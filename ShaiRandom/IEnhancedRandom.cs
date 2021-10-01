@@ -192,5 +192,135 @@ namespace ShaiRandom
             }
         }
 
+        /**
+         * Returns the next pseudorandom, uniformly distributed {@code ulong}
+         * value from this random number generator's sequence. The general
+         * contract of {@code NextUlong} is that one {@code ulong} value is
+         * pseudorandomly generated and returned.
+         *
+         * @return the next pseudorandom, uniformly distributed {@code ulong}
+         * value from this random number generator's sequence
+         */
+        public ulong NextUlong();
+
+        public long NextLong()
+        {
+            return (long)NextUlong();
+        }
+
+        /**
+         * Returns a pseudorandom, uniformly distributed {@code long} value
+         * between 0 (inclusive) and the specified value (exclusive), drawn from
+         * this random number generator's sequence.  The general contract of
+         * {@code nextLong} is that one {@code long} value in the specified range
+         * is pseudorandomly generated and returned.  All {@code bound} possible
+         * {@code long} values are produced with (approximately) equal
+         * probability, though there is a small amount of bias depending on the bound.
+         *
+         * <br> Note that this advances the state by the same amount as a single call to
+         * {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
+         * correctly, but introduces some bias when {@code bound} is very large. This will
+         * also advance the state if {@code bound} is 0 or negative, so usage with a variable
+         * bound will advance the state reliably.
+         *
+         * <br> This method has some bias, particularly on larger bounds. Actually measuring
+         * bias with bounds in the trillions or greater is challenging but not impossible, so
+         * don't use this for a real-money gambling purpose. The bias isn't especially
+         * significant, though.
+         *
+         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+         * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
+         * @return the next pseudorandom, uniformly distributed {@code long}
+         * value between zero (inclusive) and {@code bound} (exclusive)
+         * from this random number generator's sequence
+         */
+        public ulong nextUlong(ulong bound)
+        {
+            return NextUlong(0UL, bound);
+        }
+
+        /**
+         * Returns a pseudorandom, uniformly distributed {@code long} value between an
+         * inner bound of 0 (inclusive) and the specified {@code outerBound} (exclusive).
+         * This is meant for cases where the outer bound may be negative, especially if
+         * the bound is unknown or may be user-specified. A negative outer bound is used
+         * as the lower bound; a positive outer bound is used as the upper bound. An outer
+         * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
+         * for outer bound 0).
+         *
+         * <p>Note that this advances the state by the same amount as a single call to
+         * {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
+         * correctly, but introduces some bias when {@code bound} is very large. This
+         * method should be about as fast as {@link #nextLong(long)} , unlike the speed
+         * difference between {@link #nextInt(int)} and {@link #nextSignedInt(int)}.
+         *
+         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+         * @param outerBound the outer exclusive bound; may be any long value, allowing negative
+         * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
+         */
+        public long NextLong(long outerBound)
+        {
+            return NextLong(0L, outerBound);
+        }
+
+        /**
+         * Returns a pseudorandom, uniformly distributed {@code long} value between the
+         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
+         * (exclusive). If {@code outerBound} is less than or equal to {@code innerBound},
+         * this always returns {@code innerBound}.
+         *
+         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+         * @param inner the inclusive inner bound; may be any long, allowing negative
+         * @param outer the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
+         * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
+         */
+        public ulong NextUlong(ulong inner, ulong outer)
+        {
+            ulong rand = NextUlong();
+            if (inner >= outer) return inner;
+            ulong bound = outer - inner;
+            ulong randLow = rand & 0xFFFFFFFFUL;
+            ulong boundLow = bound & 0xFFFFFFFFUL;
+            ulong randHigh = (rand >> 32);
+            ulong boundHigh = (bound >> 32);
+            return inner + (randHigh * boundLow >> 32) + (randLow * boundHigh >> 32) + randHigh * boundHigh;
+        }
+
+        /**
+         * Returns a pseudorandom, uniformly distributed {@code long} value between the
+         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
+         * (exclusive). This is meant for cases where either bound may be negative,
+         * especially if the bounds are unknown or may be user-specified.
+         *
+         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+         * @param inner the inclusive inner bound; may be any long, allowing negative
+         * @param outer the exclusive outer bound; may be any long, allowing negative
+         * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
+         */
+
+        //TODO: I'm not sure if this works as expected. Can't run unit tests without some implementation.
+        public long NextLong(long inner, long outer)
+        {
+            ulong rand = NextUlong();
+            ulong i2, o2;
+            if (outer < inner)
+            {
+                ulong t = (ulong)outer;
+                o2 = (ulong)inner + 1UL;
+                i2 = t + 1UL;
+            }
+            else
+            {
+                o2 = (ulong)outer;
+                i2 = (ulong)inner;
+            }
+            ulong bound = o2 - i2;
+            ulong randLow = rand & 0xFFFFFFFFUL;
+            ulong boundLow = bound & 0xFFFFFFFFUL;
+            ulong randHigh = (rand >> 32);
+            ulong boundHigh = (bound >> 32);
+            return (long)(i2 + (randHigh * boundLow >> 32) + (randLow * boundHigh >> 32) + randHigh * boundHigh);
+        }
+
     }
 }
