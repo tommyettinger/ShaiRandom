@@ -895,5 +895,29 @@ namespace ShaiRandom
         {
             return Probit(NextInclusiveDouble());
         }
+
+        /// <summary>
+        /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextUlong()
+        /// as if called at that step. The distance can be negative if a long is cast to a ulong, which jumps backwards if the period of the generator is 2 to the 64.
+        /// </summary>
+        /// <param name="distance">How many steps to jump forward</param>
+        /// <returns>The result of what NextUlong() would return at the now-current jumped state.</returns>
+        public ulong Skip(ulong distance)
+        {
+            throw new NotSupportedException("Skip() is not implemented for this generator.");
+        }
+
+        /// <summary>
+        /// (Optional) If implemented, jumps the generator back to the previous state and returns what NextUlong() would have produced at that state.
+        /// </summary>
+        /// <remarks>
+        /// The default implementation calls Skip() with the equivalent of (ulong)(-1L) . If Skip() is not implemented, this throws a NotSupportedException.
+        /// </remarks>
+        /// <returns>The result of what NextUlong() would return at the previous state.</returns>
+        public ulong PreviousUlong()
+        {
+            return Skip(0xFFFFFFFFFFFFFFFFUL);
+        }
+
     }
 }
