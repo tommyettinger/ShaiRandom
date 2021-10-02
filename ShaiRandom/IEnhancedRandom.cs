@@ -503,326 +503,397 @@ namespace ShaiRandom
             return (NextUlong() & 0x8000000000000000UL) == 0x8000000000000000UL;
         }
 
-	/**
-	 * Returns the next pseudorandom, uniformly distributed {@code float}
-	 * value between {@code 0.0} (inclusive) and {@code 1.0} (exclusive)
-	 * from this random number generator's sequence.
-	 *
-	 * <p>The general contract of {@code NextFloat} is that one
-	 * {@code float} value, chosen (approximately) uniformly from the
-	 * range {@code 0.0f} (inclusive) to {@code 1.0f} (exclusive), is
-	 * pseudorandomly generated and returned. All 2<sup>24</sup> possible
-	 * {@code float} values of the form <i>m&nbsp;x&nbsp;</i>2<sup>-24</sup>,
-	 * where <i>m</i> is a positive integer less than 2<sup>24</sup>, are
-	 * produced with (approximately) equal probability.
-	 *
-	 * <p>The public implementation uses the upper 24 bits of {@link #nextLong()},
-	 * with an unsigned right shift and a multiply by a very small float
-	 * ({@code 5.9604645E-8f} or {@code 0x1p-24f}). It tends to be fast if
-	 * nextLong() is fast, but alternative implementations could use 24 bits of
-	 * {@link #nextInt()} (or just {@link #next(int)}, giving it {@code 24})
-	 * if that generator doesn't efficiently generate 64-bit longs.<p>
-	 *
-	 * @return the next pseudorandom, uniformly distributed {@code float}
-	 * value between {@code 0.0} and {@code 1.0} from this
-	 * random number generator's sequence
-	 */
-	public float NextFloat()
+        /**
+         * Returns the next pseudorandom, uniformly distributed {@code float}
+         * value between {@code 0.0} (inclusive) and {@code 1.0} (exclusive)
+         * from this random number generator's sequence.
+         *
+         * <p>The general contract of {@code NextFloat} is that one
+         * {@code float} value, chosen (approximately) uniformly from the
+         * range {@code 0.0f} (inclusive) to {@code 1.0f} (exclusive), is
+         * pseudorandomly generated and returned. All 2<sup>24</sup> possible
+         * {@code float} values of the form <i>m&nbsp;x&nbsp;</i>2<sup>-24</sup>,
+         * where <i>m</i> is a positive integer less than 2<sup>24</sup>, are
+         * produced with (approximately) equal probability.
+         *
+         * <p>The public implementation uses the upper 24 bits of {@link #nextLong()},
+         * with an unsigned right shift and a multiply by a very small float
+         * ({@code 5.9604645E-8f} or {@code 0x1p-24f}). It tends to be fast if
+         * nextLong() is fast, but alternative implementations could use 24 bits of
+         * {@link #nextInt()} (or just {@link #next(int)}, giving it {@code 24})
+         * if that generator doesn't efficiently generate 64-bit longs.<p>
+         *
+         * @return the next pseudorandom, uniformly distributed {@code float}
+         * value between {@code 0.0} and {@code 1.0} from this
+         * random number generator's sequence
+         */
+        public float NextFloat()
         {
             return (NextUlong() >> 40) * FLOAT_ADJUST;
         }
 
-	/**
-	 * Gets a pseudo-random float between 0 (inclusive) and {@code outerBound} (exclusive).
-	 * The outerBound may be positive or negative.
-	 * Exactly the same as {@code NextFloat() * outerBound}.
-	 * @param outerBound the exclusive outer bound
-	 * @return a float between 0 (inclusive) and {@code outerBound} (exclusive)
-	 */
-	public float NextFloat(float outerBound)
+        /**
+         * Gets a pseudo-random float between 0 (inclusive) and {@code outerBound} (exclusive).
+         * The outerBound may be positive or negative.
+         * Exactly the same as {@code NextFloat() * outerBound}.
+         * @param outerBound the exclusive outer bound
+         * @return a float between 0 (inclusive) and {@code outerBound} (exclusive)
+         */
+        public float NextFloat(float outerBound)
         {
             return NextFloat() * outerBound;
         }
 
-	/**
-	 * Gets a pseudo-random float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
-	 * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
-	 * inclusive and which is exclusive.
-	 * @param innerBound the inclusive inner bound; may be negative
-	 * @param outerBound the exclusive outer bound; may be negative
-	 * @return a float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
-	 */
-	public float NextFloat(float innerBound, float outerBound)
+        /**
+         * Gets a pseudo-random float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
+         * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
+         * inclusive and which is exclusive.
+         * @param innerBound the inclusive inner bound; may be negative
+         * @param outerBound the exclusive outer bound; may be negative
+         * @return a float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
+         */
+        public float NextFloat(float innerBound, float outerBound)
         {
             return innerBound + NextFloat() * (outerBound - innerBound);
         }
 
-	/**
-	 * Returns the next pseudorandom, uniformly distributed
-	 * {@code double} value between {@code 0.0} (inclusive) and {@code 1.0}
-	 * (exclusive) from this random number generator's sequence.
-	 *
-	 * <p>The general contract of {@code NextDouble} is that one
-	 * {@code double} value, chosen (approximately) uniformly from the
-	 * range {@code 0.0d} (inclusive) to {@code 1.0d} (exclusive), is
-	 * pseudorandomly generated and returned.
-	 *
-	 * <p>The default implementation uses the upper 53 bits of {@link #nextLong()},
-	 * with an unsigned right shift and a multiply by a very small double
-	 * ({@code 1.1102230246251565E-16}, or {@code 0x1p-53}). It should perform well
-	 * if nextLong() performs well, and is expected to perform less well if the
-	 * generator naturally produces 32 or fewer bits at a time.<p>
-	 *
-	 * @return the next pseudorandom, uniformly distributed {@code double}
-	 * value between {@code 0.0} and {@code 1.0} from this
-	 * random number generator's sequence
-	 */
-	public double NextDouble()
+        /**
+         * Returns the next pseudorandom, uniformly distributed
+         * {@code double} value between {@code 0.0} (inclusive) and {@code 1.0}
+         * (exclusive) from this random number generator's sequence.
+         *
+         * <p>The general contract of {@code NextDouble} is that one
+         * {@code double} value, chosen (approximately) uniformly from the
+         * range {@code 0.0d} (inclusive) to {@code 1.0d} (exclusive), is
+         * pseudorandomly generated and returned.
+         *
+         * <p>The default implementation uses the upper 53 bits of {@link #nextLong()},
+         * with an unsigned right shift and a multiply by a very small double
+         * ({@code 1.1102230246251565E-16}, or {@code 0x1p-53}). It should perform well
+         * if nextLong() performs well, and is expected to perform less well if the
+         * generator naturally produces 32 or fewer bits at a time.<p>
+         *
+         * @return the next pseudorandom, uniformly distributed {@code double}
+         * value between {@code 0.0} and {@code 1.0} from this
+         * random number generator's sequence
+         */
+        public double NextDouble()
         {
             return (NextUlong() >> 11) * DOUBLE_ADJUST;
         }
 
-	/**
-	 * Gets a pseudo-random double between 0 (inclusive) and {@code outerBound} (exclusive).
-	 * The outerBound may be positive or negative.
-	 * Exactly the same as {@code NextDouble() * outerBound}.
-	 * @param outerBound the exclusive outer bound
-	 * @return a double between 0 (inclusive) and {@code outerBound} (exclusive)
-	 */
-	public double NextDouble(double outerBound)
+        /**
+         * Gets a pseudo-random double between 0 (inclusive) and {@code outerBound} (exclusive).
+         * The outerBound may be positive or negative.
+         * Exactly the same as {@code NextDouble() * outerBound}.
+         * @param outerBound the exclusive outer bound
+         * @return a double between 0 (inclusive) and {@code outerBound} (exclusive)
+         */
+        public double NextDouble(double outerBound)
         {
             return NextDouble() * outerBound;
         }
 
-	/**
-	 * Gets a pseudo-random double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
-	 * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
-	 * inclusive and which is exclusive.
-	 * @param innerBound the inclusive inner bound; may be negative
-	 * @param outerBound the exclusive outer bound; may be negative
-	 * @return a double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
-	 */
-	public double NextDouble(double innerBound, double outerBound)
+        /**
+         * Gets a pseudo-random double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
+         * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
+         * inclusive and which is exclusive.
+         * @param innerBound the inclusive inner bound; may be negative
+         * @param outerBound the exclusive outer bound; may be negative
+         * @return a double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
+         */
+        public double NextDouble(double innerBound, double outerBound)
         {
             return innerBound + NextDouble() * (outerBound - innerBound);
         }
 
-	/**
-	 * This is just like {@link #NextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
-	 * It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
-	 * can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
-	 * subtly-different results.
-	 * @return a double between 0.0, inclusive, and 1.0, inclusive
-	 */
-	public double NextInclusiveDouble()
+        /**
+         * This is just like {@link #NextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+         * It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
+         * can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
+         * subtly-different results.
+         * @return a double between 0.0, inclusive, and 1.0, inclusive
+         */
+        public double NextInclusiveDouble()
         {
             return NextUlong(0x20000000000001L) * DOUBLE_ADJUST;
         }
 
-	/**
-	 * Just like {@link #NextDouble(double)}, but this is inclusive on both 0.0 and {@code outerBound}.
-	 * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
-	 * @param outerBound the outer inclusive bound; may be positive or negative
-	 * @return a double between 0.0, inclusive, and {@code outerBound}, inclusive
-	 */
-	public double NextInclusiveDouble(double outerBound)
+        /**
+         * Just like {@link #NextDouble(double)}, but this is inclusive on both 0.0 and {@code outerBound}.
+         * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
+         * @param outerBound the outer inclusive bound; may be positive or negative
+         * @return a double between 0.0, inclusive, and {@code outerBound}, inclusive
+         */
+        public double NextInclusiveDouble(double outerBound)
         {
             return NextInclusiveDouble() * outerBound;
         }
 
-	/**
-	 * Just like {@link #NextDouble(double, double)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
-	 * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
-	 * return it at all because of floating-point imprecision when innerBound is a larger number.
-	 * @param innerBound the inner inclusive bound; may be positive or negative
-	 * @param outerBound the outer inclusive bound; may be positive or negative
-	 * @return a double between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
-	 */
-	public double NextInclusiveDouble(double innerBound, double outerBound)
+        /**
+         * Just like {@link #NextDouble(double, double)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
+         * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
+         * return it at all because of floating-point imprecision when innerBound is a larger number.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer inclusive bound; may be positive or negative
+         * @return a double between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
+         */
+        public double NextInclusiveDouble(double innerBound, double outerBound)
         {
             return innerBound + NextInclusiveDouble() * (outerBound - innerBound);
         }
 
-	/**
-	 * This is just like {@link #NextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
-	 * It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
-	 * has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
-	 * it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
-	 * likely to accomplish that in the same time, or at all, depending on the generator.
-	 * @return a float between 0.0, inclusive, and 1.0, inclusive
-	 */
-	public float NextInclusiveFloat()
+        /**
+         * This is just like {@link #NextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+         * It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
+         * has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
+         * it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
+         * likely to accomplish that in the same time, or at all, depending on the generator.
+         * @return a float between 0.0, inclusive, and 1.0, inclusive
+         */
+        public float NextInclusiveFloat()
         {
             return NextInt(0x1000001) * FLOAT_ADJUST;
         }
 
-	/**
-	 * Just like {@link #NextFloat(float)}, but this is inclusive on both 0.0 and {@code outerBound}.
-	 * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
-	 * @param outerBound the outer inclusive bound; may be positive or negative
-	 * @return a float between 0.0, inclusive, and {@code outerBound}, inclusive
-	 */
-	public float NextInclusiveFloat(float outerBound)
+        /**
+         * Just like {@link #NextFloat(float)}, but this is inclusive on both 0.0 and {@code outerBound}.
+         * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
+         * @param outerBound the outer inclusive bound; may be positive or negative
+         * @return a float between 0.0, inclusive, and {@code outerBound}, inclusive
+         */
+        public float NextInclusiveFloat(float outerBound)
         {
             return NextInclusiveFloat() * outerBound;
         }
 
-	/**
-	 * Just like {@link #NextFloat(float, float)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
-	 * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
-	 * it at all because of floating-point imprecision when innerBound is a larger number.
-	 * @param innerBound the inner inclusive bound; may be positive or negative
-	 * @param outerBound the outer inclusive bound; may be positive or negative
-	 * @return a float between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
-	 */
-	public float NextInclusiveFloat(float innerBound, float outerBound)
+        /**
+         * Just like {@link #NextFloat(float, float)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
+         * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
+         * it at all because of floating-point imprecision when innerBound is a larger number.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer inclusive bound; may be positive or negative
+         * @return a float between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
+         */
+        public float NextInclusiveFloat(float innerBound, float outerBound)
         {
             return innerBound + NextInclusiveFloat() * (outerBound - innerBound);
         }
 
-	///**
-	// * Gets a random double between 0.0 and 1.0, exclusive at both ends; this method is also more uniform than
-	// * {@link #NextDouble()} if you use the bit-patterns of the returned doubles. This is a simplified version of
-	// * <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>. This can return double
-	// * values between 2.710505431213761E-20 and 0.9999999999999999, or 0x1.0p-65 and 0x1.fffffffffffffp-1 in hex
-	// * notation. It cannot return 0 or 1. Most cases can instead use {@link #nextExclusiveDoubleEquidistant()}, which is
-	// * implemented more traditionally but may have different performance. This method can also return doubles that
-	// * are extremely close to 0, but can't return doubles that are as close to 1, due to limits of doubles.
-	// * However, nextExclusiveDoubleEquidistant() can return only a minimum value that is as distant from 0 as its maximum
-	// * value is distant from 1.
-	// * <br>
-	// * To compare, NextDouble() and nextExclusiveDoubleEquidistant() are less likely to produce a "1" bit for their
-	// * lowest 5 bits of mantissa/significand (the least significant bits numerically, but potentially important
-	// * for some uses), with the least significant bit produced half as often as the most significant bit in the
-	// * mantissa. As for this method, it has approximately the same likelihood of producing a "1" bit for any
-	// * position in the mantissa.
-	// * <br>
-	// * The default implementation may have different performance characteristics than {@link #NextDouble()},
-	// * because this doesn't perform any floating-point multiplication or division, and instead assembles bits
-	// * obtained by one call to {@link #nextLong()}. This uses {@link BitConversion#longBitsToDouble(long)} and
-	// * {@link Long#numberOfTrailingZeros(long)}, both of which typically have optimized intrinsics on HotSpot,
-	// * and this is branchless and loopless, unlike the original algorithm by Allen Downey. When compared with
-	// * {@link #nextExclusiveDoubleEquidistant()}, this method performs better on at least HotSpot JVMs.
-	// * @return a random uniform double between 0 and 1 (both exclusive)
-	// */
-	//public double nextExclusiveDouble()
- //       {
- //           long bits = NextLong();
- //           return BitConverter.Int64BitsToDouble(1022L - Long.numberOfTrailingZeros(bits) << 52
- //               | bits >>> 12);
- //       }
+        ///**
+        // * Gets a random double between 0.0 and 1.0, exclusive at both ends; this method is also more uniform than
+        // * {@link #NextDouble()} if you use the bit-patterns of the returned doubles. This is a simplified version of
+        // * <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>. This can return double
+        // * values between 2.710505431213761E-20 and 0.9999999999999999, or 0x1.0p-65 and 0x1.fffffffffffffp-1 in hex
+        // * notation. It cannot return 0 or 1. Most cases can instead use {@link #nextExclusiveDoubleEquidistant()}, which is
+        // * implemented more traditionally but may have different performance. This method can also return doubles that
+        // * are extremely close to 0, but can't return doubles that are as close to 1, due to limits of doubles.
+        // * However, nextExclusiveDoubleEquidistant() can return only a minimum value that is as distant from 0 as its maximum
+        // * value is distant from 1.
+        // * <br>
+        // * To compare, NextDouble() and nextExclusiveDoubleEquidistant() are less likely to produce a "1" bit for their
+        // * lowest 5 bits of mantissa/significand (the least significant bits numerically, but potentially important
+        // * for some uses), with the least significant bit produced half as often as the most significant bit in the
+        // * mantissa. As for this method, it has approximately the same likelihood of producing a "1" bit for any
+        // * position in the mantissa.
+        // * <br>
+        // * The default implementation may have different performance characteristics than {@link #NextDouble()},
+        // * because this doesn't perform any floating-point multiplication or division, and instead assembles bits
+        // * obtained by one call to {@link #nextLong()}. This uses {@link BitConversion#longBitsToDouble(long)} and
+        // * {@link Long#numberOfTrailingZeros(long)}, both of which typically have optimized intrinsics on HotSpot,
+        // * and this is branchless and loopless, unlike the original algorithm by Allen Downey. When compared with
+        // * {@link #nextExclusiveDoubleEquidistant()}, this method performs better on at least HotSpot JVMs.
+        // * @return a random uniform double between 0 and 1 (both exclusive)
+        // */
+        //public double nextExclusiveDouble()
+        //       {
+        //           long bits = NextLong();
+        //           return BitConverter.Int64BitsToDouble(1022L - Long.numberOfTrailingZeros(bits) << 52
+        //               | bits >>> 12);
+        //       }
 
-	/**
-	 * Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
-	 * values between 1.1102230246251565E-16 and 0.9999999999999999, or 0x1.0p-53 and 0x1.fffffffffffffp-1 in hex
-	 * notation. It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
-	 * 1, respectively. Some usages may prefer {@link #nextExclusiveDouble()}, which is
-	 * better-distributed if you consider the bit representation of the returned doubles, tends to perform
-	 * better, and can return doubles that much closer to 0 than this can.
-	 * <br>
-	 * The default implementation simply uses {@link #nextLong(long)} to get a uniformly-chosen long between 1 and
-	 * (2 to the 53) - 1, both inclusive, and multiplies it by (2 to the -53). Using larger values than (2 to the
-	 * 53) would cause issues with the double math.
-	 * @return a random uniform double between 0 and 1 (both exclusive)
-	 */
-	public double NextExclusiveDouble()
+        /**
+         * Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
+         * values between 1.1102230246251565E-16 and 0.9999999999999999, or 0x1.0p-53 and 0x1.fffffffffffffp-1 in hex
+         * notation. It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
+         * 1, respectively. Some usages may prefer {@link #nextExclusiveDouble()}, which is
+         * better-distributed if you consider the bit representation of the returned doubles, tends to perform
+         * better, and can return doubles that much closer to 0 than this can.
+         * <br>
+         * The default implementation simply uses {@link #nextLong(long)} to get a uniformly-chosen long between 1 and
+         * (2 to the 53) - 1, both inclusive, and multiplies it by (2 to the -53). Using larger values than (2 to the
+         * 53) would cause issues with the double math.
+         * @return a random uniform double between 0 and 1 (both exclusive)
+         */
+        public double NextExclusiveDouble()
         {
             return (NextUlong(0x1FFFFFFFFFFFFFL) + 1L) * DOUBLE_ADJUST;
         }
 
-	/**
-	 * Just like {@link #NextDouble(double)}, but this is exclusive on both 0.0 and {@code outerBound}.
-	 * Like {@link #nextExclusiveDouble()}, which this uses, this may have better bit-distribution of
-	 * double values, and it may also be better able to produce very small doubles when {@code outerBound} is large.
-	 * @param outerBound the outer exclusive bound; may be positive or negative
-	 * @return a double between 0.0, exclusive, and {@code outerBound}, exclusive
-	 */
-	public double NextExclusiveDouble(double outerBound)
+        /**
+         * Just like {@link #NextDouble(double)}, but this is exclusive on both 0.0 and {@code outerBound}.
+         * Like {@link #nextExclusiveDouble()}, which this uses, this may have better bit-distribution of
+         * double values, and it may also be better able to produce very small doubles when {@code outerBound} is large.
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @return a double between 0.0, exclusive, and {@code outerBound}, exclusive
+         */
+        public double NextExclusiveDouble(double outerBound)
         {
             return NextExclusiveDouble() * outerBound;
         }
 
-	/**
-	 * Just like {@link #NextDouble(double, double)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
-	 * Like {@link #nextExclusiveDouble()}, which this uses,, this may have better bit-distribution of double values,
-	 * and it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
-	 * @param innerBound the inner exclusive bound; may be positive or negative
-	 * @param outerBound the outer exclusive bound; may be positive or negative
-	 * @return a double between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
-	 */
-	public double NextExclusiveDouble(double innerBound, double outerBound)
+        /**
+         * Just like {@link #NextDouble(double, double)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
+         * Like {@link #nextExclusiveDouble()}, which this uses,, this may have better bit-distribution of double values,
+         * and it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
+         * @param innerBound the inner exclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @return a double between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
+         */
+        public double NextExclusiveDouble(double innerBound, double outerBound)
         {
             return innerBound + NextExclusiveDouble() * (outerBound - innerBound);
         }
 
-	///**
-	// * Gets a random float between 0.0 and 1.0, exclusive at both ends. This method is also more uniform than
-	// * {@link #NextFloat()} if you use the bit-patterns of the returned floats. This is a simplified version of
-	// * <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>. This version can
-	// * return float values between 2.7105054E-20 to 0.99999994, or 0x1.0p-65 to 0x1.fffffep-1 in hex notation.
-	// * It cannot return 0 or 1. To compare, NextFloat() is less likely to produce a "1" bit for its
-	// * lowest 5 bits of mantissa/significand (the least significant bits numerically, but potentially important
-	// * for some uses), with the least significant bit produced half as often as the most significant bit in the
-	// * mantissa. As for this method, it has approximately the same likelihood of producing a "1" bit for any
-	// * position in the mantissa.
-	// * <br>
-	// * The default implementation may have different performance characteristics than {@link #NextFloat()},
-	// * because this doesn't perform any floating-point multiplication or division, and instead assembles bits
-	// * obtained by one call to {@link #nextLong()}. This uses {@link BitConversion#intBitsToFloat(int)} and
-	// * {@link Long#numberOfTrailingZeros(long)}, both of which typically have optimized intrinsics on HotSpot,
-	// * and this is branchless and loopless, unlike the original algorithm by Allen Downey. When compared with
-	// * {@link #nextExclusiveFloatEquidistant()}, this method performs better on at least HotSpot JVMs.
-	// * @return a random uniform float between 0 and 1 (both exclusive)
-	// */
-	//public float nextExclusiveFloat()
- //       {
- //           final long bits = nextLong();
- //           return BitConversion.intBitsToFloat(126 - Long.numberOfTrailingZeros(bits) << 23
- //               | (int)(bits >>> 41));
- //       }
+        ///**
+        // * Gets a random float between 0.0 and 1.0, exclusive at both ends. This method is also more uniform than
+        // * {@link #NextFloat()} if you use the bit-patterns of the returned floats. This is a simplified version of
+        // * <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>. This version can
+        // * return float values between 2.7105054E-20 to 0.99999994, or 0x1.0p-65 to 0x1.fffffep-1 in hex notation.
+        // * It cannot return 0 or 1. To compare, NextFloat() is less likely to produce a "1" bit for its
+        // * lowest 5 bits of mantissa/significand (the least significant bits numerically, but potentially important
+        // * for some uses), with the least significant bit produced half as often as the most significant bit in the
+        // * mantissa. As for this method, it has approximately the same likelihood of producing a "1" bit for any
+        // * position in the mantissa.
+        // * <br>
+        // * The default implementation may have different performance characteristics than {@link #NextFloat()},
+        // * because this doesn't perform any floating-point multiplication or division, and instead assembles bits
+        // * obtained by one call to {@link #nextLong()}. This uses {@link BitConversion#intBitsToFloat(int)} and
+        // * {@link Long#numberOfTrailingZeros(long)}, both of which typically have optimized intrinsics on HotSpot,
+        // * and this is branchless and loopless, unlike the original algorithm by Allen Downey. When compared with
+        // * {@link #nextExclusiveFloatEquidistant()}, this method performs better on at least HotSpot JVMs.
+        // * @return a random uniform float between 0 and 1 (both exclusive)
+        // */
+        //public float nextExclusiveFloat()
+        //       {
+        //           final long bits = nextLong();
+        //           return BitConversion.intBitsToFloat(126 - Long.numberOfTrailingZeros(bits) << 23
+        //               | (int)(bits >>> 41));
+        //       }
 
-	/**
-	 * Gets a random float between 0.0 and 1.0, exclusive at both ends. This can return float
-	 * values between 5.9604645E-8 and 0.99999994, or 0x1.0p-24 and 0x1.fffffep-1 in hex notation.
-	 * It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
-	 * 1, respectively. Some usages may prefer {@link #nextExclusiveFloat()}, which is
-	 * better-distributed if you consider the bit representation of the returned floats, tends to perform
-	 * better, and can return floats that much closer to 0 than this can.
-	 * <br>
-	 * The default implementation simply uses {@link #nextInt(int)} to get a uniformly-chosen int between 1 and
-	 * (2 to the 24) - 1, both inclusive, and multiplies it by (2 to the -24). Using larger values than (2 to the
-	 * 24) would cause issues with the float math.
-	 * @return a random uniform float between 0 and 1 (both exclusive)
-	 */
-	public float NextExclusiveFloat()
+        /**
+         * Gets a random float between 0.0 and 1.0, exclusive at both ends. This can return float
+         * values between 5.9604645E-8 and 0.99999994, or 0x1.0p-24 and 0x1.fffffep-1 in hex notation.
+         * It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
+         * 1, respectively. Some usages may prefer {@link #nextExclusiveFloat()}, which is
+         * better-distributed if you consider the bit representation of the returned floats, tends to perform
+         * better, and can return floats that much closer to 0 than this can.
+         * <br>
+         * The default implementation simply uses {@link #nextInt(int)} to get a uniformly-chosen int between 1 and
+         * (2 to the 24) - 1, both inclusive, and multiplies it by (2 to the -24). Using larger values than (2 to the
+         * 24) would cause issues with the float math.
+         * @return a random uniform float between 0 and 1 (both exclusive)
+         */
+        public float NextExclusiveFloat()
         {
             return (NextUint(0xFFFFFFU) + 1) * FLOAT_ADJUST;
         }
 
-	/**
-	 * Just like {@link #NextFloat(float)}, but this is exclusive on both 0.0 and {@code outerBound}.
-	 * Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
-	 * it may also be better able to produce very small floats when {@code outerBound} is large.
-	 * @param outerBound the outer exclusive bound; may be positive or negative
-	 * @return a float between 0.0, exclusive, and {@code outerBound}, exclusive
-	 */
-	public float NextExclusiveFloat(float outerBound)
+        /**
+         * Just like {@link #NextFloat(float)}, but this is exclusive on both 0.0 and {@code outerBound}.
+         * Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
+         * it may also be better able to produce very small floats when {@code outerBound} is large.
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @return a float between 0.0, exclusive, and {@code outerBound}, exclusive
+         */
+        public float NextExclusiveFloat(float outerBound)
         {
             return NextExclusiveFloat() * outerBound;
         }
 
-	/**
-	 * Just like {@link #NextFloat(float, float)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
-	 * Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
-	 * it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
-	 * @param innerBound the inner exclusive bound; may be positive or negative
-	 * @param outerBound the outer exclusive bound; may be positive or negative
-	 * @return a float between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
-	 */
-	public float NextExclusiveFloat(float innerBound, float outerBound)
+        /**
+         * Just like {@link #NextFloat(float, float)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
+         * Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
+         * it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
+         * @param innerBound the inner exclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @return a float between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
+         */
+        public float NextExclusiveFloat(float innerBound, float outerBound)
         {
             return innerBound + NextExclusiveFloat() * (outerBound - innerBound);
         }
 
+
+        /**
+     * A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
+     * inputs correspond to high outputs, and similarly for the low range. This is centered on 0.0 and its standard
+     * deviation seems to be 1.0 (the same as {@link java.util.Random#nextGaussian()}). If this is given an input of 0.0
+     * or less, it returns -38.5, which is slightly less than the result when given {@link Double#MIN_VALUE}. If it is
+     * given an input of 1.0 or more, it returns 38.5, which is significantly larger than the result when given the
+     * largest double less than 1.0 (this value is further from 1.0 than {@link Double#MIN_VALUE} is from 0.0). If
+     * given {@link Double#NaN}, it returns whatever {@link Math#copySign(double, double)} returns for the arguments
+     * {@code 38.5, Double.NaN}, which is implementation-dependent. It uses an algorithm by Peter John Acklam, as
+     * implemented by Sherali Karimov.
+     * <a href="https://web.archive.org/web/20150910002142/http://home.online.no/~pjacklam/notes/invnorm/impl/karimov/StatUtil.java">Original source</a>.
+     * <a href="https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/">Information on the algorithm</a>.
+     * <a href="https://en.wikipedia.org/wiki/Probit_function">Wikipedia's page on the probit function</a> may help, but
+     * is more likely to just be confusing.
+     * <br>
+     * Acklam's algorithm and Karimov's implementation are both quite fast. This appears faster than generating
+     * Gaussian-distributed numbers using either the Box-Muller Transform or Marsaglia's Polar Method, though it isn't
+     * as precise and can't produce as extreme min and max results in the extreme cases they should appear. If given
+     * a typical uniform random {@code double} that's exclusive on 1.0, it won't produce a result higher than
+     * {@code 8.209536145151493}, and will only produce results of at least {@code -8.209536145151493} if 0.0 is
+     * excluded from the inputs (if 0.0 is an input, the result is {@code -38.5}). A chief advantage of using this with
+     * a random number generator is that it only requires one random double to obtain one Gaussian value;
+     * {@link java.util.Random#nextGaussian()} generates at least two random doubles for each two Gaussian values, but
+     * may rarely require much more random generation.
+     * <br>
+     * This can be used both as an optimization for generating Gaussian random values, and as a way of generating
+     * Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
+     * as the input, such as those produced by a van der Corput, Halton, Sobol or R2 sequence). Most methods of generating
+     * Gaussian values (e.g. Box-Muller and Marsaglia polar) do not have any way to preserve a particular pattern.
+     *
+     * @param d should be between 0 and 1, exclusive, but other values are tolerated
+     * @return a normal-distributed double centered on 0.0; all results will be between -38.5 and 38.5, both inclusive
+     */
+        public static double Probit(double d)
+        {
+            if (d <= 0) {
+                return -38.5;
+            } else if (d >= 1)
+            {
+                return 38.5;
+            }
+            else if (d < 0.02425)
+            {
+                double q = Math.Sqrt(-2.0 * Math.Log(d));
+                return (((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
+                    (((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
+            }
+            else if (0.97575 < d)
+            {
+                double q = Math.Sqrt(-2.0 * Math.Log(1 - d));
+                return -(((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
+                    (((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
+            }
+            else
+            {
+                double q = d - 0.5;
+                double r = q * q;
+                return (((((-3.969683028665376e+01 * r + 2.209460984245205e+02) * r + -2.759285104469687e+02) * r + 1.383577518672690e+02) * r + -3.066479806614716e+01) * r + 2.506628277459239e+00) * q / (
+                    ((((-5.447609879822406e+01 * r + 1.615858368580409e+02) * r + -1.556989798598866e+02) * r + 6.680131188771972e+01) * r + -1.328068155288572e+01) * r + 1.0);
+            }
+        }
+
+        /// <summary>
+        /// Gets a normally-distributed (Gaussian) double between -38.5 and 38.5, both inclusive, and weighted centrally, with a standard deviation of 1.0 and mean of 0.0.
+        /// </summary>
+        /// <returns>A double from the normal distribution with standard deviation 1.0 and mean 0.0 .</returns>
+        public double NextNormal()
+        {
+            return Probit(NextInclusiveDouble());
+        }
     }
 }
