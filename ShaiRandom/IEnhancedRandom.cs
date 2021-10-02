@@ -919,5 +919,56 @@ namespace ShaiRandom
             return Skip(0xFFFFFFFFFFFFFFFFUL);
         }
 
+        /// <summary>
+        /// Returns a full copy (deep, if necessary) of this IEnhancedRandom.
+        /// </summary>
+        /// <returns>A copy of this IEnhancedRandom.</returns>
+        public IEnhancedRandom Copy();
+
+        /// <summary>
+        /// Sets each state in this IEnhancedRandom to the corresponding state in the other IEnhancedRandom.
+        /// This generally only works correctly if both objects have the same class.
+        /// </summary>
+        /// <param name="other">Another IEnhancedRandom that almost always should have the same class as this one.</param>
+        public void SetWith(IEnhancedRandom other)
+        {
+            int myCount = StateCount, otherCount = other.StateCount;
+            int i = 0;
+            for (; i < myCount && i < otherCount; i++)
+            {
+                SetSelectedState(i, other.SelectState(i));
+            }
+            for (; i < myCount; i++)
+            {
+                SetSelectedState(i, 0xFFFFFFFFFFFFFFFFUL);
+            }
+        }
+
+        /**
+ * Given two EnhancedRandom objects that could have the same or different classes,
+ * this returns true if they have the same class and same state, or false otherwise.
+ * Both of the arguments should implement {@link #getSelectedState(int)}, or this
+ * will throw an UnsupportedOperationException. This can be useful for comparing
+ * EnhancedRandom classes that do not implement equals(), for whatever reason.
+ * @param left an EnhancedRandom to compare for equality
+ * @param right another EnhancedRandom to compare for equality
+ * @return true if the two EnhancedRandom objects have the same class and state, or false otherwise
+ */
+        static bool AreEqual(IEnhancedRandom left, IEnhancedRandom right)
+        {
+            if (left == right)
+                return true;
+            if (left.GetType() != right.GetType())
+                return false;
+
+            int count = left.StateCount;
+            for (int i = 0; i < count; i++)
+            {
+                if (left.SelectState(i) != right.SelectState(i))
+                    return false;
+            }
+            return true;
+        }
+
     }
 }
