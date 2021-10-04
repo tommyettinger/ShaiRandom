@@ -970,5 +970,79 @@ namespace ShaiRandom
             return true;
         }
 
+        	/**
+	 * Returns true if a random value between 0 and 1 is less than the specified value.
+	 *
+	 * @param chance a float between 0.0 and 1.0; higher values are more likely to result in true
+	 * @return a bool selected with the given {@code chance} of being true
+	 */
+	public bool NextBool(float chance)
+        {
+            return NextFloat() < chance;
+        }
+
+	/**
+	 * Returns -1 or 1, randomly.
+	 *
+	 * @return -1 or 1, selected with approximately equal likelihood
+	 */
+	public int NextSign()
+        {
+            return 1 | NextInt() >> 31;
+        }
+
+        /**
+         * Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
+         * more likely. Advances the state twice.
+         * <p>
+         * This is an optimized version of {@link #NextTriangular(float, float, float) NextTriangular(-1, 1, 0)}
+         */
+        public float NextTriangular()
+        {
+            return NextFloat() - NextFloat();
+        }
+
+	/**
+	 * Returns a triangularly distributed random number between {@code -max} (exclusive) and {@code max} (exclusive), where values
+	 * around zero are more likely. Advances the state twice.
+	 * <p>
+	 * This is an optimized version of {@link #nextTriangular(float, float, float) NextTriangular(-max, max, 0)}
+	 *
+	 * @param max the upper limit
+	 */
+	public float NextTriangular(float max)
+        {
+            return (NextFloat() - NextFloat()) * max;
+        }
+
+	/**
+	 * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where the
+	 * {@code mode} argument defaults to the midpoint between the bounds, giving a symmetric distribution. Advances the state once.
+	 * <p>
+	 * This method is equivalent of {@link #nextTriangular(float, float, float) NextTriangular(min, max, (min + max) * 0.5f)}
+	 *
+	 * @param min the lower limit
+	 * @param max the upper limit
+	 */
+	public float NextTriangular(float min, float max)
+        {
+            return NextTriangular(min, max, (min + max) * 0.5f);
+        }
+
+	/**
+	 * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where values
+	 * around {@code mode} are more likely. Advances the state once.
+	 *
+	 * @param min  the lower limit
+	 * @param max  the upper limit
+	 * @param mode the point around which the values are more likely
+	 */
+	public float NextTriangular(float min, float max, float mode)
+        {
+            float u = NextFloat();
+            float d = max - min;
+            if (u <= (mode - min) / d) { return min + MathF.Sqrt(u * d * (mode - min)); }
+            return max - MathF.Sqrt((1 - u) * d * (max - mode));
+        }
     }
 }
