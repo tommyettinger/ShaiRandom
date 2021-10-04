@@ -1203,5 +1203,79 @@ namespace ShaiRandom
             return v;
         }
 
+        /// <summary>
+        /// Gets a randomly-chosen item from the given non-null, non-empty array.
+        /// </summary>
+        /// <typeparam name="T">The type of items in the array.</typeparam>
+        /// <param name="array">Must be non-null and non-empty.</param>
+        /// <returns>A randomly-chosen item from array.</returns>
+        public T RandomElement<T>(T[] array)
+        {
+            return array[NextInt(array.Length)];
+        }
+
+        /// <summary>
+        /// Gets a randomly-chosen item from the given non-null, non-empty IList.
+        /// </summary>
+        /// <typeparam name="T">The type of items in the list.</typeparam>
+        /// <param name="list">Must be non-null and non-empty.</param>
+        /// <returns>A randomly-chosen item from list.</returns>
+        public T RandomElement<T>(IList<T> list)
+        {
+            return list[NextInt(list.Count)];
+        }
+
+        /**
+         * Shuffles the given array in-place pseudo-randomly, using this to generate
+         * {@code items.Length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
+         *
+         * @param items an array of some reference type; must be non-null but may contain null items
+         */
+        public void Shuffle<T>(T[] items)
+        {
+            Shuffle(items, 0, items.Length);
+        }
+
+        /**
+         * Shuffles a section of the given array in-place pseudo-randomly, using this to generate
+         * {@code length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
+         *
+         * @param items an array of some reference type; must be non-null but may contain null items
+         * @param offset the index of the first element of the array that can be shuffled
+         * @param length the length of the section to shuffle
+         */
+        public void Shuffle<T>(T[] items, int offset, int length)
+        {
+            offset = Math.Min(Math.Max(0, offset), items.Length);
+            length = Math.Min(items.Length - offset, Math.Max(0, length));
+            for (int i = offset + length - 1; i > offset; i--)
+            {
+                int ii = NextInt(offset, i + 1);
+                T temp = items[i];
+                items[i] = items[ii];
+                items[ii] = temp;
+            }
+        }
+        /**
+         * Shuffles a section of the given array in-place pseudo-randomly, using this to generate
+         * {@code length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
+         *
+         * @param items an array of some reference type; must be non-null but may contain null items
+         * @param offset the index of the first element of the array that can be shuffled
+         * @param length the length of the section to shuffle
+         */
+        public void Shuffle<T>(IList<T> items, int offset, int length)
+        {
+            offset = Math.Min(Math.Max(0, offset), items.Count);
+            length = Math.Min(items.Count - offset, Math.Max(0, length));
+            for (int i = offset + length - 1; i > offset; i--)
+            {
+                int ii = NextInt(offset, i + 1);
+                T temp = items[i];
+                items[i] = items[ii];
+                items[ii] = temp;
+            }
+        }
+
     }
 }
