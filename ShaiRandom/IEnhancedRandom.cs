@@ -366,9 +366,11 @@ namespace ShaiRandom
         public void NextBytes(byte[] bytes)
         {
             int bl = bytes.Length;
-            for (int i = 0; i < bl;) {
+            for (int i = 0; i < bl;)
+            {
                 int n = Math.Min(bl - i, 8);
-                for (ulong r = NextUlong(); n-- > 0; r >>= 8) {
+                for (ulong r = NextUlong(); n-- > 0; r >>= 8)
+                {
                     bytes[i++] = (byte)r;
                 }
             }
@@ -480,14 +482,16 @@ namespace ShaiRandom
         {
             return (int)(innerBound + NextLong(outerBound - innerBound & 0xFFFFFFFFL));
         }
+
+
         /**
- * Returns the next pseudorandom, uniformly distributed
- * {@code boolean} value from this random number generator's
+         * Returns the next pseudorandom, uniformly distributed
+ * {@code bool} value from this random number generator's
  * sequence. The general contract of {@code NextBool} is that one
- * {@code boolean} value is pseudorandomly generated and returned.  The
+ * {@code bool} value is pseudorandomly generated and returned.  The
  * values {@code true} and {@code false} are produced with
  * (approximately) equal probability.
- * <br>
+ * 
  * The default implementation is equivalent to a sign check on {@link #NextUlong()},
  * returning true if the generated long is negative. This is typically the safest
  * way to implement this method; many types of generators have less statistical
@@ -495,7 +499,7 @@ namespace ShaiRandom
  * always a good idea.
  *
  * @return the next pseudorandom, uniformly distributed
- * {@code boolean} value from this random number generator's
+ * {@code bool} value from this random number generator's
  * sequence
  */
         public bool NextBool()
@@ -860,9 +864,11 @@ namespace ShaiRandom
      */
         public static double Probit(double d)
         {
-            if (d <= 0) {
+            if (d <= 0)
+            {
                 return -38.5;
-            } else if (d >= 1)
+            }
+            else if (d >= 1)
             {
                 return 38.5;
             }
@@ -970,23 +976,23 @@ namespace ShaiRandom
             return true;
         }
 
-        	/**
-	 * Returns true if a random value between 0 and 1 is less than the specified value.
-	 *
-	 * @param chance a float between 0.0 and 1.0; higher values are more likely to result in true
-	 * @return a bool selected with the given {@code chance} of being true
-	 */
-	public bool NextBool(float chance)
+        /**
+ * Returns true if a random value between 0 and 1 is less than the specified value.
+ *
+ * @param chance a float between 0.0 and 1.0; higher values are more likely to result in true
+ * @return a bool selected with the given {@code chance} of being true
+ */
+        public bool NextBool(float chance)
         {
             return NextFloat() < chance;
         }
 
-	/**
-	 * Returns -1 or 1, randomly.
-	 *
-	 * @return -1 or 1, selected with approximately equal likelihood
-	 */
-	public int NextSign()
+        /**
+         * Returns -1 or 1, randomly.
+         *
+         * @return -1 or 1, selected with approximately equal likelihood
+         */
+        public int NextSign()
         {
             return 1 | NextInt() >> 31;
         }
@@ -1002,47 +1008,200 @@ namespace ShaiRandom
             return NextFloat() - NextFloat();
         }
 
-	/**
-	 * Returns a triangularly distributed random number between {@code -max} (exclusive) and {@code max} (exclusive), where values
-	 * around zero are more likely. Advances the state twice.
-	 * <p>
-	 * This is an optimized version of {@link #nextTriangular(float, float, float) NextTriangular(-max, max, 0)}
-	 *
-	 * @param max the upper limit
-	 */
-	public float NextTriangular(float max)
+        /**
+         * Returns a triangularly distributed random number between {@code -max} (exclusive) and {@code max} (exclusive), where values
+         * around zero are more likely. Advances the state twice.
+         * <p>
+         * This is an optimized version of {@link #nextTriangular(float, float, float) NextTriangular(-max, max, 0)}
+         *
+         * @param max the upper limit
+         */
+        public float NextTriangular(float max)
         {
             return (NextFloat() - NextFloat()) * max;
         }
 
-	/**
-	 * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where the
-	 * {@code mode} argument defaults to the midpoint between the bounds, giving a symmetric distribution. Advances the state once.
-	 * <p>
-	 * This method is equivalent of {@link #nextTriangular(float, float, float) NextTriangular(min, max, (min + max) * 0.5f)}
-	 *
-	 * @param min the lower limit
-	 * @param max the upper limit
-	 */
-	public float NextTriangular(float min, float max)
+        /**
+         * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where the
+         * {@code mode} argument defaults to the midpoint between the bounds, giving a symmetric distribution. Advances the state once.
+         * <p>
+         * This method is equivalent of {@link #nextTriangular(float, float, float) NextTriangular(min, max, (min + max) * 0.5f)}
+         *
+         * @param min the lower limit
+         * @param max the upper limit
+         */
+        public float NextTriangular(float min, float max)
         {
             return NextTriangular(min, max, (min + max) * 0.5f);
         }
 
-	/**
-	 * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where values
-	 * around {@code mode} are more likely. Advances the state once.
-	 *
-	 * @param min  the lower limit
-	 * @param max  the upper limit
-	 * @param mode the point around which the values are more likely
-	 */
-	public float NextTriangular(float min, float max, float mode)
+        /**
+         * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where values
+         * around {@code mode} are more likely. Advances the state once.
+         *
+         * @param min  the lower limit
+         * @param max  the upper limit
+         * @param mode the point around which the values are more likely
+         */
+        public float NextTriangular(float min, float max, float mode)
         {
             float u = NextFloat();
             float d = max - min;
             if (u <= (mode - min) / d) { return min + MathF.Sqrt(u * d * (mode - min)); }
             return max - MathF.Sqrt((1 - u) * d * (max - mode));
         }
+
+        /**
+ * Returns the minimum result of {@code trials} calls to {@link #NextInt(int, int)} using the given {@code innerBound}
+ * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+ * The higher trials is, the lower the average value this returns.
+ * @param innerBound the inner inclusive bound; may be positive or negative
+ * @param outerBound the outer exclusive bound; may be positive or negative
+ * @param trials how many random numbers to acquire and compare
+ * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+ */
+        public int MinIntOf(int innerBound, int outerBound, int trials)
+        {
+            int v = NextInt(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Min(v, NextInt(innerBound, outerBound));
+            }
+            return v;
+        }
+
+        /**
+         * Returns the maximum result of {@code trials} calls to {@link #NextInt(int, int)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the higher the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        public int MaxIntOf(int innerBound, int outerBound, int trials)
+        {
+            int v = NextInt(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Max(v, NextInt(innerBound, outerBound));
+            }
+            return v;
+        }
+
+        /**
+         * Returns the minimum result of {@code trials} calls to {@link #NextLong(long, long)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the lower the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        public long MinLongOf(long innerBound, long outerBound, int trials)
+        {
+            long v = NextLong(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Min(v, NextLong(innerBound, outerBound));
+            }
+            return v;
+        }
+
+        /**
+         * Returns the maximum result of {@code trials} calls to {@link #NextLong(long, long)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the higher the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        public long MaxLongOf(long innerBound, long outerBound, int trials)
+        {
+            long v = NextLong(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Max(v, NextLong(innerBound, outerBound));
+            }
+            return v;
+        }
+
+        /**
+         * Returns the minimum result of {@code trials} calls to {@link #NextDouble(double, double)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the lower the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        public double MinDoubleOf(double innerBound, double outerBound, int trials)
+        {
+            double v = NextDouble(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Min(v, NextDouble(innerBound, outerBound));
+            }
+            return v;
+        }
+
+        /**
+         * Returns the maximum result of {@code trials} calls to {@link #NextDouble(double, double)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the higher the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        public double MaxDoubleOf(double innerBound, double outerBound, int trials)
+        {
+            double v = NextDouble(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Max(v, NextDouble(innerBound, outerBound));
+            }
+            return v;
+        }
+
+        /**
+         * Returns the minimum result of {@code trials} calls to {@link #NextFloat(float, float)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the lower the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        public float MinFloatOf(float innerBound, float outerBound, int trials)
+        {
+            float v = NextFloat(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Min(v, NextFloat(innerBound, outerBound));
+            }
+            return v;
+        }
+
+        /**
+         * Returns the maximum result of {@code trials} calls to {@link #NextFloat(float, float)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the higher the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        public float MaxFloatOf(float innerBound, float outerBound, int trials)
+        {
+            float v = NextFloat(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Max(v, NextFloat(innerBound, outerBound));
+            }
+            return v;
+        }
+
     }
 }
