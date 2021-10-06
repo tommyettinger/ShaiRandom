@@ -37,22 +37,22 @@ namespace ShaiRandom
         #region IGenerator explicit implementation
         bool IGenerator.CanReset => false;
         uint IGenerator.Seed => 1;
-        int IGenerator.Next() => NextInt(int.MaxValue);
-        int IGenerator.Next(int maxValue) => NextInt(maxValue);
-        int IGenerator.Next(int minValue, int maxValue) => NextInt(minValue, maxValue);
-        bool IGenerator.NextBoolean() => NextBool();
-        void IGenerator.NextBytes(byte[] buffer) => NextBytes(buffer);
-        double IGenerator.NextDouble() => NextDouble();
-        double IGenerator.NextDouble(double maxValue) => NextDouble(maxValue);
-        double IGenerator.NextDouble(double minValue, double maxValue) => NextDouble(minValue, maxValue);
-        int IGenerator.NextInclusiveMaxValue() => (int)NextBits(31);
-        uint IGenerator.NextUInt() => NextUint(uint.MaxValue);
-        uint IGenerator.NextUInt(uint maxValue) => NextUint(maxValue);
-        uint IGenerator.NextUInt(uint minValue, uint maxValue) => NextUint(minValue, maxValue);
-        uint IGenerator.NextUIntExclusiveMaxValue() => NextUint(uint.MaxValue);
-        uint IGenerator.NextUIntInclusiveMaxValue() => NextUint();
-        bool IGenerator.Reset() => throw new NotImplementedException();
-        bool IGenerator.Reset(uint seed) => throw new NotImplementedException();
+        int IGenerator.Next() => Wrapped.NextInt(int.MaxValue);
+        int IGenerator.Next(int maxValue) => Wrapped.NextInt(maxValue);
+        int IGenerator.Next(int minValue, int maxValue) => Wrapped.NextInt(minValue, maxValue);
+        bool IGenerator.NextBoolean() => Wrapped.NextBool();
+        void IGenerator.NextBytes(byte[] buffer) => Wrapped.NextBytes(buffer);
+        double IGenerator.NextDouble() => Wrapped.NextDouble();
+        double IGenerator.NextDouble(double maxValue) => Wrapped.NextDouble(maxValue);
+        double IGenerator.NextDouble(double minValue, double maxValue) => Wrapped.NextDouble(minValue, maxValue);
+        int IGenerator.NextInclusiveMaxValue() => (int)Wrapped.NextBits(31);
+        uint IGenerator.NextUInt() => Wrapped.NextUint(uint.MaxValue);
+        uint IGenerator.NextUInt(uint maxValue) => Wrapped.NextUint(maxValue);
+        uint IGenerator.NextUInt(uint minValue, uint maxValue) => Wrapped.NextUint(minValue, maxValue);
+        uint IGenerator.NextUIntExclusiveMaxValue() => Wrapped.NextUint(uint.MaxValue);
+        uint IGenerator.NextUIntInclusiveMaxValue() => Wrapped.NextUint();
+        bool IGenerator.Reset() => false;
+        bool IGenerator.Reset(uint seed) => false;
         #endregion
     }
 }
