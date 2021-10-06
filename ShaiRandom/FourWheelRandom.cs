@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ShaiRandom
 {
     /// <summary>
     /// It's an IEnhancedRandom with 4 states, more here later.
     /// </summary>
-    public class FourWheelRandom : IEnhancedRandom
+    [Serializable]
+    public class FourWheelRandom : ARandom
     {
         /**
          * The first state; can be any long.
@@ -197,6 +196,6 @@ namespace ShaiRandom
             return 0x572B5EE77A54E3BDUL * stateA;
         }
 
-        public override IEnhancedRandom Copy() => new FourWheelRandom(stateA, stateB, stateC, stateD);
+        public override ARandom Copy() => new FourWheelRandom(stateA, stateB, stateC, stateD);
     }
 }

@@ -21,7 +21,9 @@ namespace ShaiRandom
         /// <returns>The rotated ul.</returns>
         public static ulong RotateRight(this ulong ul, int amt) => (ul >> amt) | (ul << 64 - amt);
     }
-    public abstract class IEnhancedRandom
+    [Serializable]
+    public abstract class ARandom
+
     {
         private static readonly float FLOAT_ADJUST = MathF.Pow(2f, -24f);
         private static readonly double DOUBLE_ADJUST = Math.Pow(2.0, -53.0);
@@ -32,15 +34,15 @@ namespace ShaiRandom
             return (ulong)SeedingRandom.Next() ^ (ulong)SeedingRandom.Next() << 21 ^ (ulong)SeedingRandom.Next() << 42;
         }
 
-        protected IEnhancedRandom()
+        protected ARandom()
         {
         }
 
-        protected IEnhancedRandom(ulong seed)
+        protected ARandom(ulong seed)
         {
             Seed(seed);
         }
-        protected IEnhancedRandom(IEnhancedRandom other)
+        protected ARandom(ARandom other)
         {
             SetWith(other);
         }
@@ -967,14 +969,14 @@ namespace ShaiRandom
         /// Returns a full copy (deep, if necessary) of this IEnhancedRandom.
         /// </summary>
         /// <returns>A copy of this IEnhancedRandom.</returns>
-        public abstract IEnhancedRandom Copy();
+        public abstract ARandom Copy();
 
         /// <summary>
         /// Sets each state in this IEnhancedRandom to the corresponding state in the other IEnhancedRandom.
         /// This generally only works correctly if both objects have the same class.
         /// </summary>
         /// <param name="other">Another IEnhancedRandom that almost always should have the same class as this one.</param>
-        public void SetWith(IEnhancedRandom other)
+        public void SetWith(ARandom other)
         {
             int myCount = StateCount, otherCount = other.StateCount;
             int i = 0;
@@ -998,7 +1000,7 @@ namespace ShaiRandom
  * @param right another EnhancedRandom to compare for equality
  * @return true if the two EnhancedRandom objects have the same class and state, or false otherwise
  */
-        public static bool AreEqual(IEnhancedRandom left, IEnhancedRandom right)
+        public static bool AreEqual(ARandom left, ARandom right)
         {
             if (left == right)
                 return true;

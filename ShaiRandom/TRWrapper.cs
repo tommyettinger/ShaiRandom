@@ -1,22 +1,27 @@
-﻿using Troschuetz.Random.Generators;
+﻿using System;
+using Troschuetz.Random.Generators;
+
 namespace ShaiRandom
 {
     /// <summary>
-    /// Wraps a ShaiRandom IEnhancedRandom object so it can also be used as a Troschuetz.Random AbstractGenerator.
+    /// Wraps a ShaiRandom ARandom object so it can also be used as a Troschuetz.Random IGenerator.
     /// </summary>
-    class TRWrapper : IEnhancedRandom
+    [Serializable]
+    public class TRWrapper : ARandom
     {
         /// <summary>
-        /// The wrapped IEnhancedRandom, which must never be null.
+        /// The wrapped ARandom, which must never be null.
         /// </summary>
-        public IEnhancedRandom Wrapped { get; set; }
+        public ARandom Wrapped { get; set; }
 
-        public TRWrapper(ulong seed) : base(seed) => Wrapped = new FourWheelRandom(seed);
+        public TRWrapper() => Wrapped = new FourWheelRandom();
 
-        public TRWrapper(IEnhancedRandom wrapped) => Wrapped = wrapped.Copy();
+        public TRWrapper(ulong seed) => Wrapped = new FourWheelRandom(seed);
+
+        public TRWrapper(ARandom wrapped) => Wrapped = wrapped.Copy();
 
         public override int StateCount => Wrapped.StateCount;
-        public override IEnhancedRandom Copy() => new TRWrapper(Wrapped.Copy());
+        public override ARandom Copy() => new TRWrapper(Wrapped);
         public override double NextDouble() => Wrapped.NextDouble();
         public override ulong NextUlong() => Wrapped.NextUlong();
         public override ulong SelectState(int selection) => Wrapped.SelectState(selection);
