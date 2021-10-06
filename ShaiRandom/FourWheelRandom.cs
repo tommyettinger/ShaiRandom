@@ -9,13 +9,6 @@ namespace ShaiRandom
     /// </summary>
     public class FourWheelRandom : IEnhancedRandom
     {
-        private static readonly Random localRNG = new Random();
-
-        private static ulong MakeSeed()
-        {
-            return (ulong)localRNG.Next() ^ (ulong)localRNG.Next() << 21 ^ (ulong)localRNG.Next() << 42;
-        }
-
         /**
          * The first state; can be any long.
          */
@@ -39,7 +32,6 @@ namespace ShaiRandom
          */
         public FourWheelRandom()
         {
-            
             stateA = MakeSeed();
             stateB = MakeSeed();
             stateC = MakeSeed();
@@ -76,7 +68,7 @@ namespace ShaiRandom
          * This generator has 4 {@code ulong} states, so this returns 4.
          * @return 4 (four)
          */
-        public int StateCount => 4;
+        public override int StateCount => 4;
 
         /**
          * Gets the state determined by {@code selection}, as-is. The value for selection should be
@@ -84,7 +76,7 @@ namespace ShaiRandom
          * @param selection used to select which state variable to get; generally 0, 1, 2, or 3
          * @return the value of the selected state
          */
-        public ulong SelectState(int selection)
+        public override ulong SelectState(int selection)
         {
             switch (selection)
             {
@@ -106,7 +98,7 @@ namespace ShaiRandom
          * @param selection used to select which state variable to set; generally 0, 1, 2, or 3
          * @param value the exact value to use for the selected state, if valid
          */
-    public void SetSelectedState(int selection, ulong value)
+    public override void SetSelectedState(int selection, ulong value)
         {
             switch (selection)
             {
@@ -132,7 +124,7 @@ namespace ShaiRandom
          * different for every different {@code seed}).
          * @param seed the initial seed; may be any long
          */
-    public void Seed(ulong seed)
+    public override void Seed(ulong seed)
         {
             ulong x = (seed += 0x9E3779B97F4A7C15UL);
             x ^= x >> 27;
@@ -172,7 +164,7 @@ namespace ShaiRandom
          * @param stateC the third state; can be any long
          * @param stateD the fourth state; this will be returned as-is if the next call is to {@link #nextLong()}
          */
-    public void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
+    public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
             this.stateA = stateA;
             this.stateB = stateB;
@@ -180,7 +172,7 @@ namespace ShaiRandom
             this.stateD = stateD;
         }
 
-        public ulong NextUlong()
+        public override ulong NextUlong()
         {
             ulong fa = stateA;
             ulong fb = stateB;
@@ -193,7 +185,7 @@ namespace ShaiRandom
             return fd;
         }
 
-        public ulong PreviousUlong()
+        public override ulong PreviousUlong()
         {
             ulong fa = stateA;
             ulong fb = stateB;
@@ -205,6 +197,6 @@ namespace ShaiRandom
             return 0x572B5EE77A54E3BDUL * stateA;
         }
 
-        public IEnhancedRandom Copy() => new FourWheelRandom(stateA, stateB, stateC, stateD);
+        public override IEnhancedRandom Copy() => new FourWheelRandom(stateA, stateB, stateC, stateD);
     }
 }

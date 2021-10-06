@@ -21,10 +21,29 @@ namespace ShaiRandom
         /// <returns>The rotated ul.</returns>
         public static ulong RotateRight(this ulong ul, int amt) => (ul >> amt) | (ul << 64 - amt);
     }
-    public interface IEnhancedRandom
+    public abstract class IEnhancedRandom
     {
         private static readonly float FLOAT_ADJUST = MathF.Pow(2f, -24f);
         private static readonly double DOUBLE_ADJUST = Math.Pow(2.0, -53.0);
+        protected static readonly Random SeedingRandom = new Random();
+
+        protected static ulong MakeSeed()
+        {
+            return (ulong)SeedingRandom.Next() ^ (ulong)SeedingRandom.Next() << 21 ^ (ulong)SeedingRandom.Next() << 42;
+        }
+
+        protected IEnhancedRandom()
+        {
+        }
+
+        protected IEnhancedRandom(ulong seed)
+        {
+            Seed(seed);
+        }
+        protected IEnhancedRandom(IEnhancedRandom other)
+        {
+            SetWith(other);
+        }
 
         /**
          * Sets the seed of this random number generator using a single
@@ -40,7 +59,7 @@ namespace ShaiRandom
          *
          * @param seed the initial seed
          */
-        public void Seed(ulong seed);
+        public abstract void Seed(ulong seed);
 
         /**
          * Gets the number of possible state variables that can be selected with
@@ -53,7 +72,7 @@ namespace ShaiRandom
          * possible for types like the Mersenne Twister or some CMWC generators.
          * @return the non-negative number of selections possible for state variables
          */
-        public int StateCount => 0;
+        public abstract int StateCount { get; }
         /**
          * Gets a selected state value from this EnhancedRandom. The number of possible selections
          * is up to the implementing class, and is accessible via {@link #StateCount}, but
@@ -65,7 +84,7 @@ namespace ShaiRandom
          * @param selection used to select which state variable to get; generally non-negative
          * @return the exact value of the selected state
          */
-        public ulong SelectState(int selection)
+        public virtual ulong SelectState(int selection)
         {
             throw new NotSupportedException("SelectState() not supported.");
         }
@@ -83,7 +102,7 @@ namespace ShaiRandom
          * @param selection used to select which state variable to set; generally non-negative
          * @param value the exact value to use for the selected state, if valid
          */
-        public void SetSelectedState(int selection, ulong value)
+        public virtual void SetSelectedState(int selection, ulong value)
         {
             Seed(value);
         }
@@ -95,7 +114,7 @@ namespace ShaiRandom
          * states will be set in the same way (using SetSelectedState(), all to {@code state}).
          * @param state the ulong value to use for each state variable
          */
-        public void SetState(ulong state)
+        public virtual void SetState(ulong state)
         {
             for (int i = StateCount - 1; i >= 0; i--)
             {
@@ -113,7 +132,7 @@ namespace ShaiRandom
          * @param stateA the ulong value to use for states at index 0, 2, 4, 6...
          * @param stateB the ulong value to use for states at index 1, 3, 5, 7...
          */
-        public void SetState(ulong stateA, ulong stateB)
+        public virtual void SetState(ulong stateA, ulong stateB)
         {
             int c = StateCount;
             for (int i = 0; i < c; i += 2)
@@ -139,7 +158,7 @@ namespace ShaiRandom
          * @param stateB the ulong value to use for states at index 1, 4, 7, 10...
          * @param stateC the ulong value to use for states at index 2, 5, 8, 11...
          */
-        public void SetState(ulong stateA, ulong stateB, ulong stateC)
+        public virtual void SetState(ulong stateA, ulong stateB, ulong stateC)
         {
             int c = StateCount;
             for (int i = 0; i < c; i += 3)
@@ -172,7 +191,7 @@ namespace ShaiRandom
          * @param stateC the ulong value to use for states at index 2, 6, 10, 14...
          * @param stateD the ulong value to use for states at index 3, 7, 11, 15...
          */
-        public void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
+        public virtual void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
             int c = StateCount;
             for (int i = 0; i < c; i += 4)
@@ -201,7 +220,7 @@ namespace ShaiRandom
          * uses {@link #SetSelectedState(int, ulong)} to change the states.
          * @param states an array or varargs of ulong values to use as states
          */
-        public void SetState(params ulong[] states)
+        public virtual void SetState(params ulong[] states)
         {
             int c = StateCount, sl = states.Length;
             for (int b = 0; b < sl; b++)
@@ -222,7 +241,7 @@ namespace ShaiRandom
          * @return the next pseudorandom, uniformly distributed {@code ulong}
          * value from this random number generator's sequence
          */
-        public ulong NextUlong();
+        public abstract ulong NextUlong();
 
         public long NextLong()
         {
@@ -520,7 +539,7 @@ namespace ShaiRandom
  * {@code bool} value from this random number generator's
  * sequence
  */
-        public bool NextBool()
+        public virtual bool NextBool()
         {
             return (NextUlong() & 0x8000000000000000UL) == 0x8000000000000000UL;
         }
@@ -549,7 +568,7 @@ namespace ShaiRandom
          * value between {@code 0.0} and {@code 1.0} from this
          * random number generator's sequence
          */
-        public float NextFloat()
+        public virtual float NextFloat()
         {
             return (NextUlong() >> 40) * FLOAT_ADJUST;
         }
@@ -599,7 +618,7 @@ namespace ShaiRandom
          * value between {@code 0.0} and {@code 1.0} from this
          * random number generator's sequence
          */
-        public double NextDouble()
+        public virtual double NextDouble()
         {
             return (NextUlong() >> 11) * DOUBLE_ADJUST;
         }
@@ -912,10 +931,11 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Gets a normally-distributed (Gaussian) double between -38.5 and 38.5, both inclusive, and weighted centrally, with a standard deviation of 1.0 and mean of 0.0.
+        /// Gets a normally-distributed (Gaussian) double, with a the specified mean (default 0.0) and standard deviation (default 1.0).
+        /// If the standard deviation is 1.0 and the mean is 0.0, then this can produce results between -38.5 and 38.5 (both extremely rarely).
         /// </summary>
-        /// <returns>A double from the normal distribution with standard deviation 1.0 and mean 0.0 .</returns>
-        public double NextNormal()
+        /// <returns>A double from the normal distribution with the specified mean (default 0.0) and standard deviation (default 1.0).</returns>
+        public double NextNormal(double mean = 0.0, double stdDev = 1.0)
         {
             return Probit(NextInclusiveDouble());
         }
@@ -926,7 +946,7 @@ namespace ShaiRandom
         /// </summary>
         /// <param name="distance">How many steps to jump forward</param>
         /// <returns>The result of what NextUlong() would return at the now-current jumped state.</returns>
-        public ulong Skip(ulong distance)
+        public virtual ulong Skip(ulong distance)
         {
             throw new NotSupportedException("Skip() is not implemented for this generator.");
         }
@@ -938,7 +958,7 @@ namespace ShaiRandom
         /// The default implementation calls Skip() with the equivalent of (ulong)(-1L) . If Skip() is not implemented, this throws a NotSupportedException.
         /// </remarks>
         /// <returns>The result of what NextUlong() would return at the previous state.</returns>
-        public ulong PreviousUlong()
+        public virtual ulong PreviousUlong()
         {
             return Skip(0xFFFFFFFFFFFFFFFFUL);
         }
@@ -947,7 +967,7 @@ namespace ShaiRandom
         /// Returns a full copy (deep, if necessary) of this IEnhancedRandom.
         /// </summary>
         /// <returns>A copy of this IEnhancedRandom.</returns>
-        public IEnhancedRandom Copy();
+        public abstract IEnhancedRandom Copy();
 
         /// <summary>
         /// Sets each state in this IEnhancedRandom to the corresponding state in the other IEnhancedRandom.
@@ -978,7 +998,7 @@ namespace ShaiRandom
  * @param right another EnhancedRandom to compare for equality
  * @return true if the two EnhancedRandom objects have the same class and state, or false otherwise
  */
-        static bool AreEqual(IEnhancedRandom left, IEnhancedRandom right)
+        public static bool AreEqual(IEnhancedRandom left, IEnhancedRandom right)
         {
             if (left == right)
                 return true;
