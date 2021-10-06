@@ -8,6 +8,10 @@ namespace ShaiRandom
     [Serializable]
     public class FourWheelRandom : ARandom
     {
+        static FourWheelRandom()
+        {
+            RegisterTag("FoWR", new FourWheelRandom());
+        }
         /**
          * The first state; can be any long.
          */
