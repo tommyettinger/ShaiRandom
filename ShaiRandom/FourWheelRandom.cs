@@ -197,5 +197,7 @@ namespace ShaiRandom
         }
 
         public override ARandom Copy() => new FourWheelRandom(stateA, stateB, stateC, stateD);
+        public override string StringSerialize() => $"#FoWR`{stateA:X}~{stateB:X}~{stateC:X}~{stateD:X}`";
+        public override void StringDeserialize(string data) => throw new NotImplementedException();
     }
 }

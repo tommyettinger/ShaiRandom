@@ -66,8 +66,7 @@ namespace ShaiRandom
         /**
          * Gets the number of possible state variables that can be selected with
          * {@link #getSelectedState(int)} or {@link #SelectState(int, ulong)}.
-         * This defaults to returning 0, making no state variable available for
-         * reading or writing. An implementation that has only one {@code ulong}
+         * This must be implemented. An implementation that has only one {@code ulong}
          * state, like a SplitMix64 generator, should return {@code 1}. A
          * generator that permits setting two different {@code ulong} values, like
          * {@link LaserRandom}, should return {@code 2}. Much larger values are
@@ -75,6 +74,33 @@ namespace ShaiRandom
          * @return the non-negative number of selections possible for state variables
          */
         public abstract int StateCount { get; }
+
+        private static Dictionary<string, ARandom> TAGS = new Dictionary<string, ARandom>();
+
+        /// <summary>
+        /// Registers an instance of a subclass of ARandom by a four-character string tag.
+        /// </summary>
+        /// <param name="tag">The four-character string that will identify a type.</param>
+        /// <param name="instance">An instance of a subclass of ARandom, which will be copied as
+        /// needed; its value does not matter, as long as it is non-null.</param>
+        protected static void RegisterTag(string tag, ARandom instance)
+        {
+            if(tag.Length == 4)
+                TAGS.Add(tag, instance);
+        }
+
+        /// <summary>
+        /// Produces a string that encodes the type and full state of this generator.
+        /// </summary>
+        /// <returns>An encoded string that stores the type and full state of this generator.</returns>
+        public abstract string StringSerialize();
+
+        /// <summary>
+        /// Given a string produced by <see cref="StringSerialize"/>, if the specified type is compatible,
+        /// then this method sets the state of this ARandom to the specified stored state.
+        /// </summary>
+        /// <param name="data">A string produced by StringSerialize.</param>
+        public abstract void StringDeserialize(string data);
         /**
          * Gets a selected state value from this EnhancedRandom. The number of possible selections
          * is up to the implementing class, and is accessible via {@link #StateCount}, but

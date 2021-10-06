@@ -33,6 +33,8 @@ namespace ShaiRandom
         public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD) => Wrapped.SetState(stateA, stateB, stateC, stateD);
         public override void SetState(params ulong[] states) => Wrapped.SetState(states);
         public override ulong Skip(ulong distance) => Wrapped.Skip(distance);
+        public override string StringSerialize() => "W"+ Wrapped.StringSerialize().Substring(1);
+        public override void StringDeserialize(string data) => throw new NotImplementedException();
 
         #region IGenerator explicit implementation
         bool IGenerator.CanReset => false;
