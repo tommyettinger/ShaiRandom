@@ -97,7 +97,7 @@ namespace ShaiRandom
          * @param selection used to select which state variable to set; generally 0, 1, 2, or 3
          * @param value the exact value to use for the selected state, if valid
          */
-    public override void SetSelectedState(int selection, ulong value)
+        public override void SetSelectedState(int selection, ulong value)
         {
             switch (selection)
             {
@@ -123,7 +123,7 @@ namespace ShaiRandom
          * different for every different {@code seed}).
          * @param seed the initial seed; may be any long
          */
-    public override void Seed(ulong seed)
+        public override void Seed(ulong seed)
         {
             ulong x = (seed += 0x9E3779B97F4A7C15UL);
             x ^= x >> 27;
@@ -163,7 +163,7 @@ namespace ShaiRandom
          * @param stateC the third state; can be any long
          * @param stateD the fourth state; this will be returned as-is if the next call is to {@link #nextLong()}
          */
-    public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
+        public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
             this.stateA = stateA;
             this.stateB = stateB;
@@ -198,6 +198,14 @@ namespace ShaiRandom
 
         public override ARandom Copy() => new FourWheelRandom(stateA, stateB, stateC, stateD);
         public override string StringSerialize() => $"#FoWR`{stateA:X}~{stateB:X}~{stateC:X}~{stateD:X}`";
-        public override void StringDeserialize(string data) => throw new NotImplementedException();
+        public override ARandom StringDeserialize(string data)
+        {
+            int idx = data.IndexOf('`');
+            stateA = Convert.ToUInt64(data.Substring(idx + 1, idx = data.IndexOf('~', idx + 1)), 16);
+            stateB = Convert.ToUInt64(data.Substring(idx + 1, idx = data.IndexOf('~', idx + 1)), 16);
+            stateC = Convert.ToUInt64(data.Substring(idx + 1, idx = data.IndexOf('~', idx + 1)), 16);
+            stateD = Convert.ToUInt64(data.Substring(idx + 1,       data.IndexOf('`', idx + 1)), 16);
+            return this;
+        }
     }
 }

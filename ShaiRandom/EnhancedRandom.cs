@@ -100,7 +100,15 @@ namespace ShaiRandom
         /// then this method sets the state of this ARandom to the specified stored state.
         /// </summary>
         /// <param name="data">A string produced by StringSerialize.</param>
-        public abstract void StringDeserialize(string data);
+        /// <returns>This ARandom, after modifications.</returns>
+        public abstract ARandom StringDeserialize(string data);
+
+        public static ARandom Deserialize(string data)
+        {
+            if(data.StartsWith('W'))
+                return new TRWrapper(TAGS[data.Substring(1, 5)].StringDeserialize(data));
+            return TAGS[data.Substring(1, 5)].Copy().StringDeserialize(data);
+        }
         /**
          * Gets a selected state value from this EnhancedRandom. The number of possible selections
          * is up to the implementing class, and is accessible via {@link #StateCount}, but
