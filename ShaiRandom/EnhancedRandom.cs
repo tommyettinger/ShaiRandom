@@ -430,6 +430,15 @@ namespace ShaiRandom
             return (int)NextUlong();
         }
 
+        /// <summary>
+        /// Gets a random uint by using the low 32 bits of NextUlong(); this can return any uint.
+        /// </summary>
+        /// <returns>Any random uint.</returns>
+        public uint NextUint()
+        {
+            return (uint)NextUlong();
+        }
+
         /**
          * Returns a pseudorandom, uniformly distributed {@code int} value
          * between 0 (inclusive) and the specified value (exclusive), drawn from
