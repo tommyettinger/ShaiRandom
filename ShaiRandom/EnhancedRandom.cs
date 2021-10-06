@@ -562,7 +562,7 @@ namespace ShaiRandom
          */
         public int NextInt(int innerBound, int outerBound)
         {
-            return (int)(innerBound + NextLong(outerBound - innerBound & 0xFFFFFFFFL));
+            return (int)(innerBound + NextLong(outerBound - innerBound));
         }
 
 
