@@ -106,8 +106,8 @@ namespace ShaiRandom
         public static ARandom Deserialize(string data)
         {
             if(data.StartsWith('W'))
-                return new TRWrapper(TAGS[data.Substring(1, 5)].StringDeserialize(data));
-            return TAGS[data.Substring(1, 5)].Copy().StringDeserialize(data);
+                return new TRWrapper(TAGS[data.Substring(1, 4)].StringDeserialize(data));
+            return TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data);
         }
         /**
          * Gets a selected state value from this EnhancedRandom. The number of possible selections

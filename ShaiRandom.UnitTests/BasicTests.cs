@@ -29,6 +29,21 @@ namespace ShaiRandom.UnitTests
                 Assert.Equal(100UL, fwr.NextUlong(100UL, 3UL));
             }
         }
+    }
 
+    public class SerializationTests
+    {
+        [Fact]
+        public void FourWheelSerDeserTest()
+        {
+            ARandom random = new FourWheelRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL);
+            random.NextUlong();
+            string data = random.StringSerialize();
+            Assert.StartsWith("#FoWR`", data);
+            ARandom random2 = ARandom.Deserialize(data);
+            Assert.Equal(random.NextUlong(), random2.NextUlong());
+            Assert.Equal(random, random2);
+
+        }
     }
 }

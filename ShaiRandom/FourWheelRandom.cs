@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ShaiRandom
 {
@@ -6,7 +7,7 @@ namespace ShaiRandom
     /// It's an IEnhancedRandom with 4 states, more here later.
     /// </summary>
     [Serializable]
-    public class FourWheelRandom : ARandom
+    public class FourWheelRandom : ARandom, IEquatable<FourWheelRandom?>
     {
         static FourWheelRandom()
         {
@@ -205,11 +206,17 @@ namespace ShaiRandom
         public override ARandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
-            stateA = Convert.ToUInt64(data.Substring(idx + 1, idx = data.IndexOf('~', idx + 1)), 16);
-            stateB = Convert.ToUInt64(data.Substring(idx + 1, idx = data.IndexOf('~', idx + 1)), 16);
-            stateC = Convert.ToUInt64(data.Substring(idx + 1, idx = data.IndexOf('~', idx + 1)), 16);
-            stateD = Convert.ToUInt64(data.Substring(idx + 1,       data.IndexOf('`', idx + 1)), 16);
+            stateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            stateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            stateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            stateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
+
+        public override bool Equals(object? obj) => Equals(obj as FourWheelRandom);
+        public bool Equals(FourWheelRandom? other) => other != null && stateA == other.stateA && stateB == other.stateB && stateC == other.stateC && stateD == other.stateD;
+
+        public static bool operator ==(FourWheelRandom? left, FourWheelRandom? right) => EqualityComparer<FourWheelRandom>.Default.Equals(left, right);
+        public static bool operator !=(FourWheelRandom? left, FourWheelRandom? right) => !(left == right);
     }
 }
