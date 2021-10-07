@@ -19,6 +19,16 @@ namespace ShaiRandom.UnitTests
                 Assert.InRange(fwr.NextUlong(100UL, 301UL), 100UL, 300UL);
             }
         }
+        [Fact]
+        public void BoundedUnsignedTest()
+        {
+            FourWheelRandom fwr = new FourWheelRandom(1);
+            for (int i = 0; i < 100; i++)
+            {
+                Assert.Equal(100U, fwr.NextUint(100U, 3U));
+                Assert.Equal(100UL, fwr.NextUlong(100UL, 3UL));
+            }
+        }
 
     }
 }

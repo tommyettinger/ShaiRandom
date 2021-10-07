@@ -508,7 +508,7 @@ namespace ShaiRandom
          * the bound is unknown or may be user-specified. A negative outer bound is used
          * as the lower bound; a positive outer bound is used as the upper bound. An outer
          * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
-         * for outer bound 0). This method is slightly slower than {@link #nextInt(int)}.
+         * for outer bound 0).
          *
          * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
          * @param outerBound the outer exclusive bound; may be any int value, allowing negative
@@ -541,7 +541,7 @@ namespace ShaiRandom
          */
         public uint NextUint(uint innerBound, uint outerBound)
         {
-            return (uint)(innerBound + NextUlong(outerBound - innerBound & 0xFFFFFFFFUL));
+            return (uint)NextUlong(innerBound, outerBound);
         }
 
         /**
@@ -562,7 +562,7 @@ namespace ShaiRandom
          */
         public int NextInt(int innerBound, int outerBound)
         {
-            return (int)(innerBound + NextLong(outerBound - innerBound));
+            return (int)NextLong(innerBound, outerBound);
         }
 
 
