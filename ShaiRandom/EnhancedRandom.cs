@@ -75,6 +75,26 @@ namespace ShaiRandom
          */
         public abstract int StateCount { get; }
 
+        /// <summary>
+        /// This should be true if the implementation supports <see cref="SelectState(int)"/>, or false if that method is unsupported.
+        /// </summary>
+        public abstract bool SupportsReadAccess { get; }
+
+        /// <summary>
+        /// This should be true if the implementation supports <see cref="SetSelectedState(int, ulong)"/>, or false if that method is unsupported.
+        /// </summary>
+        public abstract bool SupportsWriteAccess { get; }
+
+        /// <summary>
+        /// This should be true if the implementation supports <see cref="Skip(ulong)"/>, or false if that method is unsupported.
+        /// </summary>
+        public abstract bool SupportsSkip { get; }
+
+        /// <summary>
+        /// This should be true if the implementation supports <see cref="PreviousUlong"/>, or false if that method is unsupported.
+        /// </summary>
+        public abstract bool SupportsPrevious { get; }
+
         private static Dictionary<string, ARandom> TAGS = new Dictionary<string, ARandom>();
 
         /// <summary>

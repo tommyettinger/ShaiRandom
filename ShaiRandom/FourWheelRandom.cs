@@ -68,12 +68,26 @@ namespace ShaiRandom
             this.stateD = stateD;
         }
 
-        /**
-         * This generator has 4 {@code ulong} states, so this returns 4.
-         * @return 4 (four)
-         */
+        /// <summary>
+        /// This generator has 4 ulong states, so this returns 4.
+        /// </summary>
         public override int StateCount => 4;
-
+        /// <summary>
+        /// This supports <see cref="SelectState(int)"/>.
+        /// </summary>
+        public override bool SupportsReadAccess => true;
+        /// <summary>
+        /// This supports <see cref="SetSelectedState(int, ulong)"/>.
+        /// </summary>
+        public override bool SupportsWriteAccess => true;
+        /// <summary>
+        /// This does not support <see cref="ARandom.Skip(ulong)"/>.
+        /// </summary>
+        public override bool SupportsSkip => false;
+        /// <summary>
+        /// This supports <see cref="PreviousUlong()"/>.
+        /// </summary>
+        public override bool SupportsPrevious => true;
         /**
          * Gets the state determined by {@code selection}, as-is. The value for selection should be
          * between 0 and 3, inclusive; if it is any other value this gets state D as if 3 was given.
