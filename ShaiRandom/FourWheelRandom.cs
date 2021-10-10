@@ -4,14 +4,14 @@ using System.Collections.Generic;
 namespace ShaiRandom
 {
     /// <summary>
-    /// It's an IEnhancedRandom with 4 states, more here later.
+    /// It's an ARandom with 4 states, more here later.
     /// </summary>
     [Serializable]
     public class FourWheelRandom : ARandom, IEquatable<FourWheelRandom?>
     {
         static FourWheelRandom()
         {
-            RegisterTag("FoWR", new FourWheelRandom());
+            RegisterTag("FoWR", new FourWheelRandom(1UL, 1UL, 1UL, 1UL));
         }
         /**
          * The first state; can be any long.

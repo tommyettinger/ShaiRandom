@@ -4,72 +4,77 @@ using System.Collections.Generic;
 namespace ShaiRandom
 {
     /// <summary>
-    /// It's an ARandom with 4 states, implementing a known-rather-good algorithm, more here later.
+    /// It's an ARandom with 4 states, more here later. This one has a good guaranteed minimum period, (2 to the 65) - 2.
     /// </summary>
     [Serializable]
-    public class Xoshiro256StarStarRandom : ARandom, IEquatable<Xoshiro256StarStarRandom?>
+    public class StrangerRandom : ARandom, IEquatable<StrangerRandom?>
     {
-        static Xoshiro256StarStarRandom()
+        static StrangerRandom()
         {
-            RegisterTag("XSSR", new Xoshiro256StarStarRandom(1UL, 1UL, 1UL, 1UL));
+            RegisterTag("StrR", new StrangerRandom(1UL, 1UL, 1UL, 1UL));
         }
+        private ulong _a, _b;
         /**
-         * The first state; can be any long except that the whole state must not all be 0.
+         * The first state; can be any long except 0.
          */
-        public ulong stateA { get; set; }
+        public ulong stateA { get => _a; set => _a = value == 0UL ? 0xD3833E804F4C574BUL : value; }
         /**
-         * The second state; can be any long except that the whole state must not all be 0.
-         * This is the state that is scrambled and returned; if it is 0 before a number
-         * is generated, then the next number will be 0.
+         * The second state; can be any long except 0.
          */
-        public ulong stateB { get; set; }
+        public ulong stateB { get => _b; set => _b = value == 0UL ? 0x790B300BF9FE738FUL : value; }
         /**
-         * The third state; can be any long except that the whole state must not all be 0.
+         * The third state; can be any long. If this has just been set to some value, then the next call to
+         * {@link #nextLong()} will return that value as-is. Later calls will be more random.
          */
         public ulong stateC { get; set; }
-        private ulong _d;
         /**
-         * The fourth state; can be any long except that the whole state must not all be 0.
-         * If all other states are 0, and this would be set to 0,
-         * then this is instead set to 0xFFFFFFFFFFFFFFFFUL.
+         * The fourth state; can be any long.
          */
-        public ulong stateD
+        public ulong stateD { get; set; }
+
+        public static ulong Jump(ulong state)
         {
-            get => _d;
-            set => _d = (stateA | stateB | stateC | value) == 0UL ? 0xFFFFFFFFFFFFFFFFUL : value;
+            ulong poly = 0x5556837749D9A17FUL;
+            ulong val = 0L, b = 1L;
+            for (int i = 0; i < 63; i++, b <<= 1)
+            {
+                if ((poly & b) != 0L) val ^= state;
+                state ^= state << 7;
+                state ^= state >> 9;
+            }
+            return val;
+
         }
-
-
         /**
-         * Creates a new Xoshiro256StarStarRandom with a random state.
+         * Creates a new StrangerRandom with a random state.
          */
-        public Xoshiro256StarStarRandom()
+        public StrangerRandom()
         {
             stateA = MakeSeed();
-            stateB = MakeSeed();
+            _b = Jump(_a);
             stateC = MakeSeed();
             stateD = MakeSeed();
         }
 
         /**
-         * Creates a new Xoshiro256StarStarRandom with the given seed; all {@code long} values are permitted.
+         * Creates a new StrangerRandom with the given seed; all {@code long} values are permitted.
          * The seed will be passed to {@link #setSeed(long)} to attempt to adequately distribute the seed randomly.
          * @param seed any {@code long} value
          */
-        public Xoshiro256StarStarRandom(ulong seed)
+        public StrangerRandom(ulong seed)
         {
             Seed(seed);
         }
 
         /**
-         * Creates a new Xoshiro256StarStarRandom with the given four states; all {@code long} values are permitted.
-         * These states will be used verbatim.
-         * @param stateA any {@code long} value
-         * @param stateB any {@code long} value
+         * Creates a new StrangerRandom with the given four states; 0 is not permitted for stateA or stateB, but
+         * all states are otherwise used verbatim.
+         * @param stateA any {@code long} value except 0
+         * @param stateB any {@code long} value except 0
          * @param stateC any {@code long} value
          * @param stateD any {@code long} value
          */
-        public Xoshiro256StarStarRandom(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
+        public StrangerRandom(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
             this.stateA = stateA;
             this.stateB = stateB;
@@ -147,36 +152,17 @@ namespace ShaiRandom
         /**
          * This initializes all 4 states of the generator to random values based on the given seed.
          * (2 to the 64) possible initial generator states can be produced here, all with a different
-         * first value returned by {@link #nextLong()} (because {@code stateB} is guaranteed to be
+         * first value returned by {@link #nextLong()} (because {@code stateC} is guaranteed to be
          * different for every different {@code seed}).
          * @param seed the initial seed; may be any long
          */
         public override void Seed(ulong seed)
         {
-            ulong x = (seed += 0x9E3779B97F4A7C15UL);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateA = x ^ x >> 27;
-            x = (seed += 0x9E3779B97F4A7C15L);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateB = x ^ x >> 27;
-            x = (seed += 0x9E3779B97F4A7C15L);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateC = x ^ x >> 27;
-            x = (seed + 0x9E3779B97F4A7C15L);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            _d = x ^ x >> 27;
+            stateA = seed ^ 0xFA346CBFD5890825UL;
+            if (stateA == 0L) stateA = 0xD3833E804F4C574BUL;
+            _b = Jump(_a);
+            stateC = Jump(seed ^ 0x05CB93402A76F7DAUL);
+            stateD = ~seed;
         }
 
         /**
@@ -184,12 +170,12 @@ namespace ShaiRandom
          * This is the same as calling {@link #setStateA(long)}, {@link #setStateB(long)},
          * {@link #setStateC(long)}, and {@link #setStateD(long)} as a group. You may want
          * to call {@link #nextLong()} a few times after setting the states like this, unless
-         * the value for stateB (in particular) is already adequately random. If all parameters
-         * are 0 here, this will assign 0xFFFFFFFFFFFFFFFFUL to stateD and 0 to the rest.
+         * the value for stateC (in particular) is already adequately random; the first call
+         * to {@link #nextLong()}, if it is made immediately after calling this, will return {@code stateD} as-is.
          * @param stateA the first state; can be any long
          * @param stateB the second state; can be any long
          * @param stateC the third state; can be any long
-         * @param stateD the fourth state; can be any long
+         * @param stateD the fourth state; this will be returned as-is if the next call is to {@link #nextLong()}
          */
         public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
@@ -198,24 +184,30 @@ namespace ShaiRandom
             this.stateC = stateC;
             this.stateD = stateD;
         }
+        public override void SetState(ulong stateA, ulong stateC, ulong stateD)
+        {
+            this.stateA = stateA;
+            _b = Jump(_a);
+            this.stateC = stateC;
+            this.stateD = stateD;
+        }
 
         public override ulong NextUlong()
         {
-            ulong result = stateB * 5UL;
-            result.RotateLeftInPlace(7);
-            result *= 9UL;
-            ulong t = stateB << 17;
-            stateC ^= stateA;
-            _d ^= stateB;
-            stateB ^= stateC;
-            stateA ^= _d;
-            stateC ^= t;
-            _d.RotateLeftInPlace(45);
-            return result;
+            ulong fa = _a;
+            ulong fb = _b;
+            ulong fc = stateC;
+            ulong fd = stateD;
+            _a = fb ^ fb << 7;
+            _b = fa ^ fa >> 9;
+            fd.RotateLeftInPlace(39);
+            stateC = fd - fb;
+            stateD = fa - fc + 0xC6BC279692B5C323L;
+            return fc;
         }
 
-        public override ARandom Copy() => new Xoshiro256StarStarRandom(stateA, stateB, stateC, stateD);
-        public override string StringSerialize() => $"#XSSR`{stateA:X}~{stateB:X}~{stateC:X}~{stateD:X}`";
+        public override ARandom Copy() => new StrangerRandom(stateA, stateB, stateC, stateD);
+        public override string StringSerialize() => $"#StrR`{stateA:X}~{stateB:X}~{stateC:X}~{stateD:X}`";
         public override ARandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
@@ -226,11 +218,11 @@ namespace ShaiRandom
             return this;
         }
 
-        public override bool Equals(object? obj) => Equals(obj as Xoshiro256StarStarRandom);
-        public bool Equals(Xoshiro256StarStarRandom? other) => other != null && stateA == other.stateA && stateB == other.stateB && stateC == other.stateC && stateD == other.stateD;
-        public override int GetHashCode() => HashCode.Combine(stateA, stateB, stateC, _d);
+        public override bool Equals(object? obj) => Equals(obj as StrangerRandom);
+        public bool Equals(StrangerRandom? other) => other != null && stateA == other.stateA && stateB == other.stateB && stateC == other.stateC && stateD == other.stateD;
+        public override int GetHashCode() => HashCode.Combine(stateA, stateB, stateC, stateD);
 
-        public static bool operator ==(Xoshiro256StarStarRandom? left, Xoshiro256StarStarRandom? right) => EqualityComparer<Xoshiro256StarStarRandom>.Default.Equals(left, right);
-        public static bool operator !=(Xoshiro256StarStarRandom? left, Xoshiro256StarStarRandom? right) => !(left == right);
+        public static bool operator ==(StrangerRandom? left, StrangerRandom? right) => EqualityComparer<StrangerRandom>.Default.Equals(left, right);
+        public static bool operator !=(StrangerRandom? left, StrangerRandom? right) => !(left == right);
     }
 }
