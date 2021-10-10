@@ -4,37 +4,46 @@ using System.Collections.Generic;
 namespace ShaiRandom
 {
     /// <summary>
-    /// It's an IEnhancedRandom with 4 states, more here later.
+    /// It's an ARandom with 4 states, implementing a known-rather-good algorithm, more here later.
     /// </summary>
     [Serializable]
-    public class FourWheelRandom : ARandom, IEquatable<FourWheelRandom?>
+    public class Xoshiro256StarStarRandom : ARandom, IEquatable<Xoshiro256StarStarRandom?>
     {
-        static FourWheelRandom()
+        static Xoshiro256StarStarRandom()
         {
-            RegisterTag("FoWR", new FourWheelRandom());
+            RegisterTag("XSSR", new Xoshiro256StarStarRandom());
         }
         /**
-         * The first state; can be any long.
+         * The first state; can be any long except that the whole state must not all be 0.
          */
         public ulong stateA { get; set; }
         /**
-         * The second state; can be any long.
+         * The second state; can be any long except that the whole state must not all be 0.
+         * This is the state that is scrambled and returned; if it is 0 before a number
+         * is generated, then the next number will be 0.
          */
         public ulong stateB { get; set; }
         /**
-         * The third state; can be any long.
+         * The third state; can be any long except that the whole state must not all be 0.
          */
         public ulong stateC { get; set; }
+        private ulong _d;
         /**
-         * The fourth state; can be any long. If this has just been set to some value, then the next call to
-         * {@link #nextLong()} will return that value as-is. Later calls will be more random.
+         * The fourth state; can be any long except that the whole state must not all be 0.
+         * If all other states are 0, and this would be set to 0,
+         * then this is instead set to 0xFFFFFFFFFFFFFFFFUL.
          */
-        public ulong stateD { get; set; }
+        public ulong stateD
+        {
+            get => _d;
+            set => _d = (stateA | stateB | stateC | value) == 0UL ? 0xFFFFFFFFFFFFFFFFUL : value;
+        }
+
 
         /**
-         * Creates a new FourWheelRandom with a random state.
+         * Creates a new Xoshiro256StarStarRandom with a random state.
          */
-        public FourWheelRandom()
+        public Xoshiro256StarStarRandom()
         {
             stateA = MakeSeed();
             stateB = MakeSeed();
@@ -43,24 +52,24 @@ namespace ShaiRandom
         }
 
         /**
-         * Creates a new FourWheelRandom with the given seed; all {@code long} values are permitted.
+         * Creates a new Xoshiro256StarStarRandom with the given seed; all {@code long} values are permitted.
          * The seed will be passed to {@link #setSeed(long)} to attempt to adequately distribute the seed randomly.
          * @param seed any {@code long} value
          */
-        public FourWheelRandom(ulong seed)
+        public Xoshiro256StarStarRandom(ulong seed)
         {
             Seed(seed);
         }
 
         /**
-         * Creates a new FourWheelRandom with the given four states; all {@code long} values are permitted.
+         * Creates a new Xoshiro256StarStarRandom with the given four states; all {@code long} values are permitted.
          * These states will be used verbatim.
          * @param stateA any {@code long} value
          * @param stateB any {@code long} value
          * @param stateC any {@code long} value
          * @param stateD any {@code long} value
          */
-        public FourWheelRandom(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
+        public Xoshiro256StarStarRandom(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
             this.stateA = stateA;
             this.stateB = stateB;
@@ -85,9 +94,9 @@ namespace ShaiRandom
         /// </summary>
         public override bool SupportsSkip => false;
         /// <summary>
-        /// This supports <see cref="PreviousUlong()"/>.
+        /// This does not support <see cref="PreviousUlong()"/>.
         /// </summary>
-        public override bool SupportsPrevious => true;
+        public override bool SupportsPrevious => false;
         /**
          * Gets the state determined by {@code selection}, as-is. The value for selection should be
          * between 0 and 3, inclusive; if it is any other value this gets state D as if 3 was given.
@@ -138,7 +147,7 @@ namespace ShaiRandom
         /**
          * This initializes all 4 states of the generator to random values based on the given seed.
          * (2 to the 64) possible initial generator states can be produced here, all with a different
-         * first value returned by {@link #nextLong()} (because {@code stateD} is guaranteed to be
+         * first value returned by {@link #nextLong()} (because {@code stateB} is guaranteed to be
          * different for every different {@code seed}).
          * @param seed the initial seed; may be any long
          */
@@ -167,7 +176,7 @@ namespace ShaiRandom
             x *= 0x3C79AC492BA7B653L;
             x ^= x >> 33;
             x *= 0x1C69B3F74AC4AE35L;
-            stateD = x ^ x >> 27;
+            _d = x ^ x >> 27;
         }
 
         /**
@@ -175,12 +184,12 @@ namespace ShaiRandom
          * This is the same as calling {@link #setStateA(long)}, {@link #setStateB(long)},
          * {@link #setStateC(long)}, and {@link #setStateD(long)} as a group. You may want
          * to call {@link #nextLong()} a few times after setting the states like this, unless
-         * the value for stateD (in particular) is already adequately random; the first call
-         * to {@link #nextLong()}, if it is made immediately after calling this, will return {@code stateD} as-is.
+         * the value for stateB (in particular) is already adequately random. If all parameters
+         * are 0 here, this will assign 0xFFFFFFFFFFFFFFFFUL to stateD and 0 to the rest.
          * @param stateA the first state; can be any long
          * @param stateB the second state; can be any long
          * @param stateC the third state; can be any long
-         * @param stateD the fourth state; this will be returned as-is if the next call is to {@link #nextLong()}
+         * @param stateD the fourth state; can be any long
          */
         public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
@@ -192,31 +201,21 @@ namespace ShaiRandom
 
         public override ulong NextUlong()
         {
-            ulong fa = stateA;
-            ulong fb = stateB;
-            ulong fc = stateC;
-            ulong fd = stateD;
-            stateA = 0xD1342543DE82EF95L * fd;
-            stateB = fa + 0xC6BC279692B5C323L;
-            stateC = fb.RotateLeft(47) - fd;
-            stateD = fb ^ fc;
-            return fd;
+            ulong result = stateB * 5UL;
+            result.RotateLeftInPlace(7);
+            result *= 9UL;
+            ulong t = stateB << 17;
+            stateC ^= stateA;
+            _d ^= stateB;
+            stateB ^= stateC;
+            stateA ^= _d;
+            stateC ^= t;
+            _d.RotateLeftInPlace(45);
+            return result;
         }
 
-        public override ulong PreviousUlong()
-        {
-            ulong fa = stateA;
-            ulong fb = stateB;
-            ulong fc = stateC;
-            stateD = 0x572B5EE77A54E3BDUL * fa;
-            stateA = fb - 0xC6BC279692B5C323L;
-            stateB = (fc + stateD).RotateRight(47);
-            stateC = stateD ^ stateB;
-            return 0x572B5EE77A54E3BDUL * stateA;
-        }
-
-        public override ARandom Copy() => new FourWheelRandom(stateA, stateB, stateC, stateD);
-        public override string StringSerialize() => $"#FoWR`{stateA:X}~{stateB:X}~{stateC:X}~{stateD:X}`";
+        public override ARandom Copy() => new Xoshiro256StarStarRandom(stateA, stateB, stateC, stateD);
+        public override string StringSerialize() => $"#XSSR`{stateA:X}~{stateB:X}~{stateC:X}~{stateD:X}`";
         public override ARandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
@@ -227,11 +226,11 @@ namespace ShaiRandom
             return this;
         }
 
-        public override bool Equals(object? obj) => Equals(obj as FourWheelRandom);
-        public bool Equals(FourWheelRandom? other) => other != null && stateA == other.stateA && stateB == other.stateB && stateC == other.stateC && stateD == other.stateD;
-        public override int GetHashCode() => HashCode.Combine(stateA, stateB, stateC, stateD);
+        public override bool Equals(object? obj) => Equals(obj as Xoshiro256StarStarRandom);
+        public bool Equals(Xoshiro256StarStarRandom? other) => other != null && stateA == other.stateA && stateB == other.stateB && stateC == other.stateC && stateD == other.stateD;
+        public override int GetHashCode() => HashCode.Combine(stateA, stateB, stateC, _d);
 
-        public static bool operator ==(FourWheelRandom? left, FourWheelRandom? right) => EqualityComparer<FourWheelRandom>.Default.Equals(left, right);
-        public static bool operator !=(FourWheelRandom? left, FourWheelRandom? right) => !(left == right);
+        public static bool operator ==(Xoshiro256StarStarRandom? left, Xoshiro256StarStarRandom? right) => EqualityComparer<Xoshiro256StarStarRandom>.Default.Equals(left, right);
+        public static bool operator !=(Xoshiro256StarStarRandom? left, Xoshiro256StarStarRandom? right) => !(left == right);
     }
 }
