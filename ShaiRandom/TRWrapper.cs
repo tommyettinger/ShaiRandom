@@ -18,7 +18,7 @@ namespace ShaiRandom
 
         public TRWrapper(ulong seed) => Wrapped = new FourWheelRandom(seed);
 
-        public TRWrapper(ARandom wrapped) => Wrapped = wrapped.Copy();
+        public TRWrapper(ARandom wrapped) => Wrapped = wrapped;
 
         public override int StateCount => Wrapped.StateCount;
         public override bool SupportsReadAccess => Wrapped.SupportsReadAccess;
@@ -26,7 +26,7 @@ namespace ShaiRandom
         public override bool SupportsSkip => Wrapped.SupportsSkip;
         public override bool SupportsPrevious => Wrapped.SupportsPrevious;
 
-        public override ARandom Copy() => new TRWrapper(Wrapped);
+        public override ARandom Copy() => new TRWrapper(Wrapped.Copy());
         public override double NextDouble() => Wrapped.NextDouble();
         public override ulong NextUlong() => Wrapped.NextUlong();
         public override ulong SelectState(int selection) => Wrapped.SelectState(selection);
@@ -38,7 +38,7 @@ namespace ShaiRandom
         public override void SetState(params ulong[] states) => Wrapped.SetState(states);
         public override ulong Skip(ulong distance) => Wrapped.Skip(distance);
         public override ulong PreviousUlong() => Wrapped.PreviousUlong();
-        public override string StringSerialize() => "W"+ Wrapped.StringSerialize().Substring(1);
+        public override string StringSerialize() => "T"+ Wrapped.StringSerialize().Substring(1);
         public override ARandom StringDeserialize(string data)
         {
             Wrapped.StringDeserialize(data);
