@@ -67,6 +67,19 @@ namespace ShaiRandom
         }
 
         /**
+         * Creates a new StrangerRandom with the given stateA to be used to get values for stateA and stateB, plus the given
+         * stateC and stateD that will be used verbatim. For stateA, 0 is not permitted, but all other ulongs are.
+         * For stateC and stateD, all {@code long} values are permitted.
+         * @param stateA any {@code ulong} value
+         * @param stateC any {@code ulong} value
+         * @param stateD any {@code ulong} value
+         */
+        public StrangerRandom(ulong stateA, ulong stateC, ulong stateD)
+        {
+            SetState(stateA, stateC, stateD);
+        }
+
+        /**
          * Creates a new StrangerRandom with the given four states; 0 is not permitted for stateA or stateB, but
          * all states are otherwise used verbatim.
          * @param stateA any {@code long} value except 0
@@ -184,6 +197,13 @@ namespace ShaiRandom
             this.stateC = stateC;
             this.stateD = stateD;
         }
+        /// <summary>
+        /// Sets the A and B states in this using the giveb stateA, and sets states C and D to stateC and stateD verbatim.
+        /// This uses state A verbatim unless it is 0, and sets state B based on state A so it is very separated in its sequence.
+        /// </summary>
+        /// <param name="stateA">Can be any ulong except 0.</param>
+        /// <param name="stateC">Can be any ulong.</param>
+        /// <param name="stateD">Can be any ulong.</param>
         public override void SetState(ulong stateA, ulong stateC, ulong stateD)
         {
             this.stateA = stateA;

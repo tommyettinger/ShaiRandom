@@ -137,8 +137,10 @@ namespace ShaiRandom
 
         public static ARandom Deserialize(string data)
         {
-            if(data.StartsWith('W'))
-                return new TRWrapper(TAGS[data.Substring(1, 4)].StringDeserialize(data));
+            if (data.StartsWith('T'))
+                return new TRWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
+            if (data.StartsWith('R'))
+                return new ReversingWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
             return TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data);
         }
         /**

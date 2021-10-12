@@ -43,7 +43,17 @@ namespace ShaiRandom.UnitTests
             ARandom random2 = ARandom.Deserialize(data);
             Assert.Equal(random.NextUlong(), random2.NextUlong());
             Assert.Equal(random, random2);
-
+        }
+        [Fact]
+        public void StrangerSerDeserTest()
+        {
+            ARandom random = new StrangerRandom(0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL);
+            random.NextUlong();
+            string data = random.StringSerialize();
+            Assert.StartsWith("#StrR`", data);
+            ARandom random2 = ARandom.Deserialize(data);
+            Assert.Equal(random.NextUlong(), random2.NextUlong());
+            Assert.Equal(random, random2);
         }
     }
 }
