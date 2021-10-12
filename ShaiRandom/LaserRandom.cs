@@ -144,8 +144,8 @@ namespace ShaiRandom
          * Sets the state completely to the given two state variables.
          * This is the same as calling {@link #setStateA(long)} and {@link #setStateB(long)}
          * as a group.
-         * @param stateA the first state; this will be returned as-is if the next call is to {@link #nextLong()}
-         * @param stateB the second state; can be any long
+         * @param stateA the first state; can be any long
+         * @param stateB the second state; can be any odd-number long
          */
         public override void SetState(ulong stateA, ulong stateB)
         {
@@ -176,7 +176,7 @@ namespace ShaiRandom
         }
 
         public override ARandom Copy() => new LaserRandom(stateA, stateB);
-        public override string StringSerialize() => $"#TriR`{stateA:X}~{stateB:X}`";
+        public override string StringSerialize() => $"#LasR`{stateA:X}~{stateB:X}`";
         public override ARandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
