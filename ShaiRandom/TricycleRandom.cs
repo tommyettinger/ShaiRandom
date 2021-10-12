@@ -39,7 +39,7 @@ namespace ShaiRandom
 
         /**
          * Creates a new TricycleRandom with the given seed; all {@code long} values are permitted.
-         * The seed will be passed to {@link #setSeed(long)} to attempt to adequately distribute the seed randomly.
+         * The seed will be passed to {@link #Seed(long)} to attempt to adequately distribute the seed randomly.
          * @param seed any {@code long} value
          */
         public TricycleRandom(ulong seed)
@@ -48,7 +48,7 @@ namespace ShaiRandom
         }
 
         /**
-         * Creates a new TricycleRandom with the given four states; all {@code long} values are permitted.
+         * Creates a new TricycleRandom with the given three states; all {@code long} values are permitted.
          * These states will be used verbatim.
          * @param stateA any {@code long} value
          * @param stateB any {@code long} value
