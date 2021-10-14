@@ -1329,7 +1329,7 @@ namespace ShaiRandom
         /// <returns>A double from the normal distribution with the specified mean (default 0.0) and standard deviation (default 1.0).</returns>
         public double NextNormal(double mean = 0.0, double stdDev = 1.0)
         {
-            return Probit(NextInclusiveDouble());
+            return Probit(NextInclusiveDouble()) * stdDev + mean;
         }
 
         /// <summary>
