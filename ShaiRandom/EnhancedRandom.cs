@@ -570,6 +570,34 @@ namespace ShaiRandom
          * @return a float between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
          */
         float NextExclusiveFloat(float innerBound, float outerBound);
+
+        /// <summary>
+        /// Gets a normally-distributed (Gaussian) double, with a the specified mean (default 0.0) and standard deviation (default 1.0).
+        /// </summary>
+        /// <returns>A double from the normal distribution with the specified mean (default 0.0) and standard deviation (default 1.0).</returns>
+        double NextNormal(double mean = 0.0, double stdDev = 1.0);
+        /// <summary>
+        /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextUlong()
+        /// as if called at that step. The distance can be negative if a long is cast to a ulong, which jumps backwards if the period of the generator is 2 to the 64.
+        /// </summary>
+        /// <param name="distance">How many steps to jump forward</param>
+        /// <returns>The result of what NextUlong() would return at the now-current jumped state.</returns>
+        ulong Skip(ulong distance);
+
+        /// <summary>
+        /// (Optional) If implemented, jumps the generator back to the previous state and returns what NextUlong() would have produced at that state.
+        /// </summary>
+        /// <returns>The result of what NextUlong() would return at the previous state.</returns>
+        ulong PreviousUlong();
+
+        /// <summary>
+        /// Sets each state in this IRandom to the corresponding state in the other IRandom.
+        /// This generally only works correctly if both objects have the same class, but may also function correctly if this, other, or both are wrappers
+        /// around the same type of IRandom.
+        /// </summary>
+        /// <param name="other">Another IRandom that almost always should have the same class as this one, or wrap an IRandom with the same class.</param>
+        void SetWith(IRandom other);
+
     }
 
 
@@ -1519,6 +1547,7 @@ namespace ShaiRandom
         /// </summary>
         /// <remarks>
         /// The default implementation calls Skip() with the equivalent of (ulong)(-1L) . If Skip() is not implemented, this throws a NotSupportedException.
+        /// Be aware that if Skip() has a non-constant-time implementation, the default here will generally take the most time possible for that method.
         /// </remarks>
         /// <returns>The result of what NextUlong() would return at the previous state.</returns>
         public virtual ulong PreviousUlong()
@@ -1537,7 +1566,7 @@ namespace ShaiRandom
         /// This generally only works correctly if both objects have the same class.
         /// </summary>
         /// <param name="other">Another IRandom that almost always should have the same class as this one.</param>
-        public void SetWith(ARandom other)
+        public void SetWith(IRandom other)
         {
             int myCount = StateCount, otherCount = other.StateCount;
             int i = 0;
@@ -1561,7 +1590,7 @@ namespace ShaiRandom
  * @param right another EnhancedRandom to compare for equality
  * @return true if the two EnhancedRandom objects have the same class and state, or false otherwise
  */
-        public static bool AreEqual(ARandom left, ARandom right)
+        public static bool AreEqual(IRandom left, IRandom right)
         {
             if (left == right)
                 return true;
