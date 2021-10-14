@@ -40,7 +40,7 @@ namespace ShaiRandom.UnitTests
             random.NextUlong();
             string data = random.StringSerialize();
             Assert.StartsWith("#FoWR`", data);
-            ARandom random2 = ARandom.Deserialize(data);
+            IRandom random2 = ARandom.Deserialize(data);
             Assert.Equal(random.NextUlong(), random2.NextUlong());
             Assert.Equal(random, random2);
         }
@@ -51,7 +51,7 @@ namespace ShaiRandom.UnitTests
             random.NextUlong();
             string data = random.StringSerialize();
             Assert.StartsWith("#StrR`", data);
-            ARandom random2 = ARandom.Deserialize(data);
+            IRandom random2 = ARandom.Deserialize(data);
             Assert.Equal(random.NextUlong(), random2.NextUlong());
             Assert.Equal(random, random2);
         }

@@ -33,8 +33,67 @@ namespace ShaiRandom
         /// <param name="amt">How many bits to rotate.</param>
         public static void RotateRightInPlace(ref this ulong ul, int amt) => ul = (ul >> amt) | (ul << 64 - amt);
     }
+
+    public interface IRandom
+    {
+        void Seed(ulong seed);
+        /// <summary>
+        /// Gets the number of possible state variables that can be selected with
+        /// <see cref="SelectState(int)"/> or <see cref="SetSelectedState(int, ulong)"/>,
+        /// even if those methods are not publicly accessible. An implementation that has only
+        /// one ulong or uint state, like <see cref="DistinctRandom"/>, should produce 1.
+        /// An implementation that has two uint or ulong states should produce 2, etc.
+        /// This is always a non-negative number; though discouraged, it is allowed to be 0 for
+        /// generators that attempt to conceal their state.
+        /// </summary>
+        int StateCount { get; }
+
+        /// <summary>
+        /// This should be true if the implementation supports <see cref="SelectState(int)"/>, or false if that method is unsupported.
+        /// </summary>
+        bool SupportsReadAccess { get; }
+
+        /// <summary>
+        /// This should be true if the implementation supports <see cref="SetSelectedState(int, ulong)"/>, or false if that method is unsupported.
+        /// </summary>
+        bool SupportsWriteAccess { get; }
+
+        /// <summary>
+        /// This should be true if the implementation supports <see cref="Skip(ulong)"/>, or false if that method is unsupported.
+        /// </summary>
+        bool SupportsSkip { get; }
+
+        /// <summary>
+        /// This should be true if the implementation supports <see cref="PreviousUlong"/>, or false if that method is unsupported.
+        /// </summary>
+        bool SupportsPrevious { get; }
+
+        /// <summary>
+        /// Returns a full copy (deep, if necessary) of this IRandom.
+        /// </summary>
+        /// <returns>A copy of this IRandom.</returns>
+        IRandom Copy();
+
+        /// <summary>
+        /// Produces a string that encodes the type and full state of this generator.
+        /// </summary>
+        /// <returns>An encoded string that stores the type and full state of this generator.</returns>
+        string StringSerialize();
+
+        /// <summary>
+        /// Given a string produced by <see cref="StringSerialize"/>, if the specified type is compatible,
+        /// then this method sets the state of this IRandom to the specified stored state.
+        /// </summary>
+        /// <param name="data">A string produced by StringSerialize.</param>
+        /// <returns>This ARandom, after modifications.</returns>
+        IRandom StringDeserialize(string data);
+
+        ulong SelectState(int selection);
+        void SetSelectedState(int selection, ulong value);
+    }
+
     [Serializable]
-    public abstract class ARandom
+    public abstract class ARandom : IRandom
 
     {
         private static readonly float FLOAT_ADJUST = MathF.Pow(2f, -24f);
@@ -74,17 +133,15 @@ namespace ShaiRandom
          * @param seed the initial seed
          */
         public abstract void Seed(ulong seed);
-
-        /**
-         * Gets the number of possible state variables that can be selected with
-         * {@link #getSelectedState(int)} or {@link #SelectState(int, ulong)}.
-         * This must be implemented. An implementation that has only one {@code ulong}
-         * state, like a SplitMix64 generator, should return {@code 1}. A
-         * generator that permits setting two different {@code ulong} values, like
-         * {@link LaserRandom}, should return {@code 2}. Much larger values are
-         * possible for types like the Mersenne Twister or some CMWC generators.
-         * @return the non-negative number of selections possible for state variables
-         */
+        /// <summary>
+        /// Gets the number of possible state variables that can be selected with
+        /// <see cref="SelectState(int)"/> or <see cref="SetSelectedState(int, ulong)"/>,
+        /// even if those methods are not publicly accessible. An implementation that has only
+        /// one ulong or uint state, like <see cref="DistinctRandom"/>, should produce 1.
+        /// An implementation that has two uint or ulong states should produce 2, etc.
+        /// This is always a non-negative number; though discouraged, it is allowed to be 0 for
+        /// generators that attempt to conceal their state.
+        /// </summary>
         public abstract int StateCount { get; }
 
         /// <summary>
@@ -107,7 +164,7 @@ namespace ShaiRandom
         /// </summary>
         public abstract bool SupportsPrevious { get; }
 
-        private static Dictionary<string, ARandom> TAGS = new Dictionary<string, ARandom>();
+        private static Dictionary<string, IRandom> TAGS = new Dictionary<string, IRandom>();
 
         /// <summary>
         /// Registers an instance of a subclass of ARandom by a four-character string tag.
@@ -115,7 +172,7 @@ namespace ShaiRandom
         /// <param name="tag">The four-character string that will identify a type.</param>
         /// <param name="instance">An instance of a subclass of ARandom, which will be copied as
         /// needed; its value does not matter, as long as it is non-null.</param>
-        protected static void RegisterTag(string tag, ARandom instance)
+        protected static void RegisterTag(string tag, IRandom instance)
         {
             if(tag.Length == 4)
                 TAGS.Add(tag, instance);
@@ -133,9 +190,9 @@ namespace ShaiRandom
         /// </summary>
         /// <param name="data">A string produced by StringSerialize.</param>
         /// <returns>This ARandom, after modifications.</returns>
-        public abstract ARandom StringDeserialize(string data);
+        public abstract IRandom StringDeserialize(string data);
 
-        public static ARandom Deserialize(string data)
+        public static IRandom Deserialize(string data)
         {
             if (data.StartsWith('T'))
                 return new TRWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
@@ -144,7 +201,7 @@ namespace ShaiRandom
             return TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data);
         }
         /**
-         * Gets a selected state value from this EnhancedRandom. The number of possible selections
+         * Gets a selected state value from this IRandom. The number of possible selections
          * is up to the implementing class, and is accessible via {@link #StateCount}, but
          * negative values for {@code selection} are typically not tolerated. This should return
          * the exact value of the selected state, assuming it is implemented. The default
@@ -1043,16 +1100,16 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns a full copy (deep, if necessary) of this IEnhancedRandom.
+        /// Returns a full copy (deep, if necessary) of this IRandom.
         /// </summary>
-        /// <returns>A copy of this IEnhancedRandom.</returns>
-        public abstract ARandom Copy();
+        /// <returns>A copy of this IRandom.</returns>
+        public abstract IRandom Copy();
 
         /// <summary>
-        /// Sets each state in this IEnhancedRandom to the corresponding state in the other IEnhancedRandom.
+        /// Sets each state in this IRandom to the corresponding state in the other IRandom.
         /// This generally only works correctly if both objects have the same class.
         /// </summary>
-        /// <param name="other">Another IEnhancedRandom that almost always should have the same class as this one.</param>
+        /// <param name="other">Another IRandom that almost always should have the same class as this one.</param>
         public void SetWith(ARandom other)
         {
             int myCount = StateCount, otherCount = other.StateCount;

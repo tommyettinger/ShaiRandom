@@ -16,7 +16,7 @@ namespace ShaiRandom
     [Serializable]
     public class ReversingWrapper : ARandom
     {
-        public ARandom Wrapped { get; set; }
+        public IRandom Wrapped { get; set; }
 
         public ReversingWrapper()
         {
@@ -28,7 +28,7 @@ namespace ShaiRandom
             Wrapped = new FourWheelRandom(seed);
         }
 
-        public ReversingWrapper(ARandom wrapping)
+        public ReversingWrapper(IRandom wrapping)
         {
             if (!wrapping.SupportsPrevious)
                 throw new NotSupportedException($"The ARandom to wrap must support PreviousUlong(), and {nameof(wrapping)} does not.");
@@ -45,12 +45,12 @@ namespace ShaiRandom
 
         public override bool SupportsPrevious => Wrapped.SupportsPrevious;
 
-        public override ARandom Copy() => new ReversingWrapper(Wrapped.Copy());
+        public override IRandom Copy() => new ReversingWrapper(Wrapped.Copy());
         public override ulong NextUlong() => Wrapped.PreviousUlong();
 
         public override void Seed(ulong seed) => Wrapped.Seed(seed);
         public override string StringSerialize() => "R" + Wrapped.StringSerialize().Substring(1);
-        public override ARandom StringDeserialize(string data)
+        public override IRandom StringDeserialize(string data)
         {
             Wrapped.StringDeserialize(data);
             return this;
