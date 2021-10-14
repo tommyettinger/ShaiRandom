@@ -90,7 +90,265 @@ namespace ShaiRandom
 
         ulong SelectState(int selection);
         void SetSelectedState(int selection, ulong value);
+        void SetState(ulong state);
+
+        /**
+         * Sets each state variable to either {@code stateA} or {@code stateB}, alternating.
+         * This uses {@link #SetSelectedState(int, ulong)} to set the values. If there is one
+         * state variable ({@link #StateCount} is 1), then this only sets that state
+         * variable to stateA. If there are two state variables, the first is set to stateA,
+         * and the second to stateB. If there are more, it reuses stateA, then stateB, then
+         * stateA, and so on until all variables are set.
+         * @param stateA the ulong value to use for states at index 0, 2, 4, 6...
+         * @param stateB the ulong value to use for states at index 1, 3, 5, 7...
+         */
+        void SetState(ulong stateA, ulong stateB);
+
+        /**
+         * Sets each state variable to {@code stateA}, {@code stateB}, or {@code stateC},
+         * alternating. This uses {@link #SetSelectedState(int, ulong)} to set the values.
+         * If there is one state variable ({@link #StateCount} is 1), then this only
+         * sets that state variable to stateA. If there are two state variables, the first
+         * is set to stateA, and the second to stateB. With three state variables, the
+         * first is set to stateA, the second to stateB, and the third to stateC. If there
+         * are more, it reuses stateA, then stateB, then stateC, then stateA, and so on
+         * until all variables are set.
+         * @param stateA the ulong value to use for states at index 0, 3, 6, 9...
+         * @param stateB the ulong value to use for states at index 1, 4, 7, 10...
+         * @param stateC the ulong value to use for states at index 2, 5, 8, 11...
+         */
+        void SetState(ulong stateA, ulong stateB, ulong stateC);
+
+        /**
+         * Sets each state variable to {@code stateA}, {@code stateB}, {@code stateC}, or
+         * {@code stateD}, alternating. This uses {@link #SetSelectedState(int, ulong)} to
+         * set the values. If there is one state variable ({@link #StateCount} is 1),
+         * then this only sets that state variable to stateA. If there are two state
+         * variables, the first is set to stateA, and the second to stateB. With three
+         * state variables, the first is set to stateA, the second to stateB, and the third
+         * to stateC. With four state variables, the first is set to stateA, the second to
+         * stateB, the third to stateC, and the fourth to stateD. If there are more, it
+         * reuses stateA, then stateB, then stateC, then stateD, then stateA, and so on
+         * until all variables are set.
+         * @param stateA the ulong value to use for states at index 0, 4, 8, 12...
+         * @param stateB the ulong value to use for states at index 1, 5, 9, 13...
+         * @param stateC the ulong value to use for states at index 2, 6, 10, 14...
+         * @param stateD the ulong value to use for states at index 3, 7, 11, 15...
+         */
+        void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD);
+
+        /**
+         * Sets all state variables to alternating values chosen from {@code states}. If states is empty,
+         * then this does nothing, and leaves the current generator unchanged. This works for
+         * generators with any {@link #StateCount}, but may allocate an array if states is
+         * used as a varargs (you can pass an existing array without needing to allocate). This
+         * uses {@link #SetSelectedState(int, ulong)} to change the states.
+         * @param states an array or varargs of ulong values to use as states
+         */
+        void SetState(params ulong[] states);
+        /// <summary>
+        /// Can return any ulong.
+        /// </summary>
+        /// <returns>A random ulong, which can have any ulong value.</returns>
+        ulong NextUlong();
+
+        /// <summary>
+        /// Can return any long, positive or negative.
+        /// If you specifically want a non-negative long, you can use <code>(long)(NextUlong() >> 1)</code>,
+        /// which can return any long that is not negative.
+        /// </summary>
+        /// <returns>A random long, which may be positive or negative, and can have any long value.</returns>
+        long NextLong();
+
+        /**
+         * Returns a pseudorandom, uniformly distributed {@code long} value
+         * between 0 (inclusive) and the specified value (exclusive), drawn from
+         * this random number generator's sequence.  The general contract of
+         * {@code nextLong} is that one {@code long} value in the specified range
+         * is pseudorandomly generated and returned.  All {@code bound} possible
+         * {@code long} values are produced with (approximately) equal
+         * probability, though there may be a small amount of bias depending on the
+         * implementation and the bound.
+         *
+         * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
+         * @return the next pseudorandom, uniformly distributed {@code long}
+         * value between zero (inclusive) and {@code bound} (exclusive)
+         * from this random number generator's sequence
+         */
+        ulong NextUlong(ulong bound);
+
+        /**
+         * Returns a pseudorandom, uniformly distributed {@code long} value between an
+         * inner bound of 0 (inclusive) and the specified {@code outerBound} (exclusive).
+         * This is meant for cases where the outer bound may be negative, especially if
+         * the bound is unknown or may be user-specified. A negative outer bound is used
+         * as the lower bound; a positive outer bound is used as the upper bound. An outer
+         * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
+         * for outer bound 0).
+         *
+         * @param outerBound the outer exclusive bound; may be any long value, allowing negative
+         * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
+         */
+        long NextLong(long outerBound);
+
+        /**
+         * Returns a pseudorandom, uniformly distributed {@code long} value between the
+         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
+         * (exclusive). If {@code outerBound} is less than or equal to {@code innerBound},
+         * this always returns {@code innerBound}.
+         *
+         * @param inner the inclusive inner bound; may be any long, allowing negative
+         * @param outer the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
+         * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
+         */
+        ulong NextUlong(ulong inner, ulong outer);
+
+        /**
+         * Returns a pseudorandom, uniformly distributed {@code long} value between the
+         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
+         * (exclusive). This is meant for cases where either bound may be negative,
+         * especially if the bounds are unknown or may be user-specified.
+         *
+         * @param inner the inclusive inner bound; may be any long, allowing negative
+         * @param outer the exclusive outer bound; may be any long, allowing negative
+         * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
+         */
+        long NextLong(long inner, long outer);
+
+        /**
+         * Generates the next pseudorandom number with a specific maximum size in bits (not a max number).
+         * If you want to get a random number in a range, you should usually use {@link #nextInt(int)} instead.
+         * <p>The general contract of {@code next} is that it returns an
+         * {@code uint} value and if the argument {@code bits} is between
+         * {@code 1} and {@code 32} (inclusive), then that many low-order
+         * bits of the returned value will be (approximately) independently
+         * chosen bit values, each of which is (approximately) equally
+         * likely to be {@code 0} or {@code 1}.
+         * <p>
+         * Note that you can give this values for {@code bits} that are outside its expected range of 1 to 32,
+         * but the value used, as long as bits is positive, will effectively be {@code bits % 32}. As stated
+         * before, a value of 0 for bits is the same as a value of 32.<p>
+         *
+         * @param bits the amount of random bits to request, from 1 to 32
+         * @return the next pseudorandom value from this random number
+         * generator's sequence
+         */
+        uint NextBits(int bits);
+
+        /**
+         * Generates random bytes and places them into a user-supplied
+         * byte array.  The number of random bytes produced is equal to
+         * the length of the byte array.
+         *
+         * @param bytes the byte array to fill with random bytes
+         * @throws NullPointerException if the byte array is null
+         */
+        void NextBytes(byte[] bytes);
+
+        /**
+         * Returns the next pseudorandom, uniformly distributed {@code int}
+         * value from this random number generator's sequence. The general
+         * contract of {@code nextInt} is that one {@code int} value is
+         * pseudorandomly generated and returned. All 2<sup>32</sup> possible
+         * {@code int} values are produced with (approximately) equal probability.
+         *
+         * @return the next pseudorandom, uniformly distributed {@code int}
+         * value from this random number generator's sequence
+         */
+        int NextInt();
+
+        /// <summary>
+        /// Gets a random uint by using the low 32 bits of NextUlong(); this can return any uint.
+        /// </summary>
+        /// <returns>Any random uint.</returns>
+        uint NextUint();
+
+        /**
+         * Returns a pseudorandom, uniformly distributed {@code int} value
+         * between 0 (inclusive) and the specified value (exclusive), drawn from
+         * this random number generator's sequence.  The general contract of
+         * {@code nextInt} is that one {@code int} value in the specified range
+         * is pseudorandomly generated and returned.  All {@code bound} possible
+         * {@code int} values are produced with (approximately) equal
+         * probability.
+         * <br>
+         * It should be mentioned that the technique this uses has some bias, depending
+         * on {@code bound}, but it typically isn't measurable without specifically looking
+         * for it. Using the method this does allows this method to always advance the state
+         * by one step, instead of a varying and unpredictable amount with the more typical
+         * ways of rejection-sampling random numbers and only using numbers that can produce
+         * an int within the bound without bias.
+         * See <a href="https://www.pcg-random.org/posts/bounded-rands.html">M.E. O'Neill's
+         * blog about random numbers</a> for discussion of alternative, unbiased methods.
+         *
+         * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
+         * @return the next pseudorandom, uniformly distributed {@code int}
+         * value between zero (inclusive) and {@code bound} (exclusive)
+         * from this random number generator's sequence
+         */
+        uint NextUint(uint bound);
+
+        /**
+         * Returns a pseudorandom, uniformly distributed {@code int} value between an
+         * inner bound of 0 (inclusive) and the specified {@code outerBound} (exclusive).
+         * This is meant for cases where the outer bound may be negative, especially if
+         * the bound is unknown or may be user-specified. A negative outer bound is used
+         * as the lower bound; a positive outer bound is used as the upper bound. An outer
+         * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
+         * for outer bound 0).
+         *
+         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+         * @param outerBound the outer exclusive bound; may be any int value, allowing negative
+         * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
+         */
+        int NextInt(int outerBound);
+
+        /**
+         * Returns a pseudorandom, uniformly distributed {@code int} value between the
+         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
+         * (exclusive). If {@code outerBound} is less than or equal to {@code innerBound},
+         * this always returns {@code innerBound}. This is significantly slower than
+         * {@link #nextInt(int)} or {@link #nextSignedInt(int)},
+         * because this handles even ranges that go from large negative numbers to large
+         * positive numbers, and since that would be larger than the largest possible int,
+         * this has to use {@link #nextLong(long)}.
+         *
+         * <br> For any case where outerBound might be valid but less than innerBound, you
+         * can use {@link #nextSignedInt(int, int)}. If outerBound is less than innerBound
+         * here, this simply returns innerBound.
+         *
+         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+         * @param innerBound the inclusive inner bound; may be any int, allowing negative
+         * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
+         * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
+         */
+        uint NextUint(uint innerBound, uint outerBound);
+        /**
+         * Returns a pseudorandom, uniformly distributed {@code int} value between the
+         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
+         * (exclusive). This is meant for cases where either bound may be negative,
+         * especially if the bounds are unknown or may be user-specified. It is slightly
+         * slower than {@link #nextInt(int, int)}, and significantly slower than
+         * {@link #nextInt(int)} or {@link #nextSignedInt(int)}. This last part is
+         * because this handles even ranges that go from large negative numbers to large
+         * positive numbers, and since that range is larger than the largest possible int,
+         * this has to use {@link #nextSignedLong(long)}.
+         *
+         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+         * @param innerBound the inclusive inner bound; may be any int, allowing negative
+         * @param outerBound the exclusive outer bound; may be any int, allowing negative
+         * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
+         */
+        int NextInt(int innerBound, int outerBound);
     }
+
+
+
+
+
+
+
+
 
     [Serializable]
     public abstract class ARandom : IRandom
@@ -464,8 +722,6 @@ namespace ShaiRandom
          * @param outer the exclusive outer bound; may be any long, allowing negative
          * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
          */
-
-        //TODO: I'm not sure if this works as expected. Can't run unit tests without some implementation.
         public long NextLong(long inner, long outer)
         {
             ulong rand = NextUlong();
