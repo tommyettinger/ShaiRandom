@@ -50,7 +50,7 @@ namespace ShaiRandom
         /// </summary>
         public override bool SupportsWriteAccess => true;
         /// <summary>
-        /// This supports <see cref="ARandom.Skip(ulong)"/>.
+        /// This supports <see cref="IRandom.Skip(ulong)"/>.
         /// </summary>
         public override bool SupportsSkip => true;
         /// <summary>
@@ -127,9 +127,9 @@ namespace ShaiRandom
             return x ^ x >> 27;
         }
 
-        public override ARandom Copy() => new DistinctRandom(state);
+        public override IRandom Copy() => new DistinctRandom(state);
         public override string StringSerialize() => $"#DisR`{state:X}`";
-        public override ARandom StringDeserialize(string data)
+        public override IRandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
             state = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);

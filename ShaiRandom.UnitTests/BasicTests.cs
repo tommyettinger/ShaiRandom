@@ -36,7 +36,7 @@ namespace ShaiRandom.UnitTests
         [Fact]
         public void FourWheelSerDeserTest()
         {
-            ARandom random = new FourWheelRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL);
+            FourWheelRandom random = new FourWheelRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL);
             random.NextUlong();
             string data = random.StringSerialize();
             Assert.StartsWith("#FoWR`", data);
@@ -47,7 +47,7 @@ namespace ShaiRandom.UnitTests
         [Fact]
         public void StrangerSerDeserTest()
         {
-            ARandom random = new StrangerRandom(0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL);
+            StrangerRandom random = new StrangerRandom(0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL);
             random.NextUlong();
             string data = random.StringSerialize();
             Assert.StartsWith("#StrR`", data);

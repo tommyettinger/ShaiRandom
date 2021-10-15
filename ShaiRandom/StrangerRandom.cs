@@ -108,11 +108,11 @@ namespace ShaiRandom
         /// </summary>
         public override bool SupportsWriteAccess => true;
         /// <summary>
-        /// This does not support <see cref="ARandom.Skip(ulong)"/>.
+        /// This does not support <see cref="IRandom.Skip(ulong)"/>.
         /// </summary>
         public override bool SupportsSkip => false;
         /// <summary>
-        /// This does not support <see cref="PreviousUlong()"/>.
+        /// This does not support <see cref="IRandom.PreviousUlong()"/>.
         /// </summary>
         public override bool SupportsPrevious => false;
         /**
@@ -226,9 +226,9 @@ namespace ShaiRandom
             return fc;
         }
 
-        public override ARandom Copy() => new StrangerRandom(stateA, stateB, stateC, stateD);
+        public override IRandom Copy() => new StrangerRandom(stateA, stateB, stateC, stateD);
         public override string StringSerialize() => $"#StrR`{stateA:X}~{stateB:X}~{stateC:X}~{stateD:X}`";
-        public override ARandom StringDeserialize(string data)
+        public override IRandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
             stateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
