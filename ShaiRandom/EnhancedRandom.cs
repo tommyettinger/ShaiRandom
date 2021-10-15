@@ -647,6 +647,95 @@ namespace ShaiRandom
          */
         float NextTriangular(float min, float max, float mode);
 
+        /**
+         * Returns the minimum result of {@code trials} calls to {@link #NextInt(int, int)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the lower the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        int MinIntOf(int innerBound, int outerBound, int trials);
+
+        /**
+         * Returns the maximum result of {@code trials} calls to {@link #NextInt(int, int)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the higher the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        int MaxIntOf(int innerBound, int outerBound, int trials);
+
+        /**
+         * Returns the minimum result of {@code trials} calls to {@link #NextLong(long, long)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the lower the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        long MinLongOf(long innerBound, long outerBound, int trials);
+
+        /**
+         * Returns the maximum result of {@code trials} calls to {@link #NextLong(long, long)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the higher the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        long MaxLongOf(long innerBound, long outerBound, int trials);
+
+        /**
+         * Returns the minimum result of {@code trials} calls to {@link #NextDouble(double, double)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the lower the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        double MinDoubleOf(double innerBound, double outerBound, int trials);
+
+        /**
+         * Returns the maximum result of {@code trials} calls to {@link #NextDouble(double, double)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the higher the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        double MaxDoubleOf(double innerBound, double outerBound, int trials);
+
+        /**
+         * Returns the minimum result of {@code trials} calls to {@link #NextFloat(float, float)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the lower the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        float MinFloatOf(float innerBound, float outerBound, int trials);
+
+        /**
+         * Returns the maximum result of {@code trials} calls to {@link #NextFloat(float, float)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the higher the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        float MaxFloatOf(float innerBound, float outerBound, int trials);
+
+
     }
 
 
@@ -1731,14 +1820,14 @@ namespace ShaiRandom
         }
 
         /**
- * Returns the minimum result of {@code trials} calls to {@link #NextInt(int, int)} using the given {@code innerBound}
- * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
- * The higher trials is, the lower the average value this returns.
- * @param innerBound the inner inclusive bound; may be positive or negative
- * @param outerBound the outer exclusive bound; may be positive or negative
- * @param trials how many random numbers to acquire and compare
- * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
- */
+         * Returns the minimum result of {@code trials} calls to {@link #NextInt(int, int)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the lower the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
         public int MinIntOf(int innerBound, int outerBound, int trials)
         {
             int v = NextInt(innerBound, outerBound);
