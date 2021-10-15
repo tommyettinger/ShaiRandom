@@ -598,6 +598,55 @@ namespace ShaiRandom
         /// <param name="other">Another IRandom that almost always should have the same class as this one, or wrap an IRandom with the same class.</param>
         void SetWith(IRandom other);
 
+        /**
+         * Returns true if a random value between 0 and 1 is less than the specified value.
+         *
+         * @param chance a float between 0.0 and 1.0; higher values are more likely to result in true
+         * @return a bool selected with the given {@code chance} of being true
+         */
+        bool NextBool(float chance);
+
+        /**
+         * Returns -1 or 1, randomly.
+         *
+         * @return -1 or 1, selected with approximately equal likelihood
+         */
+        int NextSign();
+
+        /**
+         * Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
+         * more likely.
+         */
+        float NextTriangular();
+
+        /**
+         * Returns a triangularly distributed random number between {@code -max} (exclusive) and {@code max} (exclusive), where values
+         * around zero are more likely.
+         * @param max the upper limit
+         */
+        float NextTriangular(float max);
+
+        /**
+         * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where the
+         * {@code mode} argument defaults to the midpoint between the bounds, giving a symmetric distribution.
+         * <p>
+         * This method is equivalent of {@link #nextTriangular(float, float, float) NextTriangular(min, max, (min + max) * 0.5f)}
+         *
+         * @param min the lower limit
+         * @param max the upper limit
+         */
+        float NextTriangular(float min, float max);
+
+        /**
+         * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where values
+         * around {@code mode} are more likely.
+         *
+         * @param min  the lower limit
+         * @param max  the upper limit
+         * @param mode the point around which the values are more likely
+         */
+        float NextTriangular(float min, float max, float mode);
+
     }
 
 
