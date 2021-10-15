@@ -690,6 +690,49 @@ namespace ShaiRandom
          * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
          */
         long MaxLongOf(long innerBound, long outerBound, int trials);
+        /**
+         * Returns the minimum result of {@code trials} calls to {@link #NextUint(int, int)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the lower the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        uint MinUintOf(uint innerBound, uint outerBound, int trials);
+
+        /**
+         * Returns the maximum result of {@code trials} calls to {@link #NextUint(int, int)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the higher the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        uint MaxUintOf(uint innerBound, uint outerBound, int trials);
+
+        /**
+         * Returns the minimum result of {@code trials} calls to {@link #NextUlong(long, long)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the lower the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        ulong MinUlongOf(ulong innerBound, ulong outerBound, int trials);
+
+        /**
+         * Returns the maximum result of {@code trials} calls to {@link #NextUlong(long, long)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the higher the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        ulong MaxUlongOf(ulong innerBound, ulong outerBound, int trials);
 
         /**
          * Returns the minimum result of {@code trials} calls to {@link #NextDouble(double, double)} using the given {@code innerBound}
@@ -1939,6 +1982,82 @@ namespace ShaiRandom
             for (int i = 1; i < trials; i++)
             {
                 v = Math.Max(v, NextLong(innerBound, outerBound));
+            }
+            return v;
+        }
+
+        /**
+         * Returns the minimum result of {@code trials} calls to {@link #NextUint(int, int)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the lower the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        public uint MinUintOf(uint innerBound, uint outerBound, int trials)
+        {
+            uint v = NextUint(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Min(v, NextUint(innerBound, outerBound));
+            }
+            return v;
+        }
+
+        /**
+         * Returns the maximum result of {@code trials} calls to {@link #NextUint(int, int)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the higher the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        public uint MaxUintOf(uint innerBound, uint outerBound, int trials)
+        {
+            uint v = NextUint(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Max(v, NextUint(innerBound, outerBound));
+            }
+            return v;
+        }
+
+        /**
+         * Returns the minimum result of {@code trials} calls to {@link #NextUlong(long, long)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the lower the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        public ulong MinUlongOf(ulong innerBound, ulong outerBound, int trials)
+        {
+            ulong v = NextUlong(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Min(v, NextUlong(innerBound, outerBound));
+            }
+            return v;
+        }
+
+        /**
+         * Returns the maximum result of {@code trials} calls to {@link #NextUlong(long, long)} using the given {@code innerBound}
+         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
+         * The higher trials is, the higher the average value this returns.
+         * @param innerBound the inner inclusive bound; may be positive or negative
+         * @param outerBound the outer exclusive bound; may be positive or negative
+         * @param trials how many random numbers to acquire and compare
+         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
+         */
+        public ulong MaxUlongOf(ulong innerBound, ulong outerBound, int trials)
+        {
+            ulong v = NextUlong(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Max(v, NextUlong(innerBound, outerBound));
             }
             return v;
         }
