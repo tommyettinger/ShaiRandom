@@ -1627,7 +1627,7 @@ namespace ShaiRandom
         */
         public double NextExclusiveDouble()
         {
-            return ((NextUlong() >> 11) + 1L) * 1.1102230246251564E-16;
+            return ((NextUlong() >> 11) + 1UL) * 1.1102230246251564E-16;
         }
 
         /**
@@ -1657,20 +1657,16 @@ namespace ShaiRandom
 
         /**
          * Gets a random float between 0.0 and 1.0, exclusive at both ends. This can return float
-         * values between 5.9604645E-8 and 0.99999994, or 0x1.0p-24 and 0x1.fffffep-1 in hex notation.
-         * It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
-         * 1, respectively. Some usages may prefer {@link #nextExclusiveFloat()}, which is
-         * better-distributed if you consider the bit representation of the returned floats, tends to perform
-         * better, and can return floats that much closer to 0 than this can.
+         * values between 5.960464E-8 and 0.99999994, or 0x1.fffffep-25 and 0x1.fffffep-1 in hex notation.
+         * It cannot return 0 or 1.
          * <br>
-         * The default implementation simply uses {@link #nextInt(int)} to get a uniformly-chosen int between 1 and
-         * (2 to the 24) - 1, both inclusive, and multiplies it by (2 to the -24). Using larger values than (2 to the
-         * 24) would cause issues with the float math.
+         * The default implementation simply uses {@link #nextUint()} to get a uniformly-chosen uint, shifts
+         * to remove 9 bits, adds 1, and multiplies by a value just slightly smaller than what NextFloat() uses.
          * @return a random uniform float between 0 and 1 (both exclusive)
          */
         public float NextExclusiveFloat()
         {
-            return (NextUint(0xFFFFFFU) + 1) * FLOAT_ADJUST;
+            return ((NextUint() >> 9) + 1u) * 5.960464E-8f;
         }
 
         /**
@@ -1765,12 +1761,12 @@ namespace ShaiRandom
 
         /// <summary>
         /// Gets a normally-distributed (Gaussian) double, with a the specified mean (default 0.0) and standard deviation (default 1.0).
-        /// If the standard deviation is 1.0 and the mean is 0.0, then this can produce results between -38.5 and 38.5 (both extremely rarely).
+        /// If the standard deviation is 1.0 and the mean is 0.0, then this can produce results between -8.209536145151493 and 8.209536145151493 (both extremely rarely).
         /// </summary>
         /// <returns>A double from the normal distribution with the specified mean (default 0.0) and standard deviation (default 1.0).</returns>
         public double NextNormal(double mean = 0.0, double stdDev = 1.0)
         {
-            return Probit(NextInclusiveDouble()) * stdDev + mean;
+            return Probit(NextExclusiveDouble()) * stdDev + mean;
         }
 
         /// <summary>
