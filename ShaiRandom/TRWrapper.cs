@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Troschuetz.Random;
 
 namespace ShaiRandom
@@ -7,7 +8,7 @@ namespace ShaiRandom
     /// Wraps a ShaiRandom ARandom object so it can also be used as a Troschuetz.Random IGenerator.
     /// </summary>
     [System.Serializable]
-    public class TRWrapper : ARandom, IGenerator
+    public class TRWrapper : ARandom, IGenerator, IEquatable<TRWrapper?>
     {
         /// <summary>
         /// The wrapped ARandom, which must never be null.
@@ -65,5 +66,13 @@ namespace ShaiRandom
         bool IGenerator.Reset() => false;
         bool IGenerator.Reset(uint seed) => false;
         #endregion
+
+        public override bool Equals(object? obj) => Equals(obj as TRWrapper);
+        public bool Equals(TRWrapper? other) => other != null && EqualityComparer<IRandom>.Default.Equals(Wrapped, other.Wrapped);
+
+        public static bool operator ==(TRWrapper? left, TRWrapper? right) => EqualityComparer<TRWrapper>.Default.Equals(left, right);
+        public static bool operator !=(TRWrapper? left, TRWrapper? right) => !(left == right);
+
+
     }
 }

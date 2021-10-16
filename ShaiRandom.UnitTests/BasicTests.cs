@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Xunit;
+﻿using Xunit;
 namespace ShaiRandom.UnitTests
 {
     public class BasicTests
@@ -51,6 +49,17 @@ namespace ShaiRandom.UnitTests
             random.NextUlong();
             string data = random.StringSerialize();
             Assert.StartsWith("#StrR`", data);
+            IRandom random2 = ARandom.Deserialize(data);
+            Assert.Equal(random.NextUlong(), random2.NextUlong());
+            Assert.Equal(random, random2);
+        }
+        [Fact]
+        public void TRWrapperSerDeserTest()
+        {
+            TRWrapper random = new TRWrapper(new FourWheelRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL));
+            random.NextUlong();
+            string data = random.StringSerialize();
+            Assert.StartsWith("TFoWR`", data);
             IRandom random2 = ARandom.Deserialize(data);
             Assert.Equal(random.NextUlong(), random2.NextUlong());
             Assert.Equal(random, random2);
