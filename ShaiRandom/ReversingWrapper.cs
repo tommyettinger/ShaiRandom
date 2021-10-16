@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ShaiRandom
 {
@@ -14,7 +15,7 @@ namespace ShaiRandom
     /// calls, and this will even un-shuffle the array (restoring it to its order before the shuffle).
     /// </summary>
     [Serializable]
-    public class ReversingWrapper : ARandom
+    public class ReversingWrapper : ARandom, IEquatable<ReversingWrapper?>
     {
         public IRandom Wrapped { get; set; }
 
@@ -57,5 +58,10 @@ namespace ShaiRandom
         }
         public override ulong Skip(ulong distance) => Wrapped.Skip(0UL - distance);
         public override ulong PreviousUlong() => Wrapped.NextUlong();
+        public override bool Equals(object? obj) => Equals(obj as ReversingWrapper);
+        public bool Equals(ReversingWrapper? other) => other != null && EqualityComparer<IRandom>.Default.Equals(Wrapped, other.Wrapped);
+
+        public static bool operator ==(ReversingWrapper? left, ReversingWrapper? right) => EqualityComparer<ReversingWrapper>.Default.Equals(left, right);
+        public static bool operator !=(ReversingWrapper? left, ReversingWrapper? right) => !(left == right);
     }
 }
