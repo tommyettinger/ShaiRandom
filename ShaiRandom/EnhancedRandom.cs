@@ -507,15 +507,11 @@ namespace ShaiRandom
 
         /**
          * Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
-         * values between 1.1102230246251565E-16 and 0.9999999999999999, or 0x1.0p-53 and 0x1.fffffffffffffp-1 in hex
-         * notation. It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
-         * 1, respectively. Some usages may prefer {@link #nextExclusiveDouble()}, which is
-         * better-distributed if you consider the bit representation of the returned doubles, tends to perform
-         * better, and can return doubles that much closer to 0 than this can.
+         * values between 1.1102230246251564E-16 and 0.9999999999999999, or 0x1.fffffffffffffp-54 and 0x1.fffffffffffffp-1 in hex
+         * notation. It cannot return 0 or 1.
          * <br>
-         * The default implementation simply uses {@link #nextLong(long)} to get a uniformly-chosen long between 1 and
-         * (2 to the 53) - 1, both inclusive, and multiplies it by (2 to the -53). Using larger values than (2 to the
-         * 53) would cause issues with the double math.
+         * The default implementation simply uses {@link #nextLong()} to get a uniform long, shifts it to remove 11 bits, adds 1, and
+         * multiplies by a value just slightly less than what nextDouble() usually uses.
          * @return a random uniform double between 0 and 1 (both exclusive)
          */
         double NextExclusiveDouble();
@@ -1621,21 +1617,17 @@ namespace ShaiRandom
         }
 
         /**
-         * Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
-         * values between 1.1102230246251565E-16 and 0.9999999999999999, or 0x1.0p-53 and 0x1.fffffffffffffp-1 in hex
-         * notation. It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
-         * 1, respectively. Some usages may prefer {@link #nextExclusiveDouble()}, which is
-         * better-distributed if you consider the bit representation of the returned doubles, tends to perform
-         * better, and can return doubles that much closer to 0 than this can.
-         * <br>
-         * The default implementation simply uses {@link #nextLong(long)} to get a uniformly-chosen long between 1 and
-         * (2 to the 53) - 1, both inclusive, and multiplies it by (2 to the -53). Using larger values than (2 to the
-         * 53) would cause issues with the double math.
-         * @return a random uniform double between 0 and 1 (both exclusive)
-         */
+        * Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
+        * values between 1.1102230246251564E-16 and 0.9999999999999999, or 0x1.fffffffffffffp-54 and 0x1.fffffffffffffp-1 in hex
+        * notation. It cannot return 0 or 1.
+        * <br>
+        * The default implementation simply uses {@link #nextLong()} to get a uniform long, shifts it to remove 11 bits, adds 1, and
+        * multiplies by a value just slightly less than what nextDouble() usually uses.
+        * @return a random uniform double between 0 and 1 (both exclusive)
+        */
         public double NextExclusiveDouble()
         {
-            return (NextUlong(0x1FFFFFFFFFFFFFL) + 1L) * DOUBLE_ADJUST;
+            return ((NextUlong() >> 11) + 1L) * 1.1102230246251564E-16;
         }
 
         /**
