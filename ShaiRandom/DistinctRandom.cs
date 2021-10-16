@@ -10,9 +10,13 @@ namespace ShaiRandom
     [Serializable]
     public class DistinctRandom : ARandom, IEquatable<DistinctRandom?>
     {
+        /// <summary>
+        /// The identifying tag here is "DisR" .
+        /// </summary>
+        public override string Tag => "DisR";
         static DistinctRandom()
         {
-            RegisterTag("DisR", new DistinctRandom(1UL));
+            RegisterTag(new DistinctRandom(1UL));
         }
         /**
          * The first state; can be any ulong.
@@ -57,6 +61,7 @@ namespace ShaiRandom
         /// This supports <see cref="PreviousUlong()"/>.
         /// </summary>
         public override bool SupportsPrevious => true;
+
         /**
          * Gets the state, regardless of {@code selection}, as-is.
          * @param selection ignored

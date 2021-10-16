@@ -9,9 +9,14 @@ namespace ShaiRandom
     [Serializable]
     public class TricycleRandom : ARandom, IEquatable<TricycleRandom?>
     {
+        /// <summary>
+        /// The identifying tag here is "TriR" .
+        /// </summary>
+        public override string Tag => "TriR";
+
         static TricycleRandom()
         {
-            RegisterTag("TriR", new TricycleRandom(1UL, 1UL, 1UL));
+            RegisterTag(new TricycleRandom(1UL, 1UL, 1UL));
         }
         /**
          * The first state; can be any long. If this has just been set to some value, then the next call to

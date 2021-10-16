@@ -9,9 +9,14 @@ namespace ShaiRandom
     [Serializable]
     public class Xoshiro256StarStarRandom : ARandom, IEquatable<Xoshiro256StarStarRandom?>
     {
+        /// <summary>
+        /// The identifying tag here is "XSSR" .
+        /// </summary>
+        public override string Tag => "XSSR";
+
         static Xoshiro256StarStarRandom()
         {
-            RegisterTag("XSSR", new Xoshiro256StarStarRandom(1UL, 1UL, 1UL, 1UL));
+            RegisterTag(new Xoshiro256StarStarRandom(1UL, 1UL, 1UL, 1UL));
         }
         /**
          * The first state; can be any long except that the whole state must not all be 0.

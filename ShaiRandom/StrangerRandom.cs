@@ -9,9 +9,14 @@ namespace ShaiRandom
     [Serializable]
     public class StrangerRandom : ARandom, IEquatable<StrangerRandom?>
     {
+        /// <summary>
+        /// The identifying tag here is "StrR" .
+        /// </summary>
+        public override string Tag => "StrR";
+
         static StrangerRandom()
         {
-            RegisterTag("StrR", new StrangerRandom(1UL, 1UL, 1UL, 1UL));
+            RegisterTag(new StrangerRandom(1UL, 1UL, 1UL, 1UL));
         }
         private ulong _a, _b;
         /**

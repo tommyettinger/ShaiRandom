@@ -29,9 +29,14 @@ namespace ShaiRandom
     [Serializable]
     public class RomuTrioRandom : ARandom, IEquatable<RomuTrioRandom?>
     {
+        /// <summary>
+        /// The identifying tag here is "RTrR" .
+        /// </summary>
+        public override string Tag => "RTrR";
+
         static RomuTrioRandom()
         {
-            RegisterTag("RTrR", new RomuTrioRandom(1UL, 1UL, 1UL));
+            RegisterTag(new RomuTrioRandom(1UL, 1UL, 1UL));
         }
         /**
          * The first state; can be any long except that the whole state must not all be 0.

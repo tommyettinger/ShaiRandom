@@ -9,9 +9,14 @@ namespace ShaiRandom
     [Serializable]
     public class LaserRandom : ARandom, IEquatable<LaserRandom?>
     {
+        /// <summary>
+        /// The identifying tag here is "LasR" .
+        /// </summary>
+        public override string Tag => "LasR";
+
         static LaserRandom()
         {
-            RegisterTag("LasR", new LaserRandom(1UL, 1UL));
+            RegisterTag(new LaserRandom(1UL, 1UL));
         }
         /**
          * The first state; can be any ulong.

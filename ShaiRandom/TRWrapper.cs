@@ -11,6 +11,11 @@ namespace ShaiRandom
     public class TRWrapper : ARandom, IGenerator, IEquatable<TRWrapper?>
     {
         /// <summary>
+        /// The identifying tag here is "T" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
+        /// </summary>
+        public override string Tag => "T";
+
+        /// <summary>
         /// The wrapped ARandom, which must never be null.
         /// </summary>
         public IRandom Wrapped { get; set; }

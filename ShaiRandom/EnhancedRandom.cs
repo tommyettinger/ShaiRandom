@@ -76,6 +76,7 @@ namespace ShaiRandom
 
         /// <summary>
         /// Produces a string that encodes the type and full state of this generator.
+        /// This is an optional operation for classes that only implement IRandom; ARandom requires an implementation.
         /// </summary>
         /// <returns>An encoded string that stores the type and full state of this generator.</returns>
         string StringSerialize();
@@ -83,9 +84,10 @@ namespace ShaiRandom
         /// <summary>
         /// Given a string produced by <see cref="StringSerialize"/>, if the specified type is compatible,
         /// then this method sets the state of this IRandom to the specified stored state.
+        /// This is an optional operation for classes that only implement IRandom; ARandom requires an implementation.
         /// </summary>
         /// <param name="data">A string produced by StringSerialize.</param>
-        /// <returns>This ARandom, after modifications.</returns>
+        /// <returns>This IRandom, after modifications.</returns>
         IRandom StringDeserialize(string data);
 
         ulong SelectState(int selection);
@@ -909,18 +911,29 @@ namespace ShaiRandom
         /// </summary>
         public abstract bool SupportsPrevious { get; }
 
+        /// <summary>
+        /// The exactly-four-character string that will identify this ARandom for serialization purposes.
+        /// </summary>
+        public abstract string Tag { get; }
+
         private static Dictionary<string, IRandom> TAGS = new Dictionary<string, IRandom>();
 
         /// <summary>
-        /// Registers an instance of a subclass of ARandom by a four-character string tag.
+        /// Registers an instance of a subclass of ARandom by its four-character string <see cref="Tag"/>.
         /// </summary>
         /// <param name="tag">The four-character string that will identify a type.</param>
         /// <param name="instance">An instance of a subclass of ARandom, which will be copied as
         /// needed; its value does not matter, as long as it is non-null.</param>
-        protected static void RegisterTag(string tag, IRandom instance)
+        /// <returns>Returns true if the tag was successfully registered for the first time, or false if the tags are unchanged.</returns>
+        protected static bool RegisterTag(ARandom instance)
         {
-            if(tag.Length == 4)
-                TAGS.Add(tag, instance);
+            if (TAGS.ContainsKey(instance.Tag)) return false;
+            if (instance.Tag.Length == 4)
+            {
+                TAGS.Add(instance.Tag, instance);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -931,12 +944,20 @@ namespace ShaiRandom
 
         /// <summary>
         /// Given a string produced by <see cref="StringSerialize"/>, if the specified type is compatible,
-        /// then this method sets the state of this ARandom to the specified stored state.
+        /// then this method sets the state of this IRandom to the specified stored state.
         /// </summary>
         /// <param name="data">A string produced by StringSerialize.</param>
-        /// <returns>This ARandom, after modifications.</returns>
+        /// <returns>This IRandom, after modifications.</returns>
         public abstract IRandom StringDeserialize(string data);
 
+        /// <summary>
+        /// Given a string produced by <see cref="StringSerialize()"/> on any valid subclass of ARandom,
+        /// this returns a new IRandom with the same implementation and state it had when it was serialized.
+        /// This handles all ARandom implementations in this library, including <see cref="TRWrapper"/> and
+        /// <see cref="ReversingWrapper"/> (both of which it currently handles with a special case).
+        /// </summary>
+        /// <param name="data">A string produced by an ARandom's StringSerialize() method.</param>
+        /// <returns>A newly-allocated IRandom matching the implementation and state of the serialized ARandom.</returns>
         public static IRandom Deserialize(string data)
         {
             if (data.StartsWith('T'))

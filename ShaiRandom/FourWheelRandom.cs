@@ -9,9 +9,14 @@ namespace ShaiRandom
     [Serializable]
     public class FourWheelRandom : ARandom, IEquatable<FourWheelRandom?>
     {
+        /// <summary>
+        /// The identifying tag here is "FoWR" .
+        /// </summary>
+        public override string Tag => "FoWR";
+
         static FourWheelRandom()
         {
-            RegisterTag("FoWR", new FourWheelRandom(1UL, 1UL, 1UL, 1UL));
+            RegisterTag(new FourWheelRandom(1UL, 1UL, 1UL, 1UL));
         }
         /**
          * The first state; can be any long.

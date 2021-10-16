@@ -17,6 +17,10 @@ namespace ShaiRandom
     [Serializable]
     public class ReversingWrapper : ARandom, IEquatable<ReversingWrapper?>
     {
+        /// <summary>
+        /// The identifying tag here is "R" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
+        /// </summary>
+        public override string Tag => "R";
         public IRandom Wrapped { get; set; }
 
         public ReversingWrapper()
