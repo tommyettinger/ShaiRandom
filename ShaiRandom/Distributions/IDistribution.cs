@@ -109,5 +109,37 @@ namespace ShaiRandom.Distributions
         /// If the generator can advance a non-constant amount of steps, this should be a negative number.
         /// </summary>
         int Steps { get; }
+
+        /// <summary>
+        /// How many parameters this generator permits, or 0 if it is not parameterized.
+        /// </summary>
+        int ParameterCount { get; }
+
+        /// <summary>
+        /// Allows looking up the name or identifier used for a given parameter in formulas or other documentation for a distribution.
+        /// </summary>
+        /// <param name="index">At least 0 and less than <see cref="ParameterCount"/>.</param>
+        /// <returns>The name or identifier for the given parameter, or the empty string if that parameter does not exist.</returns>
+        string ParameterName(int index);
+
+        /// <summary>
+        /// Gets the current value of a given parameter by its index.
+        /// </summary>
+        /// <param name="index">At least 0 and less than <see cref="ParameterCount"/>.</param>
+        /// <returns>The value of the given parameter, as a double (regardless of the parameter's actual type).</returns>
+        /// <exception cref="NotSupportedException">
+        /// Thrown if the parameter by the given index does not exist.
+        /// </exception>
+        double ParameterValue(int index);
+
+        /// <summary>
+        /// Sets the value of a given parameter by its index.
+        /// </summary>
+        /// <param name="index">At least 0 and less than <see cref="ParameterCount"/>.</param>
+        /// <param name="value">The value to use for the given parameter, as a double.</param>
+        /// <exception cref="NotSupportedException">
+        /// Thrown if the parameter by the given index does not exist.
+        /// </exception>
+        void SetParameterValue(int index, double value);
     }
 }
