@@ -26,7 +26,6 @@
 namespace ShaiRandom.Distributions
 {
     using System;
-    using System.Diagnostics;
     using ShaiRandom;
 
     /// <summary>
@@ -34,35 +33,43 @@ namespace ShaiRandom.Distributions
     /// </summary>
     /// <remarks>
     ///   <para>
-    ///     The implementation of the <see cref="ExponentialDistribution"/> type bases upon
+    ///     The implementation of the <see cref="KumaraswamyDistribution"/> type bases upon
     ///     information presented on
-    ///     <a href="http://en.wikipedia.org/wiki/Exponential_distribution">Wikipedia - Exponential distribution</a>.
+    ///     <a href="https://en.wikipedia.org/wiki/Kumaraswamy_distribution">Wikipedia - Kumaraswamy distribution</a>.
     ///   </para>
     ///   <para>The thread safety of this class depends on the one of the underlying generator.</para>
     /// </remarks>
     [Serializable]
-    public sealed class ExponentialDistribution : IContinuousDistribution
+    public sealed class KumaraswamyDistribution : IContinuousDistribution
     {
         #region Constants
 
         /// <summary>
-        ///   The default value assigned to <see cref="ParameterLambda"/> if none is specified.
+        ///   The default value assigned to <see cref="ParameterA"/> if none is specified.
         /// </summary>
-        public const double DefaultLambda = 1;
+        public const double DefaultA = 2.0;
+
+        /// <summary>
+        ///   The default value assigned to <see cref="ParameterB"/> if none is specified.
+        /// </summary>
+        public const double DefaultB = 2.0;
 
         #endregion Constants
 
         #region Fields
 
         /// <summary>
-        ///   Stores the parameter lambda which is used for generation of exponential distributed
-        ///   random numbers.
+        ///   Stores the shape parameter a.
         /// </summary>
-        private double _lambda;
+        private double _a;
 
         /// <summary>
-        ///   Gets or sets the parameter lambda which is used for generation of exponential
-        ///   distributed random numbers.
+        ///   Stores the shape parameter b.
+        /// </summary>
+        private double _b;
+
+        /// <summary>
+        ///   Gets or sets the shape parameter a.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="value"/> is less than or equal to zero.
@@ -70,13 +77,32 @@ namespace ShaiRandom.Distributions
         /// <remarks>
         ///   Calls <see cref="IsValidParam"/> to determine whether a value is valid and therefore assignable.
         /// </remarks>
-        public double ParameterLambda
+        public double ParameterA
         {
-            get { return 1.0 / _lambda; }
+            get { return 1.0 / _a; }
             set
             {
-                if (!IsValidParam(value)) throw new ArgumentOutOfRangeException(nameof(ParameterLambda), "Parameter 0 (Lambda) must be > 0.0 .");
-                _lambda = 1.0 / value;
+                if (!IsValidParam(value)) throw new ArgumentOutOfRangeException(nameof(ParameterA), "Parameter 0 (a) must be > 0.0 .");
+                _a = 1.0 / value;
+            }
+        }
+
+        /// <summary>
+        ///   Gets or sets the shape parameter b.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="value"/> is less than or equal to zero.
+        /// </exception>
+        /// <remarks>
+        ///   Calls <see cref="IsValidParam"/> to determine whether a value is valid and therefore assignable.
+        /// </remarks>
+        public double ParameterB
+        {
+            get { return 1.0 / _b; }
+            set
+            {
+                if (!IsValidParam(value)) throw new ArgumentOutOfRangeException(nameof(ParameterB), "Parameter 1 (b) must be > 0.0 .");
+                _b = 1.0 / value;
             }
         }
 
@@ -87,93 +113,102 @@ namespace ShaiRandom.Distributions
         #region Construction
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> as underlying random number generator.
         /// </summary>
-        public ExponentialDistribution() : this(new LaserRandom(), DefaultLambda)
+        public KumaraswamyDistribution() : this(new LaserRandom(), DefaultA, DefaultB)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> with the specified seed value.
         /// </summary>
         /// <param name="seed">
         ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
-        public ExponentialDistribution(ulong seed) : this(new LaserRandom(seed), DefaultLambda)
+        public KumaraswamyDistribution(ulong seed) : this(new LaserRandom(seed), DefaultA, DefaultB)
         {
         }
 
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> with the specified seed value.
         /// </summary>
         /// <param name="seed">
         ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
-        public ExponentialDistribution(ulong seedA, ulong seedB) : this(new LaserRandom(seedA, seedB), DefaultLambda)
+        public KumaraswamyDistribution(ulong seedA, ulong seedB) : this(new LaserRandom(seedA, seedB), DefaultA, DefaultB)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using
+        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using
         ///   the specified <see cref="IGenerator"/> as underlying random number generator.
         /// </summary>
         /// <param name="generator">An <see cref="IGenerator"/> object.</param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
-        public ExponentialDistribution(IRandom generator) : this(generator, DefaultLambda)
+        public KumaraswamyDistribution(IRandom generator) : this(generator, DefaultA, DefaultB)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="lambda">
+        /// <param name="a">
         ///   The parameter lambda which is used for generation of exponential distributed random numbers.
         /// </param>
+        /// <param name="b">
+        ///   The shape parameter b.
+        /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="lambda"/> is less than or equal to zero.
+        ///   <paramref name="a"/> is less than or equal to zero, or
+        ///   <paramref name="b"/> is less than or equal to zero.
         /// </exception>
-        public ExponentialDistribution(double lambda) : this(new LaserRandom(), lambda)
+        public KumaraswamyDistribution(double a, double b) : this(new LaserRandom(), a, b)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> with the specified seed value.
         /// </summary>
         /// <param name="seed">
         ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
-        /// <param name="lambda">
+        /// <param name="a">
         ///   The parameter lambda which is used for generation of exponential distributed random numbers.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="lambda"/> is less than or equal to zero.
+        ///   <paramref name="a"/> is less than or equal to zero.
         /// </exception>
-        public ExponentialDistribution(ulong seed, double lambda) : this(new LaserRandom(seed), lambda)
+        public KumaraswamyDistribution(ulong seed, double a, double b) : this(new LaserRandom(seed), a, b)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using
+        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using
         ///   the specified <see cref="IGenerator"/> as underlying random number generator.
         /// </summary>
         /// <param name="generator">An <see cref="IGenerator"/> object.</param>
-        /// <param name="lambda">
-        ///   The parameter lambda which is used for generation of exponential distributed random numbers.
+        /// <param name="a">
+        ///   The shape parameter a.
+        /// </param>
+        /// <param name="b">
+        ///   The shape parameter b.
         /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="lambda"/> is less than or equal to zero.
+        ///   <paramref name="a"/> is less than or equal to zero, or
+        ///   <paramref name="b"/> is less than or equal to zero.
         /// </exception>
-        public ExponentialDistribution(IRandom generator, double lambda)
+        public KumaraswamyDistribution(IRandom generator, double a, double b)
         {
             Generator = generator;
-            ParameterLambda = lambda;
+            ParameterA = a;
+            ParameterB = b;
         }
 
         #endregion Construction
@@ -183,12 +218,7 @@ namespace ShaiRandom.Distributions
         /// <summary>
         ///   Gets the maximum possible value of distributed random numbers.
         /// </summary>
-        public double Maximum => double.PositiveInfinity;
-
-        /// <summary>
-        ///   Gets the minimum possible value of distributed random numbers.
-        /// </summary>
-        public double Minimum => 0.0;
+        public double Maximum => 1.0;
 
         /// <summary>
         ///   Gets the mean of distributed random numbers.
@@ -196,7 +226,7 @@ namespace ShaiRandom.Distributions
         /// <exception cref="NotSupportedException">
         ///   Thrown if mean is not defined for given distribution with some parameters.
         /// </exception>
-        public double Mean => _lambda;
+        public double Mean => throw new NotSupportedException("I have no idea how to calculate this.");
 
         /// <summary>
         ///   Gets the median of distributed random numbers.
@@ -204,7 +234,12 @@ namespace ShaiRandom.Distributions
         /// <exception cref="NotSupportedException">
         ///   Thrown if median is not defined for given distribution with some parameters.
         /// </exception>
-        public double Median => Math.Log(2.0) * _lambda;
+        public double Median => Math.Pow(1.0 - Math.Pow(2.0, -_b), _a);
+
+        /// <summary>
+        ///   Gets the minimum possible value of distributed random numbers.
+        /// </summary>
+        public double Minimum => 0.0;
 
         /// <summary>
         ///   Gets the mode of distributed random numbers.
@@ -212,7 +247,7 @@ namespace ShaiRandom.Distributions
         /// <exception cref="NotSupportedException">
         ///   Thrown if mode is not defined for given distribution with some parameters.
         /// </exception>
-        public double[] Mode => new[] { 0.0 };
+        public double[] Mode => throw new NotSupportedException("I have no idea how to calculate this, or if it is even defined for all valid parameters.");
 
         /// <summary>
         ///   Gets the variance of distributed random numbers.
@@ -220,31 +255,47 @@ namespace ShaiRandom.Distributions
         /// <exception cref="NotSupportedException">
         ///   Thrown if variance is not defined for given distribution with some parameters.
         /// </exception>
-        public double Variance => Math.Pow(1.0 / _lambda, -2.0);
+        public double Variance => throw new NotSupportedException("I have no idea how to calculate this, or if it is even defined for all valid parameters.");
 
         /// <summary>
         ///   Returns a distributed floating point random number.
         /// </summary>
         /// <returns>A distributed double-precision floating point number.</returns>
-        public double NextDouble() => Sample(Generator, _lambda);
+        public double NextDouble() => Sample(Generator, _a, _b);
 
         public int Steps => 1;
 
-        public int ParameterCount => 1;
+        public int ParameterCount => 2;
 
-        public string ParameterName(int index) => index == 0 ? "Lambda" : "";
+        public string ParameterName(int index)
+        {
+            switch (index)
+            {
+                case 0: return "a";
+                case 1: return "b";
+                default: return "";
+            }
+        }
         public double ParameterValue(int index)
         {
-            if (index == 0) return Lambda;
-            throw new NotSupportedException($"The requested index does not exist in this ExponentialDistribution.");
+            switch (index)
+            {
+                case 0: return ParameterA;
+                case 1: return ParameterB;
+                default: throw new NotSupportedException($"The requested index does not exist in this KumaraswamyDistribution.");
+            }
         }
         public void SetParameterValue(int index, double value)
         {
-            if (index == 0) ParameterLambda = value;
-            throw new NotSupportedException($"The requested index does not exist in this ExponentialDistribution.");
+            switch (index)
+            {
+                case 0: ParameterA = value;
+                    break;
+                case 1: ParameterB = value;
+                    break;
+                default: throw new NotSupportedException($"The requested index does not exist in this KumaraswamyDistribution.");
+            }
         }
-
-
 
         #endregion IContinuousDistribution Members
 
@@ -252,22 +303,22 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Determines whether exponential distribution is defined under given parameter. The
-        ///   default definition returns true if lambda is greater than zero; otherwise, it returns false.
+        ///   default definition returns true if the parameter is greater than zero; otherwise, it returns false.
         /// </summary>
         /// <remarks>
-        ///   This is an extensibility point for the <see cref="ExponentialDistribution"/> class.
+        ///   This is an extensibility point for the <see cref="KumaraswamyDistribution"/> class.
         /// </remarks>
-        public static Func<double, bool> IsValidParam { get; set; } = lambda => lambda > 0.0;
+        public static Func<double, bool> IsValidParam { get; set; } = p => p > 0.0;
 
         /// <summary>
         ///   Declares a function returning an exponential distributed floating point random number.
         /// </summary>
         /// <remarks>
-        ///   This is an extensibility point for the <see cref="ExponentialDistribution"/> class.
+        ///   This is an extensibility point for the <see cref="KumaraswamyDistribution"/> class.
         /// </remarks>
-        public static Func<IRandom, double, double> Sample { get; set; } = (generator, lambda) =>
+        public static Func<IRandom, double, double, double> Sample { get; set; } = (generator, a, b) =>
         {
-            return -Math.Log(1.0 - generator.NextDouble()) * lambda;
+            return Math.Pow(1.0 - Math.Pow(generator.NextExclusiveDouble(), b), a);
         };
 
         #endregion Helpers
