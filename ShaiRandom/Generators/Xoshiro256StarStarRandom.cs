@@ -4,10 +4,10 @@ using System.Collections.Generic;
 namespace ShaiRandom
 {
     /// <summary>
-    /// It's an ARandom with 4 states, implementing a known-rather-good algorithm, more here later.
+    /// It's an AbstractRandom with 4 states, implementing a known-rather-good algorithm, more here later.
     /// </summary>
     [Serializable]
-    public class Xoshiro256StarStarRandom : ARandom, IEquatable<Xoshiro256StarStarRandom?>
+    public class Xoshiro256StarStarRandom : AbstractRandom, IEquatable<Xoshiro256StarStarRandom?>
     {
         /// <summary>
         /// The identifying tag here is "XSSR" .

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 namespace ShaiRandom
 {
     /// <summary>
-    /// It's an ARandom with 4 states, more here later. This one has a good guaranteed minimum period, (2 to the 65) - 2.
+    /// It's an AbstractRandom with 4 states, more here later. This one has a good guaranteed minimum period, (2 to the 65) - 2.
     /// </summary>
     [Serializable]
-    public class StrangerRandom : ARandom, IEquatable<StrangerRandom?>
+    public class StrangerRandom : AbstractRandom, IEquatable<StrangerRandom?>
     {
         /// <summary>
         /// The identifying tag here is "StrR" .

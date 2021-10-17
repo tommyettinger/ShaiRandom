@@ -4,11 +4,11 @@ using System.Collections.Generic;
 namespace ShaiRandom
 {
     /// <summary>
-    /// It's an ARandom with 1 state, more here later. This one supports <see cref="Skip(ulong)"/>.
+    /// It's an AbstractRandom with 1 state, more here later. This one supports <see cref="Skip(ulong)"/>.
     /// Note that this generator only returns each ulong result exactly once over its period.
     /// </summary>
     [Serializable]
-    public class DistinctRandom : ARandom, IEquatable<DistinctRandom?>
+    public class DistinctRandom : AbstractRandom, IEquatable<DistinctRandom?>
     {
         /// <summary>
         /// The identifying tag here is "DisR" .

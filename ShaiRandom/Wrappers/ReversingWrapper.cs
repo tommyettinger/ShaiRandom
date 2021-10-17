@@ -5,17 +5,17 @@ namespace ShaiRandom
 {
 
     /// <summary>
-    /// Wraps another ARandom without copying it, making all calls to "NextSomething()" on this ReversingWrapper move the state in reverse
-    /// instead of forward in the wrapped ARandom. This only works for ARandom implementations that support <see cref="PreviousUlong"/>,
-    /// which can be checked with <see cref="SupportsPrevious"/>. If the wrapped ARandom supports <see cref="Skip(ulong)"/>, then this
+    /// Wraps another AbstractRandom without copying it, making all calls to "NextSomething()" on this ReversingWrapper move the state in reverse
+    /// instead of forward in the wrapped AbstractRandom. This only works for AbstractRandom implementations that support <see cref="PreviousUlong"/>,
+    /// which can be checked with <see cref="SupportsPrevious"/>. If the wrapped AbstractRandom supports <see cref="Skip(ulong)"/>, then this
     /// ReversingWrapper will permit calls to its Skip, and they will also go in reverse. The most common use for this would be to run
     /// the wrapped generator forward and track the number of calls made, then run the ReversingWrapper by the same number of calls
     /// (potentially using Skip(), if supported) to revert the state to its original value. This is more convenient for the usage where
-    /// you use <see cref="ARandom.Shuffle{T}(T[])"/> with both the wrapped generator and wrapper, since they will use the same amount of
+    /// you use <see cref="IRandom.Shuffle{T}(T[])"/> with both the wrapped generator and wrapper, since they will use the same amount of
     /// calls, and this will even un-shuffle the array (restoring it to its order before the shuffle).
     /// </summary>
     [Serializable]
-    public class ReversingWrapper : ARandom, IEquatable<ReversingWrapper?>
+    public class ReversingWrapper : AbstractRandom, IEquatable<ReversingWrapper?>
     {
         /// <summary>
         /// The identifying tag here is "R" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
@@ -36,7 +36,7 @@ namespace ShaiRandom
         public ReversingWrapper(IRandom wrapping)
         {
             if (!wrapping.SupportsPrevious)
-                throw new NotSupportedException($"The ARandom to wrap must support PreviousUlong(), and {nameof(wrapping)} does not.");
+                throw new NotSupportedException($"The AbstractRandom to wrap must support PreviousUlong(), and {nameof(wrapping)} does not.");
             Wrapped = wrapping;
         }
 

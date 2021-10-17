@@ -4,10 +4,10 @@ using System.Collections.Generic;
 namespace ShaiRandom
 {
     /// <summary>
-    /// It's an ARandom with 4 states, more here later.
+    /// It's an AbstractRandom with 4 states, more here later.
     /// </summary>
     [Serializable]
-    public class FourWheelRandom : ARandom, IEquatable<FourWheelRandom?>
+    public class FourWheelRandom : AbstractRandom, IEquatable<FourWheelRandom?>
     {
         /// <summary>
         /// The identifying tag here is "FoWR" .

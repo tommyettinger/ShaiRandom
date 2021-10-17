@@ -4,10 +4,10 @@ using System.Collections.Generic;
 namespace ShaiRandom
 {
     /// <summary>
-    /// It's an ARandom with 2 states, more here later. This one supports <see cref="Skip(ulong)"/>.
+    /// It's an AbstractRandom with 2 states, more here later. This one supports <see cref="Skip(ulong)"/>.
     /// </summary>
     [Serializable]
-    public class LaserRandom : ARandom, IEquatable<LaserRandom?>
+    public class LaserRandom : AbstractRandom, IEquatable<LaserRandom?>
     {
         /// <summary>
         /// The identifying tag here is "LasR" .

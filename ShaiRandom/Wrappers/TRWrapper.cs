@@ -5,10 +5,10 @@ using Troschuetz.Random;
 namespace ShaiRandom
 {
     /// <summary>
-    /// Wraps a ShaiRandom ARandom object so it can also be used as a Troschuetz.Random IGenerator.
+    /// Wraps a ShaiRandom AbstractRandom object so it can also be used as a Troschuetz.Random IGenerator.
     /// </summary>
     [System.Serializable]
-    public class TRWrapper : ARandom, IGenerator, IEquatable<TRWrapper?>
+    public class TRWrapper : AbstractRandom, IGenerator, IEquatable<TRWrapper?>
     {
         /// <summary>
         /// The identifying tag here is "T" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
@@ -16,7 +16,7 @@ namespace ShaiRandom
         public override string Tag => "T";
 
         /// <summary>
-        /// The wrapped ARandom, which must never be null.
+        /// The wrapped AbstractRandom, which must never be null.
         /// </summary>
         public IRandom Wrapped { get; set; }
 

@@ -23,11 +23,11 @@ using System.Collections.Generic;
 namespace ShaiRandom
 {
     /// <summary>
-    /// It's an ARandom with 3 states, more here later. Implements the RomuTrio algorithm for fast ulongs.
+    /// It's an AbstractRandom with 3 states, more here later. Implements the RomuTrio algorithm for fast ulongs.
     /// TricycleRandom or FourWheelRandom may be about the same speed or faster.
     /// </summary>
     [Serializable]
-    public class RomuTrioRandom : ARandom, IEquatable<RomuTrioRandom?>
+    public class RomuTrioRandom : AbstractRandom, IEquatable<RomuTrioRandom?>
     {
         /// <summary>
         /// The identifying tag here is "RTrR" .
