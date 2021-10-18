@@ -844,7 +844,9 @@ namespace ShaiRandom
 
         protected static ulong MakeSeed()
         {
-            return (ulong)SeedingRandom.Next() ^ (ulong)SeedingRandom.Next() << 21 ^ (ulong)SeedingRandom.Next() << 42;
+            unchecked {
+                return (ulong)SeedingRandom.Next() ^ (ulong)SeedingRandom.Next() << 21 ^ (ulong)SeedingRandom.Next() << 42;
+            }
         }
 
         protected AbstractRandom()
@@ -1133,7 +1135,10 @@ namespace ShaiRandom
 
         public long NextLong()
         {
-            return (long)NextUlong();
+            unchecked
+            {
+                return (long)NextUlong();
+            }
         }
 
         /**

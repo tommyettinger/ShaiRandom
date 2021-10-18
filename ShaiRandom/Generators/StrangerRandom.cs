@@ -39,16 +39,18 @@ namespace ShaiRandom
 
         public static ulong Jump(ulong state)
         {
-            ulong poly = 0x5556837749D9A17FUL;
-            ulong val = 0L, b = 1L;
-            for (int i = 0; i < 63; i++, b <<= 1)
+            unchecked
             {
-                if ((poly & b) != 0L) val ^= state;
-                state ^= state << 7;
-                state ^= state >> 9;
+                ulong poly = 0x5556837749D9A17FUL;
+                ulong val = 0L, b = 1L;
+                for (int i = 0; i < 63; i++, b <<= 1)
+                {
+                    if ((poly & b) != 0L) val ^= state;
+                    state ^= state << 7;
+                    state ^= state >> 9;
+                }
+                return val;
             }
-            return val;
-
         }
         /**
          * Creates a new StrangerRandom with a random state.
@@ -223,12 +225,14 @@ namespace ShaiRandom
             ulong fb = _b;
             ulong fc = stateC;
             ulong fd = stateD;
-            _a = fb ^ fb << 7;
-            _b = fa ^ fa >> 9;
-            fd.RotateLeftInPlace(39);
-            stateC = fd - fb;
-            stateD = fa - fc + 0xC6BC279692B5C323L;
-            return fc;
+            unchecked
+            {
+                _a = fb ^ fb << 7;
+                _b = fa ^ fa >> 9;
+                stateC = fd.RotateLeft(39) - fb;
+                stateD = fa - fc + 0xC6BC279692B5C323UL;
+                return fc;
+            }
         }
 
         public override IRandom Copy() => new StrangerRandom(stateA, stateB, stateC, stateD);

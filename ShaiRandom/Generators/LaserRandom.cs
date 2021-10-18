@@ -131,18 +131,21 @@ namespace ShaiRandom
          */
         public override void Seed(ulong seed)
         {
-            ulong x = (seed += 0x9E3779B97F4A7C15UL);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateA = x ^ x >> 27;
-            x = (seed + 0x9E3779B97F4A7C15L);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            _b = (x ^ x >> 27) | 1UL;
+            unchecked
+            {
+                ulong x = (seed += 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                stateA = x ^ x >> 27;
+                x = (seed + 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                _b = (x ^ x >> 27) | 1UL;
+            }
         }
 
         /**
@@ -160,24 +163,32 @@ namespace ShaiRandom
 
         public override ulong NextUlong()
         {
-            ulong s = (stateA += 0xC6BC279692B5C323UL);
-            ulong z = (s ^ s >> 31) * (_b += 0x9E3779B97F4A7C16UL);
-            return z ^ z >> 26 ^ z >> 6;
+            unchecked
+            {
+                ulong s = (stateA += 0xC6BC279692B5C323UL);
+                ulong z = (s ^ s >> 31) * (_b += 0x9E3779B97F4A7C16UL);
+                return z ^ z >> 26 ^ z >> 6;
+            }
         }
 
         public override ulong Skip(ulong distance)
         {
-            ulong s = (stateA += 0xC6BC279692B5C323UL * distance);
-            ulong z = (s ^ s >> 31) * (_b += 0x9E3779B97F4A7C16UL * distance);
-            return z ^ z >> 26 ^ z >> 6;
-
+            unchecked
+            {
+                ulong s = (stateA += 0xC6BC279692B5C323UL * distance);
+                ulong z = (s ^ s >> 31) * (_b += 0x9E3779B97F4A7C16UL * distance);
+                return z ^ z >> 26 ^ z >> 6;
+            }
         }
 
         public override ulong PreviousUlong()
         {
-            ulong s = stateA -= 0xC6BC279692B5C323UL;
-            ulong z = (s ^ s >> 31) * (_b -= 0x9E3779B97F4A7C16UL);
-            return z ^ z >> 26 ^ z >> 6;
+            unchecked
+            {
+                ulong s = stateA -= 0xC6BC279692B5C323UL;
+                ulong z = (s ^ s >> 31) * (_b -= 0x9E3779B97F4A7C16UL);
+                return z ^ z >> 26 ^ z >> 6;
+            }
         }
 
         public override IRandom Copy() => new LaserRandom(stateA, stateB);

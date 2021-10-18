@@ -104,32 +104,41 @@ namespace ShaiRandom
 
         public override ulong NextUlong()
         {
-            ulong x = (state += 0x9E3779B97F4A7C15UL);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653UL;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35UL;
-            return x ^ x >> 27;
+            unchecked
+            {
+                ulong x = (state += 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                return x ^ x >> 27;
+            }
         }
 
         public override ulong Skip(ulong distance)
         {
-            ulong x = (state += 0x9E3779B97F4A7C15UL * distance);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653UL;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35UL;
-            return x ^ x >> 27;
+            unchecked
+            {
+                ulong x = (state += 0x9E3779B97F4A7C15UL * distance);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                return x ^ x >> 27;
+            }
         }
 
         public override ulong PreviousUlong()
         {
-            ulong x = (state -= 0x9E3779B97F4A7C15UL);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653UL;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35UL;
-            return x ^ x >> 27;
+            unchecked
+            {
+                ulong x = (state -= 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                return x ^ x >> 27;
+            }
         }
 
         public override IRandom Copy() => new DistinctRandom(state);

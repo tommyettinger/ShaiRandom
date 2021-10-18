@@ -149,30 +149,33 @@ namespace ShaiRandom
          */
         public override void Seed(ulong seed)
         {
-            ulong x = (seed += 0x9E3779B97F4A7C15UL);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateA = x ^ x >> 27;
-            x = (seed += 0x9E3779B97F4A7C15L);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateB = x ^ x >> 27;
-            x = (seed += 0x9E3779B97F4A7C15L);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateC = x ^ x >> 27;
-            x = (seed + 0x9E3779B97F4A7C15L);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateD = x ^ x >> 27;
+            unchecked
+            {
+                ulong x = (seed += 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                stateA = x ^ x >> 27;
+                x = (seed += 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                stateB = x ^ x >> 27;
+                x = (seed += 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                stateC = x ^ x >> 27;
+                x = (seed + 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                stateD = x ^ x >> 27;
+            }
         }
 
         /**
@@ -201,10 +204,13 @@ namespace ShaiRandom
             ulong fb = stateB;
             ulong fc = stateC;
             ulong fd = stateD;
-            stateA = 0xD1342543DE82EF95L * fd;
-            stateB = fa + 0xC6BC279692B5C323L;
-            stateC = fb.RotateLeft(47) - fd;
-            stateD = fb ^ fc;
+            unchecked
+            {
+                stateA = 0xD1342543DE82EF95UL * fd;
+                stateB = fa + 0xC6BC279692B5C323UL;
+                stateC = fb.RotateLeft(47) - fd;
+                stateD = fb ^ fc;
+            }
             return fd;
         }
 
@@ -213,11 +219,14 @@ namespace ShaiRandom
             ulong fa = stateA;
             ulong fb = stateB;
             ulong fc = stateC;
-            stateD = 0x572B5EE77A54E3BDUL * fa;
-            stateA = fb - 0xC6BC279692B5C323L;
-            stateB = (fc + stateD).RotateRight(47);
-            stateC = stateD ^ stateB;
-            return 0x572B5EE77A54E3BDUL * stateA;
+            unchecked
+            {
+                stateD = 0x572B5EE77A54E3BDUL * fa;
+                stateA = fb - 0xC6BC279692B5C323UL;
+                stateB = BitExtensions.RotateRight(fc + stateD, 47);
+                stateC = stateD ^ stateB;
+                return 0x572B5EE77A54E3BDUL * stateA;
+            }
         }
 
         public override IRandom Copy() => new FourWheelRandom(stateA, stateB, stateC, stateD);

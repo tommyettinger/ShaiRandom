@@ -86,9 +86,6 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Troschuetz.Random" Version="5.0.1" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Distributions\Discrete\" />
-  </ItemGroup>
 
   <!-- When packing, copy the nuget files to the nuget output directory -->
   <Target Name="CopyPackage" AfterTargets="Pack">

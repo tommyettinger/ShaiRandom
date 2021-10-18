@@ -137,24 +137,27 @@ namespace ShaiRandom
          */
         public override void Seed(ulong seed)
         {
-            ulong x = (seed += 0x9E3779B97F4A7C15UL);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateA = x ^ x >> 27;
-            x = (seed += 0x9E3779B97F4A7C15L);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateB = x ^ x >> 27;
-            x = (seed + 0x9E3779B97F4A7C15L);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateC = x ^ x >> 27;
+            unchecked
+            {
+                ulong x = (seed += 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                stateA = x ^ x >> 27;
+                x = (seed += 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                stateB = x ^ x >> 27;
+                x = (seed + 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                stateC = x ^ x >> 27;
+            }
         }
 
         /**
@@ -180,10 +183,12 @@ namespace ShaiRandom
             ulong fa = stateA;
             ulong fb = stateB;
             ulong fc = stateC;
-            stateA = 0xD1342543DE82EF95L * fc;
-            stateB = fa ^ fb ^ fc;
-            fb.RotateLeftInPlace(41);
-            stateC = fb + 0xC6BC279692B5C323L;
+            unchecked
+            {
+                stateA = 0xD1342543DE82EF95UL * fc;
+                stateB = fa ^ fb ^ fc;
+                stateC = fb.RotateLeft(41) + 0xC6BC279692B5C323UL;
+            }
             return fa;
         }
 
@@ -193,10 +198,10 @@ namespace ShaiRandom
             ulong fb = stateB;
             ulong fc = stateC;
 
-            stateC = 0x572B5EE77A54E3BDL * fa;
-            stateB = (fc - 0xC6BC279692B5C323L).RotateRight(41);
+            stateC = 0x572B5EE77A54E3BDUL * fa;
+            stateB = BitExtensions.RotateRight(fc - 0xC6BC279692B5C323UL, 41);
             stateA = fb ^ stateB ^ stateC;
-            return stateB ^ 0x572B5EE77A54E3BDL * stateA ^ (stateC - 0xC6BC279692B5C323L).RotateRight(41);
+            return stateB ^ 0x572B5EE77A54E3BDUL * stateA ^ BitExtensions.RotateRight(stateC - 0xC6BC279692B5C323UL, 41);
         }
 
         public override IRandom Copy() => new TricycleRandom(stateA, stateB, stateC);

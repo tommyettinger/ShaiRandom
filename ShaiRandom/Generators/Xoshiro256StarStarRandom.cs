@@ -158,30 +158,33 @@ namespace ShaiRandom
          */
         public override void Seed(ulong seed)
         {
-            ulong x = (seed += 0x9E3779B97F4A7C15UL);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateA = x ^ x >> 27;
-            x = (seed += 0x9E3779B97F4A7C15L);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateB = x ^ x >> 27;
-            x = (seed += 0x9E3779B97F4A7C15L);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            stateC = x ^ x >> 27;
-            x = (seed + 0x9E3779B97F4A7C15L);
-            x ^= x >> 27;
-            x *= 0x3C79AC492BA7B653L;
-            x ^= x >> 33;
-            x *= 0x1C69B3F74AC4AE35L;
-            _d = x ^ x >> 27;
+            unchecked
+            {
+                ulong x = (seed += 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                stateA = x ^ x >> 27;
+                x = (seed += 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                stateB = x ^ x >> 27;
+                x = (seed += 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                stateC = x ^ x >> 27;
+                x = (seed + 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                _d = x ^ x >> 27;
+            }
         }
 
         /**
@@ -206,17 +209,18 @@ namespace ShaiRandom
 
         public override ulong NextUlong()
         {
-            ulong result = stateB * 5UL;
-            result.RotateLeftInPlace(7);
-            result *= 9UL;
-            ulong t = stateB << 17;
-            stateC ^= stateA;
-            _d ^= stateB;
-            stateB ^= stateC;
-            stateA ^= _d;
-            stateC ^= t;
-            _d.RotateLeftInPlace(45);
-            return result;
+            unchecked
+            {
+                ulong result = BitExtensions.RotateLeft(stateB * 5UL, 7) * 9UL;
+                ulong t = stateB << 17;
+                stateC ^= stateA;
+                _d ^= stateB;
+                stateB ^= stateC;
+                stateA ^= _d;
+                stateC ^= t;
+                _d.RotateLeftInPlace(45);
+                return result;
+            }
         }
 
         public override IRandom Copy() => new Xoshiro256StarStarRandom(stateA, stateB, stateC, stateD);
