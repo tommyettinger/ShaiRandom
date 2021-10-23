@@ -29,7 +29,7 @@ namespace ShaiRandom.Distributions
     using ShaiRandom;
 
     /// <summary>
-    ///   Provides generation of exponential distributed random numbers.
+    ///   Provides generation of Kumaraswamy distributed random numbers.
     /// </summary>
     /// <remarks>
     ///   <para>
@@ -136,8 +136,11 @@ namespace ShaiRandom.Distributions
         ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> with the specified seed value.
         /// </summary>
-        /// <param name="seed">
-        ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
+        /// <param name="seedA">
+        ///   An unsigned long used to calculate a starting value for the pseudo-random number sequence.
+        /// </param>
+        /// <param name="seedB">
+        ///   Another unsigned long used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
         public KumaraswamyDistribution(ulong seedA, ulong seedB) : this(new LaserRandom(seedA, seedB), DefaultA, DefaultB)
         {
@@ -145,9 +148,9 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using
-        ///   the specified <see cref="IGenerator"/> as underlying random number generator.
+        ///   the specified <see cref="IRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IGenerator"/> object.</param>
+        /// <param name="generator">An <see cref="IRandom"/> object.</param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
         public KumaraswamyDistribution(IRandom generator) : this(generator, DefaultA, DefaultB)
         {
@@ -158,7 +161,7 @@ namespace ShaiRandom.Distributions
         ///   <see cref="LaserRandom"/> as underlying random number generator.
         /// </summary>
         /// <param name="a">
-        ///   The parameter lambda which is used for generation of exponential distributed random numbers.
+        ///   The shape parameter a.
         /// </param>
         /// <param name="b">
         ///   The shape parameter b.
@@ -179,10 +182,14 @@ namespace ShaiRandom.Distributions
         ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
         /// <param name="a">
-        ///   The parameter lambda which is used for generation of exponential distributed random numbers.
+        ///   The shape parameter a.
+        /// </param>
+        /// <param name="b">
+        ///   The shape parameter b.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="a"/> is less than or equal to zero.
+        ///   <paramref name="a"/> is less than or equal to zero, or
+        ///   <paramref name="b"/> is less than or equal to zero.
         /// </exception>
         public KumaraswamyDistribution(ulong seed, double a, double b) : this(new LaserRandom(seed), a, b)
         {
@@ -190,9 +197,9 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using
-        ///   the specified <see cref="IGenerator"/> as underlying random number generator.
+        ///   the specified <see cref="IRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IGenerator"/> object.</param>
+        /// <param name="generator">An <see cref="IRandom"/> object.</param>
         /// <param name="a">
         ///   The shape parameter a.
         /// </param>
@@ -302,7 +309,7 @@ namespace ShaiRandom.Distributions
         #region Helpers
 
         /// <summary>
-        ///   Determines whether exponential distribution is defined under given parameter. The
+        ///   Determines whether the Kumaraswamy distribution is defined under a given parameter. The
         ///   default definition returns true if the parameter is greater than zero; otherwise, it returns false.
         /// </summary>
         /// <remarks>
@@ -311,7 +318,7 @@ namespace ShaiRandom.Distributions
         public static Func<double, bool> IsValidParam { get; set; } = p => p > 0.0;
 
         /// <summary>
-        ///   Declares a function returning an exponential distributed floating point random number.
+        ///   Declares a function returning a Kumaraswamy distributed floating point random number.
         /// </summary>
         /// <remarks>
         ///   This is an extensibility point for the <see cref="KumaraswamyDistribution"/> class.
