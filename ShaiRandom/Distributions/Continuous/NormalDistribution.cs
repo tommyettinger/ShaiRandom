@@ -34,7 +34,7 @@ namespace ShaiRandom.Distributions
     /// <remarks>
     ///   <para>
     ///     The implementation of the <see cref="NormalDistribution"/> type bases upon
-    ///     information presented on<a href="http://en.wikipedia.org/wiki/Normal_distribution">Wikipedia -
+    ///     information presented on <a href="http://en.wikipedia.org/wiki/Normal_distribution">Wikipedia -
     ///     Normal distribution</a> and the probit function from
     ///     <a href="https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/">Peter John Acklam's page (archived)</a>.
     ///   </para>
