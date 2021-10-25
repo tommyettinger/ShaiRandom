@@ -164,15 +164,19 @@ namespace ShaiRandom.PerformanceTests
         public uint XorShift128() => _xorShift128Generator.NextUInt(1u, 1000u);
     }
     /// <summary>
-    ///|          Method |      Mean |     Error |    StdDev |
-    ///|---------------- |----------:|----------:|----------:|
-    ///|        Distinct | 1.0371 ns | 0.0461 ns | 0.0718 ns |
-    ///|           Laser | 0.8627 ns | 0.0310 ns | 0.0304 ns |
-    ///|        Tricycle | 2.6663 ns | 0.0679 ns | 0.0567 ns |
-    ///|       FourWheel | 2.9888 ns | 0.0633 ns | 0.0561 ns |
-    ///|        Stranger | 3.3530 ns | 0.0672 ns | 0.0850 ns |
-    ///| XoshiroStarStar | 4.5292 ns | 0.1173 ns | 0.1927 ns |
-    ///|        RomuTrio | 4.2993 ns | 0.0640 ns | 0.0599 ns |
+    ///|          Method |      Mean |     Error |    StdDev |    Median |
+    ///|---------------- |----------:|----------:|----------:|----------:|
+    ///|        Distinct | 1.1249 ns | 0.0528 ns | 0.0939 ns | 1.1677 ns |
+    ///|           Laser | 0.8952 ns | 0.0486 ns | 0.1067 ns | 0.9604 ns |
+    ///|        Tricycle | 2.1396 ns | 0.0712 ns | 0.1044 ns | 2.1928 ns |
+    ///|       FourWheel | 3.1486 ns | 0.0922 ns | 0.1986 ns | 3.1758 ns |
+    ///|        Stranger | 2.9137 ns | 0.0870 ns | 0.1068 ns | 2.9432 ns |
+    ///| XoshiroStarStar | 3.7421 ns | 0.1093 ns | 0.2132 ns | 3.8836 ns |
+    ///|        RomuTrio | 3.8312 ns | 0.1084 ns | 0.2401 ns | 3.9740 ns |
+    ///|             NR3 | 2.5353 ns | 0.0821 ns | 0.0912 ns | 2.5611 ns |
+    ///|           NR3Q1 | 1.1177 ns | 0.0529 ns | 0.0967 ns | 1.1633 ns |
+    ///|           NR3Q2 | 1.2952 ns | 0.0573 ns | 0.1131 ns | 1.2654 ns |
+    ///|     XorShift128 | 0.8302 ns | 0.0467 ns | 0.0854 ns | 0.8064 ns |
     /// </summary>
     public class RandomUlongComparison
     {
@@ -183,6 +187,13 @@ namespace ShaiRandom.PerformanceTests
         private readonly StrangerRandom _strangerRandom = new StrangerRandom(1UL);
         private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
         private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
+
+        //Troschuetz.Random
+
+        private readonly XorShift128Generator _xorShift128Generator = new XorShift128Generator(1u);
+        private readonly NR3Generator _nR3Generator = new NR3Generator(1u);
+        private readonly NR3Q1Generator _nR3Q1Generator = new NR3Q1Generator(1u);
+        private readonly NR3Q2Generator _nR3Q2Generator = new NR3Q2Generator(1u);
 
         [Benchmark]
         public ulong Distinct() => _distinctRandom.NextUlong();
@@ -204,6 +215,18 @@ namespace ShaiRandom.PerformanceTests
 
         [Benchmark]
         public ulong RomuTrio() => _romuTrioRandom.NextUlong();
+
+        [Benchmark]
+        public ulong NR3() => _nR3Generator.NextULong();
+
+        [Benchmark]
+        public ulong NR3Q1() => _nR3Q1Generator.NextULong();
+
+        [Benchmark]
+        public ulong NR3Q2() => _nR3Q2Generator.NextULong();
+
+        [Benchmark]
+        public ulong XorShift128() => _xorShift128Generator.NextULong();
 
     }
     /// <summary>
@@ -247,8 +270,68 @@ namespace ShaiRandom.PerformanceTests
 
         [Benchmark]
         public ulong RomuTrio() => _romuTrioRandom.NextUlong(1UL, 1000UL);
-
     }
+
+    public class RandomDoubleComparison
+    {
+        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
+        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
+        private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
+        private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
+        private readonly StrangerRandom _strangerRandom = new StrangerRandom(1UL);
+        private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
+        private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
+
+        //Troschuetz.Random
+
+        private readonly XorShift128Generator _xorShift128Generator = new XorShift128Generator(1u);
+        private readonly ALFGenerator _aLFGenerator = new ALFGenerator(1u);
+        private readonly NR3Generator _nR3Generator = new NR3Generator(1u);
+        private readonly NR3Q1Generator _nR3Q1Generator = new NR3Q1Generator(1u);
+        private readonly NR3Q2Generator _nR3Q2Generator = new NR3Q2Generator(1u);
+        private readonly MT19937Generator _mT19937Generator = new MT19937Generator(1u);
+
+        [Benchmark]
+        public double Distinct() => _distinctRandom.NextDouble();
+
+        [Benchmark]
+        public double Laser() => _laserRandom.NextDouble();
+
+        [Benchmark]
+        public double Tricycle() => _tricycleRandom.NextDouble();
+
+        [Benchmark]
+        public double FourWheel() => _fourWheelRandom.NextDouble();
+
+        [Benchmark]
+        public double Stranger() => _strangerRandom.NextDouble();
+
+        [Benchmark]
+        public double XoshiroStarStar() => _xoshiro256StarStarRandom.NextDouble();
+
+        [Benchmark]
+        public double RomuTrio() => _romuTrioRandom.NextDouble();
+
+        [Benchmark]
+        public double ALF() => _aLFGenerator.NextDouble();
+
+        [Benchmark]
+        public double MT19937() => _mT19937Generator.NextDouble();
+
+        [Benchmark]
+        public double NR3() => _nR3Generator.NextDouble();
+
+        [Benchmark]
+        public double NR3Q1() => _nR3Q1Generator.NextDouble();
+
+        [Benchmark]
+        public double NR3Q2() => _nR3Q2Generator.NextDouble();
+
+        [Benchmark]
+        public double XorShift128() => _xorShift128Generator.NextDouble();
+    }
+
+
     internal static class Program
     {
         private static void Main(string[] args)
