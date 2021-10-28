@@ -172,17 +172,17 @@ namespace ShaiRandom
         /**
          * This initializes all 4 states of the generator to random values based on the given seed.
          * (2 to the 64) possible initial generator states can be produced here, all with a different
-         * first value returned by {@link #nextLong()} (because {@code stateC} is guaranteed to be
+         * first value returned by {@link #nextUlong()} (because {@code stateC} is guaranteed to be
          * different for every different {@code seed}).
          * @param seed the initial seed; may be any long
          */
         public override void Seed(ulong seed)
         {
             stateA = seed ^ 0xFA346CBFD5890825UL;
-            if (stateA == 0L) stateA = 0xD3833E804F4C574BUL;
+            if (stateA == 0UL) stateA = 0xD3833E804F4C574BUL;
             _b = Jump(_a);
-            stateC = Jump(seed ^ 0x05CB93402A76F7DAUL);
-            stateD = ~seed;
+            stateC = Jump(_b - seed);
+            stateD = Jump(stateC + 0xC6BC279692B5C323UL);
         }
 
         /**
