@@ -6,19 +6,20 @@ namespace ShaiRandom.PerformanceTests
     /// <summary>
     ///|          Method |      Mean |     Error |    StdDev |    Median |
     ///|---------------- |----------:|----------:|----------:|----------:|
-    ///|        Distinct | 1.3301 ns | 0.0525 ns | 0.0562 ns | 1.3315 ns |
-    ///|           Laser | 1.3228 ns | 0.0137 ns | 0.0128 ns | 1.3242 ns |
-    ///|        Tricycle | 3.2720 ns | 0.0938 ns | 0.1186 ns | 3.3170 ns |
-    ///|       FourWheel | 3.2035 ns | 0.0453 ns | 0.0354 ns | 3.2057 ns |
-    ///|        Stranger | 3.5039 ns | 0.0417 ns | 0.0370 ns | 3.5178 ns |
-    ///| XoshiroStarStar | 5.0989 ns | 0.0163 ns | 0.0152 ns | 5.0961 ns |
-    ///|        RomuTrio | 4.5261 ns | 0.1178 ns | 0.2241 ns | 4.4347 ns |
-    ///|             ALF | 2.4955 ns | 0.0754 ns | 0.0981 ns | 2.5089 ns |
-    ///|         MT19937 | 3.3030 ns | 0.0623 ns | 0.0553 ns | 3.3183 ns |
-    ///|             NR3 | 2.1339 ns | 0.0463 ns | 0.0387 ns | 2.1470 ns |
-    ///|           NR3Q1 | 0.7869 ns | 0.0272 ns | 0.0255 ns | 0.7935 ns |
-    ///|           NR3Q2 | 1.0056 ns | 0.0355 ns | 0.0409 ns | 1.0060 ns |
-    ///|     XorShift128 | 0.9189 ns | 0.0222 ns | 0.0218 ns | 0.9231 ns |
+    ///|        Distinct | 1.5092 ns | 0.0589 ns | 0.1280 ns | 1.5623 ns |
+    ///|           Laser | 1.3595 ns | 0.0576 ns | 0.1606 ns | 1.3748 ns |
+    ///|        Tricycle | 2.9756 ns | 0.0880 ns | 0.2287 ns | 3.1318 ns |
+    ///|       FourWheel | 3.7578 ns | 0.1094 ns | 0.3227 ns | 3.7378 ns |
+    ///|        Stranger | 3.4388 ns | 0.0969 ns | 0.2303 ns | 3.5175 ns |
+    ///| XoshiroStarStar | 4.6913 ns | 0.1233 ns | 0.3093 ns | 4.8695 ns |
+    ///|        RomuTrio | 4.7724 ns | 0.1245 ns | 0.3491 ns | 4.9871 ns |
+    ///|         Mizuchi | 1.4457 ns | 0.0562 ns | 0.1324 ns | 1.4843 ns |
+    ///|             ALF | 2.3270 ns | 0.0741 ns | 0.1298 ns | 2.3713 ns |
+    ///|         MT19937 | 3.6102 ns | 0.0999 ns | 0.2041 ns | 3.7089 ns |
+    ///|             NR3 | 1.5843 ns | 0.0577 ns | 0.1229 ns | 1.5747 ns |
+    ///|           NR3Q1 | 1.1030 ns | 0.0493 ns | 0.0723 ns | 1.0815 ns |
+    ///|           NR3Q2 | 1.0030 ns | 0.0476 ns | 0.0795 ns | 0.9987 ns |
+    ///|     XorShift128 | 0.8824 ns | 0.0097 ns | 0.0076 ns | 0.8857 ns |
     /// </summary>
     /// <remarks>
     /// It looks like .NET does virtually no optimizations relating to ILP,
@@ -27,7 +28,9 @@ namespace ShaiRandom.PerformanceTests
     /// also with 3 states, is faster than any of the 4-state generators. Laser
     /// sometimes seems to get optimized much more or less than other times; here,
     /// it's the fastest of the 64-bit generators except for XorShift128 (which is
-    /// a medium-low-quality generator in various ways).
+    /// a medium-low-quality generator in various ways). I probably should stop
+    /// even testing NR3Q1 and NR3Q2, because they fail PractRand testing in a
+    /// matter of seconds (so does XorShift128, but not on as many tests).
     /// </remarks>
     public class RandomUintComparison
     {
