@@ -95,22 +95,22 @@ namespace ShaiRandom.PerformanceTests
         public uint XorShift128() => _xorShift128Generator.NextUIntInclusiveMaxValue();
     }
     /// <summary>
-    ///
     ///|          Method |      Mean |     Error |    StdDev |    Median |
     ///|---------------- |----------:|----------:|----------:|----------:|
-    ///|        Distinct |  3.781 ns | 0.1009 ns | 0.1686 ns |  3.863 ns |
-    ///|           Laser |  3.314 ns | 0.0692 ns | 0.0971 ns |  3.261 ns |
-    ///|        Tricycle |  5.236 ns | 0.1315 ns | 0.1843 ns |  5.323 ns |
-    ///|       FourWheel |  4.834 ns | 0.0486 ns | 0.0431 ns |  4.843 ns |
-    ///|        Stranger |  6.172 ns | 0.1508 ns | 0.2561 ns |  6.328 ns |
-    ///| XoshiroStarStar |  7.424 ns | 0.1749 ns | 0.2670 ns |  7.296 ns |
-    ///|        RomuTrio |  6.624 ns | 0.1616 ns | 0.3582 ns |  6.745 ns |
-    ///|             ALF |  7.655 ns | 0.1762 ns | 0.2412 ns |  7.738 ns |
-    ///|         MT19937 | 11.266 ns | 0.2292 ns | 0.2453 ns | 11.361 ns |
-    ///|             NR3 |  5.611 ns | 0.1411 ns | 0.1680 ns |  5.685 ns |
-    ///|           NR3Q1 |  4.139 ns | 0.1112 ns | 0.1366 ns |  4.101 ns |
-    ///|           NR3Q2 |  4.156 ns | 0.0281 ns | 0.0263 ns |  4.155 ns |
-    ///|     XorShift128 |  3.900 ns | 0.1080 ns | 0.1060 ns |  3.932 ns |
+    ///|        Distinct |  4.105 ns | 0.1214 ns | 0.3580 ns |  4.035 ns |
+    ///|           Laser |  3.676 ns | 0.1023 ns | 0.2066 ns |  3.673 ns |
+    ///|        Tricycle |  5.013 ns | 0.1299 ns | 0.2878 ns |  4.958 ns |
+    ///|       FourWheel |  5.349 ns | 0.1343 ns | 0.2833 ns |  5.371 ns |
+    ///|        Stranger |  5.211 ns | 0.1354 ns | 0.2736 ns |  5.204 ns |
+    ///| XoshiroStarStar |  6.789 ns | 0.1638 ns | 0.3194 ns |  6.776 ns |
+    ///|        RomuTrio |  6.603 ns | 0.1620 ns | 0.1436 ns |  6.573 ns |
+    ///|         Mizuchi |  3.319 ns | 0.0963 ns | 0.1900 ns |  3.309 ns |
+    ///|             ALF |  7.838 ns | 0.1858 ns | 0.3754 ns |  7.746 ns |
+    ///|         MT19937 | 11.694 ns | 0.2585 ns | 0.5222 ns | 11.683 ns |
+    ///|             NR3 |  6.512 ns | 0.1584 ns | 0.3126 ns |  6.396 ns |
+    ///|           NR3Q1 |  4.158 ns | 0.1099 ns | 0.1576 ns |  4.180 ns |
+    ///|           NR3Q2 |  4.255 ns | 0.1132 ns | 0.1922 ns |  4.357 ns |
+    ///|     XorShift128 |  3.953 ns | 0.1059 ns | 0.1177 ns |  4.004 ns |
     /// </summary>
     public class RandomUintBoundedComparison
     {
@@ -257,15 +257,16 @@ namespace ShaiRandom.PerformanceTests
 
     }
     /// <summary>
-    ///|          Method |     Mean |     Error |    StdDev |
-    ///|---------------- |---------:|----------:|----------:|
-    ///|        Distinct | 3.043 ns | 0.0882 ns | 0.1678 ns |
-    ///|           Laser | 2.938 ns | 0.0849 ns | 0.1552 ns |
-    ///|        Tricycle | 4.437 ns | 0.0844 ns | 0.0705 ns |
-    ///|       FourWheel | 4.375 ns | 0.0851 ns | 0.1013 ns |
-    ///|        Stranger | 5.169 ns | 0.0808 ns | 0.0993 ns |
-    ///| XoshiroStarStar | 6.861 ns | 0.1597 ns | 0.1334 ns |
-    ///|        RomuTrio | 6.565 ns | 0.1591 ns | 0.2613 ns |
+    ///|          Method |     Mean |     Error |    StdDev |   Median |
+    ///|---------------- |---------:|----------:|----------:|---------:|
+    ///|        Distinct | 2.904 ns | 0.0174 ns | 0.0154 ns | 2.904 ns |
+    ///|           Laser | 2.994 ns | 0.0887 ns | 0.1772 ns | 3.044 ns |
+    ///|        Tricycle | 4.134 ns | 0.1125 ns | 0.2607 ns | 4.227 ns |
+    ///|       FourWheel | 4.473 ns | 0.1186 ns | 0.2422 ns | 4.301 ns |
+    ///|        Stranger | 4.797 ns | 0.1233 ns | 0.2434 ns | 4.826 ns |
+    ///| XoshiroStarStar | 5.723 ns | 0.1446 ns | 0.2494 ns | 5.759 ns |
+    ///|        RomuTrio | 6.675 ns | 0.1606 ns | 0.3690 ns | 6.628 ns |
+    ///|         Mizuchi | 3.018 ns | 0.0902 ns | 0.1672 ns | 3.053 ns |
     /// </summary>
     public class RandomUlongBoundedComparison
     {
@@ -302,7 +303,24 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public ulong Mizuchi() => _mizuchiRandom.NextUlong(1UL, 1000UL);
     }
-
+    /// <summary>
+    ///|          Method |     Mean |     Error |    StdDev |   Median |
+    ///|---------------- |---------:|----------:|----------:|---------:|
+    ///|        Distinct | 2.239 ns | 0.0745 ns | 0.1266 ns | 2.297 ns |
+    ///|           Laser | 2.639 ns | 0.0840 ns | 0.2045 ns | 2.610 ns |
+    ///|        Tricycle | 3.452 ns | 0.1005 ns | 0.2141 ns | 3.454 ns |
+    ///|       FourWheel | 3.891 ns | 0.1026 ns | 0.1627 ns | 3.919 ns |
+    ///|        Stranger | 4.001 ns | 0.1112 ns | 0.2169 ns | 4.011 ns |
+    ///| XoshiroStarStar | 5.190 ns | 0.1360 ns | 0.3608 ns | 5.223 ns |
+    ///|        RomuTrio | 5.364 ns | 0.1386 ns | 0.2862 ns | 5.496 ns |
+    ///|         Mizuchi | 2.515 ns | 0.0306 ns | 0.0256 ns | 2.511 ns |
+    ///|             ALF | 6.454 ns | 0.0569 ns | 0.0504 ns | 6.445 ns |
+    ///|         MT19937 | 9.911 ns | 0.1074 ns | 0.0897 ns | 9.878 ns |
+    ///|             NR3 | 3.913 ns | 0.0827 ns | 0.0691 ns | 3.911 ns |
+    ///|           NR3Q1 | 1.678 ns | 0.0686 ns | 0.1548 ns | 1.692 ns |
+    ///|           NR3Q2 | 2.268 ns | 0.0774 ns | 0.1748 ns | 2.294 ns |
+    ///|     XorShift128 | 1.697 ns | 0.0661 ns | 0.1141 ns | 1.719 ns |
+    /// </summary>
     public class RandomDoubleComparison
     {
         private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
