@@ -185,8 +185,10 @@ namespace ShaiRandom
         {
             unchecked
             {
-                ulong s = stateA -= 0xC6BC279692B5C323UL;
-                ulong z = (s ^ s >> 31) * (_b -= 0x9E3779B97F4A7C16UL);
+                ulong z = stateA;
+                z = (z ^ z >> 31) * _b;
+                stateA -= 0xC6BC279692B5C323UL;
+                _b -= 0x9E3779B97F4A7C16UL;
                 return z ^ z >> 26 ^ z >> 6;
             }
         }

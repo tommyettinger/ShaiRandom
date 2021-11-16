@@ -109,8 +109,11 @@ namespace ShaiRandom.Distributions
         ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> with the specified seed value.
         /// </summary>
-        /// <param name="seed">
+        /// <param name="seedA">
         ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
+        /// </param>
+        /// <param name="seedB">
+        ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence; should be odd.
         /// </param>
         public ExponentialDistribution(ulong seedA, ulong seedB) : this(new LaserRandom(seedA, seedB), DefaultLambda)
         {
@@ -118,9 +121,9 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using
-        ///   the specified <see cref="IGenerator"/> as underlying random number generator.
+        ///   the specified <see cref="IRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IGenerator"/> object.</param>
+        /// <param name="generator">An <see cref="IRandom"/> object.</param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
         public ExponentialDistribution(IRandom generator) : this(generator, DefaultLambda)
         {
@@ -159,9 +162,9 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using
-        ///   the specified <see cref="IGenerator"/> as underlying random number generator.
+        ///   the specified <see cref="IRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IGenerator"/> object.</param>
+        /// <param name="generator">An <see cref="IRandom"/> object.</param>
         /// <param name="lambda">
         ///   The parameter lambda which is used for generation of exponential distributed random numbers.
         /// </param>
