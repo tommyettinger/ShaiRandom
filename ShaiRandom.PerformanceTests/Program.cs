@@ -38,6 +38,7 @@ namespace ShaiRandom.PerformanceTests
         private readonly StrangerRandom _strangerRandom = new StrangerRandom(1UL);
         private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
         private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
+        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
 
         //Troschuetz.Random
 
@@ -68,6 +69,9 @@ namespace ShaiRandom.PerformanceTests
 
         [Benchmark]
         public uint RomuTrio() => _romuTrioRandom.NextUint();
+
+        [Benchmark]
+        public uint Mizuchi() => _mizuchiRandom.NextUint();
 
         [Benchmark]
         public uint ALF() => _aLFGenerator.NextUIntInclusiveMaxValue();
@@ -114,6 +118,7 @@ namespace ShaiRandom.PerformanceTests
         private readonly StrangerRandom _strangerRandom = new StrangerRandom(1UL);
         private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
         private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
+        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
 
         //Troschuetz.Random
 
@@ -146,6 +151,9 @@ namespace ShaiRandom.PerformanceTests
         public uint RomuTrio() => _romuTrioRandom.NextUint(1u, 1000u);
 
         [Benchmark]
+        public uint Mizuchi() => _mizuchiRandom.NextUint(1u, 1000u);
+
+        [Benchmark]
         public uint ALF() => _aLFGenerator.NextUInt(1u, 1000u);
 
         [Benchmark]
@@ -166,18 +174,30 @@ namespace ShaiRandom.PerformanceTests
     /// <summary>
     ///|          Method |      Mean |     Error |    StdDev |    Median |
     ///|---------------- |----------:|----------:|----------:|----------:|
-    ///|        Distinct | 1.1249 ns | 0.0528 ns | 0.0939 ns | 1.1677 ns |
-    ///|           Laser | 0.8952 ns | 0.0486 ns | 0.1067 ns | 0.9604 ns |
-    ///|        Tricycle | 2.1396 ns | 0.0712 ns | 0.1044 ns | 2.1928 ns |
-    ///|       FourWheel | 3.1486 ns | 0.0922 ns | 0.1986 ns | 3.1758 ns |
-    ///|        Stranger | 2.9137 ns | 0.0870 ns | 0.1068 ns | 2.9432 ns |
-    ///| XoshiroStarStar | 3.7421 ns | 0.1093 ns | 0.2132 ns | 3.8836 ns |
-    ///|        RomuTrio | 3.8312 ns | 0.1084 ns | 0.2401 ns | 3.9740 ns |
-    ///|             NR3 | 2.5353 ns | 0.0821 ns | 0.0912 ns | 2.5611 ns |
-    ///|           NR3Q1 | 1.1177 ns | 0.0529 ns | 0.0967 ns | 1.1633 ns |
-    ///|           NR3Q2 | 1.2952 ns | 0.0573 ns | 0.1131 ns | 1.2654 ns |
-    ///|     XorShift128 | 0.8302 ns | 0.0467 ns | 0.0854 ns | 0.8064 ns |
+    ///|        Distinct | 1.0671 ns | 0.0520 ns | 0.1275 ns | 1.1181 ns |
+    ///|           Laser | 1.0966 ns | 0.0544 ns | 0.1195 ns | 1.1619 ns |
+    ///|        Tricycle | 1.9388 ns | 0.0701 ns | 0.1399 ns | 2.0169 ns |
+    ///|       FourWheel | 3.1970 ns | 0.0931 ns | 0.2369 ns | 3.2971 ns |
+    ///|        Stranger | 2.8947 ns | 0.0882 ns | 0.1955 ns | 2.9432 ns |
+    ///| XoshiroStarStar | 3.6905 ns | 0.1054 ns | 0.2128 ns | 3.7494 ns |
+    ///|        RomuTrio | 4.2563 ns | 0.0196 ns | 0.0183 ns | 4.2569 ns |
+    ///|         Mizuchi | 0.9028 ns | 0.0492 ns | 0.1079 ns | 0.8849 ns |
+    ///|             NR3 | 2.2041 ns | 0.0773 ns | 0.1133 ns | 2.1215 ns |
+    ///|           NR3Q1 | 0.8976 ns | 0.0479 ns | 0.1041 ns | 0.9279 ns |
+    ///|           NR3Q2 | 1.2278 ns | 0.0562 ns | 0.1210 ns | 1.2776 ns |
+    ///|     XorShift128 | 0.7221 ns | 0.0448 ns | 0.0935 ns | 0.7149 ns |
     /// </summary>
+    /// <remarks>
+    /// LaserRandom sometimes does better than any of the other "high-quality"
+    /// generators here, but this time MizuchiRandom took the lead. While XorShift128
+    /// is the fastest, it also fails several tests in under a minute of testing with
+    /// PractRand, and was also confirmed by its authors to have a severe linear bit
+    /// dependency. NR3Q1 is also fast, but is scraping the bottom of the barrel on
+    /// statistical quality. Of the Troschuetz.Random generators that can generate
+    /// ulong values natively, only NR3 is high-quality (passing PractRand to at least
+    /// 64TB), and it is much slower than Mizuchi or Laser (both of which also pass
+    /// PractRand to at least 64TB).
+    /// </remarks>
     public class RandomUlongComparison
     {
         private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
@@ -187,6 +207,7 @@ namespace ShaiRandom.PerformanceTests
         private readonly StrangerRandom _strangerRandom = new StrangerRandom(1UL);
         private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
         private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
+        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
 
         //Troschuetz.Random
 
@@ -215,6 +236,9 @@ namespace ShaiRandom.PerformanceTests
 
         [Benchmark]
         public ulong RomuTrio() => _romuTrioRandom.NextUlong();
+
+        [Benchmark]
+        public ulong Mizuchi() => _mizuchiRandom.NextUlong();
 
         [Benchmark]
         public ulong NR3() => _nR3Generator.NextULong();
@@ -249,6 +273,7 @@ namespace ShaiRandom.PerformanceTests
         private readonly StrangerRandom _strangerRandom = new StrangerRandom(1UL);
         private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
         private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
+        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
 
         [Benchmark]
         public ulong Distinct() => _distinctRandom.NextUlong(1UL, 1000UL);
@@ -270,6 +295,9 @@ namespace ShaiRandom.PerformanceTests
 
         [Benchmark]
         public ulong RomuTrio() => _romuTrioRandom.NextUlong(1UL, 1000UL);
+
+        [Benchmark]
+        public ulong Mizuchi() => _mizuchiRandom.NextUlong(1UL, 1000UL);
     }
 
     public class RandomDoubleComparison
@@ -281,6 +309,7 @@ namespace ShaiRandom.PerformanceTests
         private readonly StrangerRandom _strangerRandom = new StrangerRandom(1UL);
         private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
         private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
+        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
 
         //Troschuetz.Random
 
@@ -311,6 +340,9 @@ namespace ShaiRandom.PerformanceTests
 
         [Benchmark]
         public double RomuTrio() => _romuTrioRandom.NextDouble();
+
+        [Benchmark]
+        public double Mizuchi() => _mizuchiRandom.NextDouble();
 
         [Benchmark]
         public double ALF() => _aLFGenerator.NextDouble();
