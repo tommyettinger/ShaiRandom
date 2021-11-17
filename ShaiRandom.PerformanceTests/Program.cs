@@ -384,6 +384,69 @@ namespace ShaiRandom.PerformanceTests
         public double XorShift128() => _xorShift128Generator.NextDouble();
     }
 
+    /// <summary>
+    ///|    Method |     Mean |     Error |    StdDev |   Median |
+    ///|---------- |---------:|----------:|----------:|---------:|
+    ///|  Distinct | 2.524 ns | 0.0783 ns | 0.2118 ns | 2.613 ns |
+    ///|     Laser | 2.461 ns | 0.0346 ns | 0.0324 ns | 2.466 ns |
+    ///| FourWheel | 3.949 ns | 0.0143 ns | 0.0127 ns | 3.952 ns |
+    ///|   Mizuchi | 2.477 ns | 0.0376 ns | 0.0352 ns | 2.476 ns |
+    /// </summary>
+    public class RandomExclusiveDoubleComparison
+    {
+        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
+        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
+        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
+        private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
+        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+
+        [Benchmark]
+        public double Distinct() => _distinctRandom.NextExclusiveDouble();
+
+        [Benchmark]
+        public double Laser() => _laserRandom.NextExclusiveDouble();
+
+        //[Benchmark]
+        //public double Tricycle() => _tricycleRandom.NextExclusiveDouble();
+
+        [Benchmark]
+        public double FourWheel() => _fourWheelRandom.NextExclusiveDouble();
+
+        [Benchmark]
+        public double Mizuchi() => _mizuchiRandom.NextExclusiveDouble();
+    }
+
+    /// <summary>
+    ///|    Method |     Mean |     Error |    StdDev |   Median |
+    ///|---------- |---------:|----------:|----------:|---------:|
+    ///|  Distinct | 2.822 ns | 0.0846 ns | 0.1038 ns | 2.865 ns |
+    ///|     Laser | 2.338 ns | 0.0796 ns | 0.1414 ns | 2.368 ns |
+    ///| FourWheel | 4.012 ns | 0.1104 ns | 0.2423 ns | 4.042 ns |
+    ///|   Mizuchi | 2.411 ns | 0.0784 ns | 0.1704 ns | 2.503 ns |
+    /// </summary>
+    public class RandomExclusiveDoubleBitwiseComparison
+    {
+        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
+        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
+        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
+        private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
+        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+
+        [Benchmark]
+        public double Distinct() => _distinctRandom.NextExclusiveDoubleBitwise();
+
+        [Benchmark]
+        public double Laser() => _laserRandom.NextExclusiveDoubleBitwise();
+
+        //[Benchmark]
+        //public double Tricycle() => _tricycleRandom.NextExclusiveDoubleBitwise();
+
+        [Benchmark]
+        public double FourWheel() => _fourWheelRandom.NextExclusiveDoubleBitwise();
+
+        [Benchmark]
+        public double Mizuchi() => _mizuchiRandom.NextExclusiveDoubleBitwise();
+    }
 
     internal static class Program
     {

@@ -1633,7 +1633,13 @@ namespace ShaiRandom
         {
             return ((NextUlong() >> 11) + 1UL) * 1.1102230246251564E-16;
         }
-
+        public double NextExclusiveDoubleBitwise()
+        {
+            long bits = NextLong();
+            // Ritual may require more goats?
+            return BitConverter.Int64BitsToDouble(1985L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFFC01L | bits) >> 52) << 52 | bits & 0x000FFFFFFFFFFFFFL);
+        }
+        
         /**
          * Just like {@link #NextDouble(double)}, but this is exclusive on both 0.0 and {@code outerBound}.
          * Like {@link #nextExclusiveDouble()}, which this uses, this may have better bit-distribution of
