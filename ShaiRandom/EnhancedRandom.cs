@@ -1620,41 +1620,33 @@ namespace ShaiRandom
             return innerBound + NextInclusiveFloat() * (outerBound - innerBound);
         }
 
-        /**
-        * Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
-        * values between 1.1102230246251564E-16 and 0.9999999999999999, or 0x1.fffffffffffffp-54 and 0x1.fffffffffffffp-1 in hex
-        * notation. It cannot return 0 or 1.
-        * <br>
-        * The default implementation simply uses {@link #nextLong()} to get a uniform long, shifts it to remove 11 bits, adds 1, and
-        * multiplies by a value just slightly less than what nextDouble() usually uses.
-        * @return a random uniform double between 0 and 1 (both exclusive)
-        */
-        public double NextExclusiveDouble()
-        {
-            return ((NextUlong() >> 11) + 1UL) * 1.1102230246251564E-16;
-        }
+        //Commented out because it was replaced by the bitwise technique below, but we may want to switch back later or on some platforms.
+
+        //**
+        //* Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
+        //* values between 1.1102230246251564E-16 and 0.9999999999999999, or 0x1.fffffffffffffp-54 and 0x1.fffffffffffffp-1 in hex
+        //* notation. It cannot return 0 or 1.
+        //* <br>
+        //* The default implementation simply uses {@link #nextLong()} to get a uniform long, shifts it to remove 11 bits, adds 1, and
+        //* multiplies by a value just slightly less than what nextDouble() usually uses.
+        //* @return a random uniform double between 0 and 1 (both exclusive)
+        //*/
+        //public double NextExclusiveDouble()
+        //{
+        //    return ((NextUlong() >> 11) + 1UL) * 1.1102230246251564E-16;
+        //}
+
+
         /// <summary>
         /// Gets a random double between 0.0 and 1.0, exclusive at both ends, using a technique that can produce more of the valid values for a double
-        /// than other methods.
+        /// (near to 0) than other methods.
         /// </summary>
         /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
-        public double NextExclusiveDoubleBitwise()
+        public double NextExclusiveDouble()
         {
             long bits = NextLong();
             // Ritual may require more goats?
             return BitConverter.Int64BitsToDouble((1985L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFFC01L | bits) >> 52) << 52) | (bits & 0x000FFFFFFFFFFFFFL));
-        }
-        /// <summary>
-        /// Gets a random double between 0.0 and 1.0, exclusive at both ends, using a technique that can produce more of the valid values for a double
-        /// than other methods.
-        /// </summary>
-        /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
-        public unsafe double NextExclusiveDoubleUnsafe()
-        {
-            long bits = NextLong();
-            double expo = -0x7FFFFFFFFFFFFC01L | bits;
-            bits = 1985L + (*((long *)&expo) >> 52) << 52 | (bits & 0x000FFFFFFFFFFFFFL);
-            return *((double*)&bits);
         }
 
         /**

@@ -416,66 +416,66 @@ namespace ShaiRandom.PerformanceTests
         public double Mizuchi() => _mizuchiRandom.NextExclusiveDouble();
     }
 
-    /// <summary>
-    ///|   Method |     Mean |     Error |    StdDev |
-    ///|--------- |---------:|----------:|----------:|
-    ///| Distinct | 2.566 ns | 0.0786 ns | 0.1152 ns |
-    ///|    Laser | 2.224 ns | 0.0755 ns | 0.0982 ns |
-    ///|  Mizuchi | 2.515 ns | 0.0792 ns | 0.1526 ns |
-    /// </summary>
-    public class RandomExclusiveDoubleBitwiseComparison
-    {
-        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
-        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
-        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
-        //private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
-        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
-
-        [Benchmark]
-        public double Distinct() => _distinctRandom.NextExclusiveDoubleBitwise();
-
-        [Benchmark]
-        public double Laser() => _laserRandom.NextExclusiveDoubleBitwise();
-
-        //[Benchmark]
-        //public double Tricycle() => _tricycleRandom.NextExclusiveDoubleBitwise();
-
-        //[Benchmark]
-        //public double FourWheel() => _fourWheelRandom.NextExclusiveDoubleBitwise();
-
-        [Benchmark]
-        public double Mizuchi() => _mizuchiRandom.NextExclusiveDoubleBitwise();
-    }
-    /// <summary>
-    ///|   Method |     Mean |     Error |    StdDev |   Median |
-    ///|--------- |---------:|----------:|----------:|---------:|
-    ///| Distinct | 2.736 ns | 0.0845 ns | 0.1959 ns | 2.764 ns |
-    ///|    Laser | 2.550 ns | 0.0818 ns | 0.0804 ns | 2.573 ns |
-    ///|  Mizuchi | 3.536 ns | 0.0997 ns | 0.2332 ns | 3.667 ns |
-    /// </summary>
-    public class RandomExclusiveDoublUnsafeComparison
-    {
-        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
-        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
-        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
-        //private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
-        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
-
-        [Benchmark]
-        public double Distinct() => _distinctRandom.NextExclusiveDoubleUnsafe();
-
-        [Benchmark]
-        public double Laser() => _laserRandom.NextExclusiveDoubleUnsafe();
-
-        //[Benchmark]
-        //public double Tricycle() => _tricycleRandom.NextExclusiveDoubleBitwise();
-
-        //[Benchmark]
-        //public double FourWheel() => _fourWheelRandom.NextExclusiveDoubleUnsafe();
-
-        [Benchmark]
-        public double Mizuchi() => _mizuchiRandom.NextExclusiveDoubleUnsafe();
-    }
+//    /// <summary>
+//    ///|   Method |     Mean |     Error |    StdDev |
+//    ///|--------- |---------:|----------:|----------:|
+//    ///| Distinct | 2.566 ns | 0.0786 ns | 0.1152 ns |
+//    ///|    Laser | 2.224 ns | 0.0755 ns | 0.0982 ns |
+//    ///|  Mizuchi | 2.515 ns | 0.0792 ns | 0.1526 ns |
+//    /// </summary>
+//    public class RandomExclusiveDoubleBitwiseComparison
+//    {
+//        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
+//        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
+//        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
+//        //private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
+//        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+//
+//        [Benchmark]
+//        public double Distinct() => _distinctRandom.NextExclusiveDoubleBitwise();
+//
+//        [Benchmark]
+//        public double Laser() => _laserRandom.NextExclusiveDoubleBitwise();
+//
+//        //[Benchmark]
+//        //public double Tricycle() => _tricycleRandom.NextExclusiveDoubleBitwise();
+//
+//        //[Benchmark]
+//        //public double FourWheel() => _fourWheelRandom.NextExclusiveDoubleBitwise();
+//
+//        [Benchmark]
+//        public double Mizuchi() => _mizuchiRandom.NextExclusiveDoubleBitwise();
+//    }
+//    /// <summary>
+//    ///|   Method |     Mean |     Error |    StdDev |   Median |
+//    ///|--------- |---------:|----------:|----------:|---------:|
+//    ///| Distinct | 2.736 ns | 0.0845 ns | 0.1959 ns | 2.764 ns |
+//    ///|    Laser | 2.550 ns | 0.0818 ns | 0.0804 ns | 2.573 ns |
+//    ///|  Mizuchi | 3.536 ns | 0.0997 ns | 0.2332 ns | 3.667 ns |
+//    /// </summary>
+//    public class RandomExclusiveDoublUnsafeComparison
+//    {
+//        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
+//        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
+//        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
+//        //private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
+//        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+//
+//        [Benchmark]
+//        public double Distinct() => _distinctRandom.NextExclusiveDoubleUnsafe();
+//
+//        [Benchmark]
+//        public double Laser() => _laserRandom.NextExclusiveDoubleUnsafe();
+//
+//        //[Benchmark]
+//        //public double Tricycle() => _tricycleRandom.NextExclusiveDoubleBitwise();
+//
+//        //[Benchmark]
+//        //public double FourWheel() => _fourWheelRandom.NextExclusiveDoubleUnsafe();
+//
+//        [Benchmark]
+//        public double Mizuchi() => _mizuchiRandom.NextExclusiveDoubleUnsafe();
+//    }
 
     internal static class Program
     {
