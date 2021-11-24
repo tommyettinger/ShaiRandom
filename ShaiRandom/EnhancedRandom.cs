@@ -1633,13 +1633,30 @@ namespace ShaiRandom
         {
             return ((NextUlong() >> 11) + 1UL) * 1.1102230246251564E-16;
         }
+        /// <summary>
+        /// Gets a random double between 0.0 and 1.0, exclusive at both ends, using a technique that can produce more of the valid values for a double
+        /// than other methods.
+        /// </summary>
+        /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
         public double NextExclusiveDoubleBitwise()
         {
             long bits = NextLong();
             // Ritual may require more goats?
-            return BitConverter.Int64BitsToDouble(1985L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFFC01L | bits) >> 52) << 52 | bits & 0x000FFFFFFFFFFFFFL);
+            return BitConverter.Int64BitsToDouble((1985L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFFC01L | bits) >> 52) << 52) | (bits & 0x000FFFFFFFFFFFFFL));
         }
-        
+        /// <summary>
+        /// Gets a random double between 0.0 and 1.0, exclusive at both ends, using a technique that can produce more of the valid values for a double
+        /// than other methods.
+        /// </summary>
+        /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
+        public unsafe double NextExclusiveDoubleUnsafe()
+        {
+            long bits = NextLong();
+            double expo = -0x7FFFFFFFFFFFFC01L | bits;
+            bits = 1985L + (*((long *)&expo) >> 52) << 52 | (bits & 0x000FFFFFFFFFFFFFL);
+            return *((double*)&bits);
+        }
+
         /**
          * Just like {@link #NextDouble(double)}, but this is exclusive on both 0.0 and {@code outerBound}.
          * Like {@link #nextExclusiveDouble()}, which this uses, this may have better bit-distribution of
