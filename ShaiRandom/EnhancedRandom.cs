@@ -1641,12 +1641,20 @@ namespace ShaiRandom
         /// Gets a random double between 0.0 and 1.0, exclusive at both ends, using a technique that can produce more of the valid values for a double
         /// (near to 0) than other methods.
         /// </summary>
+        /// <remarks>
+        /// <p>The code for this is small, but extremely unorthodox. The technique is related to <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>,
+        /// but because the ability to get the number of leading or trailing zeros is in a method not present in .NET Standard, we get close to that by using
+        /// BitConverter.DoubleToInt64Bits() on a negative long and using its exponent bits directly. The smallest double this can return is 5.421010862427522E-20 ; the largest it
+        /// can return is 0.9999999999999999 .
+        /// </p>
+        /// <p>This is voodoo code.
+        /// </p>
+        /// </remarks>
         /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
         public double NextExclusiveDouble()
         {
             long bits = NextLong();
-            // Ritual may require more goats?
-            return BitConverter.Int64BitsToDouble((1985L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFFC01L | bits) >> 52) << 52) | (bits & 0x000FFFFFFFFFFFFFL));
+            return BitConverter.Int64BitsToDouble((0x7C00000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFFFFFL | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
         }
 
         /**
