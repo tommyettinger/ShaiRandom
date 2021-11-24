@@ -1644,7 +1644,7 @@ namespace ShaiRandom
         /// <remarks>
         /// <p>The code for this is small, but extremely unorthodox. The technique is related to <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>,
         /// but because the ability to get the number of leading or trailing zeros is in a method not present in .NET Standard, we get close to that by using
-        /// BitConverter.DoubleToInt64Bits() on a negative long and using its exponent bits directly. The smallest double this can return is 5.421010862427522E-20 ; the largest it
+        /// BitConverter.DoubleToInt64Bits() on a negative long and using its exponent bits directly. The smallest double this can return is 1.0842021724855044E-19 ; the largest it
         /// can return is 0.9999999999999999 .
         /// </p>
         /// <p>This is voodoo code.
@@ -1654,7 +1654,7 @@ namespace ShaiRandom
         public double NextExclusiveDouble()
         {
             long bits = NextLong();
-            return BitConverter.Int64BitsToDouble((0x7C00000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFFFFFL | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
+            return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFFFFFL | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
         }
 
         /**
