@@ -15,7 +15,34 @@ namespace ShaiRandom.UnitTests
                 Assert.InRange(fwr.NextLong(-100L, 101L), -100L, 100L);
                 Assert.InRange(fwr.NextLong(100L, -101L), -100L, 100L);
                 Assert.InRange(fwr.NextUlong(100UL, 301UL), 100UL, 300UL);
+                Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
             }
+        }
+        [Fact]
+        public void AverageValueTest()
+        {
+            FourWheelRandom fwr = new FourWheelRandom(1);
+            double sum = 0.0;
+            for (int i = 0; i < 100; i++)
+            {
+                sum += fwr.NextExclusiveDouble();
+            }
+            Assert.InRange(sum, 45.0, 55.0);
+            fwr.Seed(1);
+            ulong usum = 0UL;
+            for (int i = 0; i < 256; i++)
+            {
+                usum += fwr.NextUlong() & 0xFFFF;
+            }
+            Assert.InRange(usum, 0x7A0000UL, 0x860000UL);
+
+            fwr.Seed(1);
+            usum = 0UL;
+            for (int i = 0; i < 256; i++)
+            {
+                usum += fwr.NextUlong() >> 48;
+            }
+            Assert.InRange(usum, 0x7A0000UL, 0x860000UL);
         }
         [Fact]
         public void BoundedUnsignedTest()
