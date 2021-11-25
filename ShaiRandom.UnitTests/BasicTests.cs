@@ -18,9 +18,17 @@ namespace ShaiRandom.UnitTests
                 Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
                 Assert.InRange(fwr.NextExclusiveFloat(), 2.3283064E-10f, 0.99999994f);
             }
-            fwr.stateD = 0x80000000UL;
-            Assert.InRange(fwr.NextExclusiveFloat(), 2.3283064E-10f, 0.99999994f);
+            fwr.stateD = 1UL;
+            Assert.InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
 
+            fwr.stateD = 0UL;
+            Assert.InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
+
+            fwr.stateD = 0xFFFFFFFFFFFFFFFFUL;
+            Assert.InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
+
+            fwr.stateD = 0x8000000000000000UL;
+            Assert.InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
         }
         [Fact]
         public void AverageValueTest()
