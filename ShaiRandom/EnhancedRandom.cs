@@ -1693,7 +1693,11 @@ namespace ShaiRandom
          */
         public float NextExclusiveFloat()
         {
-            return ((NextUint() >> 9) + 1u) * 5.960464E-8f;
+            //            return ((NextUint() >> 9) + 1u) * 5.960464E-8f;
+            int bits = NextInt();
+            return BitConverter.Int32BitsToSingle((0x70000000 + (BitConverter.SingleToInt32Bits(-0x7FFFFFFF | bits) & -0x00800000)) | (~bits & 0x007FFFFF));
+            //return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFFFFFL | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
+
         }
 
         /**

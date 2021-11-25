@@ -16,7 +16,11 @@ namespace ShaiRandom.UnitTests
                 Assert.InRange(fwr.NextLong(100L, -101L), -100L, 100L);
                 Assert.InRange(fwr.NextUlong(100UL, 301UL), 100UL, 300UL);
                 Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
+                Assert.InRange(fwr.NextExclusiveFloat(), 2.3283064E-10f, 0.99999994f);
             }
+            fwr.stateD = 0x80000000UL;
+            Assert.InRange(fwr.NextExclusiveFloat(), 2.3283064E-10f, 0.99999994f);
+
         }
         [Fact]
         public void AverageValueTest()
@@ -28,6 +32,13 @@ namespace ShaiRandom.UnitTests
                 sum += fwr.NextExclusiveDouble();
             }
             Assert.InRange(sum, 45.0, 55.0);
+            fwr.Seed(1);
+            float fsum = 0f;
+            for (int i = 0; i < 100; i++)
+            {
+                fsum += fwr.NextExclusiveFloat();
+            }
+            Assert.InRange(fsum, 45f, 55f);
             fwr.Seed(1);
             ulong usum = 0UL;
             for (int i = 0; i < 256; i++)
