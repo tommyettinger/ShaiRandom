@@ -16,7 +16,7 @@ namespace ShaiRandom.UnitTests
                 Assert.InRange(fwr.NextLong(100L, -101L), -100L, 100L);
                 Assert.InRange(fwr.NextUlong(100UL, 301UL), 100UL, 300UL);
                 Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
-                Assert.InRange(fwr.NextExclusiveFloat(), 2.3283064E-10f, 0.99999994f);
+                Assert.InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
             }
             fwr.stateD = 1UL;
             Assert.InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
@@ -33,35 +33,38 @@ namespace ShaiRandom.UnitTests
         [Fact]
         public void AverageValueTest()
         {
-            FourWheelRandom fwr = new FourWheelRandom(1);
-            double sum = 0.0;
-            for (int i = 0; i < 100; i++)
+            unchecked
             {
-                sum += fwr.NextExclusiveDouble();
-            }
-            Assert.InRange(sum, 45.0, 55.0);
-            fwr.Seed(1);
-            float fsum = 0f;
-            for (int i = 0; i < 100; i++)
-            {
-                fsum += fwr.NextExclusiveFloat();
-            }
-            Assert.InRange(fsum, 45f, 55f);
-            fwr.Seed(1);
-            ulong usum = 0UL;
-            for (int i = 0; i < 256; i++)
-            {
-                usum += fwr.NextUlong() & 0xFFFF;
-            }
-            Assert.InRange(usum, 0x7A0000UL, 0x860000UL);
+                FourWheelRandom fwr = new FourWheelRandom(1);
+                double sum = 0.0;
+                for (int i = 0; i < 100; i++)
+                {
+                    sum += fwr.NextExclusiveDouble();
+                }
+                Assert.InRange(sum, 45.0, 55.0);
+                fwr.Seed(1UL);
+                float fsum = 0f;
+                for (int i = 0; i < 100; i++)
+                {
+                    fsum += fwr.NextExclusiveFloat();
+                }
+                Assert.InRange(fsum, 45f, 55f);
+                fwr.Seed(1);
+                ulong usum = 0UL;
+                for (int i = 0; i < 256; i++)
+                {
+                    usum += fwr.NextUlong() & 0xFFFF;
+                }
+                Assert.InRange(usum, 0x7A0000UL, 0x860000UL);
 
-            fwr.Seed(1);
-            usum = 0UL;
-            for (int i = 0; i < 256; i++)
-            {
-                usum += fwr.NextUlong() >> 48;
+                fwr.Seed(1);
+                usum = 0UL;
+                for (int i = 0; i < 256; i++)
+                {
+                    usum += fwr.NextUlong() >> 48;
+                }
+                Assert.InRange(usum, 0x7A0000UL, 0x860000UL);
             }
-            Assert.InRange(usum, 0x7A0000UL, 0x860000UL);
         }
         [Fact]
         public void BoundedUnsignedTest()

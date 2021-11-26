@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -7,6 +7,7 @@
 	  <!-- Enable C# 8.0 nullable reference feature -->
     <LangVersion>8.0</LangVersion>
 	  <Nullable>enable</Nullable>
+	  <StartupObject>ShaiRandom.UnitTests.Scratch</StartupObject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
