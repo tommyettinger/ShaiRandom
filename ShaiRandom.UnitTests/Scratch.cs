@@ -32,6 +32,9 @@ namespace ShaiRandom.UnitTests
                 Console.WriteLine(checking + " was outside of bounds");
                 fwr.PreviousUlong();
                 Console.WriteLine("previous returned long was {0:X}", fwr.stateD);
+                Console.WriteLine("(int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) : {0:D}", (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | (long)fwr.stateD) >> 52));
+                Console.WriteLine("(127 + 962 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23 : {0:D}", 127 + 962 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | (long)fwr.stateD) >> 52) << 23);
+                //BitConverter.Int32BitsToSingle((127 + 962 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF));
             }
         }
 
@@ -71,6 +74,10 @@ namespace ShaiRandom.UnitTests
             fwr.stateD = 0x8000000000000000UL;
             InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
 
+            long bits = -1L;
+            Console.WriteLine(BitConverter.Int32BitsToSingle((127 + 962 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF)));
+            bits = 0L;
+            Console.WriteLine(BitConverter.Int32BitsToSingle((127 + 962 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF)));
         }
     }
 }
