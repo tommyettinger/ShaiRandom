@@ -1654,7 +1654,7 @@ namespace ShaiRandom
         public double NextExclusiveDouble()
         {
             long bits = NextLong();
-            return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFFFFFL | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
+            return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
         }
 
         /**
@@ -1686,14 +1686,14 @@ namespace ShaiRandom
         /// Gets a random float between 0.0 and 1.0, exclusive at both ends. This can return float values between 1.0842022E-19 and 0.99999994; it cannot return 0 or 1.
         /// </summary>
         /// <remarks>
-        /// Like <see cref="NextExclusiveDouble"/>, this is absolute voodoo code. Its implementation generates one long and then does conversions both from int to float
+        /// Like <see cref="NextExclusiveDouble()"/>, this is absolute voodoo code. Its implementation generates one long and then does conversions both from int to float
         /// (to get the result), and from double to long (to get an approximation of log base 2). The code here is bat country, and should not be edited carelessly.</remarks>
         /// <returns>A random uniform float between 0 and 1 (both exclusive).</returns>
         public float NextExclusiveFloat()
         {
             // return ((NextUint() >> 9) + 1u) * 5.960464E-8f;
             long bits = NextLong();
-            return BitConverter.Int32BitsToSingle((127 + 962 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF));
+            return BitConverter.Int32BitsToSingle((1089 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF));
         }
 
         /**

@@ -78,6 +78,14 @@ namespace ShaiRandom.UnitTests
             Console.WriteLine(BitConverter.Int32BitsToSingle((127 + 962 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF)));
             bits = 0L;
             Console.WriteLine(BitConverter.Int32BitsToSingle((127 + 962 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF)));
+
+
+            fwr.stateD = 0xFFFFFFFFFFFFFFFFUL;
+            Console.WriteLine(fwr.NextExclusiveFloat());
+
+            fwr.stateD = 0xFFFFFFFFFFFFFFFFUL;
+            Console.WriteLine(fwr.NextExclusiveDouble());
+
         }
     }
 }
