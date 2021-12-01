@@ -254,7 +254,10 @@ namespace ShaiRandom.Distributions
                 else
                     throw new NotSupportedException("The given value is invalid for Lambda.");
             }
-            throw new NotSupportedException($"The requested index does not exist in this PoissonDistribution.");
+            else
+            {
+                throw new NotSupportedException($"The requested index does not exist in this PoissonDistribution.");
+            }
         }
 
 
