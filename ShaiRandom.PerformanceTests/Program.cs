@@ -95,6 +95,8 @@ namespace ShaiRandom.PerformanceTests
         public uint XorShift128() => _xorShift128Generator.NextUIntInclusiveMaxValue();
     }
     /// <summary>
+    /// On .NET 5.0:
+    /// <code>
     ///|          Method |      Mean |     Error |    StdDev |    Median |
     ///|---------------- |----------:|----------:|----------:|----------:|
     ///|        Distinct |  4.105 ns | 0.1214 ns | 0.3580 ns |  4.035 ns |
@@ -111,6 +113,28 @@ namespace ShaiRandom.PerformanceTests
     ///|           NR3Q1 |  4.158 ns | 0.1099 ns | 0.1576 ns |  4.180 ns |
     ///|           NR3Q2 |  4.255 ns | 0.1132 ns | 0.1922 ns |  4.357 ns |
     ///|     XorShift128 |  3.953 ns | 0.1059 ns | 0.1177 ns |  4.004 ns |
+    ///</code>
+    ///On .NET 6.0:
+    ///<code>
+    ///|          Method |      Mean |     Error |    StdDev |    Median |
+    ///|---------------- |----------:|----------:|----------:|----------:|
+    ///|          Seeded | 10.714 ns | 0.2373 ns | 0.3001 ns | 10.693 ns |
+    ///|        Unseeded |  3.811 ns | 0.1048 ns | 0.2117 ns |  3.916 ns |
+    ///|        Distinct |  1.630 ns | 0.0615 ns | 0.1229 ns |  1.587 ns |
+    ///|           Laser |  1.540 ns | 0.0576 ns | 0.1024 ns |  1.479 ns |
+    ///|        Tricycle |  1.452 ns | 0.0580 ns | 0.1322 ns |  1.347 ns |
+    ///|       FourWheel |  1.801 ns | 0.0649 ns | 0.1203 ns |  1.846 ns |
+    ///|        Stranger |  1.794 ns | 0.0126 ns | 0.0118 ns |  1.792 ns |
+    ///| XoshiroStarStar |  2.210 ns | 0.0218 ns | 0.0193 ns |  2.211 ns |
+    ///|        RomuTrio |  2.310 ns | 0.0139 ns | 0.0130 ns |  2.309 ns |
+    ///|         Mizuchi |  1.077 ns | 0.0672 ns | 0.1194 ns |  1.089 ns |
+    ///|             ALF |  6.987 ns | 0.1673 ns | 0.3601 ns |  7.130 ns |
+    ///|         MT19937 |  9.910 ns | 0.2284 ns | 0.4060 ns | 10.059 ns |
+    ///|             NR3 |  4.329 ns | 0.1148 ns | 0.2318 ns |  4.339 ns |
+    ///|           NR3Q1 |  2.803 ns | 0.0847 ns | 0.1671 ns |  2.753 ns |
+    ///|           NR3Q2 |  3.218 ns | 0.0905 ns | 0.1537 ns |  3.300 ns |
+    ///|     XorShift128 |  2.756 ns | 0.0827 ns | 0.1632 ns |  2.802 ns |
+    ///</code>
     /// </summary>
     public class RandomUintBoundedComparison
     {
@@ -131,6 +155,17 @@ namespace ShaiRandom.PerformanceTests
         private readonly NR3Q1Generator _nR3Q1Generator = new NR3Q1Generator(1u);
         private readonly NR3Q2Generator _nR3Q2Generator = new NR3Q2Generator(1u);
         private readonly MT19937Generator _mT19937Generator = new MT19937Generator(1u);
+
+#if NET6_0
+        private readonly System.Random _seededRandom = new System.Random(1);
+        private readonly System.Random _unseededRandom = new System.Random();
+
+        [Benchmark]
+        public int Seeded() => _seededRandom.Next(1, 1000);
+
+        [Benchmark]
+        public int Unseeded() => _unseededRandom.Next(1, 1000);
+#endif
 
         [Benchmark]
         public uint Distinct() => _distinctRandom.NextUint(1u, 1000u);
@@ -257,6 +292,8 @@ namespace ShaiRandom.PerformanceTests
 
     }
     /// <summary>
+    /// On .NET 5.0:
+    /// <code>
     ///|          Method |     Mean |     Error |    StdDev |   Median |
     ///|---------------- |---------:|----------:|----------:|---------:|
     ///|        Distinct | 2.904 ns | 0.0174 ns | 0.0154 ns | 2.904 ns |
@@ -267,6 +304,22 @@ namespace ShaiRandom.PerformanceTests
     ///| XoshiroStarStar | 5.723 ns | 0.1446 ns | 0.2494 ns | 5.759 ns |
     ///|        RomuTrio | 6.675 ns | 0.1606 ns | 0.3690 ns | 6.628 ns |
     ///|         Mizuchi | 3.018 ns | 0.0902 ns | 0.1672 ns | 3.053 ns |
+    /// </code>
+    /// On .NET 6.0:
+    /// <code>
+    ///|          Method |      Mean |     Error |    StdDev |    Median |
+    ///|---------------- |----------:|----------:|----------:|----------:|
+    ///|          Seeded | 24.306 ns | 0.4981 ns | 0.6117 ns | 24.575 ns |
+    ///|        Unseeded |  3.857 ns | 0.1056 ns | 0.2109 ns |  3.893 ns |
+    ///|        Distinct |  1.476 ns | 0.0594 ns | 0.1056 ns |  1.524 ns |
+    ///|           Laser |  1.545 ns | 0.0577 ns | 0.0482 ns |  1.568 ns |
+    ///|        Tricycle |  1.436 ns | 0.0563 ns | 0.1044 ns |  1.470 ns |
+    ///|       FourWheel |  1.593 ns | 0.0610 ns | 0.0874 ns |  1.626 ns |
+    ///|        Stranger |  1.563 ns | 0.0606 ns | 0.0907 ns |  1.611 ns |
+    ///| XoshiroStarStar |  2.114 ns | 0.0734 ns | 0.1360 ns |  2.177 ns |
+    ///|        RomuTrio |  2.231 ns | 0.0737 ns | 0.1403 ns |  2.282 ns |
+    ///|         Mizuchi |  1.666 ns | 0.0622 ns | 0.1229 ns |  1.711 ns |
+    /// </code>
     /// </summary>
     public class RandomUlongBoundedComparison
     {
@@ -278,6 +331,17 @@ namespace ShaiRandom.PerformanceTests
         private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
         private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
         private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+
+#if NET6_0
+        private readonly System.Random _seededRandom = new System.Random(1);
+        private readonly System.Random _unseededRandom = new System.Random();
+
+        [Benchmark]
+        public long Seeded() => _seededRandom.NextInt64(1L, 1000L);
+
+        [Benchmark]
+        public long Unseeded() => _unseededRandom.NextInt64(1L, 1000L);
+#endif
 
         [Benchmark]
         public ulong Distinct() => _distinctRandom.NextUlong(1UL, 1000UL);
