@@ -129,6 +129,19 @@ namespace ShaiRandom.Generators
             return value;
         }
 
+        private static T returnIfRangeBothExclusive<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
+        {
+            T value = returnValueFrom(series, ref seriesIndex);
+
+            if (minValue.CompareTo(value) <= 0)
+                throw new ArgumentException("Value returned is less than/equal to minimum value.");
+
+            if (maxValue.CompareTo(value) >= 0)
+                throw new ArgumentException("Value returned is greater than/equal to maximum value.");
+
+            return value;
+        }
+
         private static T returnIfRangeInclusive<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
         {
             T value = returnValueFrom(series, ref seriesIndex);
@@ -208,7 +221,11 @@ namespace ShaiRandom.Generators
         /// <returns>The next unsigned integer in the underlying series.</returns>
         public new uint NextUint(uint minValue, uint maxValue) => returnIfRange(minValue, maxValue, uintSeries, ref uintIndex);
         public override double NextDouble() => returnValueFrom(doubleSeries, ref doubleIndex);
+        public new double NextDouble(double outerBound) => NextDouble(0, outerBound);
+        public new double NextDouble(double minBound, double maxBound) => returnIfRange(minBound, maxBound, doubleSeries, ref doubleIndex);
         public override float NextFloat() => returnValueFrom(floatSeries, ref floatIndex);
+        public new float NextFloat(float outerBound) => NextFloat(0, outerBound);
+        public new float NextFloat(float minBound, float maxBound) => returnIfRange(minBound, maxBound, floatSeries, ref floatIndex);
         public new long NextLong() => returnValueFrom(longSeries, ref longIndex);
         public new long NextLong(long outerBound) => NextLong(0, outerBound);
         /// <summary>
@@ -221,6 +238,16 @@ namespace ShaiRandom.Generators
         public new long NextLong(long minValue, long maxValue) => returnIfRange(minValue, maxValue, longSeries, ref longIndex);
 
         public override ulong NextUlong() => returnValueFrom(ulongSeries, ref ulongIndex);
+        public new ulong NextUlong(ulong outerBound) => NextUlong(0, outerBound);
+        /// <summary>
+        /// Returns the next ulong in the underlying series. If the value is less than
+        /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
+        /// </summary>
+        /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
+        /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
+        /// <returns>The next ulong in the underlying series.</returns>
+        public new ulong NextUlong(ulong minValue, ulong maxValue) => returnIfRange(minValue, maxValue, ulongSeries, ref ulongIndex);
+
 
         /// <summary>
         /// Fills the specified buffer with values from the underlying byte series.
