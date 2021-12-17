@@ -199,6 +199,7 @@ namespace ShaiRandom.Generators
         public override bool Equals(object? obj) => obj is KnownSeriesRandom random && StateCount == random.StateCount && boolIndex == random.boolIndex && EqualityComparer<List<bool>>.Default.Equals(boolSeries, random.boolSeries) && byteIndex == random.byteIndex && EqualityComparer<List<byte>>.Default.Equals(byteSeries, random.byteSeries) && doubleIndex == random.doubleIndex && EqualityComparer<List<double>>.Default.Equals(doubleSeries, random.doubleSeries) && floatIndex == random.floatIndex && EqualityComparer<List<float>>.Default.Equals(floatSeries, random.floatSeries) && intIndex == random.intIndex && EqualityComparer<List<int>>.Default.Equals(intSeries, random.intSeries) && uintIndex == random.uintIndex && EqualityComparer<List<uint>>.Default.Equals(uintSeries, random.uintSeries) && longIndex == random.longIndex && EqualityComparer<List<long>>.Default.Equals(longSeries, random.longSeries) && ulongIndex == random.ulongIndex && EqualityComparer<List<ulong>>.Default.Equals(ulongSeries, random.ulongSeries);
         public bool Equals(KnownSeriesRandom? random) => random != null && StateCount == random.StateCount && boolIndex == random.boolIndex && EqualityComparer<List<bool>>.Default.Equals(boolSeries, random.boolSeries) && byteIndex == random.byteIndex && EqualityComparer<List<byte>>.Default.Equals(byteSeries, random.byteSeries) && doubleIndex == random.doubleIndex && EqualityComparer<List<double>>.Default.Equals(doubleSeries, random.doubleSeries) && floatIndex == random.floatIndex && EqualityComparer<List<float>>.Default.Equals(floatSeries, random.floatSeries) && intIndex == random.intIndex && EqualityComparer<List<int>>.Default.Equals(intSeries, random.intSeries) && uintIndex == random.uintIndex && EqualityComparer<List<uint>>.Default.Equals(uintSeries, random.uintSeries) && longIndex == random.longIndex && EqualityComparer<List<long>>.Default.Equals(longSeries, random.longSeries) && ulongIndex == random.ulongIndex && EqualityComparer<List<ulong>>.Default.Equals(ulongSeries, random.ulongSeries);
         public override bool NextBool() => returnValueFrom(boolSeries, ref boolIndex);
+        public new bool NextBool(float chance) => NextBool();
 
         public new int NextInt() => returnValueFrom(intSeries, ref intIndex);
         public new int NextInt(int outerBound) => NextInt(0, outerBound);
@@ -212,6 +213,8 @@ namespace ShaiRandom.Generators
         public new int NextInt(int minValue, int maxValue) => returnIfRange(minValue, maxValue, intSeries, ref intIndex);
         public new uint NextUint() => returnValueFrom(uintSeries, ref uintIndex);
         public new uint NextUint(uint outerBound) => NextUint(0, outerBound);
+        public new uint NextBits(int bits) => (bits & 31) == 0 ? NextUint() : NextUint(0, 1U << bits);
+
         /// <summary>
         /// Returns the next unsigned integer in the underlying series. If the value is less than
         /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
@@ -238,6 +241,13 @@ namespace ShaiRandom.Generators
         public new float NextExclusiveFloat() => NextExclusiveFloat(0f, 1f);
         public new float NextExclusiveFloat(float outerBound) => NextExclusiveFloat(0f, outerBound);
         public new float NextExclusiveFloat(float minBound, float maxBound) => returnIfRangeBothExclusive(minBound, maxBound, floatSeries, ref floatIndex);
+        public new float NextTriangular()
+        {
+            NextFloat(); // Used only to advance state the same number of times.
+            return NextExclusiveFloat(-1f, 1f);
+        }
+        public new float NextTriangular(float min, float max) => NextExclusiveFloat(min, max);
+        public new float NextTriangular(float min, float max, float mode) => NextExclusiveFloat(min, max);
         public new long NextLong() => returnValueFrom(longSeries, ref longIndex);
         public new long NextLong(long outerBound) => NextLong(0, outerBound);
         /// <summary>
