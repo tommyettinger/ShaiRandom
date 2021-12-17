@@ -221,11 +221,23 @@ namespace ShaiRandom.Generators
         /// <returns>The next unsigned integer in the underlying series.</returns>
         public new uint NextUint(uint minValue, uint maxValue) => returnIfRange(minValue, maxValue, uintSeries, ref uintIndex);
         public override double NextDouble() => returnValueFrom(doubleSeries, ref doubleIndex);
-        public new double NextDouble(double outerBound) => NextDouble(0, outerBound);
+        public new double NextDouble(double outerBound) => NextDouble(0.0, outerBound);
         public new double NextDouble(double minBound, double maxBound) => returnIfRange(minBound, maxBound, doubleSeries, ref doubleIndex);
+        public new double NextInclusiveDouble() => NextInclusiveDouble(0f, 1f);
+        public new double NextInclusiveDouble(double outerBound) => NextInclusiveDouble(0f, outerBound);
+        public new double NextInclusiveDouble(double minBound, double maxBound) => returnIfRangeInclusive(minBound, maxBound, doubleSeries, ref doubleIndex);
+        public new double NextExclusiveDouble() => NextExclusiveDouble(0f, 1f);
+        public new double NextExclusiveDouble(double outerBound) => NextExclusiveDouble(0f, outerBound);
+        public new double NextExclusiveDouble(double minBound, double maxBound) => returnIfRangeBothExclusive(minBound, maxBound, doubleSeries, ref doubleIndex);
         public override float NextFloat() => returnValueFrom(floatSeries, ref floatIndex);
-        public new float NextFloat(float outerBound) => NextFloat(0, outerBound);
+        public new float NextFloat(float outerBound) => NextFloat(0f, outerBound);
         public new float NextFloat(float minBound, float maxBound) => returnIfRange(minBound, maxBound, floatSeries, ref floatIndex);
+        public new float NextInclusiveFloat() => NextInclusiveFloat(0f, 1f);
+        public new float NextInclusiveFloat(float outerBound) => NextInclusiveFloat(0f, outerBound);
+        public new float NextInclusiveFloat(float minBound, float maxBound) => returnIfRangeInclusive(minBound, maxBound, floatSeries, ref floatIndex);
+        public new float NextExclusiveFloat() => NextExclusiveFloat(0f, 1f);
+        public new float NextExclusiveFloat(float outerBound) => NextExclusiveFloat(0f, outerBound);
+        public new float NextExclusiveFloat(float minBound, float maxBound) => returnIfRangeBothExclusive(minBound, maxBound, floatSeries, ref floatIndex);
         public new long NextLong() => returnValueFrom(longSeries, ref longIndex);
         public new long NextLong(long outerBound) => NextLong(0, outerBound);
         /// <summary>
