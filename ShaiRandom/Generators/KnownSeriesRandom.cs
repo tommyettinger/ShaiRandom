@@ -186,8 +186,40 @@ namespace ShaiRandom.Generators
         public override bool Equals(object? obj) => obj is KnownSeriesRandom random && StateCount == random.StateCount && boolIndex == random.boolIndex && EqualityComparer<List<bool>>.Default.Equals(boolSeries, random.boolSeries) && byteIndex == random.byteIndex && EqualityComparer<List<byte>>.Default.Equals(byteSeries, random.byteSeries) && doubleIndex == random.doubleIndex && EqualityComparer<List<double>>.Default.Equals(doubleSeries, random.doubleSeries) && floatIndex == random.floatIndex && EqualityComparer<List<float>>.Default.Equals(floatSeries, random.floatSeries) && intIndex == random.intIndex && EqualityComparer<List<int>>.Default.Equals(intSeries, random.intSeries) && uintIndex == random.uintIndex && EqualityComparer<List<uint>>.Default.Equals(uintSeries, random.uintSeries) && longIndex == random.longIndex && EqualityComparer<List<long>>.Default.Equals(longSeries, random.longSeries) && ulongIndex == random.ulongIndex && EqualityComparer<List<ulong>>.Default.Equals(ulongSeries, random.ulongSeries);
         public bool Equals(KnownSeriesRandom? random) => random != null && StateCount == random.StateCount && boolIndex == random.boolIndex && EqualityComparer<List<bool>>.Default.Equals(boolSeries, random.boolSeries) && byteIndex == random.byteIndex && EqualityComparer<List<byte>>.Default.Equals(byteSeries, random.byteSeries) && doubleIndex == random.doubleIndex && EqualityComparer<List<double>>.Default.Equals(doubleSeries, random.doubleSeries) && floatIndex == random.floatIndex && EqualityComparer<List<float>>.Default.Equals(floatSeries, random.floatSeries) && intIndex == random.intIndex && EqualityComparer<List<int>>.Default.Equals(intSeries, random.intSeries) && uintIndex == random.uintIndex && EqualityComparer<List<uint>>.Default.Equals(uintSeries, random.uintSeries) && longIndex == random.longIndex && EqualityComparer<List<long>>.Default.Equals(longSeries, random.longSeries) && ulongIndex == random.ulongIndex && EqualityComparer<List<ulong>>.Default.Equals(ulongSeries, random.ulongSeries);
         public override bool NextBool() => returnValueFrom(boolSeries, ref boolIndex);
+
+        public new int NextInt() => returnValueFrom(intSeries, ref intIndex);
+        public new int NextInt(int outerBound) => NextInt(0, outerBound);
+        /// <summary>
+        /// Returns the next integer in the underlying series. If the value is less than
+        /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
+        /// </summary>
+        /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
+        /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
+        /// <returns>The next integer in the underlying series.</returns>
+        public new int NextInt(int minValue, int maxValue) => returnIfRange(minValue, maxValue, intSeries, ref intIndex);
+        public new uint NextUint() => returnValueFrom(uintSeries, ref uintIndex);
+        public new uint NextUint(uint outerBound) => NextUint(0, outerBound);
+        /// <summary>
+        /// Returns the next unsigned integer in the underlying series. If the value is less than
+        /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
+        /// </summary>
+        /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
+        /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
+        /// <returns>The next unsigned integer in the underlying series.</returns>
+        public new uint NextUint(uint minValue, uint maxValue) => returnIfRange(minValue, maxValue, uintSeries, ref uintIndex);
         public override double NextDouble() => returnValueFrom(doubleSeries, ref doubleIndex);
         public override float NextFloat() => returnValueFrom(floatSeries, ref floatIndex);
+        public new long NextLong() => returnValueFrom(longSeries, ref longIndex);
+        public new long NextLong(long outerBound) => NextLong(0, outerBound);
+        /// <summary>
+        /// Returns the next long in the underlying series. If the value is less than
+        /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
+        /// </summary>
+        /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
+        /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
+        /// <returns>The next long in the underlying series.</returns>
+        public new long NextLong(long minValue, long maxValue) => returnIfRange(minValue, maxValue, longSeries, ref longIndex);
+
         public override ulong NextUlong() => returnValueFrom(ulongSeries, ref ulongIndex);
 
         /// <summary>
