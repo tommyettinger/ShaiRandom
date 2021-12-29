@@ -79,7 +79,7 @@ namespace ShaiRandom.Distributions
             }
         }
 
-        public IRandom Generator { get; set; }
+        public IEnhancedRandom Generator { get; set; }
 
         #endregion Fields
 
@@ -121,11 +121,11 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="PoissonDistribution"/> class, using
-        ///   the specified <see cref="IRandom"/> as underlying random number generator.
+        ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IRandom"/> object.</param>
+        /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
-        public PoissonDistribution(IRandom generator) : this(generator, DefaultLambda)
+        public PoissonDistribution(IEnhancedRandom generator) : this(generator, DefaultLambda)
         {
         }
 
@@ -162,9 +162,9 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="PoissonDistribution"/> class, using
-        ///   the specified <see cref="IRandom"/> as underlying random number generator.
+        ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IRandom"/> object.</param>
+        /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <param name="lambda">
         ///   The parameter lambda which is used for generation of Poisson distributed random numbers.
         /// </param>
@@ -172,7 +172,7 @@ namespace ShaiRandom.Distributions
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="lambda"/> is less than or equal to zero.
         /// </exception>
-        public PoissonDistribution(IRandom generator, double lambda)
+        public PoissonDistribution(IEnhancedRandom generator, double lambda)
         {
             Generator = generator;
             ParameterLambda = lambda;
@@ -282,7 +282,7 @@ namespace ShaiRandom.Distributions
         /// <remarks>
         ///   This is an extensibility point for the <see cref="PoissonDistribution"/> class.
         /// </remarks>
-        public static Func<IRandom, double, int> Sample { get; set; } = (generator, lambda) =>
+        public static Func<IEnhancedRandom, double, int> Sample { get; set; } = (generator, lambda) =>
         {
             int x = 0;
             double p = Math.Exp(-lambda), s = p, u = generator.NextDouble();

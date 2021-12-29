@@ -79,7 +79,7 @@ namespace ShaiRandom
         /// </summary>
         public override bool SupportsWriteAccess => true;
         /// <summary>
-        /// This does not support <see cref="IRandom.Skip(ulong)"/>.
+        /// This does not support <see cref="IEnhancedRandom.Skip(ulong)"/>.
         /// </summary>
         public override bool SupportsSkip => false;
         /// <summary>
@@ -204,9 +204,9 @@ namespace ShaiRandom
             return stateB ^ 0x572B5EE77A54E3BDUL * stateA ^ BitExtensions.RotateRight(stateC - 0xC6BC279692B5C323UL, 41);
         }
 
-        public override IRandom Copy() => new TricycleRandom(stateA, stateB, stateC);
+        public override IEnhancedRandom Copy() => new TricycleRandom(stateA, stateB, stateC);
         public override string StringSerialize() => $"#TriR`{stateA:X}~{stateB:X}~{stateC:X}`";
-        public override IRandom StringDeserialize(string data)
+        public override IEnhancedRandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
             stateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);

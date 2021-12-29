@@ -80,7 +80,7 @@ namespace ShaiRandom
         /// </summary>
         public override bool SupportsWriteAccess => true;
         /// <summary>
-        /// This supports <see cref="IRandom.Skip(ulong)"/>.
+        /// This supports <see cref="IEnhancedRandom.Skip(ulong)"/>.
         /// </summary>
         public override bool SupportsSkip => true;
         /// <summary>
@@ -193,9 +193,9 @@ namespace ShaiRandom
             }
         }
 
-        public override IRandom Copy() => new LaserRandom(stateA, stateB);
+        public override IEnhancedRandom Copy() => new LaserRandom(stateA, stateB);
         public override string StringSerialize() => $"#LasR`{stateA:X}~{stateB:X}`";
-        public override IRandom StringDeserialize(string data)
+        public override IEnhancedRandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
             stateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);

@@ -85,7 +85,7 @@ namespace ShaiRandom
         /// </summary>
         public override bool SupportsWriteAccess => true;
         /// <summary>
-        /// This does not support <see cref="IRandom.Skip(ulong)"/>.
+        /// This does not support <see cref="IEnhancedRandom.Skip(ulong)"/>.
         /// </summary>
         public override bool SupportsSkip => false;
         /// <summary>
@@ -187,9 +187,9 @@ namespace ShaiRandom
             }
         }
 
-        public override IRandom Copy() => new MizuchiRandom(stateA, stateB);
+        public override IEnhancedRandom Copy() => new MizuchiRandom(stateA, stateB);
         public override string StringSerialize() => $"#MizR`{stateA:X}~{stateB:X}`";
-        public override IRandom StringDeserialize(string data)
+        public override IEnhancedRandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
             stateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);

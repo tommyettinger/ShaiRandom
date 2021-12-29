@@ -140,7 +140,7 @@ namespace ShaiRandom.Distributions
             }
         }
 
-        public IRandom Generator { get; set; }
+        public IEnhancedRandom Generator { get; set; }
 
         #endregion Fields
 
@@ -182,11 +182,11 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="TriangularDistribution"/> class, using
-        ///   the specified <see cref="IRandom"/> as underlying random number generator.
+        ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IRandom"/> object.</param>
+        /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
-        public TriangularDistribution(IRandom generator) : this(generator, DefaultAlpha, DefaultBeta, DefaultGamma)
+        public TriangularDistribution(IEnhancedRandom generator) : this(generator, DefaultAlpha, DefaultBeta, DefaultGamma)
         {
         }
 
@@ -237,9 +237,9 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="TriangularDistribution"/> class, using
-        ///   the specified <see cref="IRandom"/> as underlying random number generator.
+        ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IRandom"/> object.</param>
+        /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <param name="alpha">
         ///   The alpha parameter.
         /// </param>
@@ -253,7 +253,7 @@ namespace ShaiRandom.Distributions
         ///   <paramref name="alpha"/> is NaN, or
         ///   <paramref name="beta"/> is less than or equal to zero.
         /// </exception>
-        public TriangularDistribution(IRandom generator, double alpha, double beta, double gamma)
+        public TriangularDistribution(IEnhancedRandom generator, double alpha, double beta, double gamma)
         {
             Generator = generator;
             ParameterAlpha = alpha;
@@ -386,7 +386,7 @@ namespace ShaiRandom.Distributions
         /// <remarks>
         ///   This is an extensibility point for the <see cref="TriangularDistribution"/> class.
         /// </remarks>
-        public static Func<IRandom, double, double, double, double> Sample { get; set; } = (generator, alpha, beta, gamma) =>
+        public static Func<IEnhancedRandom, double, double, double, double> Sample { get; set; } = (generator, alpha, beta, gamma) =>
         {
             double helper1 = gamma - alpha;
             double helper2 = beta - alpha;

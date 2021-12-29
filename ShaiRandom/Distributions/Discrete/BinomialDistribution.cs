@@ -110,7 +110,7 @@ namespace ShaiRandom.Distributions
             }
         }
 
-        public IRandom Generator { get; set; }
+        public IEnhancedRandom Generator { get; set; }
 
         #endregion Fields
 
@@ -152,11 +152,11 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="BinomialDistribution"/> class, using
-        ///   the specified <see cref="IRandom"/> as underlying random number generator.
+        ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IRandom"/> object.</param>
+        /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
-        public BinomialDistribution(IRandom generator) : this(generator, DefaultAlpha, DefaultBeta)
+        public BinomialDistribution(IEnhancedRandom generator) : this(generator, DefaultAlpha, DefaultBeta)
         {
         }
 
@@ -193,9 +193,9 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="BinomialDistribution"/> class, using
-        ///   the specified <see cref="IRandom"/> as underlying random number generator.
+        ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IRandom"/> object.</param>
+        /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <param name="alpha">
         ///   The parameter alpha which is used for generation of Binomial distributed random numbers.
         /// </param>
@@ -203,7 +203,7 @@ namespace ShaiRandom.Distributions
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="alpha"/> is less than or equal to zero.
         /// </exception>
-        public BinomialDistribution(IRandom generator, double alpha, int beta)
+        public BinomialDistribution(IEnhancedRandom generator, double alpha, int beta)
         {
             Generator = generator;
             ParameterAlpha = alpha;
@@ -331,7 +331,7 @@ namespace ShaiRandom.Distributions
         /// <remarks>
         ///   This is an extensibility point for the <see cref="BinomialDistribution"/> class.
         /// </remarks>
-        public static Func<IRandom, double, int, int> Sample { get; set; } = (generator, alpha, beta) =>
+        public static Func<IEnhancedRandom, double, int, int> Sample { get; set; } = (generator, alpha, beta) =>
         {
             int successes = 0;
             for (int i = 0; i < beta; i++)

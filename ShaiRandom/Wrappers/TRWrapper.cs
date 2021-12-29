@@ -18,13 +18,13 @@ namespace ShaiRandom
         /// <summary>
         /// The wrapped AbstractRandom, which must never be null.
         /// </summary>
-        public IRandom Wrapped { get; set; }
+        public IEnhancedRandom Wrapped { get; set; }
 
         public TRWrapper() => Wrapped = new FourWheelRandom();
 
         public TRWrapper(ulong seed) => Wrapped = new FourWheelRandom(seed);
 
-        public TRWrapper(IRandom wrapped) => Wrapped = wrapped;
+        public TRWrapper(IEnhancedRandom wrapped) => Wrapped = wrapped;
 
         public override int StateCount => Wrapped.StateCount;
         public override bool SupportsReadAccess => Wrapped.SupportsReadAccess;
@@ -32,7 +32,7 @@ namespace ShaiRandom
         public override bool SupportsSkip => Wrapped.SupportsSkip;
         public override bool SupportsPrevious => Wrapped.SupportsPrevious;
 
-        public override IRandom Copy() => new TRWrapper(Wrapped.Copy());
+        public override IEnhancedRandom Copy() => new TRWrapper(Wrapped.Copy());
         public override double NextDouble() => Wrapped.NextDouble();
         public override ulong NextULong() => Wrapped.NextULong();
         public override ulong SelectState(int selection) => Wrapped.SelectState(selection);
@@ -45,7 +45,7 @@ namespace ShaiRandom
         public override ulong Skip(ulong distance) => Wrapped.Skip(distance);
         public override ulong PreviousULong() => Wrapped.PreviousULong();
         public override string StringSerialize() => "T"+ Wrapped.StringSerialize().Substring(1);
-        public override IRandom StringDeserialize(string data)
+        public override IEnhancedRandom StringDeserialize(string data)
         {
             Wrapped.StringDeserialize(data);
             return this;
@@ -73,7 +73,7 @@ namespace ShaiRandom
         #endregion
 
         public override bool Equals(object? obj) => Equals(obj as TRWrapper);
-        public bool Equals(TRWrapper? other) => other != null && EqualityComparer<IRandom>.Default.Equals(Wrapped, other.Wrapped);
+        public bool Equals(TRWrapper? other) => other != null && EqualityComparer<IEnhancedRandom>.Default.Equals(Wrapped, other.Wrapped);
 
         public static bool operator ==(TRWrapper? left, TRWrapper? right) => EqualityComparer<TRWrapper>.Default.Equals(left, right);
         public static bool operator !=(TRWrapper? left, TRWrapper? right) => !(left == right);

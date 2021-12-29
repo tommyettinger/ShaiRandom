@@ -106,7 +106,7 @@ namespace ShaiRandom.Distributions
             }
         }
 
-        public IRandom Generator { get; set; }
+        public IEnhancedRandom Generator { get; set; }
 
         #endregion Fields
 
@@ -148,11 +148,11 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using
-        ///   the specified <see cref="IRandom"/> as underlying random number generator.
+        ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IRandom"/> object.</param>
+        /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
-        public KumaraswamyDistribution(IRandom generator) : this(generator, DefaultA, DefaultB)
+        public KumaraswamyDistribution(IEnhancedRandom generator) : this(generator, DefaultA, DefaultB)
         {
         }
 
@@ -197,9 +197,9 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using
-        ///   the specified <see cref="IRandom"/> as underlying random number generator.
+        ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IRandom"/> object.</param>
+        /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <param name="a">
         ///   The shape parameter a.
         /// </param>
@@ -211,7 +211,7 @@ namespace ShaiRandom.Distributions
         ///   <paramref name="a"/> is less than or equal to zero, or
         ///   <paramref name="b"/> is less than or equal to zero.
         /// </exception>
-        public KumaraswamyDistribution(IRandom generator, double a, double b)
+        public KumaraswamyDistribution(IEnhancedRandom generator, double a, double b)
         {
             Generator = generator;
             ParameterA = a;
@@ -323,7 +323,7 @@ namespace ShaiRandom.Distributions
         /// <remarks>
         ///   This is an extensibility point for the <see cref="KumaraswamyDistribution"/> class.
         /// </remarks>
-        public static Func<IRandom, double, double, double> Sample { get; set; } = (generator, a, b) =>
+        public static Func<IEnhancedRandom, double, double, double> Sample { get; set; } = (generator, a, b) =>
         {
             return Math.Pow(1.0 - Math.Pow(generator.NextExclusiveDouble(), b), a);
         };

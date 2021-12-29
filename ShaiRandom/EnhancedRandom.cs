@@ -34,7 +34,10 @@ namespace ShaiRandom
         public static void RotateRightInPlace(ref this ulong ul, int amt) => ul = (ul >> amt) | (ul << 64 - amt);
     }
 
-    public interface IRandom
+    /// <summary>
+    /// The interface view of the functionality typically provided by <see cref="AbstractRandom"/>.
+    /// </summary>
+    public interface IEnhancedRandom
     {
         void Seed(ulong seed);
         /// <summary>
@@ -69,59 +72,99 @@ namespace ShaiRandom
         bool SupportsPrevious { get; }
 
         /// <summary>
-        /// Returns a full copy (deep, if necessary) of this IRandom.
+        /// Returns a full copy (deep, if necessary) of this IEnhancedRandom.
         /// </summary>
-        /// <returns>A copy of this IRandom.</returns>
-        IRandom Copy();
+        /// <returns>A copy of this IEnhancedRandom.</returns>
+        IEnhancedRandom Copy();
 
         /// <summary>
         /// Produces a string that encodes the type and full state of this generator.
-        /// This is an optional operation for classes that only implement IRandom; AbstractRandom requires an implementation.
+        /// This is an optional operation for classes that only implement IEnhancedRandom; AbstractRandom requires an implementation.
         /// </summary>
         /// <returns>An encoded string that stores the type and full state of this generator.</returns>
         string StringSerialize();
 
         /// <summary>
         /// Given a string produced by <see cref="StringSerialize"/>, if the specified type is compatible,
-        /// then this method sets the state of this IRandom to the specified stored state.
-        /// This is an optional operation for classes that only implement IRandom; AbstractRandom requires an implementation.
+        /// then this method sets the state of this IEnhancedRandom to the specified stored state.
+        /// This is an optional operation for classes that only implement IEnhancedRandom; AbstractRandom requires an implementation.
         /// </summary>
         /// <param name="data">A string produced by StringSerialize.</param>
-        /// <returns>This IRandom, after modifications.</returns>
-        IRandom StringDeserialize(string data);
+        /// <returns>This IEnhancedRandom, after modifications.</returns>
+        IEnhancedRandom StringDeserialize(string data);
 
+        /// <summary>
+        /// Gets a selected state value from this AbstractRandom, by index.
+        /// </summary>
+        /// <remarks>
+        /// The number of possible selections is up to the implementing class, and is accessible via <see cref="StateCount"/>, but negative values for selection are typically not tolerated.
+        /// This should return the exact value of the selected state, assuming it is implemented. The default implementation throws an NotSupportedException, and implementors only have to
+        /// allow reading the state if they choose to implement this differently. If this method is intended to be used, <see cref="StateCount"/> must also be implemented.
+        /// </remarks>
+        /// <param name="selection">The index of the state to retrieve.</param>
+        /// <returns>The value of the state corresponding to selection</returns>
+        /// <exception cref="NotSupportedException">If the generator does not allow reading its state.</exception>
         ulong SelectState(int selection);
+
+        /// <summary>
+        /// Sets a selected state value to the given ulong value.
+        /// </summary>
+        /// <remarks>
+        /// The number of possible selections is up to the implementing class, but selection should be at least 0 and less than <see cref="StateCount"/>.
+        /// Implementors are permitted to change value if it is not valid, but they should not alter it if it is valid.
+        /// The public implementation calls <see cref="Seed(ulong)"/> with value, which doesn't need changing if the generator has one state that is set verbatim by Seed().
+        /// Otherwise, this method should be implemented when <see cref="SelectState(int)"/> is and the state is allowed to be set by users.
+        /// Having accurate ways to get and set the full state of a random number generator makes it much easier to serialize and deserialize that class.
+        /// </remarks>
+        /// <param name="selection">The index of the state to set.</param>
+        /// <param name="value">The value to try to use for the selected state.</param>
         void SetSelectedState(int selection, ulong value);
+
+        /// <summary>
+        /// Sets every state variable to the given state.
+        /// </summary>
+        /// <remarks>
+        /// If <see cref="StateCount"/> is 1, then this should set the whole state to the given value using <see cref="SetSelectedState(int, ulong)"/>.
+        /// If StateCount is more than 1, then all states will be set in the same way (using SetSelectedState(), all to state).
+        /// </remarks>
+        /// <param name="state">The ulong variable to use for every state variable.</param>
         void SetState(ulong state);
 
         /// <summary>
         /// Sets each state variable to either stateA or stateB, alternating.
-        /// This uses <see cref="SetSelectedState(int, ulong)"/> to set the values. If there is one
-        /// state variable (<see cref="StateCount"/> is 1), then this only sets that state
-        /// variable to stateA. If there are two state variables, the first is set to stateA,
-        /// and the second to stateB. If there are more, it reuses stateA, then stateB, then
-        /// stateA, and so on until all variables are set.
-        /// <param name="stateA">the ulong value to use for states at index 0, 2, 4, 6...</param>
-        /// <param name="stateB">the ulong value to use for states at index 1, 3, 5, 7...</param>
+        /// </summary>
+        /// <remarks>
+        /// This uses <see cref="SetSelectedState(int, ulong)"/> to set the values.
+        /// If there is one state variable (<see cref="StateCount"/> is 1), then this only sets that state variable to stateA.
+        /// If there are two state variables, the first is set to stateA, and the second to stateB.
+        ///  there are more, it reuses stateA, then stateB, then stateA, and so on until all variables are set.
+        /// </remarks>
+        /// <param name="stateA">The ulong value to use for states at index 0, 2, 4, 6...</param>
+        /// <param name="stateB">The ulong value to use for states at index 1, 3, 5, 7...</param>
         void SetState(ulong stateA, ulong stateB);
 
         /// <summary>
-        /// Sets each state variable to stateA, stateB, or stateC,
-        /// alternating. This uses <see cref="SetSelectedState(int, ulong)"/> to set the values.
+        /// Sets each state variable to stateA, stateB, or stateC, alternating.
+        /// </summary>
+        /// <remarks>
+        /// This uses <see cref="SetSelectedState(int, ulong)"/> to set the values.
         /// If there is one state variable (<see cref="StateCount"/> is 1), then this only
         /// sets that state variable to stateA. If there are two state variables, the first
         /// is set to stateA, and the second to stateB. With three state variables, the
         /// first is set to stateA, the second to stateB, and the third to stateC. If there
         /// are more, it reuses stateA, then stateB, then stateC, then stateA, and so on
         /// until all variables are set.
-        /// <param name="stateA">the ulong value to use for states at index 0, 3, 6, 9...</param>
-        /// <param name="stateB">the ulong value to use for states at index 1, 4, 7, 10...</param>
-        /// <param name="stateC">the ulong value to use for states at index 2, 5, 8, 11...</param>
+        /// </remarks>
+        /// <param name="stateA">The ulong value to use for states at index 0, 3, 6, 9...</param>
+        /// <param name="stateB">The ulong value to use for states at index 1, 4, 7, 10...</param>
+        /// <param name="stateC">The ulong value to use for states at index 2, 5, 8, 11...</param>
         void SetState(ulong stateA, ulong stateB, ulong stateC);
 
         /// <summary>
-        /// Sets each state variable to stateA, stateB, stateC, or
-        /// stateD, alternating. This uses <see cref="SetSelectedState(int, ulong)"/> to
+        /// Sets each state variable to stateA, stateB, stateC, or stateD, alternating.
+        /// </summary>
+        /// <remarks>
+        /// This uses <see cref="SetSelectedState(int, ulong)"/> to
         /// set the values. If there is one state variable (<see cref="StateCount"/> is 1),
         /// then this only sets that state variable to stateA. If there are two state
         /// variables, the first is set to stateA, and the second to stateB. With three
@@ -130,6 +173,7 @@ namespace ShaiRandom
         /// stateB, the third to stateC, and the fourth to stateD. If there are more, it
         /// reuses stateA, then stateB, then stateC, then stateD, then stateA, and so on
         /// until all variables are set.
+        /// </remarks>
         /// <param name="stateA">the ulong value to use for states at index 0, 4, 8, 12...</param>
         /// <param name="stateB">the ulong value to use for states at index 1, 5, 9, 13...</param>
         /// <param name="stateC">the ulong value to use for states at index 2, 6, 10, 14...</param>
@@ -142,6 +186,7 @@ namespace ShaiRandom
         /// generators with any <see cref="StateCount"/>, but may allocate an array if states is
         /// used as a varargs (you can pass an existing array without needing to allocate). This
         /// uses <see cref="SetSelectedState(int, ulong)"/> to change the states.
+        /// </summary>
         /// <param name="states">an array or varargs of ulong values to use as states</param>
         void SetState(params ulong[] states);
         /// <summary>
@@ -324,12 +369,14 @@ namespace ShaiRandom
         /// bool value is pseudorandomly generated and returned.  The
         /// values true and false are produced with
         /// (approximately) equal probability.
-        /// 
-        /// The default implementation is equivalent to a sign check on {@link #NextULong()},
+        /// </summary>
+        /// <remarks>
+        /// The default implementation is equivalent to a sign check on <see cref="NextLong()"/>,
         /// returning true if the generated long is negative. This is typically the safest
         /// way to implement this method; many types of generators have less statistical
         /// quality on their lowest bit, so just returning based on the lowest bit isn't
         /// always a good idea.
+        /// </remarks>
         /// <returns>the next pseudorandom, uniformly distributed</returns>
         /// bool value from this random number generator's
         /// sequence
@@ -536,12 +583,12 @@ namespace ShaiRandom
         ulong PreviousULong();
 
         /// <summary>
-        /// Sets each state in this IRandom to the corresponding state in the other IRandom.
+        /// Sets each state in this IEnhancedRandom to the corresponding state in the other IEnhancedRandom.
         /// This generally only works correctly if both objects have the same class, but may also function correctly if this, other, or both are wrappers
-        /// around the same type of IRandom.
+        /// around the same type of IEnhancedRandom.
         /// </summary>
-        /// <param name="other">Another IRandom that almost always should have the same class as this one, or wrap an IRandom with the same class.</param>
-        void SetWith(IRandom other);
+        /// <param name="other">Another IEnhancedRandom that almost always should have the same class as this one, or wrap an IEnhancedRandom with the same class.</param>
+        void SetWith(IEnhancedRandom other);
 
         /// <summary>
         /// Returns true if a random value between 0 and 1 is less than the specified value.
@@ -760,7 +807,7 @@ namespace ShaiRandom
     /// be implemented to set specific states, especially if there is more than one state variable.
     /// </remarks>
     [Serializable]
-    public abstract class AbstractRandom : IRandom
+    public abstract class AbstractRandom : IEnhancedRandom
     {
         private static readonly float FLOAT_ADJUST = MathF.Pow(2f, -24f);
         private static readonly double DOUBLE_ADJUST = Math.Pow(2.0, -53.0);
@@ -847,7 +894,7 @@ namespace ShaiRandom
         /// </summary>
         public abstract string Tag { get; }
 
-        private static Dictionary<string, IRandom> TAGS = new Dictionary<string, IRandom>();
+        private static Dictionary<string, IEnhancedRandom> TAGS = new Dictionary<string, IEnhancedRandom>();
 
         /// <summary>
         /// Registers an instance of a subclass of AbstractRandom by its four-character string <see cref="Tag"/>.
@@ -874,21 +921,21 @@ namespace ShaiRandom
 
         /// <summary>
         /// Given a string produced by <see cref="StringSerialize"/>, if the specified type is compatible,
-        /// then this method sets the state of this IRandom to the specified stored state.
+        /// then this method sets the state of this IEnhancedRandom to the specified stored state.
         /// </summary>
         /// <param name="data">A string produced by StringSerialize.</param>
-        /// <returns>This IRandom, after modifications.</returns>
-        public abstract IRandom StringDeserialize(string data);
+        /// <returns>This IEnhancedRandom, after modifications.</returns>
+        public abstract IEnhancedRandom StringDeserialize(string data);
 
         /// <summary>
         /// Given a string produced by <see cref="StringSerialize()"/> on any valid subclass of AbstractRandom,
-        /// this returns a new IRandom with the same implementation and state it had when it was serialized.
+        /// this returns a new IEnhancedRandom with the same implementation and state it had when it was serialized.
         /// This handles all AbstractRandom implementations in this library, including <see cref="TRWrapper"/> and
         /// <see cref="ReversingWrapper"/> (both of which it currently handles with a special case).
         /// </summary>
         /// <param name="data">A string produced by an AbstractRandom's StringSerialize() method.</param>
-        /// <returns>A newly-allocated IRandom matching the implementation and state of the serialized AbstractRandom.</returns>
-        public static IRandom Deserialize(string data)
+        /// <returns>A newly-allocated IEnhancedRandom matching the implementation and state of the serialized AbstractRandom.</returns>
+        public static IEnhancedRandom Deserialize(string data)
         {
             if (data.StartsWith('T'))
                 return new TRWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
@@ -1712,17 +1759,17 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns a full copy (deep, if necessary) of this IRandom.
+        /// Returns a full copy (deep, if necessary) of this IEnhancedRandom.
         /// </summary>
-        /// <returns>A copy of this IRandom.</returns>
-        public abstract IRandom Copy();
+        /// <returns>A copy of this IEnhancedRandom.</returns>
+        public abstract IEnhancedRandom Copy();
 
         /// <summary>
-        /// Sets each state in this IRandom to the corresponding state in the other IRandom.
+        /// Sets each state in this IEnhancedRandom to the corresponding state in the other IEnhancedRandom.
         /// This generally only works correctly if both objects have the same class.
         /// </summary>
-        /// <param name="other">Another IRandom that almost always should have the same class as this one.</param>
-        public void SetWith(IRandom other)
+        /// <param name="other">Another IEnhancedRandom that almost always should have the same class as this one.</param>
+        public void SetWith(IEnhancedRandom other)
         {
             int myCount = StateCount, otherCount = other.StateCount;
             int i = 0;
@@ -1748,7 +1795,7 @@ namespace ShaiRandom
         /// <param name="left">An EnhancedRandom to compare for equality</param>
         /// <param name="right">Another EnhancedRandom to compare for equality</param>
         /// <returns>true if the two EnhancedRandom objects have the same class and state, or false otherwise</returns>
-        public static bool AreEqual(IRandom left, IRandom right)
+        public static bool AreEqual(IEnhancedRandom left, IEnhancedRandom right)
         {
             if (left == right)
                 return true;

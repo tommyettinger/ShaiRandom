@@ -99,7 +99,7 @@ namespace ShaiRandom.UnitTests
             random.NextULong();
             string data = random.StringSerialize();
             Assert.StartsWith("#FoWR`", data);
-            IRandom random2 = AbstractRandom.Deserialize(data);
+            IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
             Assert.Equal(random.NextULong(), random2.NextULong());
             Assert.Equal(random, random2);
         }
@@ -110,7 +110,7 @@ namespace ShaiRandom.UnitTests
             random.NextULong();
             string data = random.StringSerialize();
             Assert.StartsWith("#StrR`", data);
-            IRandom random2 = AbstractRandom.Deserialize(data);
+            IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
             Assert.Equal(random.NextULong(), random2.NextULong());
             Assert.Equal(random, random2);
         }
@@ -122,7 +122,7 @@ namespace ShaiRandom.UnitTests
             random.NextULong();
             string data = random.StringSerialize();
             Assert.StartsWith("TFoWR`", data);
-            IRandom random2 = AbstractRandom.Deserialize(data);
+            IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
             Assert.Equal(random.NextULong(), random2.NextULong());
             Assert.Equal(random, random2);
         }
@@ -134,7 +134,7 @@ namespace ShaiRandom.UnitTests
             random.NextULong();
             string data = random.StringSerialize();
             Assert.StartsWith("RFoWR`", data);
-            IRandom random2 = AbstractRandom.Deserialize(data);
+            IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
             Assert.Equal(random.NextULong(), random2.NextULong());
             Assert.Equal(random, random2);
         }

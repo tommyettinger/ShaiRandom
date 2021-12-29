@@ -52,9 +52,9 @@ namespace ShaiRandom.Distributions
     public interface IDistribution
     {
         /// <summary>
-        ///   Gets the <see cref="IRandom"/> object that is used as underlying random number generator.
+        ///   Gets the <see cref="IEnhancedRandom"/> object that is used as underlying random number generator.
         /// </summary>
-        IRandom Generator { get; }
+        IEnhancedRandom Generator { get; }
 
         /// <summary>
         ///   Gets the maximum possible value of distributed random numbers.
@@ -105,7 +105,7 @@ namespace ShaiRandom.Distributions
         double NextDouble();
 
         /// <summary>
-        /// How many steps the IRandom generator advances each time it produces a distributed result, if a constant value.
+        /// How many steps the IEnhancedRandom generator advances each time it produces a distributed result, if a constant value.
         /// If the generator can advance a non-constant amount of steps, this should be a negative number.
         /// </summary>
         int Steps { get; }

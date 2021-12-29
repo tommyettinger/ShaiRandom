@@ -107,7 +107,7 @@ namespace ShaiRandom.Distributions
             }
         }
 
-        public IRandom Generator { get; set; }
+        public IEnhancedRandom Generator { get; set; }
 
         #endregion Fields
 
@@ -149,11 +149,11 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="NormalDistribution"/> class, using
-        ///   the specified <see cref="IRandom"/> as underlying random number generator.
+        ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IRandom"/> object.</param>
+        /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
-        public NormalDistribution(IRandom generator) : this(generator, DefaultMu, DefaultSigma)
+        public NormalDistribution(IEnhancedRandom generator) : this(generator, DefaultMu, DefaultSigma)
         {
         }
 
@@ -198,9 +198,9 @@ namespace ShaiRandom.Distributions
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="NormalDistribution"/> class, using
-        ///   the specified <see cref="IRandom"/> as underlying random number generator.
+        ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="generator">An <see cref="IRandom"/> object.</param>
+        /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <param name="mu">
         ///   The mu parameter.
         /// </param>
@@ -211,7 +211,7 @@ namespace ShaiRandom.Distributions
         ///   <paramref name="mu"/> is NaN, or
         ///   <paramref name="sigma"/> is less than or equal to zero.
         /// </exception>
-        public NormalDistribution(IRandom generator, double mu, double sigma)
+        public NormalDistribution(IEnhancedRandom generator, double mu, double sigma)
         {
             Generator = generator;
             ParameterMu = mu;
@@ -332,7 +332,7 @@ namespace ShaiRandom.Distributions
         /// <remarks>
         ///   This is an extensibility point for the <see cref="NormalDistribution"/> class.
         /// </remarks>
-        public static Func<IRandom, double, double, double> Sample { get; set; } = (generator, mu, sigma) =>
+        public static Func<IEnhancedRandom, double, double, double> Sample { get; set; } = (generator, mu, sigma) =>
         {
             return generator.NextNormal(mu, sigma);
         };

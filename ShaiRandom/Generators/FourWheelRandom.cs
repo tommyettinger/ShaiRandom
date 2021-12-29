@@ -86,7 +86,7 @@ namespace ShaiRandom
         /// </summary>
         public override bool SupportsWriteAccess => true;
         /// <summary>
-        /// This does not support <see cref="IRandom.Skip(ulong)"/>.
+        /// This does not support <see cref="IEnhancedRandom.Skip(ulong)"/>.
         /// </summary>
         public override bool SupportsSkip => false;
         /// <summary>
@@ -229,9 +229,9 @@ namespace ShaiRandom
             }
         }
 
-        public override IRandom Copy() => new FourWheelRandom(stateA, stateB, stateC, stateD);
+        public override IEnhancedRandom Copy() => new FourWheelRandom(stateA, stateB, stateC, stateD);
         public override string StringSerialize() => $"#FoWR`{stateA:X}~{stateB:X}~{stateC:X}~{stateD:X}`";
-        public override IRandom StringDeserialize(string data)
+        public override IEnhancedRandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
             stateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
