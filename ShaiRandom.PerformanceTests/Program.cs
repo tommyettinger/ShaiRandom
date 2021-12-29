@@ -4,6 +4,7 @@ using Troschuetz.Random.Generators;
 namespace ShaiRandom.PerformanceTests
 {
     /// <summary>
+	///.NET 5.0
     ///|          Method |      Mean |     Error |    StdDev |    Median |
     ///|---------------- |----------:|----------:|----------:|----------:|
     ///|        Distinct | 1.5092 ns | 0.0589 ns | 0.1280 ns | 1.5623 ns |
@@ -20,18 +21,24 @@ namespace ShaiRandom.PerformanceTests
     ///|           NR3Q1 | 1.1030 ns | 0.0493 ns | 0.0723 ns | 1.0815 ns |
     ///|           NR3Q2 | 1.0030 ns | 0.0476 ns | 0.0795 ns | 0.9987 ns |
     ///|     XorShift128 | 0.8824 ns | 0.0097 ns | 0.0076 ns | 0.8857 ns |
+	///.NET 6.0:
+    ///|          Method |      Mean |     Error |    StdDev |    Median |
+    ///|---------------- |----------:|----------:|----------:|----------:|
+    ///|        Distinct | 1.3143 ns | 0.0481 ns | 0.0472 ns | 1.3149 ns |
+    ///|           Laser | 1.3786 ns | 0.0521 ns | 0.0557 ns | 1.4028 ns |
+    ///|        Tricycle | 1.3994 ns | 0.0548 ns | 0.0960 ns | 1.4011 ns |
+    ///|       FourWheel | 1.6187 ns | 0.0587 ns | 0.0947 ns | 1.6493 ns |
+    ///|        Stranger | 1.5240 ns | 0.0589 ns | 0.1061 ns | 1.4495 ns |
+    ///| XoshiroStarStar | 2.0554 ns | 0.0693 ns | 0.1606 ns | 2.0958 ns |
+    ///|        RomuTrio | 2.0602 ns | 0.0606 ns | 0.0567 ns | 2.0751 ns |
+    ///|         Mizuchi | 1.4402 ns | 0.0550 ns | 0.0919 ns | 1.4613 ns |
+    ///|             ALF | 2.4424 ns | 0.0229 ns | 0.0215 ns | 2.4390 ns |
+    ///|         MT19937 | 3.5251 ns | 0.0318 ns | 0.0297 ns | 3.5239 ns |
+    ///|             NR3 | 1.5136 ns | 0.0156 ns | 0.0146 ns | 1.5088 ns |
+    ///|           NR3Q1 | 0.8354 ns | 0.0085 ns | 0.0080 ns | 0.8369 ns |
+    ///|           NR3Q2 | 1.0360 ns | 0.0509 ns | 0.1229 ns | 0.9810 ns |
+    ///|     XorShift128 | 0.8993 ns | 0.0103 ns | 0.0096 ns | 0.8964 ns |
     /// </summary>
-    /// <remarks>
-    /// It looks like .NET does virtually no optimizations relating to ILP,
-    /// and smaller states are almost always better. I have no clue why RomuTrio,
-    /// with 3 states, is slower than any of the 4-state generators, while Tricycle,
-    /// also with 3 states, is faster than any of the 4-state generators. Laser
-    /// sometimes seems to get optimized much more or less than other times; here,
-    /// it's the fastest of the 64-bit generators except for XorShift128 (which is
-    /// a medium-low-quality generator in various ways). I probably should stop
-    /// even testing NR3Q1 and NR3Q2, because they fail PractRand testing in a
-    /// matter of seconds (so does XorShift128, but not on as many tests).
-    /// </remarks>
     public class RandomUIntComparison
     {
         private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
@@ -210,6 +217,7 @@ namespace ShaiRandom.PerformanceTests
         public uint XorShift128() => _xorShift128Generator.NextUInt(1u, 1000u);
     }
     /// <summary>
+	/// .NET 5.0:
     ///|          Method |      Mean |     Error |    StdDev |    Median |
     ///|---------------- |----------:|----------:|----------:|----------:|
     ///|        Distinct | 1.0671 ns | 0.0520 ns | 0.1275 ns | 1.1181 ns |
@@ -224,18 +232,22 @@ namespace ShaiRandom.PerformanceTests
     ///|           NR3Q1 | 0.8976 ns | 0.0479 ns | 0.1041 ns | 0.9279 ns |
     ///|           NR3Q2 | 1.2278 ns | 0.0562 ns | 0.1210 ns | 1.2776 ns |
     ///|     XorShift128 | 0.7221 ns | 0.0448 ns | 0.0935 ns | 0.7149 ns |
+	/// .NET 6.0:
+    ///|          Method |      Mean |     Error |    StdDev |    Median |
+    ///|---------------- |----------:|----------:|----------:|----------:|
+    ///|        Distinct | 0.9392 ns | 0.0469 ns | 0.0502 ns | 0.9213 ns |
+    ///|           Laser | 1.0175 ns | 0.0499 ns | 0.0848 ns | 1.0256 ns |
+    ///|        Tricycle | 1.0037 ns | 0.0492 ns | 0.0766 ns | 0.9618 ns |
+    ///|       FourWheel | 1.0935 ns | 0.0484 ns | 0.0497 ns | 1.0776 ns |
+    ///|        Stranger | 1.2431 ns | 0.0540 ns | 0.0945 ns | 1.2302 ns |
+    ///| XoshiroStarStar | 1.8845 ns | 0.0671 ns | 0.1528 ns | 1.8944 ns |
+    ///|        RomuTrio | 1.9390 ns | 0.0677 ns | 0.1131 ns | 1.9366 ns |
+    ///|         Mizuchi | 0.7374 ns | 0.0102 ns | 0.0080 ns | 0.7390 ns |
+    ///|             NR3 | 2.5752 ns | 0.0794 ns | 0.1033 ns | 2.5637 ns |
+    ///|           NR3Q1 | 1.0214 ns | 0.0472 ns | 0.0505 ns | 1.0208 ns |
+    ///|           NR3Q2 | 1.3573 ns | 0.0557 ns | 0.1087 ns | 1.3559 ns |
+    ///|     XorShift128 | 0.8180 ns | 0.0468 ns | 0.0878 ns | 0.8324 ns |
     /// </summary>
-    /// <remarks>
-    /// LaserRandom sometimes does better than any of the other "high-quality"
-    /// generators here, but this time MizuchiRandom took the lead. While XorShift128
-    /// is the fastest, it also fails several tests in under a minute of testing with
-    /// PractRand, and was also confirmed by its authors to have a severe linear bit
-    /// dependency. NR3Q1 is also fast, but is scraping the bottom of the barrel on
-    /// statistical quality. Of the Troschuetz.Random generators that can generate
-    /// ulong values natively, only NR3 is high-quality (passing PractRand to at least
-    /// 64TB), and it is much slower than Mizuchi or Laser (both of which also pass
-    /// PractRand to at least 64TB).
-    /// </remarks>
     public class RandomULongComparison
     {
         private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
@@ -368,6 +380,7 @@ namespace ShaiRandom.PerformanceTests
         public ulong Mizuchi() => _mizuchiRandom.NextULong(1UL, 1000UL);
     }
     /// <summary>
+	/// .NET 5.0:
     ///|          Method |     Mean |     Error |    StdDev |   Median |
     ///|---------------- |---------:|----------:|----------:|---------:|
     ///|        Distinct | 2.239 ns | 0.0745 ns | 0.1266 ns | 2.297 ns |
@@ -384,6 +397,23 @@ namespace ShaiRandom.PerformanceTests
     ///|           NR3Q1 | 1.678 ns | 0.0686 ns | 0.1548 ns | 1.692 ns |
     ///|           NR3Q2 | 2.268 ns | 0.0774 ns | 0.1748 ns | 2.294 ns |
     ///|     XorShift128 | 1.697 ns | 0.0661 ns | 0.1141 ns | 1.719 ns |
+	/// .NET 6.0:
+    ///|          Method |     Mean |     Error |    StdDev |
+    ///|---------------- |---------:|----------:|----------:|
+    ///|        Distinct | 2.183 ns | 0.0725 ns | 0.1396 ns |
+    ///|           Laser | 2.182 ns | 0.0745 ns | 0.1453 ns |
+    ///|        Tricycle | 1.973 ns | 0.0711 ns | 0.1560 ns |
+    ///|       FourWheel | 2.579 ns | 0.0808 ns | 0.1738 ns |
+    ///|        Stranger | 2.279 ns | 0.0766 ns | 0.1301 ns |
+    ///| XoshiroStarStar | 2.819 ns | 0.0875 ns | 0.1555 ns |
+    ///|        RomuTrio | 2.839 ns | 0.0262 ns | 0.0245 ns |
+    ///|         Mizuchi | 2.426 ns | 0.0277 ns | 0.0260 ns |
+    ///|             ALF | 6.177 ns | 0.0264 ns | 0.0221 ns |
+    ///|         MT19937 | 9.205 ns | 0.0421 ns | 0.0352 ns |
+    ///|             NR3 | 3.694 ns | 0.0147 ns | 0.0123 ns |
+    ///|           NR3Q1 | 1.770 ns | 0.0321 ns | 0.0300 ns |
+    ///|           NR3Q2 | 2.136 ns | 0.0259 ns | 0.0242 ns |
+    ///|     XorShift128 | 1.599 ns | 0.0167 ns | 0.0157 ns |
     /// </summary>
     public class RandomDoubleComparison
     {
@@ -449,18 +479,27 @@ namespace ShaiRandom.PerformanceTests
     }
 
     /// <summary>
+	/// .NET 5.0, maybe?
     ///|    Method |     Mean |     Error |    StdDev |   Median |
     ///|---------- |---------:|----------:|----------:|---------:|
     ///|  Distinct | 2.524 ns | 0.0783 ns | 0.2118 ns | 2.613 ns |
     ///|     Laser | 2.461 ns | 0.0346 ns | 0.0324 ns | 2.466 ns |
     ///| FourWheel | 3.949 ns | 0.0143 ns | 0.0127 ns | 3.952 ns |
     ///|   Mizuchi | 2.477 ns | 0.0376 ns | 0.0352 ns | 2.476 ns |
+	/// .NET 6.0:
+    ///|    Method |     Mean |     Error |    StdDev |   Median |
+    ///|---------- |---------:|----------:|----------:|---------:|
+    ///|  Distinct | 2.765 ns | 0.0822 ns | 0.1304 ns | 2.771 ns |
+    ///|     Laser | 2.438 ns | 0.0761 ns | 0.1333 ns | 2.508 ns |
+    ///|  Tricycle | 2.460 ns | 0.0790 ns | 0.1632 ns | 2.496 ns |
+    ///| FourWheel | 2.586 ns | 0.0780 ns | 0.0835 ns | 2.607 ns |
+    ///|   Mizuchi | 2.359 ns | 0.0757 ns | 0.1645 ns | 2.390 ns |
     /// </summary>
     public class RandomExclusiveDoubleComparison
     {
         private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
         private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
-        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
+        private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
         private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
         private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
 
@@ -470,8 +509,8 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double Laser() => _laserRandom.NextExclusiveDouble();
 
-        //[Benchmark]
-        //public double Tricycle() => _tricycleRandom.NextExclusiveDouble();
+        [Benchmark]
+        public double Tricycle() => _tricycleRandom.NextExclusiveDouble();
 
         [Benchmark]
         public double FourWheel() => _fourWheelRandom.NextExclusiveDouble();
