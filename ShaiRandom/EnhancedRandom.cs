@@ -834,48 +834,65 @@ namespace ShaiRandom
 
 
 
-
+    /// <summary>
+    /// The abstract parent class of nearly all random number generators here.
+    /// </summary>
+    /// <remarks>
+    /// Almost all subclasses of AbstractRandom should implement <see cref="SelectState(int)"/> so that individual states can be retrieved; this is used by many of
+    /// the other methods here, and some of them throw exceptions if that method is not available. Similarly, <see cref="SetSelectedState(int, ulong)"/> should
+    /// be implemented to set specific states, especially if there is more than one state variable.
+    /// </remarks>
     [Serializable]
     public abstract class AbstractRandom : IRandom
     {
         private static readonly float FLOAT_ADJUST = MathF.Pow(2f, -24f);
         private static readonly double DOUBLE_ADJUST = Math.Pow(2.0, -53.0);
+        /// <summary>
+        /// Used by <see cref="MakeSeed"/> to produce mid-low quality random numbers as a starting seed, as a "don't care" option for seeding.
+        /// </summary>        
         protected static readonly Random SeedingRandom = new Random();
 
+        /// <summary>
+        /// Used by zero-argument constructors, typically, as a "don't care" option for seeding that creates a random ulong state.
+        /// </summary>
+        /// <returns></returns>
         protected static ulong MakeSeed()
         {
             unchecked {
                 return (ulong)SeedingRandom.Next() ^ (ulong)SeedingRandom.Next() << 21 ^ (ulong)SeedingRandom.Next() << 42;
             }
         }
-
+        /// <summary>
+        /// Must have a zero-argument constructor.
+        /// </summary>
         protected AbstractRandom()
         {
         }
-
+        /// <summary>
+        /// This calls <see cref="Seed(ulong)"/> with it seed by default.
+        /// </summary>
+        /// <param name="seed">A ulong that will either be used as a state verbatim or, more commonly, to determine multiple states.</param>
         protected AbstractRandom(ulong seed)
         {
             Seed(seed);
         }
+        /// <summary>
+        /// Copies another AbstractRandom, typically with the same class, into this newly-constructed one.
+        /// </summary>
+        /// <param name="other">Another AbstractRandom to copy into this one.</param>
         protected AbstractRandom(AbstractRandom other)
         {
             SetWith(other);
         }
 
-        /**
-         * Sets the seed of this random number generator using a single
-         * {@code ulong} seed. This should behave exactly the same as if a new
-         * object of this type was created with the constructor that takes a single
-         * {@code ulong} value. This does not necessarily assign the state
-         * variable(s) of the implementation with the exact contents of seed, so
-         * {@link #getSelectedState(int)} should not be expected to return
-         * {@code seed} after this, though it may. If this implementation has more
-         * than one {@code ulong} of state, then the expectation is that none of
-         * those state variables will be exactly equal to {@code seed} (almost all
-         * of the time).
-         *
-         * @param seed the initial seed
-         */
+        /// <summary>
+        /// Sets the seed of this random number generator using a single ulong seed.
+        /// </summary>
+        /// <remarks>
+        /// This does not necessarily assign the state variable(s) of the implementation with the exact contents of seed,
+        /// so <see cref="SelectState(int)"/> should not be expected to return seed after this, though it may.
+        /// </remarks>
+        /// <param name="seed"></param>
         public abstract void Seed(ulong seed);
         /// <summary>
         /// Gets the number of possible state variables that can be selected with
@@ -963,35 +980,35 @@ namespace ShaiRandom
                 return new ReversingWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
             return TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data);
         }
-        /**
-         * Gets a selected state value from this IRandom. The number of possible selections
-         * is up to the implementing class, and is accessible via {@link #StateCount}, but
-         * negative values for {@code selection} are typically not tolerated. This should return
-         * the exact value of the selected state, assuming it is implemented. The default
-         * implementation throws an NotSupportedException, and implementors only have to
-         * allow reading the state if they choose to implement this differently. If this method
-         * is intended to be used, {@link #StateCount} must also be implemented.
-         * @param selection used to select which state variable to get; generally non-negative
-         * @return the exact value of the selected state
-         */
+
+        /// <summary>
+        /// Gets a selected state value from this AbstractRandom, by index.
+        /// </summary>
+        /// <remarks>
+        /// The number of possible selections is up to the implementing class, and is accessible via <see cref="StateCount"/>, but negative values for selection are typically not tolerated.
+        /// This should return the exact value of the selected state, assuming it is implemented. The default implementation throws an NotSupportedException, and implementors only have to
+        /// allow reading the state if they choose to implement this differently. If this method is intended to be used, <see cref="StateCount"/> must also be implemented.
+        /// </remarks>
+        /// <param name="selection">The index of the state to retrieve.</param>
+        /// <returns>The value of the state corresponding to selection</returns>
+        /// <exception cref="NotSupportedException">If the generator does not allow reading its state.</exception>
         public virtual ulong SelectState(int selection)
         {
             throw new NotSupportedException("SelectState() not supported.");
         }
 
-        /**
-         * Sets a selected state value to the given ulong {@code value}. The number of possible
-         * selections is up to the implementing class, but negative values for {@code selection}
-         * are typically not tolerated. Implementors are permitted to change {@code value} if it
-         * is not valid, but they should not alter it if it is valid. The public implementation
-         * calls {@link #Seed(ulong)} with {@code value}, which doesn't need changing if the
-         * generator has one state that is set verbatim by Seed(). Otherwise, this method
-         * should be implemented when {@link #SelectState(int)} is and the state is allowed
-         * to be set by users. Having accurate ways to get and set the full state of a random
-         * number generator makes it much easier to serialize and deserialize that class.
-         * @param selection used to select which state variable to set; generally non-negative
-         * @param value the exact value to use for the selected state, if valid
-         */
+        /// <summary>
+        /// Sets a selected state value to the given ulong value.
+        /// </summary>
+        /// <remarks>
+        /// The number of possible selections is up to the implementing class, but selection should be at least 0 and less than <see cref="StateCount"/>.
+        /// Implementors are permitted to change {@code value} if it is not valid, but they should not alter it if it is valid.
+        /// The public implementation calls <see cref="Seed(ulong)"/> with value, which doesn't need changing if the generator has one state that is set verbatim by Seed().
+        /// Otherwise, this method should be implemented when <see cref="SelectState(int)"/> is and the state is allowed to be set by users.
+        /// Having accurate ways to get and set the full state of a random number generator makes it much easier to serialize and deserialize that class.
+        /// </remarks>
+        /// <param name="selection">The index of the state to set.</param>
+        /// <param name="value">The value to try to use for the selected state.</param>
         public virtual void SetSelectedState(int selection, ulong value)
         {
             Seed(value);
