@@ -6,7 +6,7 @@ namespace ShaiRandom
 
     /// <summary>
     /// Wraps another AbstractRandom without copying it, making all calls to "NextSomething()" on this ReversingWrapper move the state in reverse
-    /// instead of forward in the wrapped AbstractRandom. This only works for AbstractRandom implementations that support <see cref="PreviousUlong"/>,
+    /// instead of forward in the wrapped AbstractRandom. This only works for AbstractRandom implementations that support <see cref="PreviousULong"/>,
     /// which can be checked with <see cref="SupportsPrevious"/>. If the wrapped AbstractRandom supports <see cref="Skip(ulong)"/>, then this
     /// ReversingWrapper will permit calls to its Skip, and they will also go in reverse. The most common use for this would be to run
     /// the wrapped generator forward and track the number of calls made, then run the ReversingWrapper by the same number of calls
@@ -36,7 +36,7 @@ namespace ShaiRandom
         public ReversingWrapper(IRandom wrapping)
         {
             if (!wrapping.SupportsPrevious)
-                throw new NotSupportedException($"The AbstractRandom to wrap must support PreviousUlong(), and {nameof(wrapping)} does not.");
+                throw new NotSupportedException($"The AbstractRandom to wrap must support PreviousULong(), and {nameof(wrapping)} does not.");
             Wrapped = wrapping;
         }
 
@@ -51,7 +51,7 @@ namespace ShaiRandom
         public override bool SupportsPrevious => Wrapped.SupportsPrevious;
 
         public override IRandom Copy() => new ReversingWrapper(Wrapped.Copy());
-        public override ulong NextUlong() => Wrapped.PreviousUlong();
+        public override ulong NextULong() => Wrapped.PreviousULong();
 
         public override void Seed(ulong seed) => Wrapped.Seed(seed);
         public override string StringSerialize() => "R" + Wrapped.StringSerialize().Substring(1);
@@ -61,7 +61,7 @@ namespace ShaiRandom
             return this;
         }
         public override ulong Skip(ulong distance) => Wrapped.Skip(0UL - distance);
-        public override ulong PreviousUlong() => Wrapped.NextUlong();
+        public override ulong PreviousULong() => Wrapped.NextULong();
         public override bool Equals(object? obj) => Equals(obj as ReversingWrapper);
         public bool Equals(ReversingWrapper? other) => other != null && EqualityComparer<IRandom>.Default.Equals(Wrapped, other.Wrapped);
 

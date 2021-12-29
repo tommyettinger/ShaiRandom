@@ -30,7 +30,7 @@ namespace ShaiRandom.UnitTests
             if(checking < lower || checking > upper)
             {
                 Console.WriteLine(checking + " was outside of bounds");
-                fwr.PreviousUlong();
+                fwr.PreviousULong();
                 Console.WriteLine("previous returned long was {0:X}", fwr.stateD);
                 Console.WriteLine("(int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) : {0:D}", (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | (long)fwr.stateD) >> 52));
                 Console.WriteLine("(127 + 962 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23 : {0:D}", 127 + 962 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | (long)fwr.stateD) >> 52) << 23);
@@ -55,10 +55,10 @@ namespace ShaiRandom.UnitTests
             {
                 InRange(fwr.NextInt(-100, 101), -100, 100);
                 InRange(fwr.NextInt(100, -101), -100, 100);
-                InRange(fwr.NextUint(100U, 301U), 100U, 300U);
+                InRange(fwr.NextUInt(100U, 301U), 100U, 300U);
                 InRange(fwr.NextLong(-100L, 101L), -100L, 100L);
                 InRange(fwr.NextLong(100L, -101L), -100L, 100L);
-                InRange(fwr.NextUlong(100UL, 301UL), 100UL, 300UL);
+                InRange(fwr.NextULong(100UL, 301UL), 100UL, 300UL);
                 InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
                 InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
             }

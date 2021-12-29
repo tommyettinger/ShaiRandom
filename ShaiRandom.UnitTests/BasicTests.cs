@@ -11,10 +11,10 @@ namespace ShaiRandom.UnitTests
             {
                 Assert.InRange(fwr.NextInt(-100, 101), -100, 100);
                 Assert.InRange(fwr.NextInt(100, -101), -100, 100);
-                Assert.InRange(fwr.NextUint(100U, 301U), 100U, 300U);
+                Assert.InRange(fwr.NextUInt(100U, 301U), 100U, 300U);
                 Assert.InRange(fwr.NextLong(-100L, 101L), -100L, 100L);
                 Assert.InRange(fwr.NextLong(100L, -101L), -100L, 100L);
-                Assert.InRange(fwr.NextUlong(100UL, 301UL), 100UL, 300UL);
+                Assert.InRange(fwr.NextULong(100UL, 301UL), 100UL, 300UL);
                 Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
                 Assert.InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
             }
@@ -65,7 +65,7 @@ namespace ShaiRandom.UnitTests
                 ulong usum = 0UL;
                 for (int i = 0; i < 256; i++)
                 {
-                    usum += fwr.NextUlong() & 0xFFFF;
+                    usum += fwr.NextULong() & 0xFFFF;
                 }
                 Assert.InRange(usum, 0x7A0000UL, 0x860000UL);
 
@@ -73,7 +73,7 @@ namespace ShaiRandom.UnitTests
                 usum = 0UL;
                 for (int i = 0; i < 256; i++)
                 {
-                    usum += fwr.NextUlong() >> 48;
+                    usum += fwr.NextULong() >> 48;
                 }
                 Assert.InRange(usum, 0x7A0000UL, 0x860000UL);
             }
@@ -84,8 +84,8 @@ namespace ShaiRandom.UnitTests
             FourWheelRandom fwr = new FourWheelRandom(1);
             for (int i = 0; i < 100; i++)
             {
-                Assert.Equal(100U, fwr.NextUint(100U, 3U));
-                Assert.Equal(100UL, fwr.NextUlong(100UL, 3UL));
+                Assert.Equal(100U, fwr.NextUInt(100U, 3U));
+                Assert.Equal(100UL, fwr.NextULong(100UL, 3UL));
             }
         }
     }
@@ -96,22 +96,22 @@ namespace ShaiRandom.UnitTests
         public void FourWheelSerDeserTest()
         {
             FourWheelRandom random = new FourWheelRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL);
-            random.NextUlong();
+            random.NextULong();
             string data = random.StringSerialize();
             Assert.StartsWith("#FoWR`", data);
             IRandom random2 = AbstractRandom.Deserialize(data);
-            Assert.Equal(random.NextUlong(), random2.NextUlong());
+            Assert.Equal(random.NextULong(), random2.NextULong());
             Assert.Equal(random, random2);
         }
         [Fact]
         public void StrangerSerDeserTest()
         {
             StrangerRandom random = new StrangerRandom(0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL);
-            random.NextUlong();
+            random.NextULong();
             string data = random.StringSerialize();
             Assert.StartsWith("#StrR`", data);
             IRandom random2 = AbstractRandom.Deserialize(data);
-            Assert.Equal(random.NextUlong(), random2.NextUlong());
+            Assert.Equal(random.NextULong(), random2.NextULong());
             Assert.Equal(random, random2);
         }
 
@@ -119,11 +119,11 @@ namespace ShaiRandom.UnitTests
         public void TRWrapperSerDeserTest()
         {
             TRWrapper random = new TRWrapper(new FourWheelRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL));
-            random.NextUlong();
+            random.NextULong();
             string data = random.StringSerialize();
             Assert.StartsWith("TFoWR`", data);
             IRandom random2 = AbstractRandom.Deserialize(data);
-            Assert.Equal(random.NextUlong(), random2.NextUlong());
+            Assert.Equal(random.NextULong(), random2.NextULong());
             Assert.Equal(random, random2);
         }
 
@@ -131,11 +131,11 @@ namespace ShaiRandom.UnitTests
         public void ReversingWrapperSerDeserTest()
         {
             ReversingWrapper random = new ReversingWrapper(new FourWheelRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL));
-            random.NextUlong();
+            random.NextULong();
             string data = random.StringSerialize();
             Assert.StartsWith("RFoWR`", data);
             IRandom random2 = AbstractRandom.Deserialize(data);
-            Assert.Equal(random.NextUlong(), random2.NextUlong());
+            Assert.Equal(random.NextULong(), random2.NextULong());
             Assert.Equal(random, random2);
         }
     }

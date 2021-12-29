@@ -58,7 +58,7 @@ namespace ShaiRandom
         /// </summary>
         public override bool SupportsSkip => true;
         /// <summary>
-        /// This supports <see cref="PreviousUlong()"/>.
+        /// This supports <see cref="PreviousULong()"/>.
         /// </summary>
         public override bool SupportsPrevious => true;
 
@@ -102,7 +102,7 @@ namespace ShaiRandom
             this.state = state;
         }
 
-        public override ulong NextUlong()
+        public override ulong NextULong()
         {
             unchecked
             {
@@ -128,7 +128,7 @@ namespace ShaiRandom
             }
         }
 
-        public override ulong PreviousUlong()
+        public override ulong PreviousULong()
         {
             unchecked
             {

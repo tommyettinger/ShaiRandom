@@ -34,7 +34,7 @@ namespace ShaiRandom
 
         public override IRandom Copy() => new TRWrapper(Wrapped.Copy());
         public override double NextDouble() => Wrapped.NextDouble();
-        public override ulong NextUlong() => Wrapped.NextUlong();
+        public override ulong NextULong() => Wrapped.NextULong();
         public override ulong SelectState(int selection) => Wrapped.SelectState(selection);
         public override void Seed(ulong seed) => Wrapped.Seed(seed);
         public override void SetState(ulong stateA) => Wrapped.SetState(stateA);
@@ -43,7 +43,7 @@ namespace ShaiRandom
         public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD) => Wrapped.SetState(stateA, stateB, stateC, stateD);
         public override void SetState(params ulong[] states) => Wrapped.SetState(states);
         public override ulong Skip(ulong distance) => Wrapped.Skip(distance);
-        public override ulong PreviousUlong() => Wrapped.PreviousUlong();
+        public override ulong PreviousULong() => Wrapped.PreviousULong();
         public override string StringSerialize() => "T"+ Wrapped.StringSerialize().Substring(1);
         public override IRandom StringDeserialize(string data)
         {
@@ -63,11 +63,11 @@ namespace ShaiRandom
         double IGenerator.NextDouble(double maxValue) => Wrapped.NextDouble(maxValue);
         double IGenerator.NextDouble(double minValue, double maxValue) => Wrapped.NextDouble(minValue, maxValue);
         int IGenerator.NextInclusiveMaxValue() => (int)Wrapped.NextBits(31);
-        uint IGenerator.NextUInt() => Wrapped.NextUint(uint.MaxValue);
-        uint IGenerator.NextUInt(uint maxValue) => Wrapped.NextUint(maxValue);
-        uint IGenerator.NextUInt(uint minValue, uint maxValue) => Wrapped.NextUint(minValue, maxValue);
-        uint IGenerator.NextUIntExclusiveMaxValue() => Wrapped.NextUint(uint.MaxValue);
-        uint IGenerator.NextUIntInclusiveMaxValue() => Wrapped.NextUint();
+        uint IGenerator.NextUInt() => Wrapped.NextUInt(uint.MaxValue);
+        uint IGenerator.NextUInt(uint maxValue) => Wrapped.NextUInt(maxValue);
+        uint IGenerator.NextUInt(uint minValue, uint maxValue) => Wrapped.NextUInt(minValue, maxValue);
+        uint IGenerator.NextUIntExclusiveMaxValue() => Wrapped.NextUInt(uint.MaxValue);
+        uint IGenerator.NextUIntInclusiveMaxValue() => Wrapped.NextUInt();
         bool IGenerator.Reset() => false;
         bool IGenerator.Reset(uint seed) => false;
         #endregion

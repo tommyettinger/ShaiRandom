@@ -211,9 +211,9 @@ namespace ShaiRandom.Generators
         /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
         /// <returns>The next integer in the underlying series.</returns>
         public new int NextInt(int minValue, int maxValue) => returnIfRange(minValue, maxValue, intSeries, ref intIndex);
-        public new uint NextUint() => returnValueFrom(uintSeries, ref uintIndex);
-        public new uint NextUint(uint outerBound) => NextUint(0, outerBound);
-        public new uint NextBits(int bits) => (bits & 31) == 0 ? NextUint() : NextUint(0, 1U << bits);
+        public new uint NextUInt() => returnValueFrom(uintSeries, ref uintIndex);
+        public new uint NextUInt(uint outerBound) => NextUInt(0, outerBound);
+        public new uint NextBits(int bits) => (bits & 31) == 0 ? NextUInt() : NextUInt(0, 1U << bits);
 
         /// <summary>
         /// Returns the next unsigned integer in the underlying series. If the value is less than
@@ -222,7 +222,7 @@ namespace ShaiRandom.Generators
         /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
         /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
         /// <returns>The next unsigned integer in the underlying series.</returns>
-        public new uint NextUint(uint minValue, uint maxValue) => returnIfRange(minValue, maxValue, uintSeries, ref uintIndex);
+        public new uint NextUInt(uint minValue, uint maxValue) => returnIfRange(minValue, maxValue, uintSeries, ref uintIndex);
         public override double NextDouble() => returnValueFrom(doubleSeries, ref doubleIndex);
         public new double NextDouble(double outerBound) => NextDouble(0.0, outerBound);
         public new double NextDouble(double minBound, double maxBound) => returnIfRange(minBound, maxBound, doubleSeries, ref doubleIndex);
@@ -259,8 +259,8 @@ namespace ShaiRandom.Generators
         /// <returns>The next long in the underlying series.</returns>
         public new long NextLong(long minValue, long maxValue) => returnIfRange(minValue, maxValue, longSeries, ref longIndex);
 
-        public override ulong NextUlong() => returnValueFrom(ulongSeries, ref ulongIndex);
-        public new ulong NextUlong(ulong outerBound) => NextUlong(0, outerBound);
+        public override ulong NextULong() => returnValueFrom(ulongSeries, ref ulongIndex);
+        public new ulong NextULong(ulong outerBound) => NextULong(0, outerBound);
         /// <summary>
         /// Returns the next ulong in the underlying series. If the value is less than
         /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
@@ -268,7 +268,7 @@ namespace ShaiRandom.Generators
         /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
         /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
         /// <returns>The next ulong in the underlying series.</returns>
-        public new ulong NextUlong(ulong minValue, ulong maxValue) => returnIfRange(minValue, maxValue, ulongSeries, ref ulongIndex);
+        public new ulong NextULong(ulong minValue, ulong maxValue) => returnIfRange(minValue, maxValue, ulongSeries, ref ulongIndex);
 
 
         /// <summary>
@@ -280,7 +280,7 @@ namespace ShaiRandom.Generators
             for (int i = 0; i < buffer.Length; i++)
                 buffer[i] = returnValueFrom(byteSeries, ref byteIndex);
         }
-        public override ulong PreviousUlong() => throw new NotImplementedException();
+        public override ulong PreviousULong() => throw new NotImplementedException();
         public override void Seed(ulong seed)
         {
             int idx = (int)seed;

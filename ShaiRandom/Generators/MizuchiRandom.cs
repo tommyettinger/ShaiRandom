@@ -7,7 +7,7 @@ namespace ShaiRandom
     /// It's an AbstractRandom with 2 states, more here later.
     /// </summary>
     /// <remarks>
-    /// This one supports <see cref="PreviousUlong()"/>, but not <see cref="AbstractRandom.Skip(ulong)"/>.
+    /// This one supports <see cref="PreviousULong()"/>, but not <see cref="AbstractRandom.Skip(ulong)"/>.
     /// It's based on a permutation of an LCG, like PCG-Random by way of SplitMix64. A mizuchi is a mythological river dragon,
     /// and since this supports multiple streams (by changing StateB), the waterway theme seemed fitting.
     /// </remarks>
@@ -89,7 +89,7 @@ namespace ShaiRandom
         /// </summary>
         public override bool SupportsSkip => false;
         /// <summary>
-        /// This supports <see cref="PreviousUlong()"/>.
+        /// This supports <see cref="PreviousULong()"/>.
         /// </summary>
         public override bool SupportsPrevious => true;
         /**
@@ -166,7 +166,7 @@ namespace ShaiRandom
             this.stateB = stateB;
         }
 
-        public override ulong NextUlong()
+        public override ulong NextULong()
         {
             unchecked
             {
@@ -176,7 +176,7 @@ namespace ShaiRandom
             }
         }
 
-        public override ulong PreviousUlong()
+        public override ulong PreviousULong()
         {
             unchecked
             {

@@ -64,7 +64,7 @@ namespace ShaiRandom
         bool SupportsSkip { get; }
 
         /// <summary>
-        /// This should be true if the implementation supports <see cref="PreviousUlong"/>, or false if that method is unsupported.
+        /// This should be true if the implementation supports <see cref="PreviousULong"/>, or false if that method is unsupported.
         /// </summary>
         bool SupportsPrevious { get; }
 
@@ -148,11 +148,11 @@ namespace ShaiRandom
         /// Can return any ulong.
         /// </summary>
         /// <returns>A random ulong, which can have any ulong value.</returns>
-        ulong NextUlong();
+        ulong NextULong();
 
         /// <summary>
         /// Can return any long, positive or negative.
-        /// If you specifically want a non-negative long, you can use <code>(long)(NextUlong() >> 1)</code>,
+        /// If you specifically want a non-negative long, you can use <code>(long)(NextULong() >> 1)</code>,
         /// which can return any long that is not negative.
         /// </summary>
         /// <returns>A random long, which may be positive or negative, and can have any long value.</returns>
@@ -171,7 +171,7 @@ namespace ShaiRandom
         /// <returns>the next pseudorandom, uniformly distributed long</returns>
         /// value between zero (inclusive) and bound (exclusive)
         /// from this random number generator's sequence
-        ulong NextUlong(ulong bound);
+        ulong NextULong(ulong bound);
 
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed long value between an
@@ -193,7 +193,7 @@ namespace ShaiRandom
         /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
         /// <param name="outer">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
         /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
-        ulong NextUlong(ulong inner, ulong outer);
+        ulong NextULong(ulong inner, ulong outer);
 
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed long value between the
@@ -242,10 +242,10 @@ namespace ShaiRandom
         int NextInt();
 
         /// <summary>
-        /// Gets a random uint by using the low 32 bits of NextUlong(); this can return any uint.
+        /// Gets a random uint by using the low 32 bits of NextULong(); this can return any uint.
         /// </summary>
         /// <returns>Any random uint.</returns>
-        uint NextUint();
+        uint NextUInt();
 
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed int value
@@ -268,7 +268,7 @@ namespace ShaiRandom
         /// <returns>the next pseudorandom, uniformly distributed int</returns>
         /// value between zero (inclusive) and bound (exclusive)
         /// from this random number generator's sequence
-        uint NextUint(uint bound);
+        uint NextUInt(uint bound);
 
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed int value between an
@@ -278,7 +278,7 @@ namespace ShaiRandom
         /// as the lower bound; a positive outer bound is used as the upper bound. An outer
         /// bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
         /// for outer bound 0).
-        /// <seealso cref="NextUint(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
+        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="outerBound">the outer exclusive bound; may be any int value, allowing negative</param>
         /// <returns>a pseudorandom int between 0 (inclusive) and outerBound (exclusive)</returns>
         int NextInt(int outerBound);
@@ -295,11 +295,11 @@ namespace ShaiRandom
         /// <br/> For any case where outerBound might be valid but less than innerBound, you
         /// can use {@link #nextSignedInt(int, int)}. If outerBound is less than innerBound
         /// here, this simply returns innerBound.
-        /// <seealso cref="NextUint(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
+        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
         /// <param name="outerBound">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
         /// <returns>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</returns>
-        uint NextUint(uint innerBound, uint outerBound);
+        uint NextUInt(uint innerBound, uint outerBound);
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed int value between the
         /// specified innerBound (inclusive) and the specified outerBound
@@ -310,7 +310,7 @@ namespace ShaiRandom
         /// because this handles even ranges that go from large negative numbers to large
         /// positive numbers, and since that range is larger than the largest possible int,
         /// this has to use {@link #nextSignedLong(long)}.
-        /// <seealso cref="NextUint(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
+        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
         /// <param name="outerBound">the exclusive outer bound; may be any int, allowing negative</param>
         /// <returns>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</returns>
@@ -325,7 +325,7 @@ namespace ShaiRandom
         /// values true and false are produced with
         /// (approximately) equal probability.
         /// 
-        /// The default implementation is equivalent to a sign check on {@link #NextUlong()},
+        /// The default implementation is equivalent to a sign check on {@link #NextULong()},
         /// returning true if the generated long is negative. This is typically the safest
         /// way to implement this method; many types of generators have less statistical
         /// quality on their lowest bit, so just returning based on the lowest bit isn't
@@ -522,18 +522,18 @@ namespace ShaiRandom
         /// <returns>A double from the normal distribution with the specified mean (default 0.0) and standard deviation (default 1.0).</returns>
         double NextNormal(double mean = 0.0, double stdDev = 1.0);
         /// <summary>
-        /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextUlong()
+        /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextULong()
         /// as if called at that step. The distance can be negative if a long is cast to a ulong, which jumps backwards if the period of the generator is 2 to the 64.
         /// </summary>
         /// <param name="distance">How many steps to jump forward</param>
-        /// <returns>The result of what NextUlong() would return at the now-current jumped state.</returns>
+        /// <returns>The result of what NextULong() would return at the now-current jumped state.</returns>
         ulong Skip(ulong distance);
 
         /// <summary>
-        /// (Optional) If implemented, jumps the generator back to the previous state and returns what NextUlong() would have produced at that state.
+        /// (Optional) If implemented, jumps the generator back to the previous state and returns what NextULong() would have produced at that state.
         /// </summary>
-        /// <returns>The result of what NextUlong() would return at the previous state.</returns>
-        ulong PreviousUlong();
+        /// <returns>The result of what NextULong() would return at the previous state.</returns>
+        ulong PreviousULong();
 
         /// <summary>
         /// Sets each state in this IRandom to the corresponding state in the other IRandom.
@@ -622,44 +622,44 @@ namespace ShaiRandom
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         long MaxLongOf(long innerBound, long outerBound, int trials);
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextUint(int, int)} using the given innerBound
+        /// Returns the minimum result of trials calls to {@link #NextUInt(int, int)} using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        uint MinUintOf(uint innerBound, uint outerBound, int trials);
+        uint MinUIntOf(uint innerBound, uint outerBound, int trials);
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextUint(int, int)} using the given innerBound
+        /// Returns the maximum result of trials calls to {@link #NextUInt(int, int)} using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        uint MaxUintOf(uint innerBound, uint outerBound, int trials);
+        uint MaxUIntOf(uint innerBound, uint outerBound, int trials);
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextUlong(long, long)} using the given innerBound
+        /// Returns the minimum result of trials calls to {@link #NextULong(long, long)} using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        ulong MinUlongOf(ulong innerBound, ulong outerBound, int trials);
+        ulong MinULongOf(ulong innerBound, ulong outerBound, int trials);
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextUlong(long, long)} using the given innerBound
+        /// Returns the maximum result of trials calls to {@link #NextULong(long, long)} using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        ulong MaxUlongOf(ulong innerBound, ulong outerBound, int trials);
+        ulong MaxULongOf(ulong innerBound, ulong outerBound, int trials);
 
         /// <summary>
         /// Returns the minimum result of trials calls to {@link #NextDouble(double, double)} using the given innerBound
@@ -838,7 +838,7 @@ namespace ShaiRandom
         public abstract bool SupportsSkip { get; }
 
         /// <summary>
-        /// This should be true if the implementation supports <see cref="PreviousUlong"/>, or false if that method is unsupported.
+        /// This should be true if the implementation supports <see cref="PreviousULong"/>, or false if that method is unsupported.
         /// </summary>
         public abstract bool SupportsPrevious { get; }
 
@@ -1066,11 +1066,11 @@ namespace ShaiRandom
         /// Returns the next pseudorandom, uniformly distributed ulong
         /// value from this random number generator's sequence, in the full range of all possible ulong values.
         /// <remarks>
-        /// The general contract of NextUlong is that one ulong value is
+        /// The general contract of NextULong is that one ulong value is
         /// pseudorandomly generated and returned.
         /// </remarks>
         /// <returns>The next pseudorandom, uniformly distributed ulong value from this random number generator's sequence.</returns>
-        public abstract ulong NextUlong();
+        public abstract ulong NextULong();
 
         /// <summary>
         /// Returns the next pseudorandom, uniformly distributed long
@@ -1081,7 +1081,7 @@ namespace ShaiRandom
         {
             unchecked
             {
-                return (long)NextUlong();
+                return (long)NextULong();
             }
         }
 
@@ -1092,13 +1092,13 @@ namespace ShaiRandom
         /// </summary>
         /// <remarks>
         /// The general contract of
-        /// nextUlong is that one ulong value in the specified range
+        /// nextULong is that one ulong value in the specified range
         /// is pseudorandomly generated and returned.  All possible
         /// long values within the bound are produced with (approximately) equal
         /// probability, though there is a small amount of bias depending on the bound.
         /// <br/>
         /// Note that this advances the state by the same amount as a single call to
-        /// <see cref="NextUlong()"/>, which allows methods like <see cref="Skip(ulong)"/> to function
+        /// <see cref="NextULong()"/>, which allows methods like <see cref="Skip(ulong)"/> to function
         /// correctly, but introduces some bias when bound is very large. This will
         /// also advance the state if bound is 0 or negative, so usage with a variable
         /// bound will advance the state reliably.
@@ -1108,12 +1108,12 @@ namespace ShaiRandom
         /// don't use this for a real-money gambling purpose. The bias isn't especially
         /// significant, though.
         /// </remarks>
-        /// <seealso cref="NextUint(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
+        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="bound">the upper bound (exclusive). If negative or 0, this always returns 0.</param>
         /// <returns>the next pseudorandom, uniformly distributed long value between zero (inclusive) and bound (exclusive) from this random number generator's sequence</returns>
-        public ulong NextUlong(ulong bound)
+        public ulong NextULong(ulong bound)
         {
-            return NextUlong(0UL, bound);
+            return NextULong(0UL, bound);
         }
 
         /// <summary>
@@ -1127,10 +1127,10 @@ namespace ShaiRandom
         /// bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
         /// for outer bound 0).
         /// <br/>Note that this advances the state by the same amount as a single call to
-        /// <see cref="NextUlong()"/>, which allows methods like <see cref="Skip(ulong)"/> to function
+        /// <see cref="NextULong()"/>, which allows methods like <see cref="Skip(ulong)"/> to function
         /// correctly, but introduces some bias when bound is very large.
         /// </remarks>
-        /// <seealso cref="NextUint(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
+        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="outerBound">the outer exclusive bound; may be any long value, allowing negative</param>
         /// <returns>a pseudorandom long between 0 (inclusive) and outerBound (exclusive)</returns>
         public long NextLong(long outerBound)
@@ -1144,13 +1144,13 @@ namespace ShaiRandom
         /// (exclusive). If outerBound is less than or equal to innerBound,
         /// this always returns innerBound.
         /// </summary>
-        /// <seealso cref="NextUint(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
+        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
         /// <param name="outer">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
         /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
-        public ulong NextUlong(ulong inner, ulong outer)
+        public ulong NextULong(ulong inner, ulong outer)
         {
-            ulong rand = NextUlong();
+            ulong rand = NextULong();
             if (inner >= outer) return inner;
             ulong bound = outer - inner;
             ulong randLow = rand & 0xFFFFFFFFUL;
@@ -1165,13 +1165,13 @@ namespace ShaiRandom
         /// specified innerBound (inclusive) and the specified outerBound
         /// (exclusive). This is meant for cases where either bound may be negative,
         /// especially if the bounds are unknown or may be user-specified.
-        /// <seealso cref="NextUint(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
+        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
         /// <param name="outer">the exclusive outer bound; may be any long, allowing negative</param>
         /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
         public long NextLong(long inner, long outer)
         {
-            ulong rand = NextUlong();
+            ulong rand = NextULong();
             ulong i2, o2;
             if (outer < inner)
             {
@@ -1196,8 +1196,8 @@ namespace ShaiRandom
         /// Generates the next pseudorandom number with a specific maximum size in bits (not a max number).
         /// </summary>
         /// <remarks>
-        /// If you want to get a random number in a range, you should usually use <see cref="NextUint(uint)"/> instead.
-        /// However, for some specific cases, this method is more efficient and less biased than <see cref="NextUint(uint)"/>
+        /// If you want to get a random number in a range, you should usually use <see cref="NextUInt(uint)"/> instead.
+        /// However, for some specific cases, this method is more efficient and less biased than <see cref="NextUInt(uint)"/>
         /// If you know you need a number from a range from 0 (inclusive) to a power of two (exclusive), you can use this method optimally.
         /// <br/>
         /// Note that you can give this values for bits that are outside its expected range of 1 to 32,
@@ -1209,7 +1209,7 @@ namespace ShaiRandom
         /// 
         public uint NextBits(int bits)
         {
-            return (uint)(NextUlong() >> 64 - bits);
+            return (uint)(NextULong() >> 64 - bits);
         }
 
         /// <summary>
@@ -1223,7 +1223,7 @@ namespace ShaiRandom
             for (int i = 0; i < bl;)
             {
                 int n = Math.Min(bl - i, 8);
-                for (ulong r = NextUlong(); n-- > 0; r >>= 8)
+                for (ulong r = NextULong(); n-- > 0; r >>= 8)
                 {
                     bytes[i++] = (byte)r;
                 }
@@ -1240,16 +1240,16 @@ namespace ShaiRandom
         /// <returns>The next pseudorandom, uniformly distributed int value from this random number generator's sequence.</returns>
         public int NextInt()
         {
-            return (int)NextUlong();
+            return (int)NextULong();
         }
 
         /// <summary>
-        /// Gets a random uint by using the low 32 bits of NextUlong(); this can return any uint.
+        /// Gets a random uint by using the low 32 bits of NextULong(); this can return any uint.
         /// </summary>
         /// <returns>Any random uint.</returns>
-        public uint NextUint()
+        public uint NextUInt()
         {
-            return (uint)NextUlong();
+            return (uint)NextULong();
         }
 
         /// <summary>
@@ -1276,9 +1276,9 @@ namespace ShaiRandom
         /// <returns>the next pseudorandom, uniformly distributed int</returns>
         /// value between zero (inclusive) and bound (exclusive)
         /// from this random number generator's sequence
-        public uint NextUint(uint bound)
+        public uint NextUInt(uint bound)
         {
-            return (uint)(bound * (NextUlong() & 0xFFFFFFFFUL) >> 32);
+            return (uint)(bound * (NextULong() & 0xFFFFFFFFUL) >> 32);
         }
 
         /// <summary>
@@ -1289,12 +1289,12 @@ namespace ShaiRandom
         /// as the lower bound; a positive outer bound is used as the upper bound. An outer
         /// bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
         /// for outer bound 0).
-        /// <seealso cref="NextUint(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
+        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="outerBound">the outer exclusive bound; may be any int value, allowing negative</param>
         /// <returns>a pseudorandom int between 0 (inclusive) and outerBound (exclusive)</returns>
         public int NextInt(int outerBound)
         {
-            outerBound = (int)(outerBound * ((long)NextUlong() & 0xFFFFFFFFL) >> 32);
+            outerBound = (int)(outerBound * ((long)NextULong() & 0xFFFFFFFFL) >> 32);
             return outerBound + (outerBound >> 31);
         }
 
@@ -1310,13 +1310,13 @@ namespace ShaiRandom
         /// <br/> For any case where outerBound might be valid but less than innerBound, you
         /// can use {@link #nextSignedInt(int, int)}. If outerBound is less than innerBound
         /// here, this simply returns innerBound.
-        /// <seealso cref="NextUint(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
+        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
         /// <param name="outerBound">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
         /// <returns>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</returns>
-        public uint NextUint(uint innerBound, uint outerBound)
+        public uint NextUInt(uint innerBound, uint outerBound)
         {
-            return (uint)NextUlong(innerBound, outerBound);
+            return (uint)NextULong(innerBound, outerBound);
         }
 
         /// <summary>
@@ -1324,7 +1324,7 @@ namespace ShaiRandom
         /// specified innerBound (inclusive) and the specified outerBound
         /// (exclusive). This is meant for cases where either bound may be negative,
         /// especially if the bounds are unknown or may be user-specified.
-        /// <seealso cref="NextUint(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
+        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
         /// <param name="outerBound">the exclusive outer bound; may be any int, allowing negative</param>
         /// <returns>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</returns>
@@ -1351,7 +1351,7 @@ namespace ShaiRandom
         /// sequence
         public virtual bool NextBool()
         {
-            return (NextUlong() & 0x8000000000000000UL) == 0x8000000000000000UL;
+            return (NextULong() & 0x8000000000000000UL) == 0x8000000000000000UL;
         }
 
         /// <summary>
@@ -1377,7 +1377,7 @@ namespace ShaiRandom
         /// random number generator's sequence
         public virtual float NextFloat()
         {
-            return (NextUlong() >> 40) * FLOAT_ADJUST;
+            return (NextULong() >> 40) * FLOAT_ADJUST;
         }
 
         /// <summary>
@@ -1424,7 +1424,7 @@ namespace ShaiRandom
         /// random number generator's sequence
         public virtual double NextDouble()
         {
-            return (NextUlong() >> 11) * DOUBLE_ADJUST;
+            return (NextULong() >> 11) * DOUBLE_ADJUST;
         }
 
         /// <summary>
@@ -1458,7 +1458,7 @@ namespace ShaiRandom
         /// <returns>a double between 0.0, inclusive, and 1.0, inclusive</returns>
         public double NextInclusiveDouble()
         {
-            return NextUlong(0x20000000000001L) * DOUBLE_ADJUST;
+            return NextULong(0x20000000000001L) * DOUBLE_ADJUST;
         }
 
         /// <summary>
@@ -1530,7 +1530,7 @@ namespace ShaiRandom
         //*/
         //public double NextExclusiveDouble()
         //{
-        //    return ((NextUlong() >> 11) + 1UL) * 1.1102230246251564E-16;
+        //    return ((NextULong() >> 11) + 1UL) * 1.1102230246251564E-16;
         //}
 
 
@@ -1586,7 +1586,7 @@ namespace ShaiRandom
         /// <returns>A random uniform float between 0 and 1 (both exclusive).</returns>
         public float NextExclusiveFloat()
         {
-            // return ((NextUint() >> 9) + 1u) * 5.960464E-8f;
+            // return ((NextUInt() >> 9) + 1u) * 5.960464E-8f;
             long bits = NextLong();
             return BitConverter.Int32BitsToSingle((1089 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF));
         }
@@ -1688,25 +1688,25 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextUlong()
+        /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextULong()
         /// as if called at that step. The distance can be negative if a long is cast to a ulong, which jumps backwards if the period of the generator is 2 to the 64.
         /// </summary>
         /// <param name="distance">How many steps to jump forward</param>
-        /// <returns>The result of what NextUlong() would return at the now-current jumped state.</returns>
+        /// <returns>The result of what NextULong() would return at the now-current jumped state.</returns>
         public virtual ulong Skip(ulong distance)
         {
             throw new NotSupportedException("Skip() is not implemented for this generator.");
         }
 
         /// <summary>
-        /// (Optional) If implemented, jumps the generator back to the previous state and returns what NextUlong() would have produced at that state.
+        /// (Optional) If implemented, jumps the generator back to the previous state and returns what NextULong() would have produced at that state.
         /// </summary>
         /// <remarks>
         /// The default implementation calls <see cref="Skip(ulong)"/> with the equivalent of (ulong)(-1L) . If Skip() is not implemented, this throws a NotSupportedException.
         /// Be aware that if Skip() has a non-constant-time implementation, the default here will generally take the most time possible for that method.
         /// </remarks>
-        /// <returns>The result of what NextUlong() would return at the previous state.</returns>
-        public virtual ulong PreviousUlong()
+        /// <returns>The result of what NextULong() would return at the previous state.</returns>
+        public virtual ulong PreviousULong()
         {
             return Skip(0xFFFFFFFFFFFFFFFFUL);
         }
@@ -1901,73 +1901,73 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextUint(int, int)} using the given innerBound
+        /// Returns the minimum result of trials calls to {@link #NextUInt(int, int)} using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        public uint MinUintOf(uint innerBound, uint outerBound, int trials)
+        public uint MinUIntOf(uint innerBound, uint outerBound, int trials)
         {
-            uint v = NextUint(innerBound, outerBound);
+            uint v = NextUInt(innerBound, outerBound);
             for (int i = 1; i < trials; i++)
             {
-                v = Math.Min(v, NextUint(innerBound, outerBound));
+                v = Math.Min(v, NextUInt(innerBound, outerBound));
             }
             return v;
         }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextUint(int, int)} using the given innerBound
+        /// Returns the maximum result of trials calls to {@link #NextUInt(int, int)} using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        public uint MaxUintOf(uint innerBound, uint outerBound, int trials)
+        public uint MaxUIntOf(uint innerBound, uint outerBound, int trials)
         {
-            uint v = NextUint(innerBound, outerBound);
+            uint v = NextUInt(innerBound, outerBound);
             for (int i = 1; i < trials; i++)
             {
-                v = Math.Max(v, NextUint(innerBound, outerBound));
+                v = Math.Max(v, NextUInt(innerBound, outerBound));
             }
             return v;
         }
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextUlong(long, long)} using the given innerBound
+        /// Returns the minimum result of trials calls to {@link #NextULong(long, long)} using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        public ulong MinUlongOf(ulong innerBound, ulong outerBound, int trials)
+        public ulong MinULongOf(ulong innerBound, ulong outerBound, int trials)
         {
-            ulong v = NextUlong(innerBound, outerBound);
+            ulong v = NextULong(innerBound, outerBound);
             for (int i = 1; i < trials; i++)
             {
-                v = Math.Min(v, NextUlong(innerBound, outerBound));
+                v = Math.Min(v, NextULong(innerBound, outerBound));
             }
             return v;
         }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextUlong(long, long)} using the given innerBound
+        /// Returns the maximum result of trials calls to {@link #NextULong(long, long)} using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        public ulong MaxUlongOf(ulong innerBound, ulong outerBound, int trials)
+        public ulong MaxULongOf(ulong innerBound, ulong outerBound, int trials)
         {
-            ulong v = NextUlong(innerBound, outerBound);
+            ulong v = NextULong(innerBound, outerBound);
             for (int i = 1; i < trials; i++)
             {
-                v = Math.Max(v, NextUlong(innerBound, outerBound));
+                v = Math.Max(v, NextULong(innerBound, outerBound));
             }
             return v;
         }

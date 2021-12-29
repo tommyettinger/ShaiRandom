@@ -99,7 +99,7 @@ namespace ShaiRandom
         /// </summary>
         public override bool SupportsSkip => false;
         /// <summary>
-        /// This does not support <see cref="IRandom.PreviousUlong()"/>.
+        /// This does not support <see cref="IRandom.PreviousULong()"/>.
         /// </summary>
         public override bool SupportsPrevious => false;
         /**
@@ -207,7 +207,7 @@ namespace ShaiRandom
             this.stateD = stateD;
         }
 
-        public override ulong NextUlong()
+        public override ulong NextULong()
         {
             unchecked
             {

@@ -32,7 +32,7 @@ namespace ShaiRandom.PerformanceTests
     /// even testing NR3Q1 and NR3Q2, because they fail PractRand testing in a
     /// matter of seconds (so does XorShift128, but not on as many tests).
     /// </remarks>
-    public class RandomUintComparison
+    public class RandomUIntComparison
     {
         private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
         private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
@@ -53,28 +53,28 @@ namespace ShaiRandom.PerformanceTests
         private readonly MT19937Generator _mT19937Generator = new MT19937Generator(1u);
 
         [Benchmark]
-        public uint Distinct() => _distinctRandom.NextUint();
+        public uint Distinct() => _distinctRandom.NextUInt();
 
         [Benchmark]
-        public uint Laser() => _laserRandom.NextUint();
+        public uint Laser() => _laserRandom.NextUInt();
 
         [Benchmark]
-        public uint Tricycle() => _tricycleRandom.NextUint();
+        public uint Tricycle() => _tricycleRandom.NextUInt();
 
         [Benchmark]
-        public uint FourWheel() => _fourWheelRandom.NextUint();
+        public uint FourWheel() => _fourWheelRandom.NextUInt();
 
         [Benchmark]
-        public uint Stranger() => _strangerRandom.NextUint();
+        public uint Stranger() => _strangerRandom.NextUInt();
 
         [Benchmark]
-        public uint XoshiroStarStar() => _xoshiro256StarStarRandom.NextUint();
+        public uint XoshiroStarStar() => _xoshiro256StarStarRandom.NextUInt();
 
         [Benchmark]
-        public uint RomuTrio() => _romuTrioRandom.NextUint();
+        public uint RomuTrio() => _romuTrioRandom.NextUInt();
 
         [Benchmark]
-        public uint Mizuchi() => _mizuchiRandom.NextUint();
+        public uint Mizuchi() => _mizuchiRandom.NextUInt();
 
         [Benchmark]
         public uint ALF() => _aLFGenerator.NextUIntInclusiveMaxValue();
@@ -136,7 +136,7 @@ namespace ShaiRandom.PerformanceTests
     ///|     XorShift128 |  2.756 ns | 0.0827 ns | 0.1632 ns |  2.802 ns |
     ///</code>
     /// </summary>
-    public class RandomUintBoundedComparison
+    public class RandomUIntBoundedComparison
     {
         private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
         private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
@@ -168,28 +168,28 @@ namespace ShaiRandom.PerformanceTests
 #endif
 
         [Benchmark]
-        public uint Distinct() => _distinctRandom.NextUint(1u, 1000u);
+        public uint Distinct() => _distinctRandom.NextUInt(1u, 1000u);
 
         [Benchmark]
-        public uint Laser() => _laserRandom.NextUint(1u, 1000u);
+        public uint Laser() => _laserRandom.NextUInt(1u, 1000u);
 
         [Benchmark]
-        public uint Tricycle() => _tricycleRandom.NextUint(1u, 1000u);
+        public uint Tricycle() => _tricycleRandom.NextUInt(1u, 1000u);
 
         [Benchmark]
-        public uint FourWheel() => _fourWheelRandom.NextUint(1u, 1000u);
+        public uint FourWheel() => _fourWheelRandom.NextUInt(1u, 1000u);
 
         [Benchmark]
-        public uint Stranger() => _strangerRandom.NextUint(1u, 1000u);
+        public uint Stranger() => _strangerRandom.NextUInt(1u, 1000u);
 
         [Benchmark]
-        public uint XoshiroStarStar() => _xoshiro256StarStarRandom.NextUint(1u, 1000u);
+        public uint XoshiroStarStar() => _xoshiro256StarStarRandom.NextUInt(1u, 1000u);
 
         [Benchmark]
-        public uint RomuTrio() => _romuTrioRandom.NextUint(1u, 1000u);
+        public uint RomuTrio() => _romuTrioRandom.NextUInt(1u, 1000u);
 
         [Benchmark]
-        public uint Mizuchi() => _mizuchiRandom.NextUint(1u, 1000u);
+        public uint Mizuchi() => _mizuchiRandom.NextUInt(1u, 1000u);
 
         [Benchmark]
         public uint ALF() => _aLFGenerator.NextUInt(1u, 1000u);
@@ -236,7 +236,7 @@ namespace ShaiRandom.PerformanceTests
     /// 64TB), and it is much slower than Mizuchi or Laser (both of which also pass
     /// PractRand to at least 64TB).
     /// </remarks>
-    public class RandomUlongComparison
+    public class RandomULongComparison
     {
         private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
         private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
@@ -255,28 +255,28 @@ namespace ShaiRandom.PerformanceTests
         private readonly NR3Q2Generator _nR3Q2Generator = new NR3Q2Generator(1u);
 
         [Benchmark]
-        public ulong Distinct() => _distinctRandom.NextUlong();
+        public ulong Distinct() => _distinctRandom.NextULong();
 
         [Benchmark]
-        public ulong Laser() => _laserRandom.NextUlong();
+        public ulong Laser() => _laserRandom.NextULong();
 
         [Benchmark]
-        public ulong Tricycle() => _tricycleRandom.NextUlong();
+        public ulong Tricycle() => _tricycleRandom.NextULong();
 
         [Benchmark]
-        public ulong FourWheel() => _fourWheelRandom.NextUlong();
+        public ulong FourWheel() => _fourWheelRandom.NextULong();
 
         [Benchmark]
-        public ulong Stranger() => _strangerRandom.NextUlong();
+        public ulong Stranger() => _strangerRandom.NextULong();
 
         [Benchmark]
-        public ulong XoshiroStarStar() => _xoshiro256StarStarRandom.NextUlong();
+        public ulong XoshiroStarStar() => _xoshiro256StarStarRandom.NextULong();
 
         [Benchmark]
-        public ulong RomuTrio() => _romuTrioRandom.NextUlong();
+        public ulong RomuTrio() => _romuTrioRandom.NextULong();
 
         [Benchmark]
-        public ulong Mizuchi() => _mizuchiRandom.NextUlong();
+        public ulong Mizuchi() => _mizuchiRandom.NextULong();
 
         [Benchmark]
         public ulong NR3() => _nR3Generator.NextULong();
@@ -321,7 +321,7 @@ namespace ShaiRandom.PerformanceTests
     ///|         Mizuchi |  1.666 ns | 0.0622 ns | 0.1229 ns |  1.711 ns |
     /// </code>
     /// </summary>
-    public class RandomUlongBoundedComparison
+    public class RandomULongBoundedComparison
     {
         private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
         private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
@@ -344,28 +344,28 @@ namespace ShaiRandom.PerformanceTests
 #endif
 
         [Benchmark]
-        public ulong Distinct() => _distinctRandom.NextUlong(1UL, 1000UL);
+        public ulong Distinct() => _distinctRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
-        public ulong Laser() => _laserRandom.NextUlong(1UL, 1000UL);
+        public ulong Laser() => _laserRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
-        public ulong Tricycle() => _tricycleRandom.NextUlong(1UL, 1000UL);
+        public ulong Tricycle() => _tricycleRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
-        public ulong FourWheel() => _fourWheelRandom.NextUlong(1UL, 1000UL);
+        public ulong FourWheel() => _fourWheelRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
-        public ulong Stranger() => _strangerRandom.NextUlong(1UL, 1000UL);
+        public ulong Stranger() => _strangerRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
-        public ulong XoshiroStarStar() => _xoshiro256StarStarRandom.NextUlong(1UL, 1000UL);
+        public ulong XoshiroStarStar() => _xoshiro256StarStarRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
-        public ulong RomuTrio() => _romuTrioRandom.NextUlong(1UL, 1000UL);
+        public ulong RomuTrio() => _romuTrioRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
-        public ulong Mizuchi() => _mizuchiRandom.NextUlong(1UL, 1000UL);
+        public ulong Mizuchi() => _mizuchiRandom.NextULong(1UL, 1000UL);
     }
     /// <summary>
     ///|          Method |     Mean |     Error |    StdDev |   Median |

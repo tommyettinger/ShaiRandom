@@ -119,7 +119,7 @@ namespace ShaiRandom
         /// </summary>
         public override bool SupportsSkip => false;
         /// <summary>
-        /// This does not support <see cref="IRandom.PreviousUlong()"/>.
+        /// This does not support <see cref="IRandom.PreviousULong()"/>.
         /// </summary>
         public override bool SupportsPrevious => false;
         /**
@@ -172,7 +172,7 @@ namespace ShaiRandom
         /**
          * This initializes all 4 states of the generator to random values based on the given seed.
          * (2 to the 64) possible initial generator states can be produced here, all with a different
-         * first value returned by {@link #nextUlong()} (because {@code stateC} is guaranteed to be
+         * first value returned by {@link #nextULong()} (because {@code stateC} is guaranteed to be
          * different for every different {@code seed}).
          * @param seed the initial seed; may be any long
          */
@@ -219,7 +219,7 @@ namespace ShaiRandom
             this.stateD = stateD;
         }
 
-        public override ulong NextUlong()
+        public override ulong NextULong()
         {
             ulong fa = _a;
             ulong fb = _b;

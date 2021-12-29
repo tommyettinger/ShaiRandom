@@ -41,7 +41,7 @@ namespace ShaiRandom
         /**
          * The first state; can be any long except that the whole state must not all be 0.
          * If this has just been set to some value, then the next call to
-         * {@link #nextUlong()} will return that value as-is. Later calls will be more random.
+         * {@link #nextULong()} will return that value as-is. Later calls will be more random.
          */
         public ulong stateA { get; set; }
 
@@ -119,7 +119,7 @@ namespace ShaiRandom
         /// </summary>
         public override bool SupportsSkip => false;
         /// <summary>
-        /// This does not support <see cref="IRandom.PreviousUlong()"/>.
+        /// This does not support <see cref="IRandom.PreviousULong()"/>.
         /// </summary>
         public override bool SupportsPrevious => false;
         /**
@@ -214,7 +214,7 @@ namespace ShaiRandom
             this.stateC = stateC;
         }
 
-        public override ulong NextUlong()
+        public override ulong NextULong()
         {
             unchecked
             {
