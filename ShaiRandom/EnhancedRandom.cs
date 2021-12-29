@@ -94,59 +94,55 @@ namespace ShaiRandom
         void SetSelectedState(int selection, ulong value);
         void SetState(ulong state);
 
-        /**
-         * Sets each state variable to either {@code stateA} or {@code stateB}, alternating.
-         * This uses {@link #SetSelectedState(int, ulong)} to set the values. If there is one
-         * state variable ({@link #StateCount} is 1), then this only sets that state
-         * variable to stateA. If there are two state variables, the first is set to stateA,
-         * and the second to stateB. If there are more, it reuses stateA, then stateB, then
-         * stateA, and so on until all variables are set.
-         * @param stateA the ulong value to use for states at index 0, 2, 4, 6...
-         * @param stateB the ulong value to use for states at index 1, 3, 5, 7...
-         */
+        /// <summary>
+        /// Sets each state variable to either stateA or stateB, alternating.
+        /// This uses <see cref="SetSelectedState(int, ulong)"/> to set the values. If there is one
+        /// state variable (<see cref="StateCount"/> is 1), then this only sets that state
+        /// variable to stateA. If there are two state variables, the first is set to stateA,
+        /// and the second to stateB. If there are more, it reuses stateA, then stateB, then
+        /// stateA, and so on until all variables are set.
+        /// <param name="stateA">the ulong value to use for states at index 0, 2, 4, 6...</param>
+        /// <param name="stateB">the ulong value to use for states at index 1, 3, 5, 7...</param>
         void SetState(ulong stateA, ulong stateB);
 
-        /**
-         * Sets each state variable to {@code stateA}, {@code stateB}, or {@code stateC},
-         * alternating. This uses {@link #SetSelectedState(int, ulong)} to set the values.
-         * If there is one state variable ({@link #StateCount} is 1), then this only
-         * sets that state variable to stateA. If there are two state variables, the first
-         * is set to stateA, and the second to stateB. With three state variables, the
-         * first is set to stateA, the second to stateB, and the third to stateC. If there
-         * are more, it reuses stateA, then stateB, then stateC, then stateA, and so on
-         * until all variables are set.
-         * @param stateA the ulong value to use for states at index 0, 3, 6, 9...
-         * @param stateB the ulong value to use for states at index 1, 4, 7, 10...
-         * @param stateC the ulong value to use for states at index 2, 5, 8, 11...
-         */
+        /// <summary>
+        /// Sets each state variable to stateA, stateB, or stateC,
+        /// alternating. This uses <see cref="SetSelectedState(int, ulong)"/> to set the values.
+        /// If there is one state variable (<see cref="StateCount"/> is 1), then this only
+        /// sets that state variable to stateA. If there are two state variables, the first
+        /// is set to stateA, and the second to stateB. With three state variables, the
+        /// first is set to stateA, the second to stateB, and the third to stateC. If there
+        /// are more, it reuses stateA, then stateB, then stateC, then stateA, and so on
+        /// until all variables are set.
+        /// <param name="stateA">the ulong value to use for states at index 0, 3, 6, 9...</param>
+        /// <param name="stateB">the ulong value to use for states at index 1, 4, 7, 10...</param>
+        /// <param name="stateC">the ulong value to use for states at index 2, 5, 8, 11...</param>
         void SetState(ulong stateA, ulong stateB, ulong stateC);
 
-        /**
-         * Sets each state variable to {@code stateA}, {@code stateB}, {@code stateC}, or
-         * {@code stateD}, alternating. This uses {@link #SetSelectedState(int, ulong)} to
-         * set the values. If there is one state variable ({@link #StateCount} is 1),
-         * then this only sets that state variable to stateA. If there are two state
-         * variables, the first is set to stateA, and the second to stateB. With three
-         * state variables, the first is set to stateA, the second to stateB, and the third
-         * to stateC. With four state variables, the first is set to stateA, the second to
-         * stateB, the third to stateC, and the fourth to stateD. If there are more, it
-         * reuses stateA, then stateB, then stateC, then stateD, then stateA, and so on
-         * until all variables are set.
-         * @param stateA the ulong value to use for states at index 0, 4, 8, 12...
-         * @param stateB the ulong value to use for states at index 1, 5, 9, 13...
-         * @param stateC the ulong value to use for states at index 2, 6, 10, 14...
-         * @param stateD the ulong value to use for states at index 3, 7, 11, 15...
-         */
+        /// <summary>
+        /// Sets each state variable to stateA, stateB, stateC, or
+        /// stateD, alternating. This uses <see cref="SetSelectedState(int, ulong)"/> to
+        /// set the values. If there is one state variable (<see cref="StateCount"/> is 1),
+        /// then this only sets that state variable to stateA. If there are two state
+        /// variables, the first is set to stateA, and the second to stateB. With three
+        /// state variables, the first is set to stateA, the second to stateB, and the third
+        /// to stateC. With four state variables, the first is set to stateA, the second to
+        /// stateB, the third to stateC, and the fourth to stateD. If there are more, it
+        /// reuses stateA, then stateB, then stateC, then stateD, then stateA, and so on
+        /// until all variables are set.
+        /// <param name="stateA">the ulong value to use for states at index 0, 4, 8, 12...</param>
+        /// <param name="stateB">the ulong value to use for states at index 1, 5, 9, 13...</param>
+        /// <param name="stateC">the ulong value to use for states at index 2, 6, 10, 14...</param>
+        /// <param name="stateD">the ulong value to use for states at index 3, 7, 11, 15...</param>
         void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD);
 
-        /**
-         * Sets all state variables to alternating values chosen from {@code states}. If states is empty,
-         * then this does nothing, and leaves the current generator unchanged. This works for
-         * generators with any {@link #StateCount}, but may allocate an array if states is
-         * used as a varargs (you can pass an existing array without needing to allocate). This
-         * uses {@link #SetSelectedState(int, ulong)} to change the states.
-         * @param states an array or varargs of ulong values to use as states
-         */
+        /// <summary>
+        /// Sets all state variables to alternating values chosen from states. If states is empty,
+        /// then this does nothing, and leaves the current generator unchanged. This works for
+        /// generators with any <see cref="StateCount"/>, but may allocate an array if states is
+        /// used as a varargs (you can pass an existing array without needing to allocate). This
+        /// uses <see cref="SetSelectedState(int, ulong)"/> to change the states.
+        /// <param name="states">an array or varargs of ulong values to use as states</param>
         void SetState(params ulong[] states);
         /// <summary>
         /// Can return any ulong.
@@ -162,101 +158,87 @@ namespace ShaiRandom
         /// <returns>A random long, which may be positive or negative, and can have any long value.</returns>
         long NextLong();
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code long} value
-         * between 0 (inclusive) and the specified value (exclusive), drawn from
-         * this random number generator's sequence.  The general contract of
-         * {@code nextLong} is that one {@code long} value in the specified range
-         * is pseudorandomly generated and returned.  All {@code bound} possible
-         * {@code long} values are produced with (approximately) equal
-         * probability, though there may be a small amount of bias depending on the
-         * implementation and the bound.
-         *
-         * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
-         * @return the next pseudorandom, uniformly distributed {@code long}
-         * value between zero (inclusive) and {@code bound} (exclusive)
-         * from this random number generator's sequence
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed long value
+        /// between 0 (inclusive) and the specified value (exclusive), drawn from
+        /// this random number generator's sequence.  The general contract of
+        /// nextLong is that one long value in the specified range
+        /// is pseudorandomly generated and returned.  All bound possible
+        /// long values are produced with (approximately) equal
+        /// probability, though there may be a small amount of bias depending on the
+        /// implementation and the bound.
+        /// <param name="bound">the upper bound (exclusive). If negative or 0, this always returns 0.</param>
+        /// <returns>the next pseudorandom, uniformly distributed long</returns>
+        /// value between zero (inclusive) and bound (exclusive)
+        /// from this random number generator's sequence
         ulong NextUlong(ulong bound);
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code long} value between an
-         * inner bound of 0 (inclusive) and the specified {@code outerBound} (exclusive).
-         * This is meant for cases where the outer bound may be negative, especially if
-         * the bound is unknown or may be user-specified. A negative outer bound is used
-         * as the lower bound; a positive outer bound is used as the upper bound. An outer
-         * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
-         * for outer bound 0).
-         *
-         * @param outerBound the outer exclusive bound; may be any long value, allowing negative
-         * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed long value between an
+        /// inner bound of 0 (inclusive) and the specified outerBound (exclusive).
+        /// This is meant for cases where the outer bound may be negative, especially if
+        /// the bound is unknown or may be user-specified. A negative outer bound is used
+        /// as the lower bound; a positive outer bound is used as the upper bound. An outer
+        /// bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
+        /// for outer bound 0).
+        /// <param name="outerBound">the outer exclusive bound; may be any long value, allowing negative</param>
+        /// <returns>a pseudorandom long between 0 (inclusive) and outerBound (exclusive)</returns>
         long NextLong(long outerBound);
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code long} value between the
-         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
-         * (exclusive). If {@code outerBound} is less than or equal to {@code innerBound},
-         * this always returns {@code innerBound}.
-         *
-         * @param inner the inclusive inner bound; may be any long, allowing negative
-         * @param outer the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
-         * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed long value between the
+        /// specified innerBound (inclusive) and the specified outerBound
+        /// (exclusive). If outerBound is less than or equal to innerBound,
+        /// this always returns innerBound.
+        /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
+        /// <param name="outer">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
+        /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
         ulong NextUlong(ulong inner, ulong outer);
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code long} value between the
-         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
-         * (exclusive). This is meant for cases where either bound may be negative,
-         * especially if the bounds are unknown or may be user-specified.
-         *
-         * @param inner the inclusive inner bound; may be any long, allowing negative
-         * @param outer the exclusive outer bound; may be any long, allowing negative
-         * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed long value between the
+        /// specified innerBound (inclusive) and the specified outerBound
+        /// (exclusive). This is meant for cases where either bound may be negative,
+        /// especially if the bounds are unknown or may be user-specified.
+        /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
+        /// <param name="outer">the exclusive outer bound; may be any long, allowing negative</param>
+        /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
         long NextLong(long inner, long outer);
 
-        /**
-         * Generates the next pseudorandom number with a specific maximum size in bits (not a max number).
-         * If you want to get a random number in a range, you should usually use {@link #nextInt(int)} instead.
-         * <p>The general contract of {@code next} is that it returns an
-         * {@code uint} value and if the argument {@code bits} is between
-         * {@code 1} and {@code 32} (inclusive), then that many low-order
-         * bits of the returned value will be (approximately) independently
-         * chosen bit values, each of which is (approximately) equally
-         * likely to be {@code 0} or {@code 1}.
-         * <p>
-         * Note that you can give this values for {@code bits} that are outside its expected range of 1 to 32,
-         * but the value used, as long as bits is positive, will effectively be {@code bits % 32}. As stated
-         * before, a value of 0 for bits is the same as a value of 32.<p>
-         *
-         * @param bits the amount of random bits to request, from 1 to 32
-         * @return the next pseudorandom value from this random number
-         * generator's sequence
-         */
+        /// <summary>
+        /// Generates the next pseudorandom number with a specific maximum size in bits (not a max number).
+        /// If you want to get a random number in a range, you should usually use {@link #nextInt(int)} instead.
+        /// <p>The general contract of next is that it returns an
+        /// uint value and if the argument bits is between
+        /// 1 and 32 (inclusive), then that many low-order
+        /// bits of the returned value will be (approximately) independently
+        /// chosen bit values, each of which is (approximately) equally
+        /// likely to be 0 or 1.
+        /// <p>
+        /// Note that you can give this values for bits that are outside its expected range of 1 to 32,
+        /// but the value used, as long as bits is positive, will effectively be {@code bits % 32}. As stated
+        /// before, a value of 0 for bits is the same as a value of 32.<p>
+        /// <param name="bits">the amount of random bits to request, from 1 to 32</param>
+        /// <returns>the next pseudorandom value from this random number</returns>
+        /// generator's sequence
         uint NextBits(int bits);
 
-        /**
-         * Generates random bytes and places them into a user-supplied
-         * byte array.  The number of random bytes produced is equal to
-         * the length of the byte array.
-         *
-         * @param bytes the byte array to fill with random bytes
-         * @throws NullPointerException if the byte array is null
-         */
+        /// <summary>
+        /// Generates random bytes and places them into a user-supplied
+        /// byte array.  The number of random bytes produced is equal to
+        /// the length of the byte array.
+        /// <param name="bytes">the byte array to fill with random bytes</param>
+        /// @throws NullPointerException if the byte array is null
         void NextBytes(byte[] bytes);
 
-        /**
-         * Returns the next pseudorandom, uniformly distributed {@code int}
-         * value from this random number generator's sequence. The general
-         * contract of {@code nextInt} is that one {@code int} value is
-         * pseudorandomly generated and returned. All 2<sup>32</sup> possible
-         * {@code int} values are produced with (approximately) equal probability.
-         *
-         * @return the next pseudorandom, uniformly distributed {@code int}
-         * value from this random number generator's sequence
-         */
+        /// <summary>
+        /// Returns the next pseudorandom, uniformly distributed int
+        /// value from this random number generator's sequence. The general
+        /// contract of nextInt is that one int value is
+        /// pseudorandomly generated and returned. All 2<sup>32</sup> possible
+        /// int values are produced with (approximately) equal probability.
+        /// <returns>the next pseudorandom, uniformly distributed int</returns>
+        /// value from this random number generator's sequence
         int NextInt();
 
         /// <summary>
@@ -265,308 +247,273 @@ namespace ShaiRandom
         /// <returns>Any random uint.</returns>
         uint NextUint();
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code int} value
-         * between 0 (inclusive) and the specified value (exclusive), drawn from
-         * this random number generator's sequence.  The general contract of
-         * {@code nextInt} is that one {@code int} value in the specified range
-         * is pseudorandomly generated and returned.  All {@code bound} possible
-         * {@code int} values are produced with (approximately) equal
-         * probability.
-         * <br>
-         * It should be mentioned that the technique this uses has some bias, depending
-         * on {@code bound}, but it typically isn't measurable without specifically looking
-         * for it. Using the method this does allows this method to always advance the state
-         * by one step, instead of a varying and unpredictable amount with the more typical
-         * ways of rejection-sampling random numbers and only using numbers that can produce
-         * an int within the bound without bias.
-         * See <a href="https://www.pcg-random.org/posts/bounded-rands.html">M.E. O'Neill's
-         * blog about random numbers</a> for discussion of alternative, unbiased methods.
-         *
-         * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
-         * @return the next pseudorandom, uniformly distributed {@code int}
-         * value between zero (inclusive) and {@code bound} (exclusive)
-         * from this random number generator's sequence
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed int value
+        /// between 0 (inclusive) and the specified value (exclusive), drawn from
+        /// this random number generator's sequence.  The general contract of
+        /// nextInt is that one int value in the specified range
+        /// is pseudorandomly generated and returned.  All bound possible
+        /// int values are produced with (approximately) equal
+        /// probability.
+        /// <br>
+        /// It should be mentioned that the technique this uses has some bias, depending
+        /// on bound, but it typically isn't measurable without specifically looking
+        /// for it. Using the method this does allows this method to always advance the state
+        /// by one step, instead of a varying and unpredictable amount with the more typical
+        /// ways of rejection-sampling random numbers and only using numbers that can produce
+        /// an int within the bound without bias.
+        /// See <a href="https://www.pcg-random.org/posts/bounded-rands.html">M.E. O'Neill's
+        /// blog about random numbers</a> for discussion of alternative, unbiased methods.
+        /// <param name="bound">the upper bound (exclusive). If negative or 0, this always returns 0.</param>
+        /// <returns>the next pseudorandom, uniformly distributed int</returns>
+        /// value between zero (inclusive) and bound (exclusive)
+        /// from this random number generator's sequence
         uint NextUint(uint bound);
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code int} value between an
-         * inner bound of 0 (inclusive) and the specified {@code outerBound} (exclusive).
-         * This is meant for cases where the outer bound may be negative, especially if
-         * the bound is unknown or may be user-specified. A negative outer bound is used
-         * as the lower bound; a positive outer bound is used as the upper bound. An outer
-         * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
-         * for outer bound 0).
-         *
-         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
-         * @param outerBound the outer exclusive bound; may be any int value, allowing negative
-         * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed int value between an
+        /// inner bound of 0 (inclusive) and the specified outerBound (exclusive).
+        /// This is meant for cases where the outer bound may be negative, especially if
+        /// the bound is unknown or may be user-specified. A negative outer bound is used
+        /// as the lower bound; a positive outer bound is used as the upper bound. An outer
+        /// bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
+        /// for outer bound 0).
+        /// @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+        /// <param name="outerBound">the outer exclusive bound; may be any int value, allowing negative</param>
+        /// <returns>a pseudorandom int between 0 (inclusive) and outerBound (exclusive)</returns>
         int NextInt(int outerBound);
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code int} value between the
-         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
-         * (exclusive). If {@code outerBound} is less than or equal to {@code innerBound},
-         * this always returns {@code innerBound}. This is significantly slower than
-         * {@link #nextInt(int)} or {@link #nextSignedInt(int)},
-         * because this handles even ranges that go from large negative numbers to large
-         * positive numbers, and since that would be larger than the largest possible int,
-         * this has to use {@link #nextLong(long)}.
-         *
-         * <br> For any case where outerBound might be valid but less than innerBound, you
-         * can use {@link #nextSignedInt(int, int)}. If outerBound is less than innerBound
-         * here, this simply returns innerBound.
-         *
-         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
-         * @param innerBound the inclusive inner bound; may be any int, allowing negative
-         * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
-         * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed int value between the
+        /// specified innerBound (inclusive) and the specified outerBound
+        /// (exclusive). If outerBound is less than or equal to innerBound,
+        /// this always returns innerBound. This is significantly slower than
+        /// {@link #nextInt(int)} or {@link #nextSignedInt(int)},
+        /// because this handles even ranges that go from large negative numbers to large
+        /// positive numbers, and since that would be larger than the largest possible int,
+        /// this has to use {@link #nextLong(long)}.
+        /// <br> For any case where outerBound might be valid but less than innerBound, you
+        /// can use {@link #nextSignedInt(int, int)}. If outerBound is less than innerBound
+        /// here, this simply returns innerBound.
+        /// @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+        /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
+        /// <param name="outerBound">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
+        /// <returns>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</returns>
         uint NextUint(uint innerBound, uint outerBound);
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code int} value between the
-         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
-         * (exclusive). This is meant for cases where either bound may be negative,
-         * especially if the bounds are unknown or may be user-specified. It is slightly
-         * slower than {@link #nextInt(int, int)}, and significantly slower than
-         * {@link #nextInt(int)} or {@link #nextSignedInt(int)}. This last part is
-         * because this handles even ranges that go from large negative numbers to large
-         * positive numbers, and since that range is larger than the largest possible int,
-         * this has to use {@link #nextSignedLong(long)}.
-         *
-         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
-         * @param innerBound the inclusive inner bound; may be any int, allowing negative
-         * @param outerBound the exclusive outer bound; may be any int, allowing negative
-         * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed int value between the
+        /// specified innerBound (inclusive) and the specified outerBound
+        /// (exclusive). This is meant for cases where either bound may be negative,
+        /// especially if the bounds are unknown or may be user-specified. It is slightly
+        /// slower than {@link #nextInt(int, int)}, and significantly slower than
+        /// {@link #nextInt(int)} or {@link #nextSignedInt(int)}. This last part is
+        /// because this handles even ranges that go from large negative numbers to large
+        /// positive numbers, and since that range is larger than the largest possible int,
+        /// this has to use {@link #nextSignedLong(long)}.
+        /// @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+        /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
+        /// <param name="outerBound">the exclusive outer bound; may be any int, allowing negative</param>
+        /// <returns>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</returns>
         int NextInt(int innerBound, int outerBound);
 
 
-        /**
-         * Returns the next pseudorandom, uniformly distributed
-         * {@code bool} value from this random number generator's
-         * sequence. The general contract of {@code NextBool} is that one
-         * {@code bool} value is pseudorandomly generated and returned.  The
-         * values {@code true} and {@code false} are produced with
-         * (approximately) equal probability.
-         * 
-         * The default implementation is equivalent to a sign check on {@link #NextUlong()},
-         * returning true if the generated long is negative. This is typically the safest
-         * way to implement this method; many types of generators have less statistical
-         * quality on their lowest bit, so just returning based on the lowest bit isn't
-         * always a good idea.
-         *
-         * @return the next pseudorandom, uniformly distributed
-         * {@code bool} value from this random number generator's
-         * sequence
-         */
+        /// <summary>
+        /// Returns the next pseudorandom, uniformly distributed
+        /// bool value from this random number generator's
+        /// sequence. The general contract of NextBool is that one
+        /// bool value is pseudorandomly generated and returned.  The
+        /// values true and false are produced with
+        /// (approximately) equal probability.
+        /// 
+        /// The default implementation is equivalent to a sign check on {@link #NextUlong()},
+        /// returning true if the generated long is negative. This is typically the safest
+        /// way to implement this method; many types of generators have less statistical
+        /// quality on their lowest bit, so just returning based on the lowest bit isn't
+        /// always a good idea.
+        /// <returns>the next pseudorandom, uniformly distributed</returns>
+        /// bool value from this random number generator's
+        /// sequence
         bool NextBool();
 
-        /**
-         * Returns the next pseudorandom, uniformly distributed {@code float}
-         * value between {@code 0.0} (inclusive) and {@code 1.0} (exclusive)
-         * from this random number generator's sequence.
-         *
-         * <p>The general contract of {@code NextFloat} is that one
-         * {@code float} value, chosen (approximately) uniformly from the
-         * range {@code 0.0f} (inclusive) to {@code 1.0f} (exclusive), is
-         * pseudorandomly generated and returned. All 2<sup>24</sup> possible
-         * {@code float} values of the form <i>m&nbsp;x&nbsp;</i>2<sup>-24</sup>,
-         * where <i>m</i> is a positive integer less than 2<sup>24</sup>, are
-         * produced with (approximately) equal probability.
-         *
-         * <p>The public implementation uses the upper 24 bits of {@link #nextLong()},
-         * with an unsigned right shift and a multiply by a very small float
-         * ({@code 5.9604645E-8f} or {@code 0x1p-24f}). It tends to be fast if
-         * nextLong() is fast, but alternative implementations could use 24 bits of
-         * {@link #nextInt()} (or just {@link #next(int)}, giving it {@code 24})
-         * if that generator doesn't efficiently generate 64-bit longs.<p>
-         *
-         * @return the next pseudorandom, uniformly distributed {@code float}
-         * value between {@code 0.0} and {@code 1.0} from this
-         * random number generator's sequence
-         */
+        /// <summary>
+        /// Returns the next pseudorandom, uniformly distributed float
+        /// value between {@code 0.0} (inclusive) and {@code 1.0} (exclusive)
+        /// from this random number generator's sequence.
+        /// <p>The general contract of NextFloat is that one
+        /// float value, chosen (approximately) uniformly from the
+        /// range {@code 0.0f} (inclusive) to {@code 1.0f} (exclusive), is
+        /// pseudorandomly generated and returned. All 2<sup>24</sup> possible
+        /// float values of the form <i>m&nbsp;x&nbsp;</i>2<sup>-24</sup>,
+        /// where <i>m</i> is a positive integer less than 2<sup>24</sup>, are
+        /// produced with (approximately) equal probability.
+        /// <p>The public implementation uses the upper 24 bits of {@link #nextLong()},
+        /// with an unsigned right shift and a multiply by a very small float
+        /// ({@code 5.9604645E-8f} or {@code 0x1p-24f}). It tends to be fast if
+        /// nextLong() is fast, but alternative implementations could use 24 bits of
+        /// {@link #nextInt()} (or just {@link #next(int)}, giving it 24)
+        /// if that generator doesn't efficiently generate 64-bit longs.<p>
+        /// <returns>the next pseudorandom, uniformly distributed float</returns>
+        /// value between {@code 0.0} and {@code 1.0} from this
+        /// random number generator's sequence
         float NextFloat();
 
-        /**
-         * Gets a pseudo-random float between 0 (inclusive) and {@code outerBound} (exclusive).
-         * The outerBound may be positive or negative.
-         * Exactly the same as {@code NextFloat() * outerBound}.
-         * @param outerBound the exclusive outer bound
-         * @return a float between 0 (inclusive) and {@code outerBound} (exclusive)
-         */
+        /// <summary>
+        /// Gets a pseudo-random float between 0 (inclusive) and outerBound (exclusive).
+        /// The outerBound may be positive or negative.
+        /// Exactly the same as {@code NextFloat() * outerBound}.
+        /// <param name="outerBound">the exclusive outer bound</param>
+        /// <returns>a float between 0 (inclusive) and outerBound (exclusive)</returns>
         float NextFloat(float outerBound);
 
-        /**
-         * Gets a pseudo-random float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
-         * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
-         * inclusive and which is exclusive.
-         * @param innerBound the inclusive inner bound; may be negative
-         * @param outerBound the exclusive outer bound; may be negative
-         * @return a float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
-         */
+        /// <summary>
+        /// Gets a pseudo-random float between innerBound (inclusive) and outerBound (exclusive).
+        /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
+        /// inclusive and which is exclusive.
+        /// <param name="innerBound">the inclusive inner bound; may be negative</param>
+        /// <param name="outerBound">the exclusive outer bound; may be negative</param>
+        /// <returns>a float between innerBound (inclusive) and outerBound (exclusive)</returns>
         float NextFloat(float innerBound, float outerBound);
 
-        /**
-         * Returns the next pseudorandom, uniformly distributed
-         * {@code double} value between {@code 0.0} (inclusive) and {@code 1.0}
-         * (exclusive) from this random number generator's sequence.
-         *
-         * <p>The general contract of {@code NextDouble} is that one
-         * {@code double} value, chosen (approximately) uniformly from the
-         * range {@code 0.0d} (inclusive) to {@code 1.0d} (exclusive), is
-         * pseudorandomly generated and returned.
-         *
-         * <p>The default implementation uses the upper 53 bits of {@link #nextLong()},
-         * with an unsigned right shift and a multiply by a very small double
-         * ({@code 1.1102230246251565E-16}, or {@code 0x1p-53}). It should perform well
-         * if nextLong() performs well, and is expected to perform less well if the
-         * generator naturally produces 32 or fewer bits at a time.<p>
-         *
-         * @return the next pseudorandom, uniformly distributed {@code double}
-         * value between {@code 0.0} and {@code 1.0} from this
-         * random number generator's sequence
-         */
+        /// <summary>
+        /// Returns the next pseudorandom, uniformly distributed
+        /// double value between {@code 0.0} (inclusive) and {@code 1.0}
+        /// (exclusive) from this random number generator's sequence.
+        /// <p>The general contract of NextDouble is that one
+        /// double value, chosen (approximately) uniformly from the
+        /// range {@code 0.0d} (inclusive) to {@code 1.0d} (exclusive), is
+        /// pseudorandomly generated and returned.
+        /// <p>The default implementation uses the upper 53 bits of {@link #nextLong()},
+        /// with an unsigned right shift and a multiply by a very small double
+        /// ({@code 1.1102230246251565E-16}, or {@code 0x1p-53}). It should perform well
+        /// if nextLong() performs well, and is expected to perform less well if the
+        /// generator naturally produces 32 or fewer bits at a time.<p>
+        /// <returns>the next pseudorandom, uniformly distributed double</returns>
+        /// value between {@code 0.0} and {@code 1.0} from this
+        /// random number generator's sequence
         double NextDouble();
 
-        /**
-         * Gets a pseudo-random double between 0 (inclusive) and {@code outerBound} (exclusive).
-         * The outerBound may be positive or negative.
-         * Exactly the same as {@code NextDouble() * outerBound}.
-         * @param outerBound the exclusive outer bound
-         * @return a double between 0 (inclusive) and {@code outerBound} (exclusive)
-         */
+        /// <summary>
+        /// Gets a pseudo-random double between 0 (inclusive) and outerBound (exclusive).
+        /// The outerBound may be positive or negative.
+        /// Exactly the same as {@code NextDouble() * outerBound}.
+        /// <param name="outerBound">the exclusive outer bound</param>
+        /// <returns>a double between 0 (inclusive) and outerBound (exclusive)</returns>
         double NextDouble(double outerBound);
 
-        /**
-         * Gets a pseudo-random double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
-         * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
-         * inclusive and which is exclusive.
-         * @param innerBound the inclusive inner bound; may be negative
-         * @param outerBound the exclusive outer bound; may be negative
-         * @return a double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
-         */
+        /// <summary>
+        /// Gets a pseudo-random double between innerBound (inclusive) and outerBound (exclusive).
+        /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
+        /// inclusive and which is exclusive.
+        /// <param name="innerBound">the inclusive inner bound; may be negative</param>
+        /// <param name="outerBound">the exclusive outer bound; may be negative</param>
+        /// <returns>a double between innerBound (inclusive) and outerBound (exclusive)</returns>
         double NextDouble(double innerBound, double outerBound);
 
-        /**
-         * This is just like {@link #NextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
-         * It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
-         * can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
-         * subtly-different results.
-         * @return a double between 0.0, inclusive, and 1.0, inclusive
-         */
+        /// <summary>
+        /// This is just like {@link #NextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+        /// It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
+        /// can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
+        /// subtly-different results.
+        /// <returns>a double between 0.0, inclusive, and 1.0, inclusive</returns>
         double NextInclusiveDouble();
 
-        /**
-         * Just like {@link #NextDouble(double)}, but this is inclusive on both 0.0 and {@code outerBound}.
-         * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
-         * @param outerBound the outer inclusive bound; may be positive or negative
-         * @return a double between 0.0, inclusive, and {@code outerBound}, inclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextDouble(double)}, but this is inclusive on both 0.0 and outerBound.
+        /// It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
+        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
+        /// <returns>a double between 0.0, inclusive, and outerBound, inclusive</returns>
         double NextInclusiveDouble(double outerBound);
 
-        /**
-         * Just like {@link #NextDouble(double, double)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
-         * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
-         * return it at all because of floating-point imprecision when innerBound is a larger number.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer inclusive bound; may be positive or negative
-         * @return a double between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextDouble(double, double)}, but this is inclusive on both innerBound and outerBound.
+        /// It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
+        /// return it at all because of floating-point imprecision when innerBound is a larger number.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
+        /// <returns>a double between innerBound, inclusive, and outerBound, inclusive</returns>
         double NextInclusiveDouble(double innerBound, double outerBound);
 
-        /**
-         * This is just like {@link #NextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
-         * It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
-         * has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
-         * it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
-         * likely to accomplish that in the same time, or at all, depending on the generator.
-         * @return a float between 0.0, inclusive, and 1.0, inclusive
-         */
+        /// <summary>
+        /// This is just like {@link #NextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+        /// It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
+        /// has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
+        /// it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
+        /// likely to accomplish that in the same time, or at all, depending on the generator.
+        /// <returns>a float between 0.0, inclusive, and 1.0, inclusive</returns>
         float NextInclusiveFloat();
 
-        /**
-         * Just like {@link #NextFloat(float)}, but this is inclusive on both 0.0 and {@code outerBound}.
-         * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
-         * @param outerBound the outer inclusive bound; may be positive or negative
-         * @return a float between 0.0, inclusive, and {@code outerBound}, inclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextFloat(float)}, but this is inclusive on both 0.0 and outerBound.
+        /// It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
+        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
+        /// <returns>a float between 0.0, inclusive, and outerBound, inclusive</returns>
         float NextInclusiveFloat(float outerBound);
 
-        /**
-         * Just like {@link #NextFloat(float, float)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
-         * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
-         * it at all because of floating-point imprecision when innerBound is a larger number.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer inclusive bound; may be positive or negative
-         * @return a float between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextFloat(float, float)}, but this is inclusive on both innerBound and outerBound.
+        /// It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
+        /// it at all because of floating-point imprecision when innerBound is a larger number.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
+        /// <returns>a float between innerBound, inclusive, and outerBound, inclusive</returns>
         float NextInclusiveFloat(float innerBound, float outerBound);
 
-        /**
-         * Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
-         * values between 1.1102230246251564E-16 and 0.9999999999999999, or 0x1.fffffffffffffp-54 and 0x1.fffffffffffffp-1 in hex
-         * notation. It cannot return 0 or 1.
-         * <br>
-         * The default implementation simply uses {@link #nextLong()} to get a uniform long, shifts it to remove 11 bits, adds 1, and
-         * multiplies by a value just slightly less than what nextDouble() usually uses.
-         * @return a random uniform double between 0 and 1 (both exclusive)
-         */
+        /// <summary>
+        /// Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
+        /// values between 1.1102230246251564E-16 and 0.9999999999999999, or 0x1.fffffffffffffp-54 and 0x1.fffffffffffffp-1 in hex
+        /// notation. It cannot return 0 or 1.
+        /// <br>
+        /// The default implementation simply uses {@link #nextLong()} to get a uniform long, shifts it to remove 11 bits, adds 1, and
+        /// multiplies by a value just slightly less than what nextDouble() usually uses.
+        /// <returns>a random uniform double between 0 and 1 (both exclusive)</returns>
         double NextExclusiveDouble();
 
-        /**
-         * Just like {@link #NextDouble(double)}, but this is exclusive on both 0.0 and {@code outerBound}.
-         * Like {@link #nextExclusiveDouble()}, which this uses, this may have better bit-distribution of
-         * double values, and it may also be better able to produce very small doubles when {@code outerBound} is large.
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @return a double between 0.0, exclusive, and {@code outerBound}, exclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextDouble(double)}, but this is exclusive on both 0.0 and outerBound.
+        /// Like {@link #nextExclusiveDouble()}, which this uses, this may have better bit-distribution of
+        /// double values, and it may also be better able to produce very small doubles when outerBound is large.
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <returns>a double between 0.0, exclusive, and outerBound, exclusive</returns>
         double NextExclusiveDouble(double outerBound);
 
-        /**
-         * Just like {@link #NextDouble(double, double)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
-         * Like {@link #nextExclusiveDouble()}, which this uses,, this may have better bit-distribution of double values,
-         * and it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
-         * @param innerBound the inner exclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @return a double between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextDouble(double, double)}, but this is exclusive on both innerBound and outerBound.
+        /// Like {@link #nextExclusiveDouble()}, which this uses,, this may have better bit-distribution of double values,
+        /// and it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
+        /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <returns>a double between innerBound, exclusive, and outerBound, exclusive</returns>
         double NextExclusiveDouble(double innerBound, double outerBound);
 
-        /**
-         * Gets a random float between 0.0 and 1.0, exclusive at both ends. This can return float
-         * values between 5.9604645E-8 and 0.99999994, or 0x1.0p-24 and 0x1.fffffep-1 in hex notation.
-         * It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
-         * 1, respectively. Some usages may prefer {@link #nextExclusiveFloat()}, which is
-         * better-distributed if you consider the bit representation of the returned floats, tends to perform
-         * better, and can return floats that much closer to 0 than this can.
-         * <br>
-         * The default implementation simply uses {@link #nextInt(int)} to get a uniformly-chosen int between 1 and
-         * (2 to the 24) - 1, both inclusive, and multiplies it by (2 to the -24). Using larger values than (2 to the
-         * 24) would cause issues with the float math.
-         * @return a random uniform float between 0 and 1 (both exclusive)
-         */
+        /// <summary>
+        /// Gets a random float between 0.0 and 1.0, exclusive at both ends. This can return float
+        /// values between 5.9604645E-8 and 0.99999994, or 0x1.0p-24 and 0x1.fffffep-1 in hex notation.
+        /// It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
+        /// 1, respectively. Some usages may prefer {@link #nextExclusiveFloat()}, which is
+        /// better-distributed if you consider the bit representation of the returned floats, tends to perform
+        /// better, and can return floats that much closer to 0 than this can.
+        /// <br>
+        /// The default implementation simply uses {@link #nextInt(int)} to get a uniformly-chosen int between 1 and
+        /// (2 to the 24) - 1, both inclusive, and multiplies it by (2 to the -24). Using larger values than (2 to the
+        /// 24) would cause issues with the float math.
+        /// <returns>a random uniform float between 0 and 1 (both exclusive)</returns>
         float NextExclusiveFloat();
 
-        /**
-         * Just like {@link #NextFloat(float)}, but this is exclusive on both 0.0 and {@code outerBound}.
-         * Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
-         * it may also be better able to produce very small floats when {@code outerBound} is large.
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @return a float between 0.0, exclusive, and {@code outerBound}, exclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextFloat(float)}, but this is exclusive on both 0.0 and outerBound.
+        /// Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
+        /// it may also be better able to produce very small floats when outerBound is large.
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <returns>a float between 0.0, exclusive, and outerBound, exclusive</returns>
         float NextExclusiveFloat(float outerBound);
 
-        /**
-         * Just like {@link #NextFloat(float, float)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
-         * Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
-         * it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
-         * @param innerBound the inner exclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @return a float between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextFloat(float, float)}, but this is exclusive on both innerBound and outerBound.
+        /// Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
+        /// it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
+        /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <returns>a float between innerBound, exclusive, and outerBound, exclusive</returns>
         float NextExclusiveFloat(float innerBound, float outerBound);
 
         /// <summary>
@@ -596,184 +543,162 @@ namespace ShaiRandom
         /// <param name="other">Another IRandom that almost always should have the same class as this one, or wrap an IRandom with the same class.</param>
         void SetWith(IRandom other);
 
-        /**
-         * Returns true if a random value between 0 and 1 is less than the specified value.
-         *
-         * @param chance a float between 0.0 and 1.0; higher values are more likely to result in true
-         * @return a bool selected with the given {@code chance} of being true
-         */
+        /// <summary>
+        /// Returns true if a random value between 0 and 1 is less than the specified value.
+        /// <param name="chance">a float between 0.0 and 1.0; higher values are more likely to result in true</param>
+        /// <returns>a bool selected with the given chance of being true</returns>
         bool NextBool(float chance);
 
-        /**
-         * Returns -1 or 1, randomly.
-         *
-         * @return -1 or 1, selected with approximately equal likelihood
-         */
+        /// <summary>
+        /// Returns -1 or 1, randomly.
+        /// <returns>-1 or 1, selected with approximately equal likelihood</returns>
         int NextSign();
 
-        /**
-         * Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
-         * more likely.
-         */
+        /// <summary>
+        /// Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
+        /// more likely.
         float NextTriangular();
 
-        /**
-         * Returns a triangularly distributed random number between {@code -max} (exclusive) and {@code max} (exclusive), where values
-         * around zero are more likely.
-         * @param max the upper limit
-         */
+        /// <summary>
+        /// Returns a triangularly distributed random number between {@code -max} (exclusive) and max (exclusive), where values
+        /// around zero are more likely.
+        /// <param name="max">the upper limit</param>
         float NextTriangular(float max);
 
-        /**
-         * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where the
-         * {@code mode} argument defaults to the midpoint between the bounds, giving a symmetric distribution.
-         * <p>
-         * This method is equivalent of {@link #nextTriangular(float, float, float) NextTriangular(min, max, (min + max) * 0.5f)}
-         *
-         * @param min the lower limit
-         * @param max the upper limit
-         */
+        /// <summary>
+        /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where the
+        /// mode argument defaults to the midpoint between the bounds, giving a symmetric distribution.
+        /// <p>
+        /// This method is equivalent of {@link #nextTriangular(float, float, float) NextTriangular(min, max, (min + max) * 0.5f)}
+        /// <param name="min">the lower limit</param>
+        /// <param name="max">the upper limit</param>
         float NextTriangular(float min, float max);
 
-        /**
-         * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where values
-         * around {@code mode} are more likely.
-         *
-         * @param min  the lower limit
-         * @param max  the upper limit
-         * @param mode the point around which the values are more likely
-         */
+        /// <summary>
+        /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where values
+        /// around mode are more likely.
+        /// <param name="min"> the lower limit</param>
+        /// <param name="max"> the upper limit</param>
+        /// <param name="mode">the point around which the values are more likely</param>
         float NextTriangular(float min, float max, float mode);
 
-        /**
-         * Returns the minimum result of {@code trials} calls to {@link #NextInt(int, int)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the lower the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the minimum result of trials calls to {@link #NextInt(int, int)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the lower the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         int MinIntOf(int innerBound, int outerBound, int trials);
 
-        /**
-         * Returns the maximum result of {@code trials} calls to {@link #NextInt(int, int)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the higher the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the maximum result of trials calls to {@link #NextInt(int, int)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the higher the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         int MaxIntOf(int innerBound, int outerBound, int trials);
 
-        /**
-         * Returns the minimum result of {@code trials} calls to {@link #NextLong(long, long)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the lower the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the minimum result of trials calls to {@link #NextLong(long, long)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the lower the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         long MinLongOf(long innerBound, long outerBound, int trials);
 
-        /**
-         * Returns the maximum result of {@code trials} calls to {@link #NextLong(long, long)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the higher the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the maximum result of trials calls to {@link #NextLong(long, long)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the higher the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         long MaxLongOf(long innerBound, long outerBound, int trials);
-        /**
-         * Returns the minimum result of {@code trials} calls to {@link #NextUint(int, int)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the lower the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the minimum result of trials calls to {@link #NextUint(int, int)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the lower the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         uint MinUintOf(uint innerBound, uint outerBound, int trials);
 
-        /**
-         * Returns the maximum result of {@code trials} calls to {@link #NextUint(int, int)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the higher the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the maximum result of trials calls to {@link #NextUint(int, int)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the higher the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         uint MaxUintOf(uint innerBound, uint outerBound, int trials);
 
-        /**
-         * Returns the minimum result of {@code trials} calls to {@link #NextUlong(long, long)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the lower the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the minimum result of trials calls to {@link #NextUlong(long, long)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the lower the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         ulong MinUlongOf(ulong innerBound, ulong outerBound, int trials);
 
-        /**
-         * Returns the maximum result of {@code trials} calls to {@link #NextUlong(long, long)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the higher the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the maximum result of trials calls to {@link #NextUlong(long, long)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the higher the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         ulong MaxUlongOf(ulong innerBound, ulong outerBound, int trials);
 
-        /**
-         * Returns the minimum result of {@code trials} calls to {@link #NextDouble(double, double)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the lower the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the minimum result of trials calls to {@link #NextDouble(double, double)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the lower the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         double MinDoubleOf(double innerBound, double outerBound, int trials);
 
-        /**
-         * Returns the maximum result of {@code trials} calls to {@link #NextDouble(double, double)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the higher the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the maximum result of trials calls to {@link #NextDouble(double, double)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the higher the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         double MaxDoubleOf(double innerBound, double outerBound, int trials);
 
-        /**
-         * Returns the minimum result of {@code trials} calls to {@link #NextFloat(float, float)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the lower the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the minimum result of trials calls to {@link #NextFloat(float, float)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the lower the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         float MinFloatOf(float innerBound, float outerBound, int trials);
 
-        /**
-         * Returns the maximum result of {@code trials} calls to {@link #NextFloat(float, float)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the higher the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the maximum result of trials calls to {@link #NextFloat(float, float)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the higher the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         float MaxFloatOf(float innerBound, float outerBound, int trials);
 
 
@@ -793,36 +718,28 @@ namespace ShaiRandom
         /// <returns>A randomly-chosen item from list.</returns>
         T RandomElement<T>(IList<T> list);
 
-        /**
-         * Shuffles the given array in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
-         *
-         * @param items an array of some reference type; must be non-null but may contain null items
-         */
+        /// <summary>
+        /// Shuffles the given array in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
         void Shuffle<T>(T[] items);
 
-        /**
-         * Shuffles the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
-         *
-         * @param items an IList; must be non-null but may contain null items
-         */
+        /// <summary>
+        /// Shuffles the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// <param name="items">an IList; must be non-null but may contain null items</param>
         void Shuffle<T>(IList<T> items);
 
-        /**
-         * Shuffles a section of the given array in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
-         *
-         * @param items an array of some reference type; must be non-null but may contain null items
-         * @param offset the index of the first element of the array that can be shuffled
-         * @param length the length of the section to shuffle
-         */
+        /// <summary>
+        /// Shuffles a section of the given array in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
+        /// <param name="offset">the index of the first element of the array that can be shuffled</param>
+        /// <param name="length">the length of the section to shuffle</param>
         void Shuffle<T>(T[] items, int offset, int length);
 
-        /**
-         * Shuffles a section of the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
-         *
-         * @param items an IList; must be non-null but may contain null items
-         * @param offset the index of the first element of the IList that can be shuffled
-         * @param length the length of the section to shuffle
-         */
+        /// <summary>
+        /// Shuffles a section of the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// <param name="items">an IList; must be non-null but may contain null items</param>
+        /// <param name="offset">the index of the first element of the IList that can be shuffled</param>
+        /// <param name="length">the length of the section to shuffle</param>
         void Shuffle<T>(IList<T> items, int offset, int length);
 
     }
@@ -1002,7 +919,7 @@ namespace ShaiRandom
         /// </summary>
         /// <remarks>
         /// The number of possible selections is up to the implementing class, but selection should be at least 0 and less than <see cref="StateCount"/>.
-        /// Implementors are permitted to change {@code value} if it is not valid, but they should not alter it if it is valid.
+        /// Implementors are permitted to change value if it is not valid, but they should not alter it if it is valid.
         /// The public implementation calls <see cref="Seed(ulong)"/> with value, which doesn't need changing if the generator has one state that is set verbatim by Seed().
         /// Otherwise, this method should be implemented when <see cref="SelectState(int)"/> is and the state is allowed to be set by users.
         /// Having accurate ways to get and set the full state of a random number generator makes it much easier to serialize and deserialize that class.
@@ -1014,13 +931,13 @@ namespace ShaiRandom
             Seed(value);
         }
 
-        /**
-         * Sets each state variable to the given {@code state}. If {@link #StateCount} is
-         * 1, then this should set the whole state to the given value using
-         * {@link #SetSelectedState(int, ulong)}. If StateCount is more than 1, then all
-         * states will be set in the same way (using SetSelectedState(), all to {@code state}).
-         * @param state the ulong value to use for each state variable
-         */
+        /// <summary>
+        /// Sets every state variable to the given state.
+        /// </summary>
+        /// <remarks>
+        /// If <see cref="StateCount"/> is 1, then this should set the whole state to the given value using <see cref="SetSelectedState(int, ulong)"/>.
+        /// If StateCount is more than 1, then all states will be set in the same way (using SetSelectedState(), all to state).</remarks>
+        /// <param name="state">The ulong variable to use for every state variable.</param>
         public virtual void SetState(ulong state)
         {
             for (int i = StateCount - 1; i >= 0; i--)
@@ -1028,17 +945,18 @@ namespace ShaiRandom
                 SetSelectedState(i, state);
             }
         }
-
-        /**
-         * Sets each state variable to either {@code stateA} or {@code stateB}, alternating.
-         * This uses {@link #SetSelectedState(int, ulong)} to set the values. If there is one
-         * state variable ({@link #StateCount} is 1), then this only sets that state
-         * variable to stateA. If there are two state variables, the first is set to stateA,
-         * and the second to stateB. If there are more, it reuses stateA, then stateB, then
-         * stateA, and so on until all variables are set.
-         * @param stateA the ulong value to use for states at index 0, 2, 4, 6...
-         * @param stateB the ulong value to use for states at index 1, 3, 5, 7...
-         */
+        
+        /// <summary>
+        /// Sets each state variable to either stateA or stateB, alternating.
+        /// </summary>
+        /// <remarks>
+        /// This uses <see cref="SetSelectedState(int, ulong)"/> to set the values.
+        /// If there is one state variable (<see cref="StateCount"/> is 1), then this only sets that state variable to stateA.
+        /// If there are two state variables, the first is set to stateA, and the second to stateB.
+        ///  there are more, it reuses stateA, then stateB, then stateA, and so on until all variables are set.
+        /// </remarks>
+        /// <param name="stateA">The ulong value to use for states at index 0, 2, 4, 6...</param>
+        /// <param name="stateB">The ulong value to use for states at index 1, 3, 5, 7...</param>
         public virtual void SetState(ulong stateA, ulong stateB)
         {
             int c = StateCount;
@@ -1052,19 +970,21 @@ namespace ShaiRandom
             }
         }
 
-        /**
-         * Sets each state variable to {@code stateA}, {@code stateB}, or {@code stateC},
-         * alternating. This uses {@link #SetSelectedState(int, ulong)} to set the values.
-         * If there is one state variable ({@link #StateCount} is 1), then this only
-         * sets that state variable to stateA. If there are two state variables, the first
-         * is set to stateA, and the second to stateB. With three state variables, the
-         * first is set to stateA, the second to stateB, and the third to stateC. If there
-         * are more, it reuses stateA, then stateB, then stateC, then stateA, and so on
-         * until all variables are set.
-         * @param stateA the ulong value to use for states at index 0, 3, 6, 9...
-         * @param stateB the ulong value to use for states at index 1, 4, 7, 10...
-         * @param stateC the ulong value to use for states at index 2, 5, 8, 11...
-         */
+        /// <summary>
+        /// Sets each state variable to stateA, stateB, or stateC, alternating.
+        /// </summary>
+        /// <remarks>
+        /// This uses <see cref="SetSelectedState(int, ulong)"/> to set the values.
+        /// If there is one state variable (<see cref="StateCount"/> is 1), then this only
+        /// sets that state variable to stateA. If there are two state variables, the first
+        /// is set to stateA, and the second to stateB. With three state variables, the
+        /// first is set to stateA, the second to stateB, and the third to stateC. If there
+        /// are more, it reuses stateA, then stateB, then stateC, then stateA, and so on
+        /// until all variables are set.
+        /// </remarks>
+        /// <param name="stateA">The ulong value to use for states at index 0, 3, 6, 9...</param>
+        /// <param name="stateB">The ulong value to use for states at index 1, 4, 7, 10...</param>
+        /// <param name="stateC">The ulong value to use for states at index 2, 5, 8, 11...</param>
         public virtual void SetState(ulong stateA, ulong stateB, ulong stateC)
         {
             int c = StateCount;
@@ -1082,22 +1002,21 @@ namespace ShaiRandom
             }
         }
 
-        /**
-         * Sets each state variable to {@code stateA}, {@code stateB}, {@code stateC}, or
-         * {@code stateD}, alternating. This uses {@link #SetSelectedState(int, ulong)} to
-         * set the values. If there is one state variable ({@link #StateCount} is 1),
-         * then this only sets that state variable to stateA. If there are two state
-         * variables, the first is set to stateA, and the second to stateB. With three
-         * state variables, the first is set to stateA, the second to stateB, and the third
-         * to stateC. With four state variables, the first is set to stateA, the second to
-         * stateB, the third to stateC, and the fourth to stateD. If there are more, it
-         * reuses stateA, then stateB, then stateC, then stateD, then stateA, and so on
-         * until all variables are set.
-         * @param stateA the ulong value to use for states at index 0, 4, 8, 12...
-         * @param stateB the ulong value to use for states at index 1, 5, 9, 13...
-         * @param stateC the ulong value to use for states at index 2, 6, 10, 14...
-         * @param stateD the ulong value to use for states at index 3, 7, 11, 15...
-         */
+        /// <summary>
+        /// Sets each state variable to stateA, stateB, stateC, or
+        /// stateD, alternating. This uses <see cref="SetSelectedState(int, ulong)"/> to
+        /// set the values. If there is one state variable (<see cref="StateCount"/> is 1),
+        /// then this only sets that state variable to stateA. If there are two state
+        /// variables, the first is set to stateA, and the second to stateB. With three
+        /// state variables, the first is set to stateA, the second to stateB, and the third
+        /// to stateC. With four state variables, the first is set to stateA, the second to
+        /// stateB, the third to stateC, and the fourth to stateD. If there are more, it
+        /// reuses stateA, then stateB, then stateC, then stateD, then stateA, and so on
+        /// until all variables are set.
+        /// <param name="stateA">the ulong value to use for states at index 0, 4, 8, 12...</param>
+        /// <param name="stateB">the ulong value to use for states at index 1, 5, 9, 13...</param>
+        /// <param name="stateC">the ulong value to use for states at index 2, 6, 10, 14...</param>
+        /// <param name="stateD">the ulong value to use for states at index 3, 7, 11, 15...</param>
         public virtual void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
             int c = StateCount;
@@ -1119,14 +1038,13 @@ namespace ShaiRandom
             }
         }
 
-        /**
-         * Sets all state variables to alternating values chosen from {@code states}. If states is empty,
-         * then this does nothing, and leaves the current generator unchanged. This works for
-         * generators with any {@link #StateCount}, but may allocate an array if states is
-         * used as a varargs (you can pass an existing array without needing to allocate). This
-         * uses {@link #SetSelectedState(int, ulong)} to change the states.
-         * @param states an array or varargs of ulong values to use as states
-         */
+        /// <summary>
+        /// Sets all state variables to alternating values chosen from states. If states is empty,
+        /// then this does nothing, and leaves the current generator unchanged. This works for
+        /// generators with any <see cref="StateCount"/>, but may allocate an array if states is
+        /// used as a varargs (you can pass an existing array without needing to allocate). This
+        /// uses <see cref="SetSelectedState(int, ulong)"/> to change the states.
+        /// <param name="states">an array or varargs of ulong values to use as states</param>
         public virtual void SetState(params ulong[] states)
         {
             int c = StateCount, sl = states.Length;
@@ -1139,15 +1057,13 @@ namespace ShaiRandom
             }
         }
 
-        /**
-         * Returns the next pseudorandom, uniformly distributed {@code ulong}
-         * value from this random number generator's sequence. The general
-         * contract of {@code NextUlong} is that one {@code ulong} value is
-         * pseudorandomly generated and returned.
-         *
-         * @return the next pseudorandom, uniformly distributed {@code ulong}
-         * value from this random number generator's sequence
-         */
+        /// <summary>
+        /// Returns the next pseudorandom, uniformly distributed ulong
+        /// value from this random number generator's sequence. The general
+        /// contract of NextUlong is that one ulong value is
+        /// pseudorandomly generated and returned.
+        /// <returns>the next pseudorandom, uniformly distributed ulong</returns>
+        /// value from this random number generator's sequence
         public abstract ulong NextUlong();
 
         public long NextLong()
@@ -1158,72 +1074,63 @@ namespace ShaiRandom
             }
         }
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code long} value
-         * between 0 (inclusive) and the specified value (exclusive), drawn from
-         * this random number generator's sequence.  The general contract of
-         * {@code nextLong} is that one {@code long} value in the specified range
-         * is pseudorandomly generated and returned.  All {@code bound} possible
-         * {@code long} values are produced with (approximately) equal
-         * probability, though there is a small amount of bias depending on the bound.
-         *
-         * <br> Note that this advances the state by the same amount as a single call to
-         * {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
-         * correctly, but introduces some bias when {@code bound} is very large. This will
-         * also advance the state if {@code bound} is 0 or negative, so usage with a variable
-         * bound will advance the state reliably.
-         *
-         * <br> This method has some bias, particularly on larger bounds. Actually measuring
-         * bias with bounds in the trillions or greater is challenging but not impossible, so
-         * don't use this for a real-money gambling purpose. The bias isn't especially
-         * significant, though.
-         *
-         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
-         * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
-         * @return the next pseudorandom, uniformly distributed {@code long}
-         * value between zero (inclusive) and {@code bound} (exclusive)
-         * from this random number generator's sequence
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed long value
+        /// between 0 (inclusive) and the specified value (exclusive), drawn from
+        /// this random number generator's sequence.  The general contract of
+        /// nextLong is that one long value in the specified range
+        /// is pseudorandomly generated and returned.  All bound possible
+        /// long values are produced with (approximately) equal
+        /// probability, though there is a small amount of bias depending on the bound.
+        /// <br> Note that this advances the state by the same amount as a single call to
+        /// {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
+        /// correctly, but introduces some bias when bound is very large. This will
+        /// also advance the state if bound is 0 or negative, so usage with a variable
+        /// bound will advance the state reliably.
+        /// <br> This method has some bias, particularly on larger bounds. Actually measuring
+        /// bias with bounds in the trillions or greater is challenging but not impossible, so
+        /// don't use this for a real-money gambling purpose. The bias isn't especially
+        /// significant, though.
+        /// @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+        /// <param name="bound">the upper bound (exclusive). If negative or 0, this always returns 0.</param>
+        /// <returns>the next pseudorandom, uniformly distributed long</returns>
+        /// value between zero (inclusive) and bound (exclusive)
+        /// from this random number generator's sequence
         public ulong NextUlong(ulong bound)
         {
             return NextUlong(0UL, bound);
         }
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code long} value between an
-         * inner bound of 0 (inclusive) and the specified {@code outerBound} (exclusive).
-         * This is meant for cases where the outer bound may be negative, especially if
-         * the bound is unknown or may be user-specified. A negative outer bound is used
-         * as the lower bound; a positive outer bound is used as the upper bound. An outer
-         * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
-         * for outer bound 0).
-         *
-         * <p>Note that this advances the state by the same amount as a single call to
-         * {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
-         * correctly, but introduces some bias when {@code bound} is very large. This
-         * method should be about as fast as {@link #nextLong(long)} , unlike the speed
-         * difference between {@link #nextInt(int)} and {@link #nextSignedInt(int)}.
-         *
-         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
-         * @param outerBound the outer exclusive bound; may be any long value, allowing negative
-         * @return a pseudorandom long between 0 (inclusive) and outerBound (exclusive)
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed long value between an
+        /// inner bound of 0 (inclusive) and the specified outerBound (exclusive).
+        /// This is meant for cases where the outer bound may be negative, especially if
+        /// the bound is unknown or may be user-specified. A negative outer bound is used
+        /// as the lower bound; a positive outer bound is used as the upper bound. An outer
+        /// bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
+        /// for outer bound 0).
+        /// <p>Note that this advances the state by the same amount as a single call to
+        /// {@link #nextLong()}, which allows methods like {@link #skip(long)} to function
+        /// correctly, but introduces some bias when bound is very large. This
+        /// method should be about as fast as {@link #nextLong(long)} , unlike the speed
+        /// difference between {@link #nextInt(int)} and {@link #nextSignedInt(int)}.
+        /// @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+        /// <param name="outerBound">the outer exclusive bound; may be any long value, allowing negative</param>
+        /// <returns>a pseudorandom long between 0 (inclusive) and outerBound (exclusive)</returns>
         public long NextLong(long outerBound)
         {
             return NextLong(0L, outerBound);
         }
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code long} value between the
-         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
-         * (exclusive). If {@code outerBound} is less than or equal to {@code innerBound},
-         * this always returns {@code innerBound}.
-         *
-         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
-         * @param inner the inclusive inner bound; may be any long, allowing negative
-         * @param outer the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
-         * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed long value between the
+        /// specified innerBound (inclusive) and the specified outerBound
+        /// (exclusive). If outerBound is less than or equal to innerBound,
+        /// this always returns innerBound.
+        /// @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+        /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
+        /// <param name="outer">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
+        /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
         public ulong NextUlong(ulong inner, ulong outer)
         {
             ulong rand = NextUlong();
@@ -1236,17 +1143,15 @@ namespace ShaiRandom
             return inner + (randHigh * boundLow >> 32) + (randLow * boundHigh >> 32) + randHigh * boundHigh;
         }
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code long} value between the
-         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
-         * (exclusive). This is meant for cases where either bound may be negative,
-         * especially if the bounds are unknown or may be user-specified.
-         *
-         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
-         * @param inner the inclusive inner bound; may be any long, allowing negative
-         * @param outer the exclusive outer bound; may be any long, allowing negative
-         * @return a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed long value between the
+        /// specified innerBound (inclusive) and the specified outerBound
+        /// (exclusive). This is meant for cases where either bound may be negative,
+        /// especially if the bounds are unknown or may be user-specified.
+        /// @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+        /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
+        /// <param name="outer">the exclusive outer bound; may be any long, allowing negative</param>
+        /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
         public long NextLong(long inner, long outer)
         {
             ulong rand = NextUlong();
@@ -1270,44 +1175,31 @@ namespace ShaiRandom
             return (long)(i2 + (randHigh * boundLow >> 32) + (randLow * boundHigh >> 32) + randHigh * boundHigh);
         }
 
-        /**
- * Generates the next pseudorandom number with a specific maximum size in bits (not a max number).
- * If you want to get a random number in a range, you should usually use {@link #nextInt(int)} instead.
- * For some specific cases, this method is more efficient and less biased than {@link #nextInt(int)}.
- * For {@code bits} values between 1 and 30, this should be similar in effect to
- * {@code nextInt(1 << bits)}; though it won't typically produce the same values, they will have
- * the correct range. If {@code bits} is 31, this can return any non-negative {@code int}; note that
- * {@code nextInt(1 << 31)} won't behave this way because {@code 1 << 31} is negative. If
- * {@code bits} is 32 (or 0), this can return any {@code int}.
- *
- * <p>The general contract of {@code next} is that it returns an
- * {@code int} value and if the argument {@code bits} is between
- * {@code 1} and {@code 32} (inclusive), then that many low-order
- * bits of the returned value will be (approximately) independently
- * chosen bit values, each of which is (approximately) equally
- * likely to be {@code 0} or {@code 1}.
- * <p>
- * Note that you can give this values for {@code bits} that are outside its expected range of 1 to 32,
- * but the value used, as long as bits is positive, will effectively be {@code bits % 32}. As stated
- * before, a value of 0 for bits is the same as a value of 32.<p>
- *
- * @param bits the amount of random bits to request, from 1 to 32
- * @return the next pseudorandom value from this random number
- * generator's sequence
- */
+        /// <summary>
+        /// Generates the next pseudorandom number with a specific maximum size in bits (not a max number).
+        /// </summary>
+        /// <remarks>
+        /// If you want to get a random number in a range, you should usually use <see cref="NextUint(uint)"/> instead.
+        /// However, for some specific cases, this method is more efficient and less biased than <see cref="NextUint(uint)"/>
+        /// If you know you need a number from a range from 0 (inclusive) to a power of two (exclusive), you can use this method optimally.
+        /// <br/>
+        /// Note that you can give this values for bits that are outside its expected range of 1 to 32,
+        /// but the value used, as long as bits is positive, will effectively be {@code bits % 32}. As stated
+        /// before, a value of 0 for bits is the same as a value of 32.
+        /// </remarks>
+        /// <param name="bits">The amount of random bits to request, from 1 to 32.</param>
+        /// <returns>The next pseudorandom value from this random number generator's sequence.</returns>
+        /// 
         public uint NextBits(int bits)
         {
             return (uint)(NextUlong() >> 64 - bits);
         }
 
-        /**
-         * Generates random bytes and places them into a user-supplied
-         * byte array.  The number of random bytes produced is equal to
-         * the length of the byte array.
-         *
-         * @param bytes the byte array to fill with random bytes
-         * @throws NullPointerException if the byte array is null
-         */
+        /// <summary>
+        /// Generates random bytes and places them into a user-supplied
+        /// byte array.  The number of random bytes produced is equal to
+        /// the length of the byte array.
+        /// <param name="bytes">the byte array to fill with random bytes</param>
         public void NextBytes(byte[] bytes)
         {
             int bl = bytes.Length;
@@ -1321,16 +1213,13 @@ namespace ShaiRandom
             }
         }
 
-        /**
-         * Returns the next pseudorandom, uniformly distributed {@code int}
-         * value from this random number generator's sequence. The general
-         * contract of {@code nextInt} is that one {@code int} value is
-         * pseudorandomly generated and returned. All 2<sup>32</sup> possible
-         * {@code int} values are produced with (approximately) equal probability.
-         *
-         * @return the next pseudorandom, uniformly distributed {@code int}
-         * value from this random number generator's sequence
-         */
+        /// <summary>
+        /// Returns the next pseudorandom, uniformly distributed int
+        /// value from this random number generator's sequence. The general
+        /// contract of nextInt is that one int value is
+        /// pseudorandomly generated and returned. All 2<sup>32</sup> possible
+        /// int values are produced with (approximately) equal probability.
+        /// <returns>The next pseudorandom, uniformly distributed int value from this random number generator's sequence.</returns>
         public int NextInt()
         {
             return (int)NextUlong();
@@ -1345,293 +1234,264 @@ namespace ShaiRandom
             return (uint)NextUlong();
         }
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code int} value
-         * between 0 (inclusive) and the specified value (exclusive), drawn from
-         * this random number generator's sequence.  The general contract of
-         * {@code nextInt} is that one {@code int} value in the specified range
-         * is pseudorandomly generated and returned.  All {@code bound} possible
-         * {@code int} values are produced with (approximately) equal
-         * probability.
-         * <br>
-         * It should be mentioned that the technique this uses has some bias, depending
-         * on {@code bound}, but it typically isn't measurable without specifically looking
-         * for it. Using the method this does allows this method to always advance the state
-         * by one step, instead of a varying and unpredictable amount with the more typical
-         * ways of rejection-sampling random numbers and only using numbers that can produce
-         * an int within the bound without bias.
-         * See <a href="https://www.pcg-random.org/posts/bounded-rands.html">M.E. O'Neill's
-         * blog about random numbers</a> for discussion of alternative, unbiased methods.
-         *
-         * @param bound the upper bound (exclusive). If negative or 0, this always returns 0.
-         * @return the next pseudorandom, uniformly distributed {@code int}
-         * value between zero (inclusive) and {@code bound} (exclusive)
-         * from this random number generator's sequence
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed int value
+        /// between 0 (inclusive) and the specified value (exclusive), drawn from
+        /// this random number generator's sequence.  The general contract of
+        /// nextInt is that one int value in the specified range
+        /// is pseudorandomly generated and returned.  All bound possible
+        /// int values are produced with (approximately) equal
+        /// probability.
+        /// <br>
+        /// It should be mentioned that the technique this uses has some bias, depending
+        /// on bound, but it typically isn't measurable without specifically looking
+        /// for it. Using the method this does allows this method to always advance the state
+        /// by one step, instead of a varying and unpredictable amount with the more typical
+        /// ways of rejection-sampling random numbers and only using numbers that can produce
+        /// an int within the bound without bias.
+        /// See <a href="https://www.pcg-random.org/posts/bounded-rands.html">M.E. O'Neill's
+        /// blog about random numbers</a> for discussion of alternative, unbiased methods.
+        /// <param name="bound">the upper bound (exclusive). If negative or 0, this always returns 0.</param>
+        /// <returns>the next pseudorandom, uniformly distributed int</returns>
+        /// value between zero (inclusive) and bound (exclusive)
+        /// from this random number generator's sequence
         public uint NextUint(uint bound)
         {
             return (uint)(bound * (NextUlong() & 0xFFFFFFFFUL) >> 32);
         }
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code int} value between an
-         * inner bound of 0 (inclusive) and the specified {@code outerBound} (exclusive).
-         * This is meant for cases where the outer bound may be negative, especially if
-         * the bound is unknown or may be user-specified. A negative outer bound is used
-         * as the lower bound; a positive outer bound is used as the upper bound. An outer
-         * bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
-         * for outer bound 0).
-         *
-         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
-         * @param outerBound the outer exclusive bound; may be any int value, allowing negative
-         * @return a pseudorandom int between 0 (inclusive) and outerBound (exclusive)
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed int value between an
+        /// inner bound of 0 (inclusive) and the specified outerBound (exclusive).
+        /// This is meant for cases where the outer bound may be negative, especially if
+        /// the bound is unknown or may be user-specified. A negative outer bound is used
+        /// as the lower bound; a positive outer bound is used as the upper bound. An outer
+        /// bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
+        /// for outer bound 0).
+        /// @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+        /// <param name="outerBound">the outer exclusive bound; may be any int value, allowing negative</param>
+        /// <returns>a pseudorandom int between 0 (inclusive) and outerBound (exclusive)</returns>
         public int NextInt(int outerBound)
         {
             outerBound = (int)(outerBound * ((long)NextUlong() & 0xFFFFFFFFL) >> 32);
             return outerBound + (outerBound >> 31);
         }
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code int} value between the
-         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
-         * (exclusive). If {@code outerBound} is less than or equal to {@code innerBound},
-         * this always returns {@code innerBound}. This is significantly slower than
-         * {@link #nextInt(int)} or {@link #nextSignedInt(int)},
-         * because this handles even ranges that go from large negative numbers to large
-         * positive numbers, and since that would be larger than the largest possible int,
-         * this has to use {@link #nextLong(long)}.
-         *
-         * <br> For any case where outerBound might be valid but less than innerBound, you
-         * can use {@link #nextSignedInt(int, int)}. If outerBound is less than innerBound
-         * here, this simply returns innerBound.
-         *
-         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
-         * @param innerBound the inclusive inner bound; may be any int, allowing negative
-         * @param outerBound the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)
-         * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed int value between the
+        /// specified innerBound (inclusive) and the specified outerBound
+        /// (exclusive). If outerBound is less than or equal to innerBound,
+        /// this always returns innerBound. This is significantly slower than
+        /// {@link #nextInt(int)} or {@link #nextSignedInt(int)},
+        /// because this handles even ranges that go from large negative numbers to large
+        /// positive numbers, and since that would be larger than the largest possible int,
+        /// this has to use {@link #nextLong(long)}.
+        /// <br> For any case where outerBound might be valid but less than innerBound, you
+        /// can use {@link #nextSignedInt(int, int)}. If outerBound is less than innerBound
+        /// here, this simply returns innerBound.
+        /// @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+        /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
+        /// <param name="outerBound">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
+        /// <returns>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</returns>
         public uint NextUint(uint innerBound, uint outerBound)
         {
             return (uint)NextUlong(innerBound, outerBound);
         }
 
-        /**
-         * Returns a pseudorandom, uniformly distributed {@code int} value between the
-         * specified {@code innerBound} (inclusive) and the specified {@code outerBound}
-         * (exclusive). This is meant for cases where either bound may be negative,
-         * especially if the bounds are unknown or may be user-specified. It is slightly
-         * slower than {@link #nextInt(int, int)}, and significantly slower than
-         * {@link #nextInt(int)} or {@link #nextSignedInt(int)}. This last part is
-         * because this handles even ranges that go from large negative numbers to large
-         * positive numbers, and since that range is larger than the largest possible int,
-         * this has to use {@link #nextSignedLong(long)}.
-         *
-         * @see #nextInt(int) Here's a note about the bias present in the bounded generation.
-         * @param innerBound the inclusive inner bound; may be any int, allowing negative
-         * @param outerBound the exclusive outer bound; may be any int, allowing negative
-         * @return a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)
-         */
+        /// <summary>
+        /// Returns a pseudorandom, uniformly distributed int value between the
+        /// specified innerBound (inclusive) and the specified outerBound
+        /// (exclusive). This is meant for cases where either bound may be negative,
+        /// especially if the bounds are unknown or may be user-specified. It is slightly
+        /// slower than {@link #nextInt(int, int)}, and significantly slower than
+        /// {@link #nextInt(int)} or {@link #nextSignedInt(int)}. This last part is
+        /// because this handles even ranges that go from large negative numbers to large
+        /// positive numbers, and since that range is larger than the largest possible int,
+        /// this has to use {@link #nextSignedLong(long)}.
+        /// @see #nextInt(int) Here's a note about the bias present in the bounded generation.
+        /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
+        /// <param name="outerBound">the exclusive outer bound; may be any int, allowing negative</param>
+        /// <returns>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</returns>
         public int NextInt(int innerBound, int outerBound)
         {
             return (int)NextLong(innerBound, outerBound);
         }
 
-        /**
-         * Returns the next pseudorandom, uniformly distributed
-         * {@code bool} value from this random number generator's
-         * sequence. The general contract of {@code NextBool} is that one
-         * {@code bool} value is pseudorandomly generated and returned.  The
-         * values {@code true} and {@code false} are produced with
-         * (approximately) equal probability.
-         * 
-         * The default implementation is equivalent to a sign check on {@link #NextUlong()},
-         * returning true if the generated long is negative. This is typically the safest
-         * way to implement this method; many types of generators have less statistical
-         * quality on their lowest bit, so just returning based on the lowest bit isn't
-         * always a good idea.
-         *
-         * @return the next pseudorandom, uniformly distributed
-         * {@code bool} value from this random number generator's
-         * sequence
-         */
+        /// <summary>
+        /// Returns the next pseudorandom, uniformly distributed
+        /// bool value from this random number generator's
+        /// sequence. The general contract of NextBool is that one
+        /// bool value is pseudorandomly generated and returned.  The
+        /// values true and false are produced with
+        /// (approximately) equal probability.
+        /// 
+        /// The default implementation is equivalent to a sign check on {@link #NextUlong()},
+        /// returning true if the generated long is negative. This is typically the safest
+        /// way to implement this method; many types of generators have less statistical
+        /// quality on their lowest bit, so just returning based on the lowest bit isn't
+        /// always a good idea.
+        /// <returns>the next pseudorandom, uniformly distributed</returns>
+        /// bool value from this random number generator's
+        /// sequence
         public virtual bool NextBool()
         {
             return (NextUlong() & 0x8000000000000000UL) == 0x8000000000000000UL;
         }
 
-        /**
-         * Returns the next pseudorandom, uniformly distributed {@code float}
-         * value between {@code 0.0} (inclusive) and {@code 1.0} (exclusive)
-         * from this random number generator's sequence.
-         *
-         * <p>The general contract of {@code NextFloat} is that one
-         * {@code float} value, chosen (approximately) uniformly from the
-         * range {@code 0.0f} (inclusive) to {@code 1.0f} (exclusive), is
-         * pseudorandomly generated and returned. All 2<sup>24</sup> possible
-         * {@code float} values of the form <i>m&nbsp;x&nbsp;</i>2<sup>-24</sup>,
-         * where <i>m</i> is a positive integer less than 2<sup>24</sup>, are
-         * produced with (approximately) equal probability.
-         *
-         * <p>The public implementation uses the upper 24 bits of {@link #nextLong()},
-         * with an unsigned right shift and a multiply by a very small float
-         * ({@code 5.9604645E-8f} or {@code 0x1p-24f}). It tends to be fast if
-         * nextLong() is fast, but alternative implementations could use 24 bits of
-         * {@link #nextInt()} (or just {@link #next(int)}, giving it {@code 24})
-         * if that generator doesn't efficiently generate 64-bit longs.<p>
-         *
-         * @return the next pseudorandom, uniformly distributed {@code float}
-         * value between {@code 0.0} and {@code 1.0} from this
-         * random number generator's sequence
-         */
+        /// <summary>
+        /// Returns the next pseudorandom, uniformly distributed float
+        /// value between {@code 0.0} (inclusive) and {@code 1.0} (exclusive)
+        /// from this random number generator's sequence.
+        /// <p>The general contract of NextFloat is that one
+        /// float value, chosen (approximately) uniformly from the
+        /// range {@code 0.0f} (inclusive) to {@code 1.0f} (exclusive), is
+        /// pseudorandomly generated and returned. All 2<sup>24</sup> possible
+        /// float values of the form <i>m&nbsp;x&nbsp;</i>2<sup>-24</sup>,
+        /// where <i>m</i> is a positive integer less than 2<sup>24</sup>, are
+        /// produced with (approximately) equal probability.
+        /// <p>The public implementation uses the upper 24 bits of {@link #nextLong()},
+        /// with an unsigned right shift and a multiply by a very small float
+        /// ({@code 5.9604645E-8f} or {@code 0x1p-24f}). It tends to be fast if
+        /// nextLong() is fast, but alternative implementations could use 24 bits of
+        /// {@link #nextInt()} (or just {@link #next(int)}, giving it 24)
+        /// if that generator doesn't efficiently generate 64-bit longs.<p>
+        /// <returns>the next pseudorandom, uniformly distributed float</returns>
+        /// value between {@code 0.0} and {@code 1.0} from this
+        /// random number generator's sequence
         public virtual float NextFloat()
         {
             return (NextUlong() >> 40) * FLOAT_ADJUST;
         }
 
-        /**
-         * Gets a pseudo-random float between 0 (inclusive) and {@code outerBound} (exclusive).
-         * The outerBound may be positive or negative.
-         * Exactly the same as {@code NextFloat() * outerBound}.
-         * @param outerBound the exclusive outer bound
-         * @return a float between 0 (inclusive) and {@code outerBound} (exclusive)
-         */
+        /// <summary>
+        /// Gets a pseudo-random float between 0 (inclusive) and outerBound (exclusive).
+        /// The outerBound may be positive or negative.
+        /// Exactly the same as {@code NextFloat() * outerBound}.
+        /// <param name="outerBound">the exclusive outer bound</param>
+        /// <returns>a float between 0 (inclusive) and outerBound (exclusive)</returns>
         public float NextFloat(float outerBound)
         {
             return NextFloat() * outerBound;
         }
 
-        /**
-         * Gets a pseudo-random float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
-         * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
-         * inclusive and which is exclusive.
-         * @param innerBound the inclusive inner bound; may be negative
-         * @param outerBound the exclusive outer bound; may be negative
-         * @return a float between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
-         */
+        /// <summary>
+        /// Gets a pseudo-random float between innerBound (inclusive) and outerBound (exclusive).
+        /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
+        /// inclusive and which is exclusive.
+        /// <param name="innerBound">the inclusive inner bound; may be negative</param>
+        /// <param name="outerBound">the exclusive outer bound; may be negative</param>
+        /// <returns>a float between innerBound (inclusive) and outerBound (exclusive)</returns>
         public float NextFloat(float innerBound, float outerBound)
         {
             return innerBound + NextFloat() * (outerBound - innerBound);
         }
 
-        /**
-         * Returns the next pseudorandom, uniformly distributed
-         * {@code double} value between {@code 0.0} (inclusive) and {@code 1.0}
-         * (exclusive) from this random number generator's sequence.
-         *
-         * <p>The general contract of {@code NextDouble} is that one
-         * {@code double} value, chosen (approximately) uniformly from the
-         * range {@code 0.0d} (inclusive) to {@code 1.0d} (exclusive), is
-         * pseudorandomly generated and returned.
-         *
-         * <p>The default implementation uses the upper 53 bits of {@link #nextLong()},
-         * with an unsigned right shift and a multiply by a very small double
-         * ({@code 1.1102230246251565E-16}, or {@code 0x1p-53}). It should perform well
-         * if nextLong() performs well, and is expected to perform less well if the
-         * generator naturally produces 32 or fewer bits at a time.<p>
-         *
-         * @return the next pseudorandom, uniformly distributed {@code double}
-         * value between {@code 0.0} and {@code 1.0} from this
-         * random number generator's sequence
-         */
+        /// <summary>
+        /// Returns the next pseudorandom, uniformly distributed
+        /// double value between {@code 0.0} (inclusive) and {@code 1.0}
+        /// (exclusive) from this random number generator's sequence.
+        /// <p>The general contract of NextDouble is that one
+        /// double value, chosen (approximately) uniformly from the
+        /// range {@code 0.0d} (inclusive) to {@code 1.0d} (exclusive), is
+        /// pseudorandomly generated and returned.
+        /// <p>The default implementation uses the upper 53 bits of {@link #nextLong()},
+        /// with an unsigned right shift and a multiply by a very small double
+        /// ({@code 1.1102230246251565E-16}, or {@code 0x1p-53}). It should perform well
+        /// if nextLong() performs well, and is expected to perform less well if the
+        /// generator naturally produces 32 or fewer bits at a time.<p>
+        /// <returns>the next pseudorandom, uniformly distributed double</returns>
+        /// value between {@code 0.0} and {@code 1.0} from this
+        /// random number generator's sequence
         public virtual double NextDouble()
         {
             return (NextUlong() >> 11) * DOUBLE_ADJUST;
         }
 
-        /**
-         * Gets a pseudo-random double between 0 (inclusive) and {@code outerBound} (exclusive).
-         * The outerBound may be positive or negative.
-         * Exactly the same as {@code NextDouble() * outerBound}.
-         * @param outerBound the exclusive outer bound
-         * @return a double between 0 (inclusive) and {@code outerBound} (exclusive)
-         */
+        /// <summary>
+        /// Gets a pseudo-random double between 0 (inclusive) and outerBound (exclusive).
+        /// The outerBound may be positive or negative.
+        /// Exactly the same as {@code NextDouble() * outerBound}.
+        /// <param name="outerBound">the exclusive outer bound</param>
+        /// <returns>a double between 0 (inclusive) and outerBound (exclusive)</returns>
         public double NextDouble(double outerBound)
         {
             return NextDouble() * outerBound;
         }
 
-        /**
-         * Gets a pseudo-random double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive).
-         * Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
-         * inclusive and which is exclusive.
-         * @param innerBound the inclusive inner bound; may be negative
-         * @param outerBound the exclusive outer bound; may be negative
-         * @return a double between {@code innerBound} (inclusive) and {@code outerBound} (exclusive)
-         */
+        /// <summary>
+        /// Gets a pseudo-random double between innerBound (inclusive) and outerBound (exclusive).
+        /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
+        /// inclusive and which is exclusive.
+        /// <param name="innerBound">the inclusive inner bound; may be negative</param>
+        /// <param name="outerBound">the exclusive outer bound; may be negative</param>
+        /// <returns>a double between innerBound (inclusive) and outerBound (exclusive)</returns>
         public double NextDouble(double innerBound, double outerBound)
         {
             return innerBound + NextDouble() * (outerBound - innerBound);
         }
 
-        /**
-         * This is just like {@link #NextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
-         * It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
-         * can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
-         * subtly-different results.
-         * @return a double between 0.0, inclusive, and 1.0, inclusive
-         */
+        /// <summary>
+        /// This is just like {@link #NextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+        /// It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
+        /// can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
+        /// subtly-different results.
+        /// <returns>a double between 0.0, inclusive, and 1.0, inclusive</returns>
         public double NextInclusiveDouble()
         {
             return NextUlong(0x20000000000001L) * DOUBLE_ADJUST;
         }
 
-        /**
-         * Just like {@link #NextDouble(double)}, but this is inclusive on both 0.0 and {@code outerBound}.
-         * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
-         * @param outerBound the outer inclusive bound; may be positive or negative
-         * @return a double between 0.0, inclusive, and {@code outerBound}, inclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextDouble(double)}, but this is inclusive on both 0.0 and outerBound.
+        /// It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
+        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
+        /// <returns>a double between 0.0, inclusive, and outerBound, inclusive</returns>
         public double NextInclusiveDouble(double outerBound)
         {
             return NextInclusiveDouble() * outerBound;
         }
 
-        /**
-         * Just like {@link #NextDouble(double, double)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
-         * It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
-         * return it at all because of floating-point imprecision when innerBound is a larger number.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer inclusive bound; may be positive or negative
-         * @return a double between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextDouble(double, double)}, but this is inclusive on both innerBound and outerBound.
+        /// It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
+        /// return it at all because of floating-point imprecision when innerBound is a larger number.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
+        /// <returns>a double between innerBound, inclusive, and outerBound, inclusive</returns>
         public double NextInclusiveDouble(double innerBound, double outerBound)
         {
             return innerBound + NextInclusiveDouble() * (outerBound - innerBound);
         }
 
-        /**
-         * This is just like {@link #NextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
-         * It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
-         * has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
-         * it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
-         * likely to accomplish that in the same time, or at all, depending on the generator.
-         * @return a float between 0.0, inclusive, and 1.0, inclusive
-         */
+        /// <summary>
+        /// This is just like {@link #NextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+        /// It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
+        /// has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
+        /// it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
+        /// likely to accomplish that in the same time, or at all, depending on the generator.
+        /// <returns>a float between 0.0, inclusive, and 1.0, inclusive</returns>
         public float NextInclusiveFloat()
         {
             return NextInt(0x1000001) * FLOAT_ADJUST;
         }
 
-        /**
-         * Just like {@link #NextFloat(float)}, but this is inclusive on both 0.0 and {@code outerBound}.
-         * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
-         * @param outerBound the outer inclusive bound; may be positive or negative
-         * @return a float between 0.0, inclusive, and {@code outerBound}, inclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextFloat(float)}, but this is inclusive on both 0.0 and outerBound.
+        /// It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
+        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
+        /// <returns>a float between 0.0, inclusive, and outerBound, inclusive</returns>
         public float NextInclusiveFloat(float outerBound)
         {
             return NextInclusiveFloat() * outerBound;
         }
 
-        /**
-         * Just like {@link #NextFloat(float, float)}, but this is inclusive on both {@code innerBound} and {@code outerBound}.
-         * It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
-         * it at all because of floating-point imprecision when innerBound is a larger number.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer inclusive bound; may be positive or negative
-         * @return a float between {@code innerBound}, inclusive, and {@code outerBound}, inclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextFloat(float, float)}, but this is inclusive on both innerBound and outerBound.
+        /// It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
+        /// it at all because of floating-point imprecision when innerBound is a larger number.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
+        /// <returns>a float between innerBound, inclusive, and outerBound, inclusive</returns>
         public float NextInclusiveFloat(float innerBound, float outerBound)
         {
             return innerBound + NextInclusiveFloat() * (outerBound - innerBound);
@@ -1674,26 +1534,24 @@ namespace ShaiRandom
             return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
         }
 
-        /**
-         * Just like {@link #NextDouble(double)}, but this is exclusive on both 0.0 and {@code outerBound}.
-         * Like {@link #nextExclusiveDouble()}, which this uses, this may have better bit-distribution of
-         * double values, and it may also be better able to produce very small doubles when {@code outerBound} is large.
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @return a double between 0.0, exclusive, and {@code outerBound}, exclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextDouble(double)}, but this is exclusive on both 0.0 and outerBound.
+        /// Like {@link #nextExclusiveDouble()}, which this uses, this may have better bit-distribution of
+        /// double values, and it may also be better able to produce very small doubles when outerBound is large.
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <returns>a double between 0.0, exclusive, and outerBound, exclusive</returns>
         public double NextExclusiveDouble(double outerBound)
         {
             return NextExclusiveDouble() * outerBound;
         }
 
-        /**
-         * Just like {@link #NextDouble(double, double)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
-         * Like {@link #nextExclusiveDouble()}, which this uses,, this may have better bit-distribution of double values,
-         * and it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
-         * @param innerBound the inner exclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @return a double between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextDouble(double, double)}, but this is exclusive on both innerBound and outerBound.
+        /// Like {@link #nextExclusiveDouble()}, which this uses,, this may have better bit-distribution of double values,
+        /// and it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
+        /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <returns>a double between innerBound, exclusive, and outerBound, exclusive</returns>
         public double NextExclusiveDouble(double innerBound, double outerBound)
         {
             return innerBound + NextExclusiveDouble() * (outerBound - innerBound);
@@ -1713,65 +1571,61 @@ namespace ShaiRandom
             return BitConverter.Int32BitsToSingle((1089 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF));
         }
 
-        /**
-         * Just like {@link #NextFloat(float)}, but this is exclusive on both 0.0 and {@code outerBound}.
-         * Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
-         * it may also be better able to produce very small floats when {@code outerBound} is large.
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @return a float between 0.0, exclusive, and {@code outerBound}, exclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextFloat(float)}, but this is exclusive on both 0.0 and outerBound.
+        /// Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
+        /// it may also be better able to produce very small floats when outerBound is large.
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <returns>a float between 0.0, exclusive, and outerBound, exclusive</returns>
         public float NextExclusiveFloat(float outerBound)
         {
             return NextExclusiveFloat() * outerBound;
         }
 
-        /**
-         * Just like {@link #NextFloat(float, float)}, but this is exclusive on both {@code innerBound} and {@code outerBound}.
-         * Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
-         * it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
-         * @param innerBound the inner exclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @return a float between {@code innerBound}, exclusive, and {@code outerBound}, exclusive
-         */
+        /// <summary>
+        /// Just like {@link #NextFloat(float, float)}, but this is exclusive on both innerBound and outerBound.
+        /// Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
+        /// it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
+        /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <returns>a float between innerBound, exclusive, and outerBound, exclusive</returns>
         public float NextExclusiveFloat(float innerBound, float outerBound)
         {
             return innerBound + NextExclusiveFloat() * (outerBound - innerBound);
         }
 
 
-        /**
-         * A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
-         * inputs correspond to high outputs, and similarly for the low range. This is centered on 0.0 and its standard
-         * deviation seems to be 1.0 (the same as {@link java.util.Random#nextGaussian()}). If this is given an input of 0.0
-         * or less, it returns -38.5, which is slightly less than the result when given {@link Double#MIN_VALUE}. If it is
-         * given an input of 1.0 or more, it returns 38.5, which is significantly larger than the result when given the
-         * largest double less than 1.0 (this value is further from 1.0 than {@link Double#MIN_VALUE} is from 0.0). If
-         * given {@link Double#NaN}, it returns whatever {@link Math#copySign(double, double)} returns for the arguments
-         * {@code 38.5, Double.NaN}, which is implementation-dependent. It uses an algorithm by Peter John Acklam, as
-         * implemented by Sherali Karimov.
-         * <a href="https://web.archive.org/web/20150910002142/http://home.online.no/~pjacklam/notes/invnorm/impl/karimov/StatUtil.java">Original source</a>.
-         * <a href="https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/">Information on the algorithm</a>.
-         * <a href="https://en.wikipedia.org/wiki/Probit_function">Wikipedia's page on the probit function</a> may help, but
-         * is more likely to just be confusing.
-         * <br>
-         * Acklam's algorithm and Karimov's implementation are both quite fast. This appears faster than generating
-         * Gaussian-distributed numbers using either the Box-Muller Transform or Marsaglia's Polar Method, though it isn't
-         * as precise and can't produce as extreme min and max results in the extreme cases they should appear. If given
-         * a typical uniform random {@code double} that's exclusive on 1.0, it won't produce a result higher than
-         * {@code 8.209536145151493}, and will only produce results of at least {@code -8.209536145151493} if 0.0 is
-         * excluded from the inputs (if 0.0 is an input, the result is {@code -38.5}). A chief advantage of using this with
-         * a random number generator is that it only requires one random double to obtain one Gaussian value;
-         * {@link java.util.Random#nextGaussian()} generates at least two random doubles for each two Gaussian values, but
-         * may rarely require much more random generation.
-         * <br>
-         * This can be used both as an optimization for generating Gaussian random values, and as a way of generating
-         * Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
-         * as the input, such as those produced by a van der Corput, Halton, Sobol or R2 sequence). Most methods of generating
-         * Gaussian values (e.g. Box-Muller and Marsaglia polar) do not have any way to preserve a particular pattern.
-         *
-         * @param d should be between 0 and 1, exclusive, but other values are tolerated
-         * @return a normal-distributed double centered on 0.0; all results will be between -38.5 and 38.5, both inclusive
-         */
+        /// <summary>
+        /// A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
+        /// inputs correspond to high outputs, and similarly for the low range. This is centered on 0.0 and its standard
+        /// deviation seems to be 1.0 (the same as {@link java.util.Random#nextGaussian()}). If this is given an input of 0.0
+        /// or less, it returns -38.5, which is slightly less than the result when given {@link Double#MIN_VALUE}. If it is
+        /// given an input of 1.0 or more, it returns 38.5, which is significantly larger than the result when given the
+        /// largest double less than 1.0 (this value is further from 1.0 than {@link Double#MIN_VALUE} is from 0.0). If
+        /// given {@link Double#NaN}, it returns whatever {@link Math#copySign(double, double)} returns for the arguments
+        /// {@code 38.5, Double.NaN}, which is implementation-dependent. It uses an algorithm by Peter John Acklam, as
+        /// implemented by Sherali Karimov.
+        /// <a href="https://web.archive.org/web/20150910002142/http://home.online.no/~pjacklam/notes/invnorm/impl/karimov/StatUtil.java">Original source</a>.
+        /// <a href="https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/">Information on the algorithm</a>.
+        /// <a href="https://en.wikipedia.org/wiki/Probit_function">Wikipedia's page on the probit function</a> may help, but
+        /// is more likely to just be confusing.
+        /// <br>
+        /// Acklam's algorithm and Karimov's implementation are both quite fast. This appears faster than generating
+        /// Gaussian-distributed numbers using either the Box-Muller Transform or Marsaglia's Polar Method, though it isn't
+        /// as precise and can't produce as extreme min and max results in the extreme cases they should appear. If given
+        /// a typical uniform random double that's exclusive on 1.0, it won't produce a result higher than
+        /// {@code 8.209536145151493}, and will only produce results of at least {@code -8.209536145151493} if 0.0 is
+        /// excluded from the inputs (if 0.0 is an input, the result is {@code -38.5}). A chief advantage of using this with
+        /// a random number generator is that it only requires one random double to obtain one Gaussian value;
+        /// {@link java.util.Random#nextGaussian()} generates at least two random doubles for each two Gaussian values, but
+        /// may rarely require much more random generation.
+        /// <br>
+        /// This can be used both as an optimization for generating Gaussian random values, and as a way of generating
+        /// Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
+        /// as the input, such as those produced by a van der Corput, Halton, Sobol or R2 sequence). Most methods of generating
+        /// Gaussian values (e.g. Box-Muller and Marsaglia polar) do not have any way to preserve a particular pattern.
+        /// <param name="d">should be between 0 and 1, exclusive, but other values are tolerated</param>
+        /// <returns>a normal-distributed double centered on 0.0; all results will be between -38.5 and 38.5, both inclusive</returns>
         public static double Probit(double d)
         {
             if (d <= 0)
@@ -1862,16 +1716,18 @@ namespace ShaiRandom
             }
         }
 
-        /**
- * Given two EnhancedRandom objects that could have the same or different classes,
- * this returns true if they have the same class and same state, or false otherwise.
- * Both of the arguments should implement {@link #getSelectedState(int)}, or this
- * will throw an UnsupportedOperationException. This can be useful for comparing
- * EnhancedRandom classes that do not implement equals(), for whatever reason.
- * @param left an EnhancedRandom to compare for equality
- * @param right another EnhancedRandom to compare for equality
- * @return true if the two EnhancedRandom objects have the same class and state, or false otherwise
- */
+        /// <summary>
+        /// Given two EnhancedRandom objects that could have the same or different classes,
+        /// this returns true if they have the same class and same state, or false otherwise.
+        /// </summary>
+        /// <remarks>
+        /// Both of the arguments should implement {@link #getSelectedState(int)}, or this
+        /// will throw an UnsupportedOperationException. This can be useful for comparing
+        /// EnhancedRandom classes that do not implement Equals(), for whatever reason.
+        /// </remarks>
+        /// <param name="left">an EnhancedRandom to compare for equality</param>
+        /// <param name="right">another EnhancedRandom to compare for equality</param>
+        /// <returns>true if the two EnhancedRandom objects have the same class and state, or false otherwise</returns>
         public static bool AreEqual(IRandom left, IRandom right)
         {
             if (left == right)
@@ -1888,73 +1744,62 @@ namespace ShaiRandom
             return true;
         }
 
-        /**
- * Returns true if a random value between 0 and 1 is less than the specified value.
- *
- * @param chance a float between 0.0 and 1.0; higher values are more likely to result in true
- * @return a bool selected with the given {@code chance} of being true
- */
+        /// <summary>
+        /// Returns true if a random value between 0 and 1 is less than the specified value.
+        /// <param name="chance">A float between 0.0 and 1.0; higher values are more likely to result in true.</param>
+        /// <returns>a bool selected with the given chance of being true</returns>
         public bool NextBool(float chance)
         {
             return NextFloat() < chance;
         }
 
-        /**
-         * Returns -1 or 1, randomly.
-         *
-         * @return -1 or 1, selected with approximately equal likelihood
-         */
+        /// <summary>
+        /// Returns -1 or 1, randomly.
+        /// <returns>-1 or 1, selected with approximately equal likelihood</returns>
         public int NextSign()
         {
             return 1 | NextInt() >> 31;
         }
 
-        /**
-         * Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
-         * more likely. Advances the state twice.
-         * <p>
-         * This is an optimized version of {@link #NextTriangular(float, float, float) NextTriangular(-1, 1, 0)}
-         */
+        /// <summary>
+        /// Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
+        /// more likely. Advances the state twice.
+        /// <p>
+        /// This is an optimized version of {@link #NextTriangular(float, float, float) NextTriangular(-1, 1, 0)}
         public float NextTriangular()
         {
             return NextFloat() - NextFloat();
         }
 
-        /**
-         * Returns a triangularly distributed random number between {@code -max} (exclusive) and {@code max} (exclusive), where values
-         * around zero are more likely. Advances the state twice.
-         * <p>
-         * This is an optimized version of {@link #nextTriangular(float, float, float) NextTriangular(-max, max, 0)}
-         *
-         * @param max the upper limit
-         */
+        /// <summary>
+        /// Returns a triangularly distributed random number between {@code -max} (exclusive) and max (exclusive), where values
+        /// around zero are more likely. Advances the state twice.
+        /// <p>
+        /// This is an optimized version of {@link #nextTriangular(float, float, float) NextTriangular(-max, max, 0)}
+        /// <param name="max">the upper limit</param>
         public float NextTriangular(float max)
         {
             return (NextFloat() - NextFloat()) * max;
         }
 
-        /**
-         * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where the
-         * {@code mode} argument defaults to the midpoint between the bounds, giving a symmetric distribution. Advances the state once.
-         * <p>
-         * This method is equivalent of {@link #nextTriangular(float, float, float) NextTriangular(min, max, (min + max) * 0.5f)}
-         *
-         * @param min the lower limit
-         * @param max the upper limit
-         */
+        /// <summary>
+        /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where the
+        /// mode argument defaults to the midpoint between the bounds, giving a symmetric distribution. Advances the state once.
+        /// <p>
+        /// This method is equivalent of {@link #nextTriangular(float, float, float) NextTriangular(min, max, (min + max) * 0.5f)}
+        /// <param name="min">the lower limit</param>
+        /// <param name="max">the upper limit</param>
         public float NextTriangular(float min, float max)
         {
             return NextTriangular(min, max, (min + max) * 0.5f);
         }
 
-        /**
-         * Returns a triangularly distributed random number between {@code min} (inclusive) and {@code max} (exclusive), where values
-         * around {@code mode} are more likely. Advances the state once.
-         *
-         * @param min  the lower limit
-         * @param max  the upper limit
-         * @param mode the point around which the values are more likely
-         */
+        /// <summary>
+        /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where values
+        /// around mode are more likely. Advances the state once.
+        /// <param name="min"> the lower limit</param>
+        /// <param name="max"> the upper limit</param>
+        /// <param name="mode">the point around which the values are more likely</param>
         public float NextTriangular(float min, float max, float mode)
         {
             float u = NextFloat();
@@ -1963,15 +1808,14 @@ namespace ShaiRandom
             return max - MathF.Sqrt((1 - u) * d * (max - mode));
         }
 
-        /**
-         * Returns the minimum result of {@code trials} calls to {@link #NextInt(int, int)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the lower the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the minimum result of trials calls to {@link #NextInt(int, int)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the lower the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         public int MinIntOf(int innerBound, int outerBound, int trials)
         {
             int v = NextInt(innerBound, outerBound);
@@ -1982,15 +1826,14 @@ namespace ShaiRandom
             return v;
         }
 
-        /**
-         * Returns the maximum result of {@code trials} calls to {@link #NextInt(int, int)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the higher the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the maximum result of trials calls to {@link #NextInt(int, int)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the higher the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         public int MaxIntOf(int innerBound, int outerBound, int trials)
         {
             int v = NextInt(innerBound, outerBound);
@@ -2001,15 +1844,14 @@ namespace ShaiRandom
             return v;
         }
 
-        /**
-         * Returns the minimum result of {@code trials} calls to {@link #NextLong(long, long)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the lower the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the minimum result of trials calls to {@link #NextLong(long, long)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the lower the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         public long MinLongOf(long innerBound, long outerBound, int trials)
         {
             long v = NextLong(innerBound, outerBound);
@@ -2020,15 +1862,14 @@ namespace ShaiRandom
             return v;
         }
 
-        /**
-         * Returns the maximum result of {@code trials} calls to {@link #NextLong(long, long)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the higher the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the maximum result of trials calls to {@link #NextLong(long, long)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the higher the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         public long MaxLongOf(long innerBound, long outerBound, int trials)
         {
             long v = NextLong(innerBound, outerBound);
@@ -2039,15 +1880,14 @@ namespace ShaiRandom
             return v;
         }
 
-        /**
-         * Returns the minimum result of {@code trials} calls to {@link #NextUint(int, int)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the lower the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the minimum result of trials calls to {@link #NextUint(int, int)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the lower the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         public uint MinUintOf(uint innerBound, uint outerBound, int trials)
         {
             uint v = NextUint(innerBound, outerBound);
@@ -2058,15 +1898,14 @@ namespace ShaiRandom
             return v;
         }
 
-        /**
-         * Returns the maximum result of {@code trials} calls to {@link #NextUint(int, int)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the higher the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the maximum result of trials calls to {@link #NextUint(int, int)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the higher the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         public uint MaxUintOf(uint innerBound, uint outerBound, int trials)
         {
             uint v = NextUint(innerBound, outerBound);
@@ -2077,15 +1916,14 @@ namespace ShaiRandom
             return v;
         }
 
-        /**
-         * Returns the minimum result of {@code trials} calls to {@link #NextUlong(long, long)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the lower the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the minimum result of trials calls to {@link #NextUlong(long, long)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the lower the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         public ulong MinUlongOf(ulong innerBound, ulong outerBound, int trials)
         {
             ulong v = NextUlong(innerBound, outerBound);
@@ -2096,15 +1934,14 @@ namespace ShaiRandom
             return v;
         }
 
-        /**
-         * Returns the maximum result of {@code trials} calls to {@link #NextUlong(long, long)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the higher the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the maximum result of trials calls to {@link #NextUlong(long, long)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the higher the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         public ulong MaxUlongOf(ulong innerBound, ulong outerBound, int trials)
         {
             ulong v = NextUlong(innerBound, outerBound);
@@ -2115,15 +1952,14 @@ namespace ShaiRandom
             return v;
         }
 
-        /**
-         * Returns the minimum result of {@code trials} calls to {@link #NextDouble(double, double)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the lower the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the minimum result of trials calls to {@link #NextDouble(double, double)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the lower the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         public double MinDoubleOf(double innerBound, double outerBound, int trials)
         {
             double v = NextDouble(innerBound, outerBound);
@@ -2134,15 +1970,14 @@ namespace ShaiRandom
             return v;
         }
 
-        /**
-         * Returns the maximum result of {@code trials} calls to {@link #NextDouble(double, double)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the higher the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the maximum result of trials calls to {@link #NextDouble(double, double)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the higher the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         public double MaxDoubleOf(double innerBound, double outerBound, int trials)
         {
             double v = NextDouble(innerBound, outerBound);
@@ -2153,15 +1988,14 @@ namespace ShaiRandom
             return v;
         }
 
-        /**
-         * Returns the minimum result of {@code trials} calls to {@link #NextFloat(float, float)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the lower the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the minimum result of trials calls to {@link #NextFloat(float, float)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the lower the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         public float MinFloatOf(float innerBound, float outerBound, int trials)
         {
             float v = NextFloat(innerBound, outerBound);
@@ -2172,15 +2006,14 @@ namespace ShaiRandom
             return v;
         }
 
-        /**
-         * Returns the maximum result of {@code trials} calls to {@link #NextFloat(float, float)} using the given {@code innerBound}
-         * and {@code outerBound}. The innerBound is inclusive; the outerBound is exclusive.
-         * The higher trials is, the higher the average value this returns.
-         * @param innerBound the inner inclusive bound; may be positive or negative
-         * @param outerBound the outer exclusive bound; may be positive or negative
-         * @param trials how many random numbers to acquire and compare
-         * @return the highest random number between innerBound (inclusive) and outerBound (exclusive) this found
-         */
+        /// <summary>
+        /// Returns the maximum result of trials calls to {@link #NextFloat(float, float)} using the given innerBound
+        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// The higher trials is, the higher the average value this returns.
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <param name="trials">how many random numbers to acquire and compare</param>
+        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         public float MaxFloatOf(float innerBound, float outerBound, int trials)
         {
             float v = NextFloat(innerBound, outerBound);
@@ -2213,36 +2046,30 @@ namespace ShaiRandom
             return list[NextInt(list.Count)];
         }
 
-        /**
-         * Shuffles the given array in-place pseudo-randomly, using this to generate
-         * {@code items.Length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
-         *
-         * @param items an array of some reference type; must be non-null but may contain null items
-         */
+        /// <summary>
+        /// Shuffles the given array in-place pseudo-randomly, using this to generate
+        /// {@code items.Length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
         public void Shuffle<T>(T[] items)
         {
             Shuffle(items, 0, items.Length);
         }
 
-        /**
-         * Shuffles the given IList in-place pseudo-randomly, using this to generate
-         * {@code items.Count - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
-         *
-         * @param items an IList; must be non-null but may contain null items
-         */
+        /// <summary>
+        /// Shuffles the given IList in-place pseudo-randomly, using this to generate
+        /// {@code items.Count - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// <param name="items">an IList; must be non-null but may contain null items</param>
         public void Shuffle<T>(IList<T> items)
         {
             Shuffle(items, 0, items.Count);
         }
 
-        /**
-         * Shuffles a section of the given array in-place pseudo-randomly, using this to generate
-         * {@code length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
-         *
-         * @param items an array of some reference type; must be non-null but may contain null items
-         * @param offset the index of the first element of the array that can be shuffled
-         * @param length the length of the section to shuffle
-         */
+        /// <summary>
+        /// Shuffles a section of the given array in-place pseudo-randomly, using this to generate
+        /// {@code length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
+        /// <param name="offset">the index of the first element of the array that can be shuffled</param>
+        /// <param name="length">the length of the section to shuffle</param>
         public void Shuffle<T>(T[] items, int offset, int length)
         {
             offset = Math.Min(Math.Max(0, offset), items.Length);
@@ -2255,14 +2082,12 @@ namespace ShaiRandom
                 items[ii] = temp;
             }
         }
-        /**
-         * Shuffles a section of the given IList in-place pseudo-randomly, using this to generate
-         * {@code length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
-         *
-         * @param items an IList; must be non-null but may contain null items
-         * @param offset the index of the first element of the IList that can be shuffled
-         * @param length the length of the section to shuffle
-         */
+        /// <summary>
+        /// Shuffles a section of the given IList in-place pseudo-randomly, using this to generate
+        /// {@code length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// <param name="items">an IList; must be non-null but may contain null items</param>
+        /// <param name="offset">the index of the first element of the IList that can be shuffled</param>
+        /// <param name="length">the length of the section to shuffle</param>
         public void Shuffle<T>(IList<T> items, int offset, int length)
         {
             offset = Math.Min(Math.Max(0, offset), items.Count);
