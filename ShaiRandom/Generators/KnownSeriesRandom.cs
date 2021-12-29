@@ -33,11 +33,11 @@ namespace ShaiRandom.Generators
         private int ulongIndex;
         private List<ulong> ulongSeries;
 
-        public KnownSeriesRandom() : base(0UL)
+        public KnownSeriesRandom() : this(0UL)
         {
         }
 
-        public KnownSeriesRandom(ulong seed) : base(seed)
+        public KnownSeriesRandom(ulong seed) : this(null, null, null, null, null, null, null, null)
         {
             Seed(seed);
         }
@@ -60,8 +60,8 @@ namespace ShaiRandom.Generators
         /// specified, no values of that type may be returned, and functions that try to return a
         /// value of that type will throw an exception.
         /// </summary>
-        public KnownSeriesRandom(IEnumerable<int> intSeries = null, IEnumerable<uint> uintSeries = null, IEnumerable<double> doubleSeries = null, IEnumerable<bool> boolSeries = null, IEnumerable<byte> byteSeries = null,
-            IEnumerable<float> floatSeries = null, IEnumerable<long> longSeries = null, IEnumerable<ulong> ulongSeries = null)
+        public KnownSeriesRandom(IEnumerable<int>? intSeries = null, IEnumerable<uint>? uintSeries = null, IEnumerable<double>? doubleSeries = null, IEnumerable<bool>? boolSeries = null, IEnumerable<byte>? byteSeries = null,
+            IEnumerable<float>? floatSeries = null, IEnumerable<long>? longSeries = null, IEnumerable<ulong>? ulongSeries = null) : base(0UL)
         {
             if (intSeries == null)
                 this.intSeries = new List<int>();
