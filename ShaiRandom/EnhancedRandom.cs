@@ -271,7 +271,7 @@ namespace ShaiRandom
         /// Generates the next pseudorandom number with a specific maximum size in bits (not a max number).
         /// </summary>
         /// <remarks>
-        /// If you want to get a random number in a range, you should usually use {@link #nextInt(int)} instead.
+        /// If you want to get a random number in a range, you should usually use <see cref="nextInt(int)"/> instead.
         /// <br/>The general contract of next is that it returns an
         /// uint value and if the argument bits is between
         /// 1 and 32 (inclusive), then that many low-order
@@ -408,20 +408,20 @@ namespace ShaiRandom
         /// <summary>
         /// Returns the next pseudorandom, uniformly distributed float
         /// value between 0.0 (inclusive) and 1.0 (exclusive)
-        /// from this random number generator's sequence.</summary>
-        /// <remarks>
-        /// The general contract of NextFloat is that one
+        /// from this random number generator's sequence.
+        /// </summary>
+        /// <remarks>The general contract of NextFloat is that one
         /// float value, chosen (approximately) uniformly from the
         /// range 0.0f (inclusive) to 1.0f (exclusive), is
         /// pseudorandomly generated and returned. All 2<sup>24</sup> possible
         /// float values of the form <i>m&nbsp;x&nbsp;</i>2<sup>-24</sup>,
         /// where <i>m</i> is a positive integer less than 2<sup>24</sup>, are
         /// produced with (approximately) equal probability.
-        /// <br/>The public implementation uses the upper 24 bits of <see cref="NextLong()"/>,
-        /// with an unsigned right shift and a multiply by a very small float
-        /// ({@code 5.9604645E-8f} or {@code 0x1p-24f}). It tends to be fast if
-        /// nextLong() is fast, but alternative implementations could use 24 bits of
-        /// {@link #nextInt()} (or just {@link #next(int)}, giving it 24)
+        /// <br/>The public implementation uses the upper 24 bits of <see cref="NextULong()"/>,
+        /// with a right shift and a multiply by a very small float
+        /// (5.9604645E-8f). It tends to be fast if
+        /// NextULong() is fast, but alternative implementations could use 24 bits of
+        /// <see cref="NextInt()"/> (or just <see cref="NextBits(int)"/>, giving it 24)
         /// if that generator doesn't efficiently generate 64-bit longs.</remarks>
         /// <returns>the next pseudorandom, uniformly distributed float
         /// value between 0.0 and 1.0 from this
@@ -453,24 +453,30 @@ namespace ShaiRandom
         /// Returns the next pseudorandom, uniformly distributed
         /// double value between 0.0 (inclusive) and 1.0
         /// (exclusive) from this random number generator's sequence.
-        /// <br/>The general contract of NextDouble is that one
+        /// </summary>
+        /// <remarks>
+        /// The general contract of NextDouble is that one
         /// double value, chosen (approximately) uniformly from the
-        /// range {@code 0.0d} (inclusive) to {@code 1.0d} (exclusive), is
+        /// range 0.0 (inclusive) to 1.0 (exclusive), is
         /// pseudorandomly generated and returned.
         /// <br/>The default implementation uses the upper 53 bits of <see cref="NextLong()"/>,
         /// with an unsigned right shift and a multiply by a very small double
-        /// ({@code 1.1102230246251565E-16}, or {@code 0x1p-53}). It should perform well
+        /// (1.1102230246251565E-16). It should perform well
         /// if nextLong() performs well, and is expected to perform less well if the
-        /// generator naturally produces 32 or fewer bits at a time.<br/>
-        /// <returns>the next pseudorandom, uniformly distributed double</returns>
+        /// generator naturally produces 32 or fewer bits at a time.\
+        /// </remarks>
+        /// <returns>the next pseudorandom, uniformly distributed double
         /// value between 0.0 and 1.0 from this
-        /// random number generator's sequence
+        /// random number generator's sequence</returns>
         double NextDouble();
 
         /// <summary>
         /// Gets a pseudo-random double between 0 (inclusive) and outerBound (exclusive).
         /// The outerBound may be positive or negative.
-        /// Exactly the same as {@code NextDouble() * outerBound}.
+        /// </summary>
+        /// <remarks>
+        /// Exactly the same as: <code>NextDouble() * outerBound</code>
+        /// </remarks>
         /// <param name="outerBound">the exclusive outer bound</param>
         /// <returns>a double between 0 (inclusive) and outerBound (exclusive)</returns>
         double NextDouble(double outerBound);
@@ -479,112 +485,137 @@ namespace ShaiRandom
         /// Gets a pseudo-random double between innerBound (inclusive) and outerBound (exclusive).
         /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
         /// inclusive and which is exclusive.
+        /// </summary>
         /// <param name="innerBound">the inclusive inner bound; may be negative</param>
         /// <param name="outerBound">the exclusive outer bound; may be negative</param>
         /// <returns>a double between innerBound (inclusive) and outerBound (exclusive)</returns>
         double NextDouble(double innerBound, double outerBound);
 
         /// <summary>
-        /// This is just like {@link #NextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+        /// This is just like <see cref="NextDouble()"/>, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+        /// </summary>
+        /// <remarks>
         /// It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
-        /// can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
+        /// can happen. This typically uses <see cref="NextULong(ulong)"/> internally, so it may have some bias towards or against specific
         /// subtly-different results.
+        /// </remarks>
         /// <returns>a double between 0.0, inclusive, and 1.0, inclusive</returns>
         double NextInclusiveDouble();
 
         /// <summary>
-        /// Just like {@link #NextDouble(double)}, but this is inclusive on both 0.0 and outerBound.
-        /// It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
+        /// Just like <see cref="NextDouble(double)"/>, but this is inclusive on both 0.0 and outerBound.
+        /// </summary>
+        /// <remarks>
+        /// It may be important to note that this returns outerBound on only 0.000000000000011102230246251565% of calls.
+        /// </remarks>
         /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
         /// <returns>a double between 0.0, inclusive, and outerBound, inclusive</returns>
         double NextInclusiveDouble(double outerBound);
 
         /// <summary>
-        /// Just like {@link #NextDouble(double, double)}, but this is inclusive on both innerBound and outerBound.
-        /// It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
+        /// Just like <see cref="NextDouble(double, double)"/>, but this is inclusive on both innerBound and outerBound.
+        /// </summary>
+        /// <remarks>
+        /// It may be important to note that this returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
         /// return it at all because of floating-point imprecision when innerBound is a larger number.
+        /// </remarks>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
         /// <returns>a double between innerBound, inclusive, and outerBound, inclusive</returns>
         double NextInclusiveDouble(double innerBound, double outerBound);
 
         /// <summary>
-        /// This is just like {@link #NextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+        /// This is just like <see cref="NextFloat()"/>, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+        /// </summary>
+        /// <remarks>
         /// It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
-        /// has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
+        /// has been tested by generating 268435456 (or 0x10000000) random ints with <see cref="nextInt(int)"/>, and just before the end of that
         /// it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
         /// likely to accomplish that in the same time, or at all, depending on the generator.
+        /// </remarks>
         /// <returns>a float between 0.0, inclusive, and 1.0, inclusive</returns>
         float NextInclusiveFloat();
 
         /// <summary>
-        /// Just like {@link #NextFloat(float)}, but this is inclusive on both 0.0 and outerBound.
+        /// Just like <see cref="NextFloat(float)"/>, but this is inclusive on both 0.0 and outerBound.
+        /// </summary>
+        /// <remarks>
         /// It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
+        /// </remarks>
         /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
         /// <returns>a float between 0.0, inclusive, and outerBound, inclusive</returns>
         float NextInclusiveFloat(float outerBound);
 
         /// <summary>
-        /// Just like {@link #NextFloat(float, float)}, but this is inclusive on both innerBound and outerBound.
+        /// Just like <see cref="NextFloat(float, float)"/>, but this is inclusive on both innerBound and outerBound.
+        /// </summary>
+        /// <remarks>
         /// It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
         /// it at all because of floating-point imprecision when innerBound is a larger number.
+        /// </remarks>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
         /// <returns>a float between innerBound, inclusive, and outerBound, inclusive</returns>
         float NextInclusiveFloat(float innerBound, float outerBound);
 
         /// <summary>
-        /// Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
-        /// values between 1.1102230246251564E-16 and 0.9999999999999999, or 0x1.fffffffffffffp-54 and 0x1.fffffffffffffp-1 in hex
-        /// notation. It cannot return 0 or 1.
-        /// <br/>
-        /// The default implementation simply uses <see cref="NextLong()"/> to get a uniform long, shifts it to remove 11 bits, adds 1, and
-        /// multiplies by a value just slightly less than what nextDouble() usually uses.
-        /// <returns>a random uniform double between 0 and 1 (both exclusive)</returns>
+        /// Gets a random double between 0.0 and 1.0, exclusive at both ends, using a technique that can produce more of the valid values for a double
+        /// (near to 0) than other methods.
+        /// </summary>
+        /// <remarks>
+        /// This can be implemented in various ways; the simplest is to generate a number in the range between 1 (inclusive) and 2<sup>24</sup> (exclusive), then divide the result by 2<sup>24</sup>.
+        /// The technique used in AbstractRandom is very different; it is related to <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>.
+        /// Because the ability to get the number of leading or trailing zeros is in a method not present in .NET Standard, we get close to that by using
+        /// <see cref="BitConverter.DoubleToInt64Bits(double)"/> on a negative long and using its exponent bits directly. The smallest double AbstractRandom can return is 1.0842021724855044E-19 ; the largest it
+        /// can return is 0.9999999999999999 . The smallest result is significantly closer to 0 than <see cref="NextDouble()"/> can produce without actually returning 0, and also much closer than the first method.
+        /// </remarks>
+        /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
+
         double NextExclusiveDouble();
 
         /// <summary>
-        /// Just like {@link #NextDouble(double)}, but this is exclusive on both 0.0 and outerBound.
-        /// Like {@link #nextExclusiveDouble()}, which this uses, this may have better bit-distribution of
+        /// Just like <see cref="NextDouble(double)"/>, but this is exclusive on both 0.0 and outerBound.
+        /// </summary>
+        /// <remarks>
+        /// Like <see cref="NextExclusiveDouble()"/>, which this uses, this may have better bit-distribution of
         /// double values, and it may also be better able to produce very small doubles when outerBound is large.
+        /// </remarks>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <returns>a double between 0.0, exclusive, and outerBound, exclusive</returns>
         double NextExclusiveDouble(double outerBound);
 
         /// <summary>
-        /// Just like {@link #NextDouble(double, double)}, but this is exclusive on both innerBound and outerBound.
-        /// Like {@link #nextExclusiveDouble()}, which this uses,, this may have better bit-distribution of double values,
+        /// Just like <see cref="NextDouble(double, double)"/>, but this is exclusive on both innerBound and outerBound.
+        /// </summary>
+        /// <remarks>
+        /// Like <see cref="NextExclusiveDouble()"/>, which this uses,, this may have better bit-distribution of double values,
         /// and it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
+        /// </remarks>
         /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <returns>a double between innerBound, exclusive, and outerBound, exclusive</returns>
         double NextExclusiveDouble(double innerBound, double outerBound);
 
         /// <summary>
-        /// Gets a random float between 0.0 and 1.0, exclusive at both ends. This can return float
-        /// values between 5.9604645E-8 and 0.99999994, or 0x1.0p-24 and 0x1.fffffep-1 in hex notation.
-        /// It cannot return 0 or 1, and its minimum and maximum results are equally distant from 0 and from
-        /// 1, respectively. Some usages may prefer {@link #nextExclusiveFloat()}, which is
-        /// better-distributed if you consider the bit representation of the returned floats, tends to perform
-        /// better, and can return floats that much closer to 0 than this can.
-        /// <br/>
-        /// The default implementation simply uses {@link #nextInt(int)} to get a uniformly-chosen int between 1 and
-        /// (2 to the 24) - 1, both inclusive, and multiplies it by (2 to the -24). Using larger values than (2 to the
-        /// 24) would cause issues with the float math.
-        /// <returns>a random uniform float between 0 and 1 (both exclusive)</returns>
+        /// Gets a random float between 0.0 and 1.0, exclusive at both ends. This can return float values between 1.0842022E-19 and 0.99999994; it cannot return 0 or 1.
+        /// </summary>
+        /// <remarks>
+        /// Like <see cref="NextExclusiveDouble()"/>, this is absolute voodoo code. Its implementation generates one long and then does conversions both from int to float
+        /// (to get the result), and from double to long (to get an approximation of log base 2). The code here is bat country, and should not be edited carelessly.</remarks>
+        /// <returns>A random uniform float between 0 and 1 (both exclusive).</returns>
         float NextExclusiveFloat();
 
         /// <summary>
-        /// Just like {@link #NextFloat(float)}, but this is exclusive on both 0.0 and outerBound.
-        /// Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
+        /// Just like <see cref="NextFloat(float)"/>, but this is exclusive on both 0.0 and outerBound.
+        /// Like <see cref="nextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
         /// it may also be better able to produce very small floats when outerBound is large.
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <returns>a float between 0.0, exclusive, and outerBound, exclusive</returns>
         float NextExclusiveFloat(float outerBound);
 
         /// <summary>
-        /// Just like {@link #NextFloat(float, float)}, but this is exclusive on both innerBound and outerBound.
-        /// Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
+        /// Just like <see cref="NextFloat(float, float)"/>, but this is exclusive on both innerBound and outerBound.
+        /// Like <see cref="nextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
         /// it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
         /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
@@ -631,20 +662,30 @@ namespace ShaiRandom
 
         /// <summary>
         /// Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
-        /// more likely.
+        /// more likely. Typically advances the state twice.
+        /// </summary>
+        /// <remarks>
+        /// This can be an optimized version of <see cref="NextTriangular(float, float, float)"/>, or: <code> NextTriangular(-1, 1, 0)</code>
+        /// </remarks>
         float NextTriangular();
 
         /// <summary>
         /// Returns a triangularly distributed random number between {@code -max} (exclusive) and max (exclusive), where values
-        /// around zero are more likely.
-        /// <param name="max">the upper limit</param>
+        /// around zero are more likely. Advances the state twice.
+        /// </summary>
+        /// <remarks>
+        /// This is an optimized version of <see cref="NextTriangular(float, float, float)"/>, or: <code> NextTriangular(-max, max, 0)</code>
+        /// </remarks>
+        /// <param name="max">the outer exclusive limit</param>
         float NextTriangular(float max);
 
         /// <summary>
         /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where the
-        /// mode argument defaults to the midpoint between the bounds, giving a symmetric distribution.
-        /// <br/>
-        /// This method is equivalent of {@link #nextTriangular(float, float, float) NextTriangular(min, max, (min + max) * 0.5f)}
+        /// mode argument defaults to the midpoint between the bounds, giving a symmetric distribution. Advances the state once.
+        /// </summary>
+        /// <remarks>
+        /// This is an optimized version of <see cref="NextTriangular(float, float, float)"/>, or: <code> NextTriangular(min, max, (min + max) * 0.5f)</code>
+        /// </remarks>
         /// <param name="min">the lower limit</param>
         /// <param name="max">the upper limit</param>
         float NextTriangular(float min, float max);
@@ -652,15 +693,17 @@ namespace ShaiRandom
         /// <summary>
         /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where values
         /// around mode are more likely.
+        /// </summary>
         /// <param name="min"> the lower limit</param>
         /// <param name="max"> the upper limit</param>
         /// <param name="mode">the point around which the values are more likely</param>
         float NextTriangular(float min, float max, float mode);
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextInt(int, int)} using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextInt(int, int)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
+        /// </summary>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
@@ -668,9 +711,10 @@ namespace ShaiRandom
         int MinIntOf(int innerBound, int outerBound, int trials);
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextInt(int, int)} using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextInt(int, int)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
+        /// </summary>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
@@ -678,9 +722,10 @@ namespace ShaiRandom
         int MaxIntOf(int innerBound, int outerBound, int trials);
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextLong(long, long)} using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextLong(long, long)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
+        /// </summary>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
@@ -688,18 +733,20 @@ namespace ShaiRandom
         long MinLongOf(long innerBound, long outerBound, int trials);
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextLong(long, long)} using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextLong(long, long)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
+        /// </summary>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         long MaxLongOf(long innerBound, long outerBound, int trials);
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextUInt(int, int)} using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextUInt(int, int)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
+        /// </summary>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
@@ -707,9 +754,10 @@ namespace ShaiRandom
         uint MinUIntOf(uint innerBound, uint outerBound, int trials);
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextUInt(int, int)} using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextUInt(int, int)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
+        /// </summary>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
@@ -717,9 +765,10 @@ namespace ShaiRandom
         uint MaxUIntOf(uint innerBound, uint outerBound, int trials);
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextULong(long, long)} using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextULong(long, long)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
+        /// </summary>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
@@ -727,9 +776,10 @@ namespace ShaiRandom
         ulong MinULongOf(ulong innerBound, ulong outerBound, int trials);
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextULong(long, long)} using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextULong(long, long)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
+        /// </summary>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
@@ -737,9 +787,10 @@ namespace ShaiRandom
         ulong MaxULongOf(ulong innerBound, ulong outerBound, int trials);
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextDouble(double, double)} using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextDouble(double, double)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
+        /// </summary>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
@@ -747,7 +798,7 @@ namespace ShaiRandom
         double MinDoubleOf(double innerBound, double outerBound, int trials);
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextDouble(double, double)} using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextDouble(double, double)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -757,9 +808,10 @@ namespace ShaiRandom
         double MaxDoubleOf(double innerBound, double outerBound, int trials);
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextFloat(float, float)} using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextFloat(float, float)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
+        /// </summary>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
@@ -767,9 +819,10 @@ namespace ShaiRandom
         float MinFloatOf(float innerBound, float outerBound, int trials);
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextFloat(float, float)} using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextFloat(float, float)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
+        /// </summary>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
@@ -795,16 +848,19 @@ namespace ShaiRandom
 
         /// <summary>
         /// Shuffles the given array in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// </summary>
         /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
         void Shuffle<T>(T[] items);
 
         /// <summary>
         /// Shuffles the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// </summary>
         /// <param name="items">an IList; must be non-null but may contain null items</param>
         void Shuffle<T>(IList<T> items);
 
         /// <summary>
         /// Shuffles a section of the given array in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// </summary>
         /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
         /// <param name="offset">the index of the first element of the array that can be shuffled</param>
         /// <param name="length">the length of the section to shuffle</param>
@@ -812,6 +868,7 @@ namespace ShaiRandom
 
         /// <summary>
         /// Shuffles a section of the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// </summary>
         /// <param name="items">an IList; must be non-null but may contain null items</param>
         /// <param name="offset">the index of the first element of the IList that can be shuffled</param>
         /// <param name="length">the length of the section to shuffle</param>
@@ -1378,12 +1435,12 @@ namespace ShaiRandom
         /// specified innerBound (inclusive) and the specified outerBound
         /// (exclusive). If outerBound is less than or equal to innerBound,
         /// this always returns innerBound. This is significantly slower than
-        /// {@link #nextInt(int)} or {@link #nextSignedInt(int)},
+        /// <see cref="nextInt(int)"/> or <see cref="nextSignedInt(int)"/>,
         /// because this handles even ranges that go from large negative numbers to large
         /// positive numbers, and since that would be larger than the largest possible int,
-        /// this has to use {@link #nextLong(long)}.
+        /// this has to use <see cref="nextLong(long)"/>.
         /// <br/> For any case where outerBound might be valid but less than innerBound, you
-        /// can use {@link #nextSignedInt(int, int)}. If outerBound is less than innerBound
+        /// can use <see cref="nextSignedInt(int, int)"/>. If outerBound is less than innerBound
         /// here, this simply returns innerBound.
         /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
@@ -1438,18 +1495,18 @@ namespace ShaiRandom
         /// float value, chosen (approximately) uniformly from the
         /// range 0.0f (inclusive) to 1.0f (exclusive), is
         /// pseudorandomly generated and returned. All 2<sup>24</sup> possible
-        /// float values of the form <i>m&nbsp;x&nbsp;</i>2<sup>-24</sup>,
+        /// float values of the form <i>m x </i>2<sup>-24</sup>,
         /// where <i>m</i> is a positive integer less than 2<sup>24</sup>, are
         /// produced with (approximately) equal probability.
-        /// <br/>The public implementation uses the upper 24 bits of <see cref="NextLong()"/>,
-        /// with an unsigned right shift and a multiply by a very small float
+        /// <br/>The public implementation uses the upper 24 bits of <see cref="NextULong()"/>,
+        /// with a right shift and a multiply by a very small float
         /// (5.9604645E-8f). It tends to be fast if
-        /// nextLong() is fast, but alternative implementations could use 24 bits of
-        /// {@link #nextInt()} (or just {@link #next(int)}, giving it 24)
+        /// NextULong() is fast, but alternative implementations could use 24 bits of
+        /// <see cref="NextInt()"/> (or just <see cref="NextBits(int)"/>, giving it 24)
         /// if that generator doesn't efficiently generate 64-bit longs.</remarks>
-        /// <returns>the next pseudorandom, uniformly distributed float</returns>
+        /// <returns>the next pseudorandom, uniformly distributed float
         /// value between 0.0 and 1.0 from this
-        /// random number generator's sequence
+        /// random number generator's sequence</returns>
         public virtual float NextFloat()
         {
             return (NextULong() >> 40) * FLOAT_ADJUST;
@@ -1494,9 +1551,9 @@ namespace ShaiRandom
         /// if nextLong() performs well, and is expected to perform less well if the
         /// generator naturally produces 32 or fewer bits at a time.\
         /// </remarks>
-        /// <returns>the next pseudorandom, uniformly distributed double</returns>
+        /// <returns>the next pseudorandom, uniformly distributed double
         /// value between 0.0 and 1.0 from this
-        /// random number generator's sequence
+        /// random number generator's sequence</returns>
         public virtual double NextDouble()
         {
             return (NextULong() >> 11) * DOUBLE_ADJUST;
@@ -1526,9 +1583,9 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// This is just like {@link #NextDouble()}, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+        /// This is just like <see cref="NextDouble()"/>, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
         /// It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
-        /// can happen. This uses {@link #nextLong(long)} internally, so it may have some bias towards or against specific
+        /// can happen. This uses <see cref="nextLong(long)"/> internally, so it may have some bias towards or against specific
         /// subtly-different results.
         /// <returns>a double between 0.0, inclusive, and 1.0, inclusive</returns>
         public double NextInclusiveDouble()
@@ -1537,7 +1594,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Just like {@link #NextDouble(double)}, but this is inclusive on both 0.0 and outerBound.
+        /// Just like <see cref="NextDouble(double)"/>, but this is inclusive on both 0.0 and outerBound.
         /// It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
         /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
         /// <returns>a double between 0.0, inclusive, and outerBound, inclusive</returns>
@@ -1547,7 +1604,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Just like {@link #NextDouble(double, double)}, but this is inclusive on both innerBound and outerBound.
+        /// Just like <see cref="NextDouble(double, double)"/>, but this is inclusive on both innerBound and outerBound.
         /// It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
         /// return it at all because of floating-point imprecision when innerBound is a larger number.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -1559,9 +1616,9 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// This is just like {@link #NextFloat()}, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+        /// This is just like <see cref="NextFloat()"/>, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
         /// It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
-        /// has been tested by generating 268435456 (or 0x10000000) random ints with {@link #nextInt(int)}, and just before the end of that
+        /// has been tested by generating 268435456 (or 0x10000000) random ints with <see cref="nextInt(int)"/>, and just before the end of that
         /// it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
         /// likely to accomplish that in the same time, or at all, depending on the generator.
         /// <returns>a float between 0.0, inclusive, and 1.0, inclusive</returns>
@@ -1571,7 +1628,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Just like {@link #NextFloat(float)}, but this is inclusive on both 0.0 and outerBound.
+        /// Just like <see cref="NextFloat(float)"/>, but this is inclusive on both 0.0 and outerBound.
         /// It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
         /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
         /// <returns>a float between 0.0, inclusive, and outerBound, inclusive</returns>
@@ -1581,7 +1638,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Just like {@link #NextFloat(float, float)}, but this is inclusive on both innerBound and outerBound.
+        /// Just like <see cref="NextFloat(float, float)"/>, but this is inclusive on both innerBound and outerBound.
         /// It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
         /// it at all because of floating-point imprecision when innerBound is a larger number.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -1614,13 +1671,11 @@ namespace ShaiRandom
         /// (near to 0) than other methods.
         /// </summary>
         /// <remarks>
-        /// <br/>The code for this is small, but extremely unorthodox. The technique is related to <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>,
+        /// The code for this is small, but extremely unorthodox. The technique is related to <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>,
         /// but because the ability to get the number of leading or trailing zeros is in a method not present in .NET Standard, we get close to that by using
-        /// BitConverter.DoubleToInt64Bits() on a negative long and using its exponent bits directly. The smallest double this can return is 1.0842021724855044E-19 ; the largest it
-        /// can return is 0.9999999999999999 .
-        /// </p>
-        /// <br/>This is voodoo code.
-        /// </p>
+        /// <see cref="BitConverter.DoubleToInt64Bits(double)"/> on a negative long and using its exponent bits directly. The smallest double this can return is 1.0842021724855044E-19 ; the largest it
+        /// can return is 0.9999999999999999 . The smallest result is significantly closer to 0 than <see cref="NextDouble()"/> can produce without actually returning 0.
+        /// <br/>If you decide to edit this, be advised: here be dragons.
         /// </remarks>
         /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
         public double NextExclusiveDouble()
@@ -1630,8 +1685,8 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Just like {@link #NextDouble(double)}, but this is exclusive on both 0.0 and outerBound.
-        /// Like {@link #nextExclusiveDouble()}, which this uses, this may have better bit-distribution of
+        /// Just like <see cref="NextDouble(double)"/>, but this is exclusive on both 0.0 and outerBound.
+        /// Like <see cref="nextExclusiveDouble()"/>, which this uses, this may have better bit-distribution of
         /// double values, and it may also be better able to produce very small doubles when outerBound is large.
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <returns>a double between 0.0, exclusive, and outerBound, exclusive</returns>
@@ -1641,8 +1696,8 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Just like {@link #NextDouble(double, double)}, but this is exclusive on both innerBound and outerBound.
-        /// Like {@link #nextExclusiveDouble()}, which this uses,, this may have better bit-distribution of double values,
+        /// Just like <see cref="NextDouble(double, double)"/>, but this is exclusive on both innerBound and outerBound.
+        /// Like <see cref="nextExclusiveDouble()"/>, which this uses,, this may have better bit-distribution of double values,
         /// and it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
         /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
@@ -1667,8 +1722,8 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Just like {@link #NextFloat(float)}, but this is exclusive on both 0.0 and outerBound.
-        /// Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
+        /// Just like <see cref="NextFloat(float)"/>, but this is exclusive on both 0.0 and outerBound.
+        /// Like <see cref="nextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
         /// it may also be better able to produce very small floats when outerBound is large.
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <returns>a float between 0.0, exclusive, and outerBound, exclusive</returns>
@@ -1678,8 +1733,8 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Just like {@link #NextFloat(float, float)}, but this is exclusive on both innerBound and outerBound.
-        /// Like {@link #nextExclusiveFloat()}, this may have better bit-distribution of float values, and
+        /// Just like <see cref="NextFloat(float, float)"/>, but this is exclusive on both innerBound and outerBound.
+        /// Like <see cref="nextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
         /// it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
         /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
@@ -1694,11 +1749,10 @@ namespace ShaiRandom
         /// A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
         /// inputs correspond to high outputs, and similarly for the low range. This is centered on 0.0 and its standard
         /// deviation seems to be 1.0 (the same as {@link java.util.Random#nextGaussian()}). If this is given an input of 0.0
-        /// or less, it returns -38.5, which is slightly less than the result when given {@link Double#MIN_VALUE}. If it is
+        /// or less, it returns -38.5, which is slightly less than the result when given <see cref="double.MinValue"/>. If it is
         /// given an input of 1.0 or more, it returns 38.5, which is significantly larger than the result when given the
-        /// largest double less than 1.0 (this value is further from 1.0 than {@link Double#MIN_VALUE} is from 0.0). If
-        /// given {@link Double#NaN}, it returns whatever {@link Math#copySign(double, double)} returns for the arguments
-        /// {@code 38.5, Double.NaN}, which is implementation-dependent. It uses an algorithm by Peter John Acklam, as
+        /// largest double less than 1.0 (this value is further from 1.0 than <see cref="double.MinValue"/> is from 0.0). If
+        /// given <see cref="double.NaN"/>, it returns NaN. It uses an algorithm by Peter John Acklam, as
         /// implemented by Sherali Karimov.
         /// <a href="https://web.archive.org/web/20150910002142/http://home.online.no/~pjacklam/notes/invnorm/impl/karimov/StatUtil.java">Original source</a>.
         /// <a href="https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/">Information on the algorithm</a>.
@@ -1841,6 +1895,7 @@ namespace ShaiRandom
 
         /// <summary>
         /// Returns true if a random value between 0 and 1 is less than the specified value.
+        /// </summary>
         /// <param name="chance">A float between 0.0 and 1.0; higher values are more likely to result in true.</param>
         /// <returns>a bool selected with the given chance of being true</returns>
         public bool NextBool(float chance)
@@ -1850,40 +1905,27 @@ namespace ShaiRandom
 
         /// <summary>
         /// Returns -1 or 1, randomly.
+        /// </summary>
         /// <returns>-1 or 1, selected with approximately equal likelihood</returns>
         public int NextSign()
         {
             return 1 | NextInt() >> 31;
         }
 
-        /// <summary>
-        /// Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
-        /// more likely. Advances the state twice.
-        /// <br/>
-        /// This is an optimized version of {@link #NextTriangular(float, float, float) NextTriangular(-1, 1, 0)}
+        /// <inheritdoc/>
         public float NextTriangular()
         {
             return NextFloat() - NextFloat();
         }
 
-        /// <summary>
-        /// Returns a triangularly distributed random number between {@code -max} (exclusive) and max (exclusive), where values
-        /// around zero are more likely. Advances the state twice.
-        /// <br/>
-        /// This is an optimized version of {@link #nextTriangular(float, float, float) NextTriangular(-max, max, 0)}
-        /// <param name="max">the upper limit</param>
+        /// <inheritdoc/>
         public float NextTriangular(float max)
         {
             return (NextFloat() - NextFloat()) * max;
         }
 
-        /// <summary>
-        /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where the
-        /// mode argument defaults to the midpoint between the bounds, giving a symmetric distribution. Advances the state once.
-        /// <br/>
-        /// This method is equivalent of {@link #nextTriangular(float, float, float) NextTriangular(min, max, (min + max) * 0.5f)}
-        /// <param name="min">the lower limit</param>
-        /// <param name="max">the upper limit</param>
+        /// <inheritdoc/>
+
         public float NextTriangular(float min, float max)
         {
             return NextTriangular(min, max, (min + max) * 0.5f);
@@ -1904,7 +1946,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextInt(int, int)} using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextInt(int, int)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -1922,7 +1964,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextInt(int, int)} using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextInt(int, int)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -1940,7 +1982,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextLong(long, long)} using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextLong(long, long)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -1958,7 +2000,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextLong(long, long)} using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextLong(long, long)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -1976,7 +2018,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextUInt(int, int)} using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextUInt(int, int)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -1994,7 +2036,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextUInt(int, int)} using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextUInt(int, int)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -2012,7 +2054,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextULong(long, long)} using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextULong(long, long)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -2030,7 +2072,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextULong(long, long)} using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextULong(long, long)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -2048,7 +2090,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextDouble(double, double)} using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextDouble(double, double)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -2066,7 +2108,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextDouble(double, double)} using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextDouble(double, double)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -2084,7 +2126,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the minimum result of trials calls to {@link #NextFloat(float, float)} using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextFloat(float, float)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -2102,7 +2144,7 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to {@link #NextFloat(float, float)} using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextFloat(float, float)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
@@ -2200,10 +2242,10 @@ namespace ShaiRandom
 
     // /**
     // * Gets a random double between 0.0 and 1.0, exclusive at both ends; this method is also more uniform than
-    // * {@link #NextDouble()} if you use the bit-patterns of the returned doubles. This is a simplified version of
+    // * <see cref="NextDouble()"/> if you use the bit-patterns of the returned doubles. This is a simplified version of
     // * <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>. This can return double
     // * values between 2.710505431213761E-20 and 0.9999999999999999, or 0x1.0p-65 and 0x1.fffffffffffffp-1 in hex
-    // * notation. It cannot return 0 or 1. Most cases can instead use {@link #nextExclusiveDoubleEquidistant()}, which is
+    // * notation. It cannot return 0 or 1. Most cases can instead use <see cref="nextExclusiveDoubleEquidistant()"/>, which is
     // * implemented more traditionally but may have different performance. This method can also return doubles that
     // * are extremely close to 0, but can't return doubles that are as close to 1, due to limits of doubles.
     // * However, nextExclusiveDoubleEquidistant() can return only a minimum value that is as distant from 0 as its maximum
@@ -2215,12 +2257,12 @@ namespace ShaiRandom
     // * mantissa. As for this method, it has approximately the same likelihood of producing a "1" bit for any
     // * position in the mantissa.
     // * <br/>
-    // * The default implementation may have different performance characteristics than {@link #NextDouble()},
+    // * The default implementation may have different performance characteristics than <see cref="NextDouble()"/>,
     // * because this doesn't perform any floating-point multiplication or division, and instead assembles bits
-    // * obtained by one call to <see cref="NextLong()"/>. This uses {@link BitConversion#longBitsToDouble(long)} and
-    // * {@link Long#numberOfTrailingZeros(long)}, both of which typically have optimized intrinsics on HotSpot,
+    // * obtained by one call to <see cref="NextLong()"/>. This uses <see cref="BitConversion.longBitsToDouble(long)"/> and
+    // * <see cref="Long.numberOfTrailingZeros(long)"/>, both of which typically have optimized intrinsics on HotSpot,
     // * and this is branchless and loopless, unlike the original algorithm by Allen Downey. When compared with
-    // * {@link #nextExclusiveDoubleEquidistant()}, this method performs better on at least HotSpot JVMs.
+    // * <see cref="nextExclusiveDoubleEquidistant()"/>, this method performs better on at least HotSpot JVMs.
     // * @return a random uniform double between 0 and 1 (both exclusive)
     // */
     //public double nextExclusiveDouble()
@@ -2232,7 +2274,7 @@ namespace ShaiRandom
 
     // /**
     // * Gets a random float between 0.0 and 1.0, exclusive at both ends. This method is also more uniform than
-    // * {@link #NextFloat()} if you use the bit-patterns of the returned floats. This is a simplified version of
+    // * <see cref="NextFloat()"/> if you use the bit-patterns of the returned floats. This is a simplified version of
     // * <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>. This version can
     // * return float values between 2.7105054E-20 to 0.99999994, or 0x1.0p-65 to 0x1.fffffep-1 in hex notation.
     // * It cannot return 0 or 1. To compare, NextFloat() is less likely to produce a "1" bit for its
@@ -2241,12 +2283,12 @@ namespace ShaiRandom
     // * mantissa. As for this method, it has approximately the same likelihood of producing a "1" bit for any
     // * position in the mantissa.
     // * <br/>
-    // * The default implementation may have different performance characteristics than {@link #NextFloat()},
+    // * The default implementation may have different performance characteristics than <see cref="NextFloat()"/>,
     // * because this doesn't perform any floating-point multiplication or division, and instead assembles bits
-    // * obtained by one call to <see cref="NextLong()"/>. This uses {@link BitConversion#intBitsToFloat(int)} and
-    // * {@link Long#numberOfTrailingZeros(long)}, both of which typically have optimized intrinsics on HotSpot,
+    // * obtained by one call to <see cref="NextLong()"/>. This uses <see cref="BitConversion.intBitsToFloat(int)"/> and
+    // * <see cref="Long.numberOfTrailingZeros(long)"/>, both of which typically have optimized intrinsics on HotSpot,
     // * and this is branchless and loopless, unlike the original algorithm by Allen Downey. When compared with
-    // * {@link #nextExclusiveFloatEquidistant()}, this method performs better on at least HotSpot JVMs.
+    // * <see cref="nextExclusiveFloatEquidistant()"/>, this method performs better on at least HotSpot JVMs.
     // * @return a random uniform float between 0 and 1 (both exclusive)
     // */
     //public float nextExclusiveFloat()
