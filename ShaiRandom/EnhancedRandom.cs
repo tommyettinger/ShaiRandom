@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ShaiRandom
 {
+    /// <summary>
+    /// Specific implementations of bitwise rotations that .NET can optimize well in some cases.
+    /// </summary>
     public static class BitExtensions
     {
         /// <summary>
@@ -39,6 +42,14 @@ namespace ShaiRandom
     /// </summary>
     public interface IEnhancedRandom
     {
+        /// <summary>
+        /// Sets the seed of this random number generator using a single ulong seed.
+        /// </summary>
+        /// <remarks>
+        /// This does not necessarily assign the state variable(s) of the implementation with the exact contents of seed,
+        /// so <see cref="SelectState(int)"/> should not be expected to return seed after this, though it may.
+        /// </remarks>
+        /// <param name="seed">May be any ulong; if the seed would give an invalid state, the generator is expected to correct that state.</param>
         void Seed(ulong seed);
         /// <summary>
         /// Gets the number of possible state variables that can be selected with
@@ -206,26 +217,30 @@ namespace ShaiRandom
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed long value
         /// between 0 (inclusive) and the specified value (exclusive), drawn from
-        /// this random number generator's sequence.  The general contract of
+        /// this random number generator's sequence.
+        /// </summary>
+        /// <remarks>
+        /// The general contract of
         /// nextLong is that one long value in the specified range
         /// is pseudorandomly generated and returned.  All bound possible
         /// long values are produced with (approximately) equal
         /// probability, though there may be a small amount of bias depending on the
-        /// implementation and the bound.
+        /// implementation and the bound. To generate a ulong that is inclusive on <see cref="ulong.MaxValue"/>,
+        /// use <see cref="NextULong()"/>.
+        /// </remarks>
         /// <param name="bound">the upper bound (exclusive). If negative or 0, this always returns 0.</param>
-        /// <returns>the next pseudorandom, uniformly distributed long</returns>
+        /// <returns>the next pseudorandom, uniformly distributed long
         /// value between zero (inclusive) and bound (exclusive)
-        /// from this random number generator's sequence
+        /// from this random number generator's sequence</returns>
         ulong NextULong(ulong bound);
 
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed long value between an
         /// inner bound of 0 (inclusive) and the specified outerBound (exclusive).
-        /// This is meant for cases where the outer bound may be negative, especially if
-        /// the bound is unknown or may be user-specified. A negative outer bound is used
-        /// as the lower bound; a positive outer bound is used as the upper bound. An outer
-        /// bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
-        /// for outer bound 0).
+        /// </summary>
+        /// <remarks>
+        /// To generate a long that is inclusive on <see cref="long.MaxValue"/>,
+        /// use: <code>(NextLong() &amp; long.MaxValue)</code></remarks>
         /// <param name="outerBound">the outer exclusive bound; may be any long value, allowing negative</param>
         /// <returns>a pseudorandom long between 0 (inclusive) and outerBound (exclusive)</returns>
         long NextLong(long outerBound);
@@ -235,6 +250,7 @@ namespace ShaiRandom
         /// specified innerBound (inclusive) and the specified outerBound
         /// (exclusive). If outerBound is less than or equal to innerBound,
         /// this always returns innerBound.
+        /// </summary>
         /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
         /// <param name="outer">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
         /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
@@ -243,8 +259,9 @@ namespace ShaiRandom
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed long value between the
         /// specified innerBound (inclusive) and the specified outerBound
-        /// (exclusive). This is meant for cases where either bound may be negative,
-        /// especially if the bounds are unknown or may be user-specified.
+        /// (exclusive). If outerBound is less than or equal to innerBound,
+        /// this always returns innerBound.
+        /// </summary>
         /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
         /// <param name="outer">the exclusive outer bound; may be any long, allowing negative</param>
         /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
@@ -252,6 +269,8 @@ namespace ShaiRandom
 
         /// <summary>
         /// Generates the next pseudorandom number with a specific maximum size in bits (not a max number).
+        /// </summary>
+        /// <remarks>
         /// If you want to get a random number in a range, you should usually use {@link #nextInt(int)} instead.
         /// <br/>The general contract of next is that it returns an
         /// uint value and if the argument bits is between
@@ -262,28 +281,33 @@ namespace ShaiRandom
         /// <br/>
         /// Note that you can give this values for bits that are outside its expected range of 1 to 32,
         /// but the value used, as long as bits is positive, will effectively be {@code bits % 32}. As stated
-        /// before, a value of 0 for bits is the same as a value of 32.<br/>
+        /// before, a value of 0 for bits is the same as a value of 32.
+        /// </remarks>
         /// <param name="bits">the amount of random bits to request, from 1 to 32</param>
-        /// <returns>the next pseudorandom value from this random number</returns>
-        /// generator's sequence
+        /// <returns>the next pseudorandom value from this random number
+        /// generator's sequence</returns>
         uint NextBits(int bits);
 
         /// <summary>
         /// Generates random bytes and places them into a user-supplied
         /// byte array.  The number of random bytes produced is equal to
         /// the length of the byte array.
+        /// </summary>
         /// <param name="bytes">the byte array to fill with random bytes</param>
-        /// @throws NullPointerException if the byte array is null
         void NextBytes(byte[] bytes);
 
         /// <summary>
         /// Returns the next pseudorandom, uniformly distributed int
-        /// value from this random number generator's sequence. The general
+        /// value from this random number generator's sequence.
+        /// </summary>
+        /// <remarks>
+        /// The general
         /// contract of nextInt is that one int value is
         /// pseudorandomly generated and returned. All 2<sup>32</sup> possible
         /// int values are produced with (approximately) equal probability.
-        /// <returns>the next pseudorandom, uniformly distributed int</returns>
-        /// value from this random number generator's sequence
+        /// </remarks>
+        /// <returns>the next pseudorandom, uniformly distributed int
+        /// value from this random number generator's sequence</returns>
         int NextInt();
 
         /// <summary>
@@ -293,13 +317,15 @@ namespace ShaiRandom
         uint NextUInt();
 
         /// <summary>
-        /// Returns a pseudorandom, uniformly distributed int value
+        /// Returns a pseudorandom, uniformly distributed uint value
         /// between 0 (inclusive) and the specified value (exclusive), drawn from
-        /// this random number generator's sequence.  The general contract of
-        /// nextInt is that one int value in the specified range
-        /// is pseudorandomly generated and returned.  All bound possible
-        /// int values are produced with (approximately) equal
-        /// probability.
+        /// this random number generator's sequence.</summary>
+        /// <remarks>The general contract of
+        /// nextUInt is that one uint value in the specified range
+        /// is pseudorandomly generated and returned.  All possible uint
+        /// values less than bound are produced with (approximately) equal
+        /// probability. To generate a uint that is inclusive on <see cref="uint.MaxValue"/>,
+        /// use <see cref="NextUInt()"/>.
         /// <br/>
         /// It should be mentioned that the technique this uses has some bias, depending
         /// on bound, but it typically isn't measurable without specifically looking
@@ -309,20 +335,22 @@ namespace ShaiRandom
         /// an int within the bound without bias.
         /// See <a href="https://www.pcg-random.org/posts/bounded-rands.html">M.E. O'Neill's
         /// blog about random numbers</a> for discussion of alternative, unbiased methods.
-        /// <param name="bound">the upper bound (exclusive). If negative or 0, this always returns 0.</param>
-        /// <returns>the next pseudorandom, uniformly distributed int</returns>
+        /// </remarks>
+        /// <param name="bound">the upper bound (exclusive). If 0 or 1, this always returns 0.</param>
+        /// <returns>the next pseudorandom, uniformly distributed int
         /// value between zero (inclusive) and bound (exclusive)
-        /// from this random number generator's sequence
+        /// from this random number generator's sequence</returns>
         uint NextUInt(uint bound);
 
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed int value between an
         /// inner bound of 0 (inclusive) and the specified outerBound (exclusive).
-        /// This is meant for cases where the outer bound may be negative, especially if
-        /// the bound is unknown or may be user-specified. A negative outer bound is used
-        /// as the lower bound; a positive outer bound is used as the upper bound. An outer
-        /// bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
-        /// for outer bound 0).
+        /// </summary>
+        /// <remarks>
+        /// If outerBound is less than or equal to innerBound,
+        /// this always returns innerBound. To generate an int that is inclusive on <see cref="int.MaxValue"/>,
+        /// use <see cref="NextBits(int)"/> (giving it a parameter of 31 to generate any positive int).
+        /// </remarks>
         /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="outerBound">the outer exclusive bound; may be any int value, allowing negative</param>
         /// <returns>a pseudorandom int between 0 (inclusive) and outerBound (exclusive)</returns>
@@ -331,15 +359,12 @@ namespace ShaiRandom
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed int value between the
         /// specified innerBound (inclusive) and the specified outerBound
-        /// (exclusive). If outerBound is less than or equal to innerBound,
-        /// this always returns innerBound. This is significantly slower than
-        /// {@link #nextInt(int)} or {@link #nextSignedInt(int)},
-        /// because this handles even ranges that go from large negative numbers to large
-        /// positive numbers, and since that would be larger than the largest possible int,
-        /// this has to use {@link #nextLong(long)}.
-        /// <br/> For any case where outerBound might be valid but less than innerBound, you
-        /// can use {@link #nextSignedInt(int, int)}. If outerBound is less than innerBound
-        /// here, this simply returns innerBound.
+        /// (exclusive).
+        /// </summary>
+        /// <remarks>
+        /// If outerBound is less than or equal to innerBound,
+        /// this always returns innerBound. 
+        /// </remarks>
         /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
         /// <param name="outerBound">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
@@ -348,13 +373,11 @@ namespace ShaiRandom
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed int value between the
         /// specified innerBound (inclusive) and the specified outerBound
-        /// (exclusive). This is meant for cases where either bound may be negative,
-        /// especially if the bounds are unknown or may be user-specified. It is slightly
-        /// slower than {@link #nextInt(int, int)}, and significantly slower than
-        /// {@link #nextInt(int)} or {@link #nextSignedInt(int)}. This last part is
-        /// because this handles even ranges that go from large negative numbers to large
-        /// positive numbers, and since that range is larger than the largest possible int,
-        /// this has to use {@link #nextSignedLong(long)}.
+        /// (exclusive).</summary>
+        /// <remarks>
+        /// If outerBound is less than or equal to innerBound,
+        /// this always returns innerBound.
+        /// </remarks>
         /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
         /// <param name="outerBound">the exclusive outer bound; may be any int, allowing negative</param>
@@ -371,7 +394,7 @@ namespace ShaiRandom
         /// (approximately) equal probability.
         /// </summary>
         /// <remarks>
-        /// The default implementation is equivalent to a sign check on <see cref="NextLong()"/>,
+        /// A typical implementation is equivalent to a sign check on <see cref="NextLong()"/>,
         /// returning true if the generated long is negative. This is typically the safest
         /// way to implement this method; many types of generators have less statistical
         /// quality on their lowest bit, so just returning based on the lowest bit isn't
@@ -385,8 +408,9 @@ namespace ShaiRandom
         /// <summary>
         /// Returns the next pseudorandom, uniformly distributed float
         /// value between 0.0 (inclusive) and 1.0 (exclusive)
-        /// from this random number generator's sequence.
-        /// <br/>The general contract of NextFloat is that one
+        /// from this random number generator's sequence.</summary>
+        /// <remarks>
+        /// The general contract of NextFloat is that one
         /// float value, chosen (approximately) uniformly from the
         /// range 0.0f (inclusive) to 1.0f (exclusive), is
         /// pseudorandomly generated and returned. All 2<sup>24</sup> possible
@@ -398,16 +422,19 @@ namespace ShaiRandom
         /// ({@code 5.9604645E-8f} or {@code 0x1p-24f}). It tends to be fast if
         /// nextLong() is fast, but alternative implementations could use 24 bits of
         /// {@link #nextInt()} (or just {@link #next(int)}, giving it 24)
-        /// if that generator doesn't efficiently generate 64-bit longs.<br/>
-        /// <returns>the next pseudorandom, uniformly distributed float</returns>
+        /// if that generator doesn't efficiently generate 64-bit longs.</remarks>
+        /// <returns>the next pseudorandom, uniformly distributed float
         /// value between 0.0 and 1.0 from this
-        /// random number generator's sequence
+        /// random number generator's sequence</returns>
         float NextFloat();
 
         /// <summary>
         /// Gets a pseudo-random float between 0 (inclusive) and outerBound (exclusive).
         /// The outerBound may be positive or negative.
-        /// Exactly the same as {@code NextFloat() * outerBound}.
+        /// </summary>
+        /// <remarks>
+        /// Exactly the same as: <code>NextFloat() * outerBound</code>
+        /// </remarks>
         /// <param name="outerBound">the exclusive outer bound</param>
         /// <returns>a float between 0 (inclusive) and outerBound (exclusive)</returns>
         float NextFloat(float outerBound);
@@ -416,6 +443,7 @@ namespace ShaiRandom
         /// Gets a pseudo-random float between innerBound (inclusive) and outerBound (exclusive).
         /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
         /// inclusive and which is exclusive.
+        /// </summary>
         /// <param name="innerBound">the inclusive inner bound; may be negative</param>
         /// <param name="outerBound">the exclusive outer bound; may be negative</param>
         /// <returns>a float between innerBound (inclusive) and outerBound (exclusive)</returns>
@@ -856,7 +884,7 @@ namespace ShaiRandom
         /// This does not necessarily assign the state variable(s) of the implementation with the exact contents of seed,
         /// so <see cref="SelectState(int)"/> should not be expected to return seed after this, though it may.
         /// </remarks>
-        /// <param name="seed"></param>
+        /// <param name="seed">May be any ulong; if the seed would give an invalid state, the generator is expected to correct that state.</param>
         public abstract void Seed(ulong seed);
         /// <summary>
         /// Gets the number of possible state variables that can be selected with
