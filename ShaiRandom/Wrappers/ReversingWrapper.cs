@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ShaiRandom.Generators;
 
-namespace ShaiRandom
+namespace ShaiRandom.Wrappers
 {
 
     /// <summary>

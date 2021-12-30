@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ShaiRandom
+namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 1 state, more here later. This one supports <see cref="Skip(ulong)"/>.

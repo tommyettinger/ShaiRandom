@@ -23,7 +23,9 @@
  * SOFTWARE.
  */
 
-namespace ShaiRandom.Distributions
+using ShaiRandom.Generators;
+
+namespace ShaiRandom.Distributions.Discrete
 {
     using System;
     using ShaiRandom;

@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ShaiRandom
+namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 3 states, more here later. Implements the RomuTrio algorithm for fast ulongs.

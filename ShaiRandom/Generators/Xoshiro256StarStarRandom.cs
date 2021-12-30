@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ShaiRandom
+namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 4 states, implementing a known-rather-good algorithm, more here later.

@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using ShaiRandom.Generators;
+using ShaiRandom.Wrappers;
+using Xunit;
 namespace ShaiRandom.UnitTests
 {
     public class BasicTests

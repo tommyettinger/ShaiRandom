@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
+using ShaiRandom.Generators;
 using Troschuetz.Random.Generators;
 namespace ShaiRandom.PerformanceTests
 {

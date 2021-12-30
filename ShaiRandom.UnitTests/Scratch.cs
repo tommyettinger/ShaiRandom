@@ -1,4 +1,5 @@
 ﻿using System;
+using ShaiRandom.Generators;
 
 namespace ShaiRandom.UnitTests
 {
