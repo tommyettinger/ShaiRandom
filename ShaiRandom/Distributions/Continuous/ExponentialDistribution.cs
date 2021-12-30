@@ -1,19 +1,19 @@
 ﻿/*
  * MIT License
- * 
+ *
  * Copyright (c) 2006-2007 Stefan Troschuetz <stefan@troschuetz.de>
  * Copyright (c) 2012-2021 Alessio Parma <alessio.parma@gmail.com>
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -79,6 +79,7 @@ namespace ShaiRandom.Distributions
             }
         }
 
+        /// <inheritdoc />
         public IEnhancedRandom Generator { get; set; }
 
         #endregion Fields
@@ -182,64 +183,50 @@ namespace ShaiRandom.Distributions
 
         #region IContinuousDistribution Members
 
-        /// <summary>
-        ///   Gets the maximum possible value of distributed random numbers.
-        /// </summary>
+        /// <inheritdoc />
         public double Maximum => double.PositiveInfinity;
 
-        /// <summary>
-        ///   Gets the minimum possible value of distributed random numbers.
-        /// </summary>
+
+        /// <inheritdoc />
         public double Minimum => 0.0;
 
-        /// <summary>
-        ///   Gets the mean of distributed random numbers.
-        /// </summary>
-        /// <exception cref="NotSupportedException">
-        ///   Thrown if mean is not defined for given distribution with some parameters.
-        /// </exception>
+
+        /// <inheritdoc />
         public double Mean => _lambda;
 
-        /// <summary>
-        ///   Gets the median of distributed random numbers.
-        /// </summary>
-        /// <exception cref="NotSupportedException">
-        ///   Thrown if median is not defined for given distribution with some parameters.
-        /// </exception>
+
+        /// <inheritdoc />
         public double Median => Math.Log(2.0) * _lambda;
 
-        /// <summary>
-        ///   Gets the mode of distributed random numbers.
-        /// </summary>
-        /// <exception cref="NotSupportedException">
-        ///   Thrown if mode is not defined for given distribution with some parameters.
-        /// </exception>
+
+        /// <inheritdoc />
         public double[] Mode => new[] { 0.0 };
 
-        /// <summary>
-        ///   Gets the variance of distributed random numbers.
-        /// </summary>
-        /// <exception cref="NotSupportedException">
-        ///   Thrown if variance is not defined for given distribution with some parameters.
-        /// </exception>
+
+        /// <inheritdoc />
         public double Variance => Math.Pow(1.0 / _lambda, -2.0);
 
-        /// <summary>
-        ///   Returns a distributed floating point random number.
-        /// </summary>
-        /// <returns>A distributed double-precision floating point number.</returns>
+
+        /// <inheritdoc />
         public double NextDouble() => Sample(Generator, _lambda);
 
+        /// <inheritdoc />
         public int Steps => 1;
 
+        /// <inheritdoc />
         public int ParameterCount => 1;
 
+        /// <inheritdoc />
         public string ParameterName(int index) => index == 0 ? "Lambda" : "";
+
+        /// <inheritdoc />
         public double ParameterValue(int index)
         {
             if (index == 0) return ParameterLambda;
             throw new NotSupportedException($"The requested index does not exist in this ExponentialDistribution.");
         }
+
+        /// <inheritdoc />
         public void SetParameterValue(int index, double value)
         {
             if (index == 0)

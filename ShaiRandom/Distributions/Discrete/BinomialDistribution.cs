@@ -1,19 +1,19 @@
 ﻿/*
  * MIT License
- * 
+ *
  * Copyright (c) 2006-2007 Stefan Troschuetz <stefan@troschuetz.de>
  * Copyright (c) 2012-2021 Alessio Parma <alessio.parma@gmail.com>
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -78,7 +78,7 @@ namespace ShaiRandom.Distributions
         ///   <paramref name="value"/> is less than or equal to zero.
         /// </exception>
         /// <remarks>
-        ///   Calls <see cref="IsValidParam"/> to determine whether a value is valid and therefore assignable.
+        ///   Calls <see cref="IsValidAlpha"/> to determine whether a value is valid and therefore assignable.
         /// </remarks>
         public double ParameterAlpha
         {
@@ -98,7 +98,7 @@ namespace ShaiRandom.Distributions
         ///   <paramref name="value"/> is less than or equal to zero.
         /// </exception>
         /// <remarks>
-        ///   Calls <see cref="IsValidParam"/> to determine whether a value is valid and therefore assignable.
+        ///   Calls <see cref="IsValidBeta"/> to determine whether a value is valid and therefore assignable.
         /// </remarks>
         public int ParameterBeta
         {
@@ -110,6 +110,7 @@ namespace ShaiRandom.Distributions
             }
         }
 
+        /// <inheritdoc />
         public IEnhancedRandom Generator { get; set; }
 
         #endregion Fields
@@ -120,7 +121,7 @@ namespace ShaiRandom.Distributions
         ///   Initializes a new instance of the <see cref="BinomialDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> as underlying random number generator.
         /// </summary>
-        public BinomialDistribution() : this(new LaserRandom(), DefaultAlpha, DefaultBeta)
+        public BinomialDistribution() : this(new LaserRandom())
         {
         }
 
@@ -131,7 +132,7 @@ namespace ShaiRandom.Distributions
         /// <param name="seed">
         ///   An unsigned long used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
-        public BinomialDistribution(ulong seed) : this(new LaserRandom(seed), DefaultAlpha, DefaultBeta)
+        public BinomialDistribution(ulong seed) : this(new LaserRandom(seed))
         {
         }
 
@@ -146,17 +147,7 @@ namespace ShaiRandom.Distributions
         /// <param name="seedB">
         ///   An unsigned long used to calculate a starting value for the pseudo-random number sequence. Usually an odd number; the last bit isn't used.
         /// </param>
-        public BinomialDistribution(ulong seedA, ulong seedB) : this(new LaserRandom(seedA, seedB), DefaultAlpha, DefaultBeta)
-        {
-        }
-
-        /// <summary>
-        ///   Initializes a new instance of the <see cref="BinomialDistribution"/> class, using
-        ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
-        /// </summary>
-        /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
-        public BinomialDistribution(IEnhancedRandom generator) : this(generator, DefaultAlpha, DefaultBeta)
+        public BinomialDistribution(ulong seedA, ulong seedB) : this(new LaserRandom(seedA, seedB))
         {
         }
 
@@ -166,6 +157,9 @@ namespace ShaiRandom.Distributions
         /// </summary>
         /// <param name="alpha">
         ///   The parameter alpha which is used for generation of Binomial distributed random numbers.
+        /// </param>
+        /// <param name="beta">
+        ///   The parameter beta which is used for generation of Binomial distributed random numbers.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="alpha"/> is less than or equal to zero.
@@ -184,8 +178,11 @@ namespace ShaiRandom.Distributions
         /// <param name="alpha">
         ///   The parameter alpha which is used for generation of Binomial distributed random numbers.
         /// </param>
+        /// <param name="beta">
+        ///   The parameter beta which is used for generation of Binomial distributed random numbers.
+        /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="alpha"/> is less than or equal to zero.
+        ///   <paramref name="alpha"/> or <paramref name="beta"/> is less than or equal to zero.
         /// </exception>
         public BinomialDistribution(ulong seed, double alpha, int beta) : this(new LaserRandom(seed), alpha, beta)
         {
@@ -199,11 +196,14 @@ namespace ShaiRandom.Distributions
         /// <param name="alpha">
         ///   The parameter alpha which is used for generation of Binomial distributed random numbers.
         /// </param>
+        /// <param name="beta">
+        /// The parameter beta which is used for generation of Binomial distributed random numbers.
+        /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="alpha"/> is less than or equal to zero.
         /// </exception>
-        public BinomialDistribution(IEnhancedRandom generator, double alpha, int beta)
+        public BinomialDistribution(IEnhancedRandom generator, double alpha = DefaultAlpha, int beta = DefaultBeta)
         {
             Generator = generator;
             ParameterAlpha = alpha;
@@ -214,70 +214,48 @@ namespace ShaiRandom.Distributions
 
         #region IContinuousDistribution Members
 
-        /// <summary>
-        ///   Gets the maximum possible value of distributed random numbers.
-        /// </summary>
+        /// <inheritdoc />
         public double Maximum => _beta;
 
-        /// <summary>
-        ///   Gets the minimum possible value of distributed random numbers.
-        /// </summary>
+        /// <inheritdoc />
         public double Minimum => 0.0;
 
-        /// <summary>
-        ///   Gets the mean of distributed random numbers.
-        /// </summary>
-        /// <exception cref="NotSupportedException">
-        ///   Thrown if mean is not defined for given distribution with some parameters.
-        /// </exception>
+        /// <inheritdoc />
         public double Mean => _alpha * _beta;
 
-        /// <summary>
-        ///   Gets the median of distributed random numbers.
-        /// </summary>
-        /// <exception cref="NotSupportedException">
-        ///   Thrown if median is not defined for given distribution with some parameters.
-        /// </exception>
+        /// <inheritdoc />
         public double Median => throw new NotSupportedException("Median is not supported by BinomialDistribution.");
 
-        /// <summary>
-        ///   Gets the mode of distributed random numbers.
-        /// </summary>
-        /// <exception cref="NotSupportedException">
-        ///   Thrown if mode is not defined for given distribution with some parameters.
-        /// </exception>
+        /// <inheritdoc />
         public double[] Mode => new[] { Math.Floor(_alpha * (_beta + 1.0)) };
 
-        /// <summary>
-        ///   Gets the variance of distributed random numbers.
-        /// </summary>
-        /// <exception cref="NotSupportedException">
-        ///   Thrown if variance is not defined for given distribution with some parameters.
-        /// </exception>
+        /// <inheritdoc />
         public double Variance => _alpha * (1.0 - _alpha) * _beta;
 
-        /// <summary>
-        ///   Returns a distributed floating point random number.
-        /// </summary>
-        /// <returns>A distributed double-precision floating point number.</returns>
+        /// <inheritdoc />
         public double NextDouble() => Sample(Generator, _alpha, _beta);
-        /// <summary>
-        ///   Returns a distributed integer random number.
-        /// </summary>
-        /// <returns>A distributed integer number.</returns>
+
+        /// <inheritdoc />
         public int NextInt() => Sample(Generator, _alpha, _beta);
 
+        /// <inheritdoc />
         public int Steps => _beta;
 
+        /// <inheritdoc />
         public int ParameterCount => 2;
 
+        /// <inheritdoc />
         public string ParameterName(int index) => index == 0 ? "Alpha" : index == 1 ? "Beta" : "";
+
+        /// <inheritdoc />
         public double ParameterValue(int index)
         {
             if (index == 0) return ParameterAlpha;
             if (index == 1) return ParameterBeta;
             throw new NotSupportedException($"The requested index does not exist in this BinomialDistribution.");
         }
+
+        /// <inheritdoc />
         public void SetParameterValue(int index, double value)
         {
             if (index == 0)
