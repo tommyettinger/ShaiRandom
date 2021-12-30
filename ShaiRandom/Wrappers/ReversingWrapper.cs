@@ -40,29 +40,60 @@ namespace ShaiRandom
             Wrapped = wrapping;
         }
 
+        /// <summary>
+        /// The <see cref="IEnhancedRandom.StateCount"/> of the wrapped generator.
+        /// </summary>
         public override int StateCount => Wrapped.StateCount;
 
+        /// <summary>
+        /// The <see cref="IEnhancedRandom.SupportsReadAccess"/> value of the wrapped generator.
+        /// </summary>
         public override bool SupportsReadAccess => Wrapped.SupportsReadAccess;
 
+        /// <summary>
+        /// The <see cref="IEnhancedRandom.SupportsWriteAccess"/> value of the wrapped generator.
+        /// </summary>
         public override bool SupportsWriteAccess => Wrapped.SupportsWriteAccess;
 
+        /// <summary>
+        /// The <see cref="IEnhancedRandom.SupportsSkip"/> value of the wrapped generator.
+        /// </summary>
         public override bool SupportsSkip => Wrapped.SupportsSkip;
 
+        /// <summary>
+        /// The <see cref="IEnhancedRandom.SupportsPrevious"/> value of the wrapped generator.
+        /// </summary>
         public override bool SupportsPrevious => Wrapped.SupportsPrevious;
 
+        /// <inheritdoc />
         public override IEnhancedRandom Copy() => new ReversingWrapper(Wrapped.Copy());
+
+        /// <inheritdoc />
         public override ulong NextULong() => Wrapped.PreviousULong();
 
+        /// <inheritdoc />
         public override void Seed(ulong seed) => Wrapped.Seed(seed);
+
+        /// <inheritdoc />
         public override string StringSerialize() => "R" + Wrapped.StringSerialize().Substring(1);
+
+        /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(string data)
         {
             Wrapped.StringDeserialize(data);
             return this;
         }
+
+        /// <inheritdoc />
         public override ulong Skip(ulong distance) => Wrapped.Skip(0UL - distance);
+
+        /// <inheritdoc />
         public override ulong PreviousULong() => Wrapped.NextULong();
+
+        /// <inheritdoc />
         public override bool Equals(object? obj) => Equals(obj as ReversingWrapper);
+
+        /// <inheritdoc />
         public bool Equals(ReversingWrapper? other) => other != null && EqualityComparer<IEnhancedRandom>.Default.Equals(Wrapped, other.Wrapped);
 
         public static bool operator ==(ReversingWrapper? left, ReversingWrapper? right) => EqualityComparer<ReversingWrapper>.Default.Equals(left, right);
