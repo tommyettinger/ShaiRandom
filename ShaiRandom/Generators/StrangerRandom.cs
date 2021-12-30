@@ -19,24 +19,34 @@ namespace ShaiRandom.Generators
             RegisterTag(new StrangerRandom(1UL, 1UL, 1UL, 1UL));
         }
         private ulong _a, _b;
-        /**
-         * The first state; can be any long except 0.
-         */
+        /// <summary>
+        /// The first state; can be any long except 0.
+        /// </summary>
         public ulong StateA { get => _a; set => _a = value == 0UL ? 0xD3833E804F4C574BUL : value; }
-        /**
-         * The second state; can be any long except 0.
-         */
+        /// <summary>
+        /// The second state; can be any long except 0.
+        /// </summary>
         public ulong StateB { get => _b; set => _b = value == 0UL ? 0x790B300BF9FE738FUL : value; }
-        /**
-         * The third state; can be any long. If this has just been set to some value, then the next call to
-         * {@link #nextLong()} will return that value as-is. Later calls will be more random.
-         */
+
+        /// <summary>
+        /// The third state; can be any long. If this has just been set to some value, then the next call to
+        /// <see cref="NextULong()"/> will return that value as-is. Later calls will be more random.
+        /// </summary>
         public ulong StateC { get; set; }
-        /**
-         * The fourth state; can be any long.
-         */
+        /// <summary>
+        /// The fourth state; can be any long.
+        /// </summary>
         public ulong StateD { get; set; }
 
+        /// <summary>
+        /// Used to get a value for stateB that is very distant from the given state in a xorshift generator sequence.
+        /// </summary>
+        /// <remarks>
+        /// This produces a state that is equivalent to stepping backwards 7046029254386353131 steps from state in the xorshift generator
+        /// sequence this uses for states A and B.
+        /// </remarks>
+        /// <param name="state">Must be non-zero, but can otherwise be any ulong.</param>
+        /// <returns>Another state that will be very distant in a xorshift generator sequence, suitable as a "StateB" when state is "StateA."</returns>
         public static ulong Jump(ulong state)
         {
             unchecked

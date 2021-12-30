@@ -273,7 +273,7 @@ namespace ShaiRandom
         /// Generates the next pseudorandom number with a specific maximum size in bits (not a max number).
         /// </summary>
         /// <remarks>
-        /// If you want to get a random number in a range, you should usually use <see cref="nextInt(int)"/> instead.
+        /// If you want to get a random number in a range, you should usually use <see cref="NextInt(int)"/> instead.
         /// <br/>The general contract of next is that it returns an
         /// uint value and if the argument bits is between
         /// 1 and 32 (inclusive), then that many low-order
@@ -416,7 +416,7 @@ namespace ShaiRandom
         /// float value, chosen (approximately) uniformly from the
         /// range 0.0f (inclusive) to 1.0f (exclusive), is
         /// pseudorandomly generated and returned. All 2<sup>24</sup> possible
-        /// float values of the form <i>m&nbsp;x&nbsp;</i>2<sup>-24</sup>,
+        /// float values of the form <i>m x </i>2<sup>-24</sup>,
         /// where <i>m</i> is a positive integer less than 2<sup>24</sup>, are
         /// produced with (approximately) equal probability.
         /// <br/>The public implementation uses the upper 24 bits of <see cref="NextULong()"/>,
@@ -461,8 +461,8 @@ namespace ShaiRandom
         /// double value, chosen (approximately) uniformly from the
         /// range 0.0 (inclusive) to 1.0 (exclusive), is
         /// pseudorandomly generated and returned.
-        /// <br/>The default implementation uses the upper 53 bits of <see cref="NextLong()"/>,
-        /// with an unsigned right shift and a multiply by a very small double
+        /// <br/>The default implementation uses the upper 53 bits of <see cref="NextULong()"/>,
+        /// with a right shift and a multiply by a very small double
         /// (1.1102230246251565E-16). It should perform well
         /// if nextLong() performs well, and is expected to perform less well if the
         /// generator naturally produces 32 or fewer bits at a time.\
@@ -531,7 +531,7 @@ namespace ShaiRandom
         /// </summary>
         /// <remarks>
         /// It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
-        /// has been tested by generating 268435456 (or 0x10000000) random ints with <see cref="nextInt(int)"/>, and just before the end of that
+        /// has been tested by generating 268435456 (or 0x10000000) random ints with <see cref="NextInt(int)"/>, and just before the end of that
         /// it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
         /// likely to accomplish that in the same time, or at all, depending on the generator.
         /// </remarks>
@@ -609,16 +609,22 @@ namespace ShaiRandom
 
         /// <summary>
         /// Just like <see cref="NextFloat(float)"/>, but this is exclusive on both 0.0 and outerBound.
-        /// Like <see cref="nextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
+        /// </summary>
+        /// <remarks>
+        /// Like <see cref="NextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
         /// it may also be better able to produce very small floats when outerBound is large.
+        /// </remarks>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <returns>a float between 0.0, exclusive, and outerBound, exclusive</returns>
         float NextExclusiveFloat(float outerBound);
 
         /// <summary>
         /// Just like <see cref="NextFloat(float, float)"/>, but this is exclusive on both innerBound and outerBound.
-        /// Like <see cref="nextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
+        /// </summary>
+        /// <remarks>
+        /// Like <see cref="NextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
         /// it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
+        /// </remarks>
         /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <returns>a float between innerBound, exclusive, and outerBound, exclusive</returns>
@@ -653,12 +659,14 @@ namespace ShaiRandom
 
         /// <summary>
         /// Returns true if a random value between 0 and 1 is less than the specified value.
+        /// </summary>
         /// <param name="chance">a float between 0.0 and 1.0; higher values are more likely to result in true</param>
         /// <returns>a bool selected with the given chance of being true</returns>
         bool NextBool(float chance);
 
         /// <summary>
         /// Returns -1 or 1, randomly.
+        /// </summary>
         /// <returns>-1 or 1, selected with approximately equal likelihood</returns>
         int NextSign();
 
@@ -745,7 +753,7 @@ namespace ShaiRandom
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
         long MaxLongOf(long innerBound, long outerBound, int trials);
         /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextUInt(int, int)"/> using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextUInt(uint, uint)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// </summary>
@@ -756,7 +764,7 @@ namespace ShaiRandom
         uint MinUIntOf(uint innerBound, uint outerBound, int trials);
 
         /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextUInt(int, int)"/> using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextUInt(uint, uint)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// </summary>
@@ -767,7 +775,7 @@ namespace ShaiRandom
         uint MaxUIntOf(uint innerBound, uint outerBound, int trials);
 
         /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextULong(long, long)"/> using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="NextULong(ulong, ulong)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// </summary>
@@ -778,7 +786,7 @@ namespace ShaiRandom
         ulong MinULongOf(ulong innerBound, ulong outerBound, int trials);
 
         /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextULong(long, long)"/> using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="NextULong(ulong, ulong)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// </summary>
@@ -803,6 +811,7 @@ namespace ShaiRandom
         /// Returns the maximum result of trials calls to <see cref="NextDouble(double, double)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
+        /// </summary>
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
@@ -1202,53 +1211,20 @@ namespace ShaiRandom
             return (uint)(bound * (NextULong() & 0xFFFFFFFFUL) >> 32);
         }
 
-        /// <summary>
-        /// Returns a pseudorandom, uniformly distributed int value between an
-        /// inner bound of 0 (inclusive) and the specified outerBound (exclusive).
-        /// This is meant for cases where the outer bound may be negative, especially if
-        /// the bound is unknown or may be user-specified. A negative outer bound is used
-        /// as the lower bound; a positive outer bound is used as the upper bound. An outer
-        /// bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
-        /// for outer bound 0).
-        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
-        /// <param name="outerBound">the outer exclusive bound; may be any int value, allowing negative</param>
-        /// <returns>a pseudorandom int between 0 (inclusive) and outerBound (exclusive)</returns>
+        /// <inheritdoc />
         public int NextInt(int outerBound)
         {
             outerBound = (int)(outerBound * ((long)NextULong() & 0xFFFFFFFFL) >> 32);
             return outerBound + (outerBound >> 31);
         }
 
-        /// <summary>
-        /// Returns a pseudorandom, uniformly distributed int value between the
-        /// specified innerBound (inclusive) and the specified outerBound
-        /// (exclusive). If outerBound is less than or equal to innerBound,
-        /// this always returns innerBound. This is significantly slower than
-        /// <see cref="nextInt(int)"/> or <see cref="nextSignedInt(int)"/>,
-        /// because this handles even ranges that go from large negative numbers to large
-        /// positive numbers, and since that would be larger than the largest possible int,
-        /// this has to use <see cref="nextLong(long)"/>.
-        /// <br/> For any case where outerBound might be valid but less than innerBound, you
-        /// can use <see cref="nextSignedInt(int, int)"/>. If outerBound is less than innerBound
-        /// here, this simply returns innerBound.
-        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
-        /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
-        /// <param name="outerBound">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
-        /// <returns>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</returns>
+        /// <inheritdoc />
         public uint NextUInt(uint innerBound, uint outerBound)
         {
             return (uint)NextULong(innerBound, outerBound);
         }
 
-        /// <summary>
-        /// Returns a pseudorandom, uniformly distributed int value between the
-        /// specified innerBound (inclusive) and the specified outerBound
-        /// (exclusive). This is meant for cases where either bound may be negative,
-        /// especially if the bounds are unknown or may be user-specified.
-        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
-        /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
-        /// <param name="outerBound">the exclusive outer bound; may be any int, allowing negative</param>
-        /// <returns>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</returns>
+        /// <inheritdoc />
         public int NextInt(int innerBound, int outerBound)
         {
             return (int)NextLong(innerBound, outerBound);
@@ -1405,7 +1381,9 @@ namespace ShaiRandom
 
         /// <summary>
         /// A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
-        /// inputs correspond to high outputs, and similarly for the low range. This is centered on 0.0 and its standard
+        /// inputs correspond to high outputs, and similarly for the low range.
+        /// </summary>
+        /// <remarks>This is centered on 0.0 and its standard
         /// deviation seems to be 1.0 (the same as {@link java.util.Random#nextGaussian()}). If this is given an input of 0.0
         /// or less, it returns -38.5, which is slightly less than the result when given <see cref="double.MinValue"/>. If it is
         /// given an input of 1.0 or more, it returns 38.5, which is significantly larger than the result when given the
@@ -1431,6 +1409,7 @@ namespace ShaiRandom
         /// Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
         /// as the input, such as those produced by a van der Corput, Halton, Sobol or R2 sequence). Most methods of generating
         /// Gaussian values (e.g. Box-Muller and Marsaglia polar) do not have any way to preserve a particular pattern.
+        /// </remarks>
         /// <param name="d">should be between 0 and 1, exclusive, but other values are tolerated</param>
         /// <returns>a normal-distributed double centered on 0.0; all results will be between -38.5 and 38.5, both inclusive</returns>
         public static double Probit(double d)
@@ -1574,12 +1553,7 @@ namespace ShaiRandom
             return NextTriangular(min, max, (min + max) * 0.5f);
         }
 
-        /// <summary>
-        /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where values
-        /// around mode are more likely. Advances the state once.
-        /// <param name="min"> the lower limit</param>
-        /// <param name="max"> the upper limit</param>
-        /// <param name="mode">the point around which the values are more likely</param>
+        /// <inheritdoc />
         public float NextTriangular(float min, float max, float mode)
         {
             float u = NextFloat();
@@ -1736,6 +1710,7 @@ namespace ShaiRandom
         /// <summary>
         /// Shuffles the given array in-place pseudo-randomly, using this to generate
         /// {@code items.Length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// </summary>
         /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
         public void Shuffle<T>(T[] items)
         {
@@ -1745,6 +1720,7 @@ namespace ShaiRandom
         /// <summary>
         /// Shuffles the given IList in-place pseudo-randomly, using this to generate
         /// {@code items.Count - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// </summary>
         /// <param name="items">an IList; must be non-null but may contain null items</param>
         public void Shuffle<T>(IList<T> items)
         {
@@ -1754,6 +1730,7 @@ namespace ShaiRandom
         /// <summary>
         /// Shuffles a section of the given array in-place pseudo-randomly, using this to generate
         /// {@code length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// </summary>
         /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
         /// <param name="offset">the index of the first element of the array that can be shuffled</param>
         /// <param name="length">the length of the section to shuffle</param>
@@ -1771,6 +1748,7 @@ namespace ShaiRandom
         /// <summary>
         /// Shuffles a section of the given IList in-place pseudo-randomly, using this to generate
         /// {@code length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// </summary>
         /// <param name="items">an IList; must be non-null but may contain null items</param>
         /// <param name="offset">the index of the first element of the IList that can be shuffled</param>
         /// <param name="length">the length of the section to shuffle</param>
@@ -1786,63 +1764,4 @@ namespace ShaiRandom
         }
 
     }
-
-    // /**
-    // * Gets a random double between 0.0 and 1.0, exclusive at both ends; this method is also more uniform than
-    // * <see cref="NextDouble()"/> if you use the bit-patterns of the returned doubles. This is a simplified version of
-    // * <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>. This can return double
-    // * values between 2.710505431213761E-20 and 0.9999999999999999, or 0x1.0p-65 and 0x1.fffffffffffffp-1 in hex
-    // * notation. It cannot return 0 or 1. Most cases can instead use <see cref="nextExclusiveDoubleEquidistant()"/>, which is
-    // * implemented more traditionally but may have different performance. This method can also return doubles that
-    // * are extremely close to 0, but can't return doubles that are as close to 1, due to limits of doubles.
-    // * However, nextExclusiveDoubleEquidistant() can return only a minimum value that is as distant from 0 as its maximum
-    // * value is distant from 1.
-    // * <br/>
-    // * To compare, NextDouble() and nextExclusiveDoubleEquidistant() are less likely to produce a "1" bit for their
-    // * lowest 5 bits of mantissa/significand (the least significant bits numerically, but potentially important
-    // * for some uses), with the least significant bit produced half as often as the most significant bit in the
-    // * mantissa. As for this method, it has approximately the same likelihood of producing a "1" bit for any
-    // * position in the mantissa.
-    // * <br/>
-    // * The default implementation may have different performance characteristics than <see cref="NextDouble()"/>,
-    // * because this doesn't perform any floating-point multiplication or division, and instead assembles bits
-    // * obtained by one call to <see cref="NextLong()"/>. This uses <see cref="BitConversion.longBitsToDouble(long)"/> and
-    // * <see cref="Long.numberOfTrailingZeros(long)"/>, both of which typically have optimized intrinsics on HotSpot,
-    // * and this is branchless and loopless, unlike the original algorithm by Allen Downey. When compared with
-    // * <see cref="nextExclusiveDoubleEquidistant()"/>, this method performs better on at least HotSpot JVMs.
-    // * @return a random uniform double between 0 and 1 (both exclusive)
-    // */
-    //public double nextExclusiveDouble()
-    //       {
-    //           long bits = NextLong();
-    //           return BitConverter.Int64BitsToDouble(1022L - Long.numberOfTrailingZeros(bits) << 52
-    //               | bits >>> 12);
-    //       }
-
-    // /**
-    // * Gets a random float between 0.0 and 1.0, exclusive at both ends. This method is also more uniform than
-    // * <see cref="NextFloat()"/> if you use the bit-patterns of the returned floats. This is a simplified version of
-    // * <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>. This version can
-    // * return float values between 2.7105054E-20 to 0.99999994, or 0x1.0p-65 to 0x1.fffffep-1 in hex notation.
-    // * It cannot return 0 or 1. To compare, NextFloat() is less likely to produce a "1" bit for its
-    // * lowest 5 bits of mantissa/significand (the least significant bits numerically, but potentially important
-    // * for some uses), with the least significant bit produced half as often as the most significant bit in the
-    // * mantissa. As for this method, it has approximately the same likelihood of producing a "1" bit for any
-    // * position in the mantissa.
-    // * <br/>
-    // * The default implementation may have different performance characteristics than <see cref="NextFloat()"/>,
-    // * because this doesn't perform any floating-point multiplication or division, and instead assembles bits
-    // * obtained by one call to <see cref="NextLong()"/>. This uses <see cref="BitConversion.intBitsToFloat(int)"/> and
-    // * <see cref="Long.numberOfTrailingZeros(long)"/>, both of which typically have optimized intrinsics on HotSpot,
-    // * and this is branchless and loopless, unlike the original algorithm by Allen Downey. When compared with
-    // * <see cref="nextExclusiveFloatEquidistant()"/>, this method performs better on at least HotSpot JVMs.
-    // * @return a random uniform float between 0 and 1 (both exclusive)
-    // */
-    //public float nextExclusiveFloat()
-    //       {
-    //           final long bits = nextLong();
-    //           return BitConversion.intBitsToFloat(126 - Long.numberOfTrailingZeros(bits) << 23
-    //               | (int)(bits >>> 41));
-    //       }
-
 }
