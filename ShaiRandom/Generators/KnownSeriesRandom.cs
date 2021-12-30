@@ -16,22 +16,22 @@ namespace ShaiRandom.Generators
     /// </remarks>
     public class KnownSeriesRandom : AbstractRandom, IEquatable<KnownSeriesRandom?>
     {
-        private int boolIndex;
-        private List<bool> boolSeries;
-        private int byteIndex;
-        private List<byte> byteSeries;
-        private int doubleIndex;
-        private List<double> doubleSeries;
-        private int floatIndex;
-        private List<float> floatSeries;
-        private int intIndex;
-        private List<int> intSeries;
-        private int uintIndex;
-        private List<uint> uintSeries;
-        private int longIndex;
-        private List<long> longSeries;
-        private int ulongIndex;
-        private List<ulong> ulongSeries;
+        private int _boolIndex;
+        private readonly List<bool> _boolSeries;
+        private int _byteIndex;
+        private readonly List<byte> _byteSeries;
+        private int _doubleIndex;
+        private readonly List<double> _doubleSeries;
+        private int _floatIndex;
+        private readonly List<float> _floatSeries;
+        private int _intIndex;
+        private readonly List<int> _intSeries;
+        private int _uintIndex;
+        private readonly List<uint> _uintSeries;
+        private int _longIndex;
+        private readonly List<long> _longSeries;
+        private int _ulongIndex;
+        private readonly List<ulong> _ulongSeries;
 
         public KnownSeriesRandom() : this(0UL)
         {
@@ -42,16 +42,16 @@ namespace ShaiRandom.Generators
             Seed(seed);
         }
 
-        public KnownSeriesRandom(KnownSeriesRandom other) : this(other.intSeries, other.uintSeries, other.doubleSeries, other.boolSeries, other.byteSeries, other.floatSeries, other.longSeries, other.ulongSeries)
+        public KnownSeriesRandom(KnownSeriesRandom other) : this(other._intSeries, other._uintSeries, other._doubleSeries, other._boolSeries, other._byteSeries, other._floatSeries, other._longSeries, other._ulongSeries)
         {
-            intIndex = other.intIndex;
-            uintIndex = other.uintIndex;
-            doubleIndex = other.doubleIndex;
-            boolIndex = other.boolIndex;
-            byteIndex = other.byteIndex;
-            floatIndex = other.floatIndex;
-            longIndex = other.longIndex;
-            ulongIndex = other.ulongIndex;
+            _intIndex = other._intIndex;
+            _uintIndex = other._uintIndex;
+            _doubleIndex = other._doubleIndex;
+            _boolIndex = other._boolIndex;
+            _byteIndex = other._byteIndex;
+            _floatIndex = other._floatIndex;
+            _longIndex = other._longIndex;
+            _ulongIndex = other._ulongIndex;
         }
 
         /// <summary>
@@ -64,61 +64,79 @@ namespace ShaiRandom.Generators
             IEnumerable<float>? floatSeries = null, IEnumerable<long>? longSeries = null, IEnumerable<ulong>? ulongSeries = null) : base(0UL)
         {
             if (intSeries == null)
-                this.intSeries = new List<int>();
+                _intSeries = new List<int>();
             else
-                this.intSeries = intSeries.ToList();
+                _intSeries = intSeries.ToList();
 
             if (uintSeries == null)
-                this.uintSeries = new List<uint>();
+                _uintSeries = new List<uint>();
             else
-                this.uintSeries = uintSeries.ToList();
+                _uintSeries = uintSeries.ToList();
 
             if (longSeries == null)
-                this.longSeries = new List<long>();
+                _longSeries = new List<long>();
             else
-                this.longSeries = longSeries.ToList();
+                _longSeries = longSeries.ToList();
 
             if (ulongSeries == null)
-                this.ulongSeries = new List<ulong>();
+                _ulongSeries = new List<ulong>();
             else
-                this.ulongSeries = ulongSeries.ToList();
+                _ulongSeries = ulongSeries.ToList();
 
             if (doubleSeries == null)
-                this.doubleSeries = new List<double>();
+                _doubleSeries = new List<double>();
             else
-                this.doubleSeries = doubleSeries.ToList();
+                _doubleSeries = doubleSeries.ToList();
 
             if (floatSeries == null)
-                this.floatSeries = new List<float>();
+                _floatSeries = new List<float>();
             else
-                this.floatSeries = floatSeries.ToList();
+                _floatSeries = floatSeries.ToList();
 
             if (boolSeries == null)
-                this.boolSeries = new List<bool>();
+                _boolSeries = new List<bool>();
             else
-                this.boolSeries = boolSeries.ToList();
+                _boolSeries = boolSeries.ToList();
 
             if (byteSeries == null)
-                this.byteSeries = new List<byte>();
+                _byteSeries = new List<byte>();
             else
-                this.byteSeries = byteSeries.ToList();
+                _byteSeries = byteSeries.ToList();
         }
 
+        /// <summary>
+        /// This generator has 8 states; one for each type of IEnumerable taken in the constructor.
+        /// </summary>
         public override int StateCount => 8;
 
+        /// <summary>
+        /// This supports <see cref="SelectState(int)"/>.
+        /// </summary>
         public override bool SupportsReadAccess => true;
 
+        /// <summary>
+        /// This supports <see cref="SetSelectedState(int, ulong)"/>.
+        /// </summary>
         public override bool SupportsWriteAccess => true;
 
+        /// <summary>
+        /// This does NOT support <see cref="IEnhancedRandom.Skip(ulong)"/>.
+        /// </summary>
         public override bool SupportsSkip => false;
 
+        /// <summary>
+        /// This does NOT support <see cref="PreviousULong()"/>.
+        /// </summary>
         public override bool SupportsPrevious => false;
 
+        /// <summary>
+        /// Generator is not serializable, and thus has no tag.
+        /// </summary>
         public override string Tag => "";
 
-        private static T returnIfRange<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
+        private static T ReturnIfRange<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
         {
-            T value = returnValueFrom(series, ref seriesIndex);
+            T value = ReturnValueFrom(series, ref seriesIndex);
 
             if (minValue.CompareTo(value) < 0)
                 throw new ArgumentException("Value returned is less than minimum value.");
@@ -129,9 +147,9 @@ namespace ShaiRandom.Generators
             return value;
         }
 
-        private static T returnIfRangeBothExclusive<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
+        private static T ReturnIfRangeBothExclusive<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
         {
-            T value = returnValueFrom(series, ref seriesIndex);
+            T value = ReturnValueFrom(series, ref seriesIndex);
 
             if (minValue.CompareTo(value) <= 0)
                 throw new ArgumentException("Value returned is less than/equal to minimum value.");
@@ -142,9 +160,9 @@ namespace ShaiRandom.Generators
             return value;
         }
 
-        private static T returnIfRangeInclusive<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
+        private static T ReturnIfRangeInclusive<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
         {
-            T value = returnValueFrom(series, ref seriesIndex);
+            T value = ReturnValueFrom(series, ref seriesIndex);
 
             if (minValue.CompareTo(value) < 0)
                 throw new ArgumentException("Value returned is less than minimum value.");
@@ -155,7 +173,7 @@ namespace ShaiRandom.Generators
             return value;
         }
 
-        private static T returnValueFrom<T>(List<T> series, ref int seriesIndex)
+        private static T ReturnValueFrom<T>(IReadOnlyList<T> series, ref int seriesIndex)
         {
             if (series.Count == 0)
                 throw new NotSupportedException("Tried to get value of type " + typeof(T).Name + ", but the KnownSeriesGenerator was not given any values of that type.");
@@ -174,7 +192,7 @@ namespace ShaiRandom.Generators
         /// <remarks>
         /// A modified modulo operator. Returns the result of  the formula
         /// (<paramref name="num"/> % <paramref name="wrapTo"/> + <paramref name="wrapTo"/>) % <paramref name="wrapTo"/>.
-        /// 
+        ///
         /// Practically it differs from regular modulo in that the values it returns when negative values for <paramref name="num"/>
         /// are wrapped around like one would want an array index to (if wrapTo is list.length, -1 wraps to list.length - 1). For example,
         /// 0 % 3 = 0, -1 % 3 = -1, -2 % 3 = -2, -3 % 3 = 0, and so forth, but WrapTo(0, 3) = 0,
@@ -195,14 +213,23 @@ namespace ShaiRandom.Generators
         /// wrapTo - 1], inclusive.
         /// </returns>
         private static int WrapAround(int num, int wrapTo) => (num % wrapTo + wrapTo) % wrapTo;
+
+        /// <inheritdoc />
         public override IEnhancedRandom Copy() => new KnownSeriesRandom(this);
-        public override bool Equals(object? obj) => obj is KnownSeriesRandom random && StateCount == random.StateCount && boolIndex == random.boolIndex && EqualityComparer<List<bool>>.Default.Equals(boolSeries, random.boolSeries) && byteIndex == random.byteIndex && EqualityComparer<List<byte>>.Default.Equals(byteSeries, random.byteSeries) && doubleIndex == random.doubleIndex && EqualityComparer<List<double>>.Default.Equals(doubleSeries, random.doubleSeries) && floatIndex == random.floatIndex && EqualityComparer<List<float>>.Default.Equals(floatSeries, random.floatSeries) && intIndex == random.intIndex && EqualityComparer<List<int>>.Default.Equals(intSeries, random.intSeries) && uintIndex == random.uintIndex && EqualityComparer<List<uint>>.Default.Equals(uintSeries, random.uintSeries) && longIndex == random.longIndex && EqualityComparer<List<long>>.Default.Equals(longSeries, random.longSeries) && ulongIndex == random.ulongIndex && EqualityComparer<List<ulong>>.Default.Equals(ulongSeries, random.ulongSeries);
-        public bool Equals(KnownSeriesRandom? random) => random != null && StateCount == random.StateCount && boolIndex == random.boolIndex && EqualityComparer<List<bool>>.Default.Equals(boolSeries, random.boolSeries) && byteIndex == random.byteIndex && EqualityComparer<List<byte>>.Default.Equals(byteSeries, random.byteSeries) && doubleIndex == random.doubleIndex && EqualityComparer<List<double>>.Default.Equals(doubleSeries, random.doubleSeries) && floatIndex == random.floatIndex && EqualityComparer<List<float>>.Default.Equals(floatSeries, random.floatSeries) && intIndex == random.intIndex && EqualityComparer<List<int>>.Default.Equals(intSeries, random.intSeries) && uintIndex == random.uintIndex && EqualityComparer<List<uint>>.Default.Equals(uintSeries, random.uintSeries) && longIndex == random.longIndex && EqualityComparer<List<long>>.Default.Equals(longSeries, random.longSeries) && ulongIndex == random.ulongIndex && EqualityComparer<List<ulong>>.Default.Equals(ulongSeries, random.ulongSeries);
-        public override bool NextBool() => returnValueFrom(boolSeries, ref boolIndex);
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj) => obj is KnownSeriesRandom random && StateCount == random.StateCount && _boolIndex == random._boolIndex && EqualityComparer<List<bool>>.Default.Equals(_boolSeries, random._boolSeries) && _byteIndex == random._byteIndex && EqualityComparer<List<byte>>.Default.Equals(_byteSeries, random._byteSeries) && _doubleIndex == random._doubleIndex && EqualityComparer<List<double>>.Default.Equals(_doubleSeries, random._doubleSeries) && _floatIndex == random._floatIndex && EqualityComparer<List<float>>.Default.Equals(_floatSeries, random._floatSeries) && _intIndex == random._intIndex && EqualityComparer<List<int>>.Default.Equals(_intSeries, random._intSeries) && _uintIndex == random._uintIndex && EqualityComparer<List<uint>>.Default.Equals(_uintSeries, random._uintSeries) && _longIndex == random._longIndex && EqualityComparer<List<long>>.Default.Equals(_longSeries, random._longSeries) && _ulongIndex == random._ulongIndex && EqualityComparer<List<ulong>>.Default.Equals(_ulongSeries, random._ulongSeries);
+
+        /// <inheritdoc />
+        public bool Equals(KnownSeriesRandom? random) => random != null && StateCount == random.StateCount && _boolIndex == random._boolIndex && EqualityComparer<List<bool>>.Default.Equals(_boolSeries, random._boolSeries) && _byteIndex == random._byteIndex && EqualityComparer<List<byte>>.Default.Equals(_byteSeries, random._byteSeries) && _doubleIndex == random._doubleIndex && EqualityComparer<List<double>>.Default.Equals(_doubleSeries, random._doubleSeries) && _floatIndex == random._floatIndex && EqualityComparer<List<float>>.Default.Equals(_floatSeries, random._floatSeries) && _intIndex == random._intIndex && EqualityComparer<List<int>>.Default.Equals(_intSeries, random._intSeries) && _uintIndex == random._uintIndex && EqualityComparer<List<uint>>.Default.Equals(_uintSeries, random._uintSeries) && _longIndex == random._longIndex && EqualityComparer<List<long>>.Default.Equals(_longSeries, random._longSeries) && _ulongIndex == random._ulongIndex && EqualityComparer<List<ulong>>.Default.Equals(_ulongSeries, random._ulongSeries);
+
+        public override bool NextBool() => ReturnValueFrom(_boolSeries, ref _boolIndex);
+
         public new bool NextBool(float chance) => NextBool();
 
-        public new int NextInt() => returnValueFrom(intSeries, ref intIndex);
+        public new int NextInt() => ReturnValueFrom(_intSeries, ref _intIndex);
         public new int NextInt(int outerBound) => NextInt(0, outerBound);
+
         /// <summary>
         /// Returns the next integer in the underlying series. If the value is less than
         /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
@@ -210,8 +237,8 @@ namespace ShaiRandom.Generators
         /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
         /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
         /// <returns>The next integer in the underlying series.</returns>
-        public new int NextInt(int minValue, int maxValue) => returnIfRange(minValue, maxValue, intSeries, ref intIndex);
-        public new uint NextUInt() => returnValueFrom(uintSeries, ref uintIndex);
+        public new int NextInt(int minValue, int maxValue) => ReturnIfRange(minValue, maxValue, _intSeries, ref _intIndex);
+        public new uint NextUInt() => ReturnValueFrom(_uintSeries, ref _uintIndex);
         public new uint NextUInt(uint outerBound) => NextUInt(0, outerBound);
         public new uint NextBits(int bits) => (bits & 31) == 0 ? NextUInt() : NextUInt(0, 1U << bits);
 
@@ -222,25 +249,26 @@ namespace ShaiRandom.Generators
         /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
         /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
         /// <returns>The next unsigned integer in the underlying series.</returns>
-        public new uint NextUInt(uint minValue, uint maxValue) => returnIfRange(minValue, maxValue, uintSeries, ref uintIndex);
-        public override double NextDouble() => returnValueFrom(doubleSeries, ref doubleIndex);
+        public new uint NextUInt(uint minValue, uint maxValue) => ReturnIfRange(minValue, maxValue, _uintSeries, ref _uintIndex);
+
+        public override double NextDouble() => ReturnValueFrom(_doubleSeries, ref _doubleIndex);
         public new double NextDouble(double outerBound) => NextDouble(0.0, outerBound);
-        public new double NextDouble(double minBound, double maxBound) => returnIfRange(minBound, maxBound, doubleSeries, ref doubleIndex);
+        public new double NextDouble(double minBound, double maxBound) => ReturnIfRange(minBound, maxBound, _doubleSeries, ref _doubleIndex);
         public new double NextInclusiveDouble() => NextInclusiveDouble(0f, 1f);
         public new double NextInclusiveDouble(double outerBound) => NextInclusiveDouble(0f, outerBound);
-        public new double NextInclusiveDouble(double minBound, double maxBound) => returnIfRangeInclusive(minBound, maxBound, doubleSeries, ref doubleIndex);
+        public new double NextInclusiveDouble(double minBound, double maxBound) => ReturnIfRangeInclusive(minBound, maxBound, _doubleSeries, ref _doubleIndex);
         public new double NextExclusiveDouble() => NextExclusiveDouble(0f, 1f);
         public new double NextExclusiveDouble(double outerBound) => NextExclusiveDouble(0f, outerBound);
-        public new double NextExclusiveDouble(double minBound, double maxBound) => returnIfRangeBothExclusive(minBound, maxBound, doubleSeries, ref doubleIndex);
-        public override float NextFloat() => returnValueFrom(floatSeries, ref floatIndex);
+        public new double NextExclusiveDouble(double minBound, double maxBound) => ReturnIfRangeBothExclusive(minBound, maxBound, _doubleSeries, ref _doubleIndex);
+        public override float NextFloat() => ReturnValueFrom(_floatSeries, ref _floatIndex);
         public new float NextFloat(float outerBound) => NextFloat(0f, outerBound);
-        public new float NextFloat(float minBound, float maxBound) => returnIfRange(minBound, maxBound, floatSeries, ref floatIndex);
+        public new float NextFloat(float minBound, float maxBound) => ReturnIfRange(minBound, maxBound, _floatSeries, ref _floatIndex);
         public new float NextInclusiveFloat() => NextInclusiveFloat(0f, 1f);
         public new float NextInclusiveFloat(float outerBound) => NextInclusiveFloat(0f, outerBound);
-        public new float NextInclusiveFloat(float minBound, float maxBound) => returnIfRangeInclusive(minBound, maxBound, floatSeries, ref floatIndex);
+        public new float NextInclusiveFloat(float minBound, float maxBound) => ReturnIfRangeInclusive(minBound, maxBound, _floatSeries, ref _floatIndex);
         public new float NextExclusiveFloat() => NextExclusiveFloat(0f, 1f);
         public new float NextExclusiveFloat(float outerBound) => NextExclusiveFloat(0f, outerBound);
-        public new float NextExclusiveFloat(float minBound, float maxBound) => returnIfRangeBothExclusive(minBound, maxBound, floatSeries, ref floatIndex);
+        public new float NextExclusiveFloat(float minBound, float maxBound) => ReturnIfRangeBothExclusive(minBound, maxBound, _floatSeries, ref _floatIndex);
         public new float NextTriangular()
         {
             NextFloat(); // Used only to advance state the same number of times.
@@ -248,7 +276,7 @@ namespace ShaiRandom.Generators
         }
         public new float NextTriangular(float min, float max) => NextExclusiveFloat(min, max);
         public new float NextTriangular(float min, float max, float mode) => NextExclusiveFloat(min, max);
-        public new long NextLong() => returnValueFrom(longSeries, ref longIndex);
+        public new long NextLong() => ReturnValueFrom(_longSeries, ref _longIndex);
         public new long NextLong(long outerBound) => NextLong(0, outerBound);
         /// <summary>
         /// Returns the next long in the underlying series. If the value is less than
@@ -257,9 +285,9 @@ namespace ShaiRandom.Generators
         /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
         /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
         /// <returns>The next long in the underlying series.</returns>
-        public new long NextLong(long minValue, long maxValue) => returnIfRange(minValue, maxValue, longSeries, ref longIndex);
+        public new long NextLong(long minValue, long maxValue) => ReturnIfRange(minValue, maxValue, _longSeries, ref _longIndex);
 
-        public override ulong NextULong() => returnValueFrom(ulongSeries, ref ulongIndex);
+        public override ulong NextULong() => ReturnValueFrom(_ulongSeries, ref _ulongIndex);
         public new ulong NextULong(ulong outerBound) => NextULong(0, outerBound);
         /// <summary>
         /// Returns the next ulong in the underlying series. If the value is less than
@@ -268,7 +296,7 @@ namespace ShaiRandom.Generators
         /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
         /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
         /// <returns>The next ulong in the underlying series.</returns>
-        public new ulong NextULong(ulong minValue, ulong maxValue) => returnIfRange(minValue, maxValue, ulongSeries, ref ulongIndex);
+        public new ulong NextULong(ulong minValue, ulong maxValue) => ReturnIfRange(minValue, maxValue, _ulongSeries, ref _ulongIndex);
 
 
         /// <summary>
@@ -278,47 +306,47 @@ namespace ShaiRandom.Generators
         public new void NextBytes(byte[] buffer)
         {
             for (int i = 0; i < buffer.Length; i++)
-                buffer[i] = returnValueFrom(byteSeries, ref byteIndex);
+                buffer[i] = ReturnValueFrom(_byteSeries, ref _byteIndex);
         }
         public override ulong PreviousULong() => throw new NotImplementedException();
         public override void Seed(ulong seed)
         {
             int idx = (int)seed;
-            intIndex = idx;
-            uintIndex = idx;
-            doubleIndex = idx;
-            boolIndex = idx;
-            byteIndex = idx;
-            floatIndex = idx;
-            longIndex = idx;
-            ulongIndex = idx;
+            _intIndex = idx;
+            _uintIndex = idx;
+            _doubleIndex = idx;
+            _boolIndex = idx;
+            _byteIndex = idx;
+            _floatIndex = idx;
+            _longIndex = idx;
+            _ulongIndex = idx;
         }
         public override ulong SelectState(int selection)
         {
             switch (selection)
             {
-                case 0: return (ulong)intIndex;
-                case 1: return (ulong)uintIndex;
-                case 2: return (ulong)doubleIndex;
-                case 3: return (ulong)boolIndex;
-                case 4: return (ulong)byteIndex;
-                case 5: return (ulong)floatIndex;
-                case 6: return (ulong)longIndex;
-                default: return (ulong)ulongIndex;
+                case 0: return (ulong)_intIndex;
+                case 1: return (ulong)_uintIndex;
+                case 2: return (ulong)_doubleIndex;
+                case 3: return (ulong)_boolIndex;
+                case 4: return (ulong)_byteIndex;
+                case 5: return (ulong)_floatIndex;
+                case 6: return (ulong)_longIndex;
+                default: return (ulong)_ulongIndex;
             }
         }
         public override void SetSelectedState(int selection, ulong value)
         {
             switch (selection)
             {
-                case 0: intIndex = (int)value; break;
-                case 1: uintIndex = (int)value; break;
-                case 2: doubleIndex = (int)value; break;
-                case 3: boolIndex = (int)value; break;
-                case 4: byteIndex = (int)value; break;
-                case 5: floatIndex = (int)value; break;
-                case 6: longIndex = (int)value; break;
-                default: ulongIndex = (int)value; break;
+                case 0: _intIndex = (int)value; break;
+                case 1: _uintIndex = (int)value; break;
+                case 2: _doubleIndex = (int)value; break;
+                case 3: _boolIndex = (int)value; break;
+                case 4: _byteIndex = (int)value; break;
+                case 5: _floatIndex = (int)value; break;
+                case 6: _longIndex = (int)value; break;
+                default: _ulongIndex = (int)value; break;
             }
         }
         public override void SetState(ulong state) => Seed(state);

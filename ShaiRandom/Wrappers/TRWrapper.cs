@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using ShaiRandom.Generators;
 using Troschuetz.Random;
 
-namespace ShaiRandom
+namespace ShaiRandom.Wrappers
 {
     /// <summary>
     /// Wraps a ShaiRandom AbstractRandom object so it can also be used as a Troschuetz.Random IGenerator.

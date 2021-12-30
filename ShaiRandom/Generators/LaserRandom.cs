@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ShaiRandom
+namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 2 states, more here later. This one supports <see cref="Skip(ulong)"/>.
@@ -21,12 +21,12 @@ namespace ShaiRandom
         /**
          * The first state; can be any ulong.
          */
-        public ulong stateA { get; set; }
+        public ulong StateA { get; set; }
         private ulong _b;
         /**
          * The second state; can be any odd ulong (the last bit must be 1)
          */
-        public ulong stateB { get
+        public ulong StateB { get
             {
                 return _b;
             }
@@ -41,8 +41,8 @@ namespace ShaiRandom
          */
         public LaserRandom()
         {
-            stateA = MakeSeed();
-            stateB = MakeSeed();
+            StateA = MakeSeed();
+            StateB = MakeSeed();
         }
 
         /**
@@ -63,8 +63,8 @@ namespace ShaiRandom
          */
         public LaserRandom(ulong stateA, ulong stateB)
         {
-            this.stateA = stateA;
-            this.stateB = stateB;
+            StateA = stateA;
+            StateB = stateB;
         }
 
         /// <summary>
@@ -98,9 +98,9 @@ namespace ShaiRandom
             switch (selection)
             {
                 case 1:
-                    return stateB;
+                    return StateB;
                 default:
-                    return stateA;
+                    return StateA;
             }
         }
 
@@ -116,10 +116,10 @@ namespace ShaiRandom
             switch (selection)
             {
                 case 1:
-                    stateB = value;
+                    StateB = value;
                     break;
                 default:
-                    stateA = value;
+                    StateA = value;
                     break;
             }
         }
@@ -138,7 +138,7 @@ namespace ShaiRandom
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                stateA = x ^ x >> 27;
+                StateA = x ^ x >> 27;
                 x = (seed + 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
@@ -157,55 +157,68 @@ namespace ShaiRandom
          */
         public override void SetState(ulong stateA, ulong stateB)
         {
-            this.stateA = stateA;
-            this.stateB = stateB;
+            this.StateA = stateA;
+            this.StateB = stateB;
         }
 
+        /// <inheritdoc />
         public override ulong NextULong()
         {
             unchecked
             {
-                ulong s = (stateA += 0xC6BC279692B5C323UL);
+                ulong s = (StateA += 0xC6BC279692B5C323UL);
                 ulong z = (s ^ s >> 31) * (_b += 0x9E3779B97F4A7C16UL);
                 return z ^ z >> 26 ^ z >> 6;
             }
         }
 
+        /// <inheritdoc />
         public override ulong Skip(ulong distance)
         {
             unchecked
             {
-                ulong s = (stateA += 0xC6BC279692B5C323UL * distance);
+                ulong s = (StateA += 0xC6BC279692B5C323UL * distance);
                 ulong z = (s ^ s >> 31) * (_b += 0x9E3779B97F4A7C16UL * distance);
                 return z ^ z >> 26 ^ z >> 6;
             }
         }
 
+        /// <inheritdoc />
         public override ulong PreviousULong()
         {
             unchecked
             {
-                ulong z = stateA;
+                ulong z = StateA;
                 z = (z ^ z >> 31) * _b;
-                stateA -= 0xC6BC279692B5C323UL;
+                StateA -= 0xC6BC279692B5C323UL;
                 _b -= 0x9E3779B97F4A7C16UL;
                 return z ^ z >> 26 ^ z >> 6;
             }
         }
 
-        public override IEnhancedRandom Copy() => new LaserRandom(stateA, stateB);
-        public override string StringSerialize() => $"#LasR`{stateA:X}~{stateB:X}`";
+        /// <inheritdoc />
+        public override IEnhancedRandom Copy() => new LaserRandom(StateA, StateB);
+
+        /// <inheritdoc />
+        public override string StringSerialize() => $"#LasR`{StateA:X}~{StateB:X}`";
+
+        /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
-            stateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            stateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
+            StateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            StateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
 
+        /// <inheritdoc />
         public override bool Equals(object? obj) => Equals(obj as LaserRandom);
-        public bool Equals(LaserRandom? other) => other != null && stateA == other.stateA && stateB == other.stateB;
-        public override int GetHashCode() => HashCode.Combine(stateA, stateB);
+
+        /// <inheritdoc />
+        public bool Equals(LaserRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB;
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine(StateA, StateB);
 
         public static bool operator ==(LaserRandom? left, LaserRandom? right) => EqualityComparer<LaserRandom>.Default.Equals(left, right);
         public static bool operator !=(LaserRandom? left, LaserRandom? right) => !(left == right);

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ShaiRandom.Generators;
+using ShaiRandom.Wrappers;
 
 namespace ShaiRandom
 {
@@ -363,7 +365,7 @@ namespace ShaiRandom
         /// </summary>
         /// <remarks>
         /// If outerBound is less than or equal to innerBound,
-        /// this always returns innerBound. 
+        /// this always returns innerBound.
         /// </remarks>
         /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
@@ -898,7 +900,7 @@ namespace ShaiRandom
         private static readonly double DOUBLE_ADJUST = Math.Pow(2.0, -53.0);
         /// <summary>
         /// Used by <see cref="MakeSeed"/> to produce mid-low quality random numbers as a starting seed, as a "don't care" option for seeding.
-        /// </summary>        
+        /// </summary>
         protected static readonly Random SeedingRandom = new Random();
 
         /// <summary>
@@ -934,44 +936,22 @@ namespace ShaiRandom
             SetWith(other);
         }
 
-        /// <summary>
-        /// Sets the seed of this random number generator using a single ulong seed.
-        /// </summary>
-        /// <remarks>
-        /// This does not necessarily assign the state variable(s) of the implementation with the exact contents of seed,
-        /// so <see cref="SelectState(int)"/> should not be expected to return seed after this, though it may.
-        /// </remarks>
-        /// <param name="seed">May be any ulong; if the seed would give an invalid state, the generator is expected to correct that state.</param>
+        /// <inheritdoc />
         public abstract void Seed(ulong seed);
-        /// <summary>
-        /// Gets the number of possible state variables that can be selected with
-        /// <see cref="SelectState(int)"/> or <see cref="SetSelectedState(int, ulong)"/>,
-        /// even if those methods are not publicly accessible. An implementation that has only
-        /// one ulong or uint state, like <see cref="DistinctRandom"/>, should produce 1.
-        /// An implementation that has two uint or ulong states should produce 2, etc.
-        /// This is always a non-negative number; though discouraged, it is allowed to be 0 for
-        /// generators that attempt to conceal their state.
-        /// </summary>
+
+        /// <inheritdoc />
         public abstract int StateCount { get; }
 
-        /// <summary>
-        /// This should be true if the implementation supports <see cref="SelectState(int)"/>, or false if that method is unsupported.
-        /// </summary>
+        /// <inheritdoc />
         public abstract bool SupportsReadAccess { get; }
 
-        /// <summary>
-        /// This should be true if the implementation supports <see cref="SetSelectedState(int, ulong)"/>, or false if that method is unsupported.
-        /// </summary>
+        /// <inheritdoc />
         public abstract bool SupportsWriteAccess { get; }
 
-        /// <summary>
-        /// This should be true if the implementation supports <see cref="Skip(ulong)"/>, or false if that method is unsupported.
-        /// </summary>
+        /// <inheritdoc />
         public abstract bool SupportsSkip { get; }
 
-        /// <summary>
-        /// This should be true if the implementation supports <see cref="PreviousULong"/>, or false if that method is unsupported.
-        /// </summary>
+        /// <inheritdoc />
         public abstract bool SupportsPrevious { get; }
 
         /// <summary>
@@ -998,18 +978,10 @@ namespace ShaiRandom
             return false;
         }
 
-        /// <summary>
-        /// Produces a string that encodes the type and full state of this generator.
-        /// </summary>
-        /// <returns>An encoded string that stores the type and full state of this generator.</returns>
+        /// <inheritdoc />
         public abstract string StringSerialize();
 
-        /// <summary>
-        /// Given a string produced by <see cref="StringSerialize"/>, if the specified type is compatible,
-        /// then this method sets the state of this IEnhancedRandom to the specified stored state.
-        /// </summary>
-        /// <param name="data">A string produced by StringSerialize.</param>
-        /// <returns>This IEnhancedRandom, after modifications.</returns>
+        /// <inheritdoc />
         public abstract IEnhancedRandom StringDeserialize(string data);
 
         /// <summary>
@@ -1029,46 +1001,19 @@ namespace ShaiRandom
             return TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data);
         }
 
-        /// <summary>
-        /// Gets a selected state value from this AbstractRandom, by index.
-        /// </summary>
-        /// <remarks>
-        /// The number of possible selections is up to the implementing class, and is accessible via <see cref="StateCount"/>, but negative values for selection are typically not tolerated.
-        /// This should return the exact value of the selected state, assuming it is implemented. The default implementation throws an NotSupportedException, and implementors only have to
-        /// allow reading the state if they choose to implement this differently. If this method is intended to be used, <see cref="StateCount"/> must also be implemented.
-        /// </remarks>
-        /// <param name="selection">The index of the state to retrieve.</param>
-        /// <returns>The value of the state corresponding to selection</returns>
-        /// <exception cref="NotSupportedException">If the generator does not allow reading its state.</exception>
+        /// <inheritdoc />
         public virtual ulong SelectState(int selection)
         {
             throw new NotSupportedException("SelectState() not supported.");
         }
 
-        /// <summary>
-        /// Sets a selected state value to the given ulong value.
-        /// </summary>
-        /// <remarks>
-        /// The number of possible selections is up to the implementing class, but selection should be at least 0 and less than <see cref="StateCount"/>.
-        /// Implementors are permitted to change value if it is not valid, but they should not alter it if it is valid.
-        /// The public implementation calls <see cref="Seed(ulong)"/> with value, which doesn't need changing if the generator has one state that is set verbatim by Seed().
-        /// Otherwise, this method should be implemented when <see cref="SelectState(int)"/> is and the state is allowed to be set by users.
-        /// Having accurate ways to get and set the full state of a random number generator makes it much easier to serialize and deserialize that class.
-        /// </remarks>
-        /// <param name="selection">The index of the state to set.</param>
-        /// <param name="value">The value to try to use for the selected state.</param>
+        /// <inheritdoc />
         public virtual void SetSelectedState(int selection, ulong value)
         {
             Seed(value);
         }
 
-        /// <summary>
-        /// Sets every state variable to the given state.
-        /// </summary>
-        /// <remarks>
-        /// If <see cref="StateCount"/> is 1, then this should set the whole state to the given value using <see cref="SetSelectedState(int, ulong)"/>.
-        /// If StateCount is more than 1, then all states will be set in the same way (using SetSelectedState(), all to state).</remarks>
-        /// <param name="state">The ulong variable to use for every state variable.</param>
+        /// <inheritdoc />
         public virtual void SetState(ulong state)
         {
             for (int i = StateCount - 1; i >= 0; i--)
@@ -1076,18 +1021,8 @@ namespace ShaiRandom
                 SetSelectedState(i, state);
             }
         }
-        
-        /// <summary>
-        /// Sets each state variable to either stateA or stateB, alternating.
-        /// </summary>
-        /// <remarks>
-        /// This uses <see cref="SetSelectedState(int, ulong)"/> to set the values.
-        /// If there is one state variable (<see cref="StateCount"/> is 1), then this only sets that state variable to stateA.
-        /// If there are two state variables, the first is set to stateA, and the second to stateB.
-        ///  there are more, it reuses stateA, then stateB, then stateA, and so on until all variables are set.
-        /// </remarks>
-        /// <param name="stateA">The ulong value to use for states at index 0, 2, 4, 6...</param>
-        /// <param name="stateB">The ulong value to use for states at index 1, 3, 5, 7...</param>
+
+        /// <inheritdoc />
         public virtual void SetState(ulong stateA, ulong stateB)
         {
             int c = StateCount;
@@ -1101,21 +1036,7 @@ namespace ShaiRandom
             }
         }
 
-        /// <summary>
-        /// Sets each state variable to stateA, stateB, or stateC, alternating.
-        /// </summary>
-        /// <remarks>
-        /// This uses <see cref="SetSelectedState(int, ulong)"/> to set the values.
-        /// If there is one state variable (<see cref="StateCount"/> is 1), then this only
-        /// sets that state variable to stateA. If there are two state variables, the first
-        /// is set to stateA, and the second to stateB. With three state variables, the
-        /// first is set to stateA, the second to stateB, and the third to stateC. If there
-        /// are more, it reuses stateA, then stateB, then stateC, then stateA, and so on
-        /// until all variables are set.
-        /// </remarks>
-        /// <param name="stateA">The ulong value to use for states at index 0, 3, 6, 9...</param>
-        /// <param name="stateB">The ulong value to use for states at index 1, 4, 7, 10...</param>
-        /// <param name="stateC">The ulong value to use for states at index 2, 5, 8, 11...</param>
+        /// <inheritdoc />
         public virtual void SetState(ulong stateA, ulong stateB, ulong stateC)
         {
             int c = StateCount;
@@ -1133,24 +1054,7 @@ namespace ShaiRandom
             }
         }
 
-        /// <summary>
-        /// Sets each state variable to stateA, stateB, stateC, or stateD, alternating.
-        /// </summary>
-        /// <remarks>
-        /// This uses <see cref="SetSelectedState(int, ulong)"/> to
-        /// set the values. If there is one state variable (<see cref="StateCount"/> is 1),
-        /// then this only sets that state variable to stateA. If there are two state
-        /// variables, the first is set to stateA, and the second to stateB. With three
-        /// state variables, the first is set to stateA, the second to stateB, and the third
-        /// to stateC. With four state variables, the first is set to stateA, the second to
-        /// stateB, the third to stateC, and the fourth to stateD. If there are more, it
-        /// reuses stateA, then stateB, then stateC, then stateD, then stateA, and so on
-        /// until all variables are set.
-        /// </remarks>
-        /// <param name="stateA">the ulong value to use for states at index 0, 4, 8, 12...</param>
-        /// <param name="stateB">the ulong value to use for states at index 1, 5, 9, 13...</param>
-        /// <param name="stateC">the ulong value to use for states at index 2, 6, 10, 14...</param>
-        /// <param name="stateD">the ulong value to use for states at index 3, 7, 11, 15...</param>
+        /// <inheritdoc />
         public virtual void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
             int c = StateCount;
@@ -1172,16 +1076,7 @@ namespace ShaiRandom
             }
         }
 
-        /// <summary>
-        /// Sets all state variables to cycling values chosen from states.'
-        /// </summary>
-        /// <remarks>
-        /// If states is empty, then this does nothing, and leaves the current generator unchanged.
-        /// This works for generators with any <see cref="StateCount"/>, but may allocate an array if states is
-        /// used as params (you can pass an existing array without needing to allocate). This
-        /// uses <see cref="SetSelectedState(int, ulong)"/> to change the states.
-        /// </remarks>
-        /// <param name="states">An array or params array of ulong values to use as states.</param>
+        /// <inheritdoc />
         public virtual void SetState(params ulong[] states)
         {
             int c = StateCount, sl = states.Length;
@@ -1194,21 +1089,10 @@ namespace ShaiRandom
             }
         }
 
-        /// <summary>
-        /// Returns the next pseudorandom, uniformly distributed ulong
-        /// value from this random number generator's sequence, in the full range of all possible ulong values.
-        /// <remarks>
-        /// The general contract of NextULong is that one ulong value is
-        /// pseudorandomly generated and returned.
-        /// </remarks>
-        /// <returns>The next pseudorandom, uniformly distributed ulong value from this random number generator's sequence.</returns>
+        /// <inheritdoc />
         public abstract ulong NextULong();
 
-        /// <summary>
-        /// Returns the next pseudorandom, uniformly distributed long
-        /// value from this random number generator's sequence, in the full range of all possible long values (positive and negative).
-        /// </summary>
-        /// <returns>The next pseudorandom, uniformly distributed long value from this random number generator's sequence.</returns>
+        /// <inheritdoc />
         public long NextLong()
         {
             unchecked
@@ -1217,69 +1101,19 @@ namespace ShaiRandom
             }
         }
 
-        /// <summary>
-        /// Returns a pseudorandom, uniformly distributed long value
-        /// between 0 (inclusive) and the specified value (exclusive), drawn from
-        /// this random number generator's sequence.
-        /// </summary>
-        /// <remarks>
-        /// The general contract of
-        /// nextULong is that one ulong value in the specified range
-        /// is pseudorandomly generated and returned.  All possible
-        /// long values within the bound are produced with (approximately) equal
-        /// probability, though there is a small amount of bias depending on the bound.
-        /// <br/>
-        /// Note that this advances the state by the same amount as a single call to
-        /// <see cref="NextULong()"/>, which allows methods like <see cref="Skip(ulong)"/> to function
-        /// correctly, but introduces some bias when bound is very large. This will
-        /// also advance the state if bound is 0 or negative, so usage with a variable
-        /// bound will advance the state reliably.
-        /// <br/>
-        /// This method has some bias, particularly on larger bounds. Actually measuring
-        /// bias with bounds in the trillions or greater is challenging but not impossible, so
-        /// don't use this for a real-money gambling purpose. The bias isn't especially
-        /// significant, though.
-        /// </remarks>
-        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
-        /// <param name="bound">the upper bound (exclusive). If negative or 0, this always returns 0.</param>
-        /// <returns>the next pseudorandom, uniformly distributed long value between zero (inclusive) and bound (exclusive) from this random number generator's sequence</returns>
+        /// <inheritdoc />
         public ulong NextULong(ulong bound)
         {
             return NextULong(0UL, bound);
         }
 
-        /// <summary>
-        /// Returns a pseudorandom, uniformly distributed long value between an
-        /// inner bound of 0 (inclusive) and the specified outerBound (exclusive).
-        /// </summary>
-        /// <remarks>
-        /// This is meant for cases where the outer bound may be negative, especially if
-        /// the bound is unknown or may be user-specified. A negative outer bound is used
-        /// as the lower bound; a positive outer bound is used as the upper bound. An outer
-        /// bound of -1, 0, or 1 will always return 0, keeping the bound exclusive (except
-        /// for outer bound 0).
-        /// <br/>Note that this advances the state by the same amount as a single call to
-        /// <see cref="NextULong()"/>, which allows methods like <see cref="Skip(ulong)"/> to function
-        /// correctly, but introduces some bias when bound is very large.
-        /// </remarks>
-        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
-        /// <param name="outerBound">the outer exclusive bound; may be any long value, allowing negative</param>
-        /// <returns>a pseudorandom long between 0 (inclusive) and outerBound (exclusive)</returns>
+        /// <inheritdoc />
         public long NextLong(long outerBound)
         {
             return NextLong(0L, outerBound);
         }
 
-        /// <summary>
-        /// Returns a pseudorandom, uniformly distributed long value between the
-        /// specified innerBound (inclusive) and the specified outerBound
-        /// (exclusive). If outerBound is less than or equal to innerBound,
-        /// this always returns innerBound.
-        /// </summary>
-        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
-        /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
-        /// <param name="outer">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
-        /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
+        /// <inheritdoc />
         public ulong NextULong(ulong inner, ulong outer)
         {
             ulong rand = NextULong();
@@ -1292,15 +1126,7 @@ namespace ShaiRandom
             return inner + (randHigh * boundLow >> 32) + (randLow * boundHigh >> 32) + randHigh * boundHigh;
         }
 
-        /// <summary>
-        /// Returns a pseudorandom, uniformly distributed long value between the
-        /// specified innerBound (inclusive) and the specified outerBound
-        /// (exclusive). This is meant for cases where either bound may be negative,
-        /// especially if the bounds are unknown or may be user-specified.
-        /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
-        /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
-        /// <param name="outer">the exclusive outer bound; may be any long, allowing negative</param>
-        /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
+        /// <inheritdoc />
         public long NextLong(long inner, long outer)
         {
             ulong rand = NextULong();
@@ -1338,17 +1164,13 @@ namespace ShaiRandom
         /// </remarks>
         /// <param name="bits">The amount of random bits to request, from 1 to 32.</param>
         /// <returns>The next pseudorandom value from this random number generator's sequence.</returns>
-        /// 
+        ///
         public uint NextBits(int bits)
         {
             return (uint)(NextULong() >> 64 - bits);
         }
 
-        /// <summary>
-        /// Generates random bytes and places them into a user-supplied
-        /// byte array.  The number of random bytes produced is equal to
-        /// the length of the byte array.
-        /// <param name="bytes">the byte array to fill with random bytes</param>
+        /// <inheritdoc />
         public void NextBytes(byte[] bytes)
         {
             int bl = bytes.Length;
@@ -1362,52 +1184,19 @@ namespace ShaiRandom
             }
         }
 
-        /// <summary>
-        /// Returns the next pseudorandom, uniformly distributed int
-        /// value from this random number generator's sequence. The general
-        /// contract of nextInt is that one int value is
-        /// pseudorandomly generated and returned. All 2<sup>32</sup> possible
-        /// int values are produced with (approximately) equal probability.
-        /// </summary>
-        /// <returns>The next pseudorandom, uniformly distributed int value from this random number generator's sequence.</returns>
+        /// <inheritdoc />
         public int NextInt()
         {
             return (int)NextULong();
         }
 
-        /// <summary>
-        /// Gets a random uint by using the low 32 bits of NextULong(); this can return any uint.
-        /// </summary>
-        /// <returns>Any random uint.</returns>
+        /// <inheritdoc />
         public uint NextUInt()
         {
             return (uint)NextULong();
         }
 
-        /// <summary>
-        /// Returns a pseudorandom, uniformly distributed int value
-        /// between 0 (inclusive) and the specified value (exclusive), drawn from
-        /// this random number generator's sequence.
-        /// </summary>
-        /// <remarks>The general contract of
-        /// nextInt is that one int value in the specified range
-        /// is pseudorandomly generated and returned.  All bound possible
-        /// int values are produced with (approximately) equal
-        /// probability.
-        /// <br/>
-        /// It should be mentioned that the technique this uses has some bias, depending
-        /// on bound, but it typically isn't measurable without specifically looking
-        /// for it. Using the method this does allows this method to always advance the state
-        /// by one step, instead of a varying and unpredictable amount with the more typical
-        /// ways of rejection-sampling random numbers and only using numbers that can produce
-        /// an int within the bound without bias.
-        /// See <a href="https://www.pcg-random.org/posts/bounded-rands.html">M.E. O'Neill's
-        /// blog about random numbers</a> for discussion of alternative, unbiased methods.
-        /// </remarks>
-        /// <param name="bound">the upper bound (exclusive). If negative or 0, this always returns 0.</param>
-        /// <returns>the next pseudorandom, uniformly distributed int</returns>
-        /// value between zero (inclusive) and bound (exclusive)
-        /// from this random number generator's sequence
+        /// <inheritdoc />
         public uint NextUInt(uint bound)
         {
             return (uint)(bound * (NextULong() & 0xFFFFFFFFUL) >> 32);
@@ -1465,185 +1254,80 @@ namespace ShaiRandom
             return (int)NextLong(innerBound, outerBound);
         }
 
-        /// <summary>
-        /// Returns the next pseudorandom, uniformly distributed
-        /// bool value from this random number generator's
-        /// sequence. The general contract of NextBool is that one
-        /// bool value is pseudorandomly generated and returned.  The
-        /// values true and false are produced with
-        /// (approximately) equal probability.
-        /// 
-        /// The default implementation is equivalent to a sign check on <see cref="NextLong()"/>
-        /// returning true if the generated long is negative. This is typically the safest
-        /// way to implement this method; many types of generators have less statistical
-        /// quality on their lowest bit, so just returning based on the lowest bit isn't
-        /// always a good idea.
-        /// <returns>the next pseudorandom, uniformly distributed</returns>
-        /// bool value from this random number generator's
-        /// sequence
+        /// <inheritdoc />
         public virtual bool NextBool()
         {
             return (NextULong() & 0x8000000000000000UL) == 0x8000000000000000UL;
         }
 
-        /// <summary>
-        /// Returns the next pseudorandom, uniformly distributed float
-        /// value between 0.0 (inclusive) and 1.0 (exclusive)
-        /// from this random number generator's sequence.
-        /// </summary>
-        /// <remarks>The general contract of NextFloat is that one
-        /// float value, chosen (approximately) uniformly from the
-        /// range 0.0f (inclusive) to 1.0f (exclusive), is
-        /// pseudorandomly generated and returned. All 2<sup>24</sup> possible
-        /// float values of the form <i>m x </i>2<sup>-24</sup>,
-        /// where <i>m</i> is a positive integer less than 2<sup>24</sup>, are
-        /// produced with (approximately) equal probability.
-        /// <br/>The public implementation uses the upper 24 bits of <see cref="NextULong()"/>,
-        /// with a right shift and a multiply by a very small float
-        /// (5.9604645E-8f). It tends to be fast if
-        /// NextULong() is fast, but alternative implementations could use 24 bits of
-        /// <see cref="NextInt()"/> (or just <see cref="NextBits(int)"/>, giving it 24)
-        /// if that generator doesn't efficiently generate 64-bit longs.</remarks>
-        /// <returns>the next pseudorandom, uniformly distributed float
-        /// value between 0.0 and 1.0 from this
-        /// random number generator's sequence</returns>
+        /// <inheritdoc />
         public virtual float NextFloat()
         {
             return (NextULong() >> 40) * FLOAT_ADJUST;
         }
 
-        /// <summary>
-        /// Gets a pseudo-random float between 0 (inclusive) and outerBound (exclusive).
-        /// The outerBound may be positive or negative.
-        /// Exactly the same as {@code NextFloat() * outerBound}.
-        /// <param name="outerBound">the exclusive outer bound</param>
-        /// <returns>a float between 0 (inclusive) and outerBound (exclusive)</returns>
+        /// <inheritdoc />
         public float NextFloat(float outerBound)
         {
             return NextFloat() * outerBound;
         }
 
-        /// <summary>
-        /// Gets a pseudo-random float between innerBound (inclusive) and outerBound (exclusive).
-        /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
-        /// inclusive and which is exclusive.
-        /// <param name="innerBound">the inclusive inner bound; may be negative</param>
-        /// <param name="outerBound">the exclusive outer bound; may be negative</param>
-        /// <returns>a float between innerBound (inclusive) and outerBound (exclusive)</returns>
+        /// <inheritdoc />
         public float NextFloat(float innerBound, float outerBound)
         {
             return innerBound + NextFloat() * (outerBound - innerBound);
         }
 
-        /// <summary>
-        /// Returns the next pseudorandom, uniformly distributed
-        /// double value between 0.0 (inclusive) and 1.0
-        /// (exclusive) from this random number generator's sequence.
-        /// </summary>
-        /// <remarks>
-        /// The general contract of NextDouble is that one
-        /// double value, chosen (approximately) uniformly from the
-        /// range 0.0 (inclusive) to 1.0 (exclusive), is
-        /// pseudorandomly generated and returned.
-        /// <br/>The default implementation uses the upper 53 bits of <see cref="NextLong()"/>,
-        /// with an unsigned right shift and a multiply by a very small double
-        /// (1.1102230246251565E-16). It should perform well
-        /// if nextLong() performs well, and is expected to perform less well if the
-        /// generator naturally produces 32 or fewer bits at a time.\
-        /// </remarks>
-        /// <returns>the next pseudorandom, uniformly distributed double
-        /// value between 0.0 and 1.0 from this
-        /// random number generator's sequence</returns>
+
+        /// <inheritdoc />
         public virtual double NextDouble()
         {
             return (NextULong() >> 11) * DOUBLE_ADJUST;
         }
 
-        /// <summary>
-        /// Gets a pseudo-random double between 0 (inclusive) and outerBound (exclusive).
-        /// The outerBound may be positive or negative.
-        /// Exactly the same as {@code NextDouble() * outerBound}.
-        /// <param name="outerBound">the exclusive outer bound</param>
-        /// <returns>a double between 0 (inclusive) and outerBound (exclusive)</returns>
+        /// <inheritdoc />
         public double NextDouble(double outerBound)
         {
             return NextDouble() * outerBound;
         }
 
-        /// <summary>
-        /// Gets a pseudo-random double between innerBound (inclusive) and outerBound (exclusive).
-        /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
-        /// inclusive and which is exclusive.
-        /// <param name="innerBound">the inclusive inner bound; may be negative</param>
-        /// <param name="outerBound">the exclusive outer bound; may be negative</param>
-        /// <returns>a double between innerBound (inclusive) and outerBound (exclusive)</returns>
+        /// <inheritdoc />
         public double NextDouble(double innerBound, double outerBound)
         {
             return innerBound + NextDouble() * (outerBound - innerBound);
         }
 
-        /// <summary>
-        /// This is just like <see cref="NextDouble()"/>, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
-        /// It returns 1.0 extremely rarely, 0.000000000000011102230246251565% of the time if there is no bias in the generator, but it
-        /// can happen. This uses <see cref="nextLong(long)"/> internally, so it may have some bias towards or against specific
-        /// subtly-different results.
-        /// <returns>a double between 0.0, inclusive, and 1.0, inclusive</returns>
+        /// <inheritdoc />
         public double NextInclusiveDouble()
         {
             return NextULong(0x20000000000001L) * DOUBLE_ADJUST;
         }
 
-        /// <summary>
-        /// Just like <see cref="NextDouble(double)"/>, but this is inclusive on both 0.0 and outerBound.
-        /// It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls.
-        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
-        /// <returns>a double between 0.0, inclusive, and outerBound, inclusive</returns>
+        /// <inheritdoc />
         public double NextInclusiveDouble(double outerBound)
         {
             return NextInclusiveDouble() * outerBound;
         }
 
-        /// <summary>
-        /// Just like <see cref="NextDouble(double, double)"/>, but this is inclusive on both innerBound and outerBound.
-        /// It may be important to note that it returns outerBound on only 0.000000000000011102230246251565% of calls, if it can
-        /// return it at all because of floating-point imprecision when innerBound is a larger number.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
-        /// <returns>a double between innerBound, inclusive, and outerBound, inclusive</returns>
+        /// <inheritdoc />
         public double NextInclusiveDouble(double innerBound, double outerBound)
         {
             return innerBound + NextInclusiveDouble() * (outerBound - innerBound);
         }
 
-        /// <summary>
-        /// This is just like <see cref="NextFloat()"/>, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
-        /// It returns 1.0 rarely, 0.00000596046412226771% of the time if there is no bias in the generator, but it can happen. This method
-        /// has been tested by generating 268435456 (or 0x10000000) random ints with <see cref="nextInt(int)"/>, and just before the end of that
-        /// it had generated every one of the 16777217 roughly-equidistant floats this is able to produce. Not all seeds and streams are
-        /// likely to accomplish that in the same time, or at all, depending on the generator.
-        /// <returns>a float between 0.0, inclusive, and 1.0, inclusive</returns>
+        /// <inheritdoc />
         public float NextInclusiveFloat()
         {
             return NextInt(0x1000001) * FLOAT_ADJUST;
         }
 
-        /// <summary>
-        /// Just like <see cref="NextFloat(float)"/>, but this is inclusive on both 0.0 and outerBound.
-        /// It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls.
-        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
-        /// <returns>a float between 0.0, inclusive, and outerBound, inclusive</returns>
+        /// <inheritdoc />
         public float NextInclusiveFloat(float outerBound)
         {
             return NextInclusiveFloat() * outerBound;
         }
 
-        /// <summary>
-        /// Just like <see cref="NextFloat(float, float)"/>, but this is inclusive on both innerBound and outerBound.
-        /// It may be important to note that it returns outerBound on only 0.00000596046412226771% of calls, if it can return
-        /// it at all because of floating-point imprecision when innerBound is a larger number.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
-        /// <returns>a float between innerBound, inclusive, and outerBound, inclusive</returns>
+        /// <inheritdoc />
         public float NextInclusiveFloat(float innerBound, float outerBound)
         {
             return innerBound + NextInclusiveFloat() * (outerBound - innerBound);
@@ -1684,36 +1368,21 @@ namespace ShaiRandom
             return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
         }
 
-        /// <summary>
-        /// Just like <see cref="NextDouble(double)"/>, but this is exclusive on both 0.0 and outerBound.
-        /// Like <see cref="nextExclusiveDouble()"/>, which this uses, this may have better bit-distribution of
-        /// double values, and it may also be better able to produce very small doubles when outerBound is large.
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <returns>a double between 0.0, exclusive, and outerBound, exclusive</returns>
+
+        /// <inheritdoc />
         public double NextExclusiveDouble(double outerBound)
         {
             return NextExclusiveDouble() * outerBound;
         }
 
-        /// <summary>
-        /// Just like <see cref="NextDouble(double, double)"/>, but this is exclusive on both innerBound and outerBound.
-        /// Like <see cref="nextExclusiveDouble()"/>, which this uses,, this may have better bit-distribution of double values,
-        /// and it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
-        /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <returns>a double between innerBound, exclusive, and outerBound, exclusive</returns>
+        /// <inheritdoc />
         public double NextExclusiveDouble(double innerBound, double outerBound)
         {
             return innerBound + NextExclusiveDouble() * (outerBound - innerBound);
         }
 
-        /// <summary>
-        /// Gets a random float between 0.0 and 1.0, exclusive at both ends. This can return float values between 1.0842022E-19 and 0.99999994; it cannot return 0 or 1.
-        /// </summary>
-        /// <remarks>
-        /// Like <see cref="NextExclusiveDouble()"/>, this is absolute voodoo code. Its implementation generates one long and then does conversions both from int to float
-        /// (to get the result), and from double to long (to get an approximation of log base 2). The code here is bat country, and should not be edited carelessly.</remarks>
-        /// <returns>A random uniform float between 0 and 1 (both exclusive).</returns>
+
+        /// <inheritdoc />
         public float NextExclusiveFloat()
         {
             // return ((NextUInt() >> 9) + 1u) * 5.960464E-8f;
@@ -1721,24 +1390,13 @@ namespace ShaiRandom
             return BitConverter.Int32BitsToSingle((1089 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF));
         }
 
-        /// <summary>
-        /// Just like <see cref="NextFloat(float)"/>, but this is exclusive on both 0.0 and outerBound.
-        /// Like <see cref="nextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
-        /// it may also be better able to produce very small floats when outerBound is large.
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <returns>a float between 0.0, exclusive, and outerBound, exclusive</returns>
+        /// <inheritdoc />
         public float NextExclusiveFloat(float outerBound)
         {
             return NextExclusiveFloat() * outerBound;
         }
 
-        /// <summary>
-        /// Just like <see cref="NextFloat(float, float)"/>, but this is exclusive on both innerBound and outerBound.
-        /// Like <see cref="nextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
-        /// it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
-        /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <returns>a float between innerBound, exclusive, and outerBound, exclusive</returns>
+        /// <inheritdoc />
         public float NextExclusiveFloat(float innerBound, float outerBound)
         {
             return innerBound + NextExclusiveFloat() * (outerBound - innerBound);
@@ -1816,12 +1474,7 @@ namespace ShaiRandom
             return Probit(NextExclusiveDouble()) * stdDev + mean;
         }
 
-        /// <summary>
-        /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextULong()
-        /// as if called at that step. The distance can be negative if a long is cast to a ulong, which jumps backwards if the period of the generator is 2 to the 64.
-        /// </summary>
-        /// <param name="distance">How many steps to jump forward</param>
-        /// <returns>The result of what NextULong() would return at the now-current jumped state.</returns>
+        /// <inheritdoc />
         public virtual ulong Skip(ulong distance)
         {
             throw new NotSupportedException("Skip() is not implemented for this generator.");
@@ -1840,10 +1493,7 @@ namespace ShaiRandom
             return Skip(0xFFFFFFFFFFFFFFFFUL);
         }
 
-        /// <summary>
-        /// Returns a full copy (deep, if necessary) of this IEnhancedRandom.
-        /// </summary>
-        /// <returns>A copy of this IEnhancedRandom.</returns>
+        /// <inheritdoc />
         public abstract IEnhancedRandom Copy();
 
         /// <summary>
@@ -1893,20 +1543,13 @@ namespace ShaiRandom
             return true;
         }
 
-        /// <summary>
-        /// Returns true if a random value between 0 and 1 is less than the specified value.
-        /// </summary>
-        /// <param name="chance">A float between 0.0 and 1.0; higher values are more likely to result in true.</param>
-        /// <returns>a bool selected with the given chance of being true</returns>
+        /// <inheritdoc />
         public bool NextBool(float chance)
         {
             return NextFloat() < chance;
         }
 
-        /// <summary>
-        /// Returns -1 or 1, randomly.
-        /// </summary>
-        /// <returns>-1 or 1, selected with approximately equal likelihood</returns>
+        /// <inheritdoc />
         public int NextSign()
         {
             return 1 | NextInt() >> 31;
@@ -1945,14 +1588,8 @@ namespace ShaiRandom
             return max - MathF.Sqrt((1 - u) * d * (max - mode));
         }
 
-        /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextInt(int, int)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
-        /// The higher trials is, the lower the average value this returns.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <param name="trials">how many random numbers to acquire and compare</param>
-        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
+
+        /// <inheritdoc />
         public int MinIntOf(int innerBound, int outerBound, int trials)
         {
             int v = NextInt(innerBound, outerBound);
@@ -1963,14 +1600,7 @@ namespace ShaiRandom
             return v;
         }
 
-        /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextInt(int, int)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
-        /// The higher trials is, the higher the average value this returns.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <param name="trials">how many random numbers to acquire and compare</param>
-        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
+        /// <inheritdoc />
         public int MaxIntOf(int innerBound, int outerBound, int trials)
         {
             int v = NextInt(innerBound, outerBound);
@@ -1981,14 +1611,7 @@ namespace ShaiRandom
             return v;
         }
 
-        /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextLong(long, long)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
-        /// The higher trials is, the lower the average value this returns.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <param name="trials">how many random numbers to acquire and compare</param>
-        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
+        /// <inheritdoc />
         public long MinLongOf(long innerBound, long outerBound, int trials)
         {
             long v = NextLong(innerBound, outerBound);
@@ -1999,14 +1622,7 @@ namespace ShaiRandom
             return v;
         }
 
-        /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextLong(long, long)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
-        /// The higher trials is, the higher the average value this returns.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <param name="trials">how many random numbers to acquire and compare</param>
-        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
+        /// <inheritdoc />
         public long MaxLongOf(long innerBound, long outerBound, int trials)
         {
             long v = NextLong(innerBound, outerBound);
@@ -2017,14 +1633,7 @@ namespace ShaiRandom
             return v;
         }
 
-        /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextUInt(int, int)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
-        /// The higher trials is, the lower the average value this returns.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <param name="trials">how many random numbers to acquire and compare</param>
-        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
+        /// <inheritdoc />
         public uint MinUIntOf(uint innerBound, uint outerBound, int trials)
         {
             uint v = NextUInt(innerBound, outerBound);
@@ -2035,14 +1644,7 @@ namespace ShaiRandom
             return v;
         }
 
-        /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextUInt(int, int)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
-        /// The higher trials is, the higher the average value this returns.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <param name="trials">how many random numbers to acquire and compare</param>
-        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
+        /// <inheritdoc />
         public uint MaxUIntOf(uint innerBound, uint outerBound, int trials)
         {
             uint v = NextUInt(innerBound, outerBound);
@@ -2053,14 +1655,7 @@ namespace ShaiRandom
             return v;
         }
 
-        /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextULong(long, long)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
-        /// The higher trials is, the lower the average value this returns.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <param name="trials">how many random numbers to acquire and compare</param>
-        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
+        /// <inheritdoc />
         public ulong MinULongOf(ulong innerBound, ulong outerBound, int trials)
         {
             ulong v = NextULong(innerBound, outerBound);
@@ -2071,14 +1666,7 @@ namespace ShaiRandom
             return v;
         }
 
-        /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextULong(long, long)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
-        /// The higher trials is, the higher the average value this returns.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <param name="trials">how many random numbers to acquire and compare</param>
-        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
+        /// <inheritdoc />
         public ulong MaxULongOf(ulong innerBound, ulong outerBound, int trials)
         {
             ulong v = NextULong(innerBound, outerBound);
@@ -2089,14 +1677,7 @@ namespace ShaiRandom
             return v;
         }
 
-        /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextDouble(double, double)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
-        /// The higher trials is, the lower the average value this returns.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <param name="trials">how many random numbers to acquire and compare</param>
-        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
+        /// <inheritdoc />
         public double MinDoubleOf(double innerBound, double outerBound, int trials)
         {
             double v = NextDouble(innerBound, outerBound);
@@ -2107,14 +1688,7 @@ namespace ShaiRandom
             return v;
         }
 
-        /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextDouble(double, double)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
-        /// The higher trials is, the higher the average value this returns.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <param name="trials">how many random numbers to acquire and compare</param>
-        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
+        /// <inheritdoc />
         public double MaxDoubleOf(double innerBound, double outerBound, int trials)
         {
             double v = NextDouble(innerBound, outerBound);
@@ -2125,14 +1699,7 @@ namespace ShaiRandom
             return v;
         }
 
-        /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextFloat(float, float)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
-        /// The higher trials is, the lower the average value this returns.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <param name="trials">how many random numbers to acquire and compare</param>
-        /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
+        /// <inheritdoc />
         public float MinFloatOf(float innerBound, float outerBound, int trials)
         {
             float v = NextFloat(innerBound, outerBound);
@@ -2143,14 +1710,7 @@ namespace ShaiRandom
             return v;
         }
 
-        /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextFloat(float, float)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
-        /// The higher trials is, the higher the average value this returns.
-        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
-        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
-        /// <param name="trials">how many random numbers to acquire and compare</param>
-        /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
+        /// <inheritdoc />
         public float MaxFloatOf(float innerBound, float outerBound, int trials)
         {
             float v = NextFloat(innerBound, outerBound);
@@ -2161,23 +1721,13 @@ namespace ShaiRandom
             return v;
         }
 
-        /// <summary>
-        /// Gets a randomly-chosen item from the given non-null, non-empty array.
-        /// </summary>
-        /// <typeparam name="T">The type of items in the array.</typeparam>
-        /// <param name="array">Must be non-null and non-empty.</param>
-        /// <returns>A randomly-chosen item from array.</returns>
+        /// <inheritdoc />
         public T RandomElement<T>(T[] array)
         {
             return array[NextInt(array.Length)];
         }
 
-        /// <summary>
-        /// Gets a randomly-chosen item from the given non-null, non-empty IList.
-        /// </summary>
-        /// <typeparam name="T">The type of items in the list.</typeparam>
-        /// <param name="list">Must be non-null and non-empty.</param>
-        /// <returns>A randomly-chosen item from list.</returns>
+        /// <inheritdoc />
         public T RandomElement<T>(IList<T> list)
         {
             return list[NextInt(list.Count)];
@@ -2214,11 +1764,10 @@ namespace ShaiRandom
             for (int i = offset + length - 1; i > offset; i--)
             {
                 int ii = NextInt(offset, i + 1);
-                T temp = items[i];
-                items[i] = items[ii];
-                items[ii] = temp;
+                (items[i], items[ii]) = (items[ii], items[i]);
             }
         }
+
         /// <summary>
         /// Shuffles a section of the given IList in-place pseudo-randomly, using this to generate
         /// {@code length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
@@ -2232,9 +1781,7 @@ namespace ShaiRandom
             for (int i = offset + length - 1; i > offset; i--)
             {
                 int ii = NextInt(offset, i + 1);
-                T temp = items[i];
-                items[i] = items[ii];
-                items[ii] = temp;
+                (items[i], items[ii]) = (items[ii], items[i]);
             }
         }
 

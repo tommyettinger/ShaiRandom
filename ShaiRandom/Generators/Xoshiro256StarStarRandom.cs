@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ShaiRandom
+namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 4 states, implementing a known-rather-good algorithm, more here later.
@@ -21,27 +21,27 @@ namespace ShaiRandom
         /**
          * The first state; can be any long except that the whole state must not all be 0.
          */
-        public ulong stateA { get; set; }
+        public ulong StateA { get; set; }
         /**
          * The second state; can be any long except that the whole state must not all be 0.
          * This is the state that is scrambled and returned; if it is 0 before a number
          * is generated, then the next number will be 0.
          */
-        public ulong stateB { get; set; }
+        public ulong StateB { get; set; }
         /**
          * The third state; can be any long except that the whole state must not all be 0.
          */
-        public ulong stateC { get; set; }
+        public ulong StateC { get; set; }
         private ulong _d;
         /**
          * The fourth state; can be any long except that the whole state must not all be 0.
          * If all other states are 0, and this would be set to 0,
          * then this is instead set to 0xFFFFFFFFFFFFFFFFUL.
          */
-        public ulong stateD
+        public ulong StateD
         {
             get => _d;
-            set => _d = (stateA | stateB | stateC | value) == 0UL ? 0xFFFFFFFFFFFFFFFFUL : value;
+            set => _d = (StateA | StateB | StateC | value) == 0UL ? 0xFFFFFFFFFFFFFFFFUL : value;
         }
 
 
@@ -50,10 +50,10 @@ namespace ShaiRandom
          */
         public Xoshiro256StarStarRandom()
         {
-            stateA = MakeSeed();
-            stateB = MakeSeed();
-            stateC = MakeSeed();
-            stateD = MakeSeed();
+            StateA = MakeSeed();
+            StateB = MakeSeed();
+            StateC = MakeSeed();
+            StateD = MakeSeed();
         }
 
         /**
@@ -76,10 +76,10 @@ namespace ShaiRandom
          */
         public Xoshiro256StarStarRandom(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
-            this.stateA = stateA;
-            this.stateB = stateB;
-            this.stateC = stateC;
-            this.stateD = stateD;
+            StateA = stateA;
+            StateB = stateB;
+            StateC = stateC;
+            StateD = stateD;
         }
 
         /// <summary>
@@ -113,13 +113,13 @@ namespace ShaiRandom
             switch (selection)
             {
                 case 0:
-                    return stateA;
+                    return StateA;
                 case 1:
-                    return stateB;
+                    return StateB;
                 case 2:
-                    return stateC;
+                    return StateC;
                 default:
-                    return stateD;
+                    return StateD;
             }
         }
 
@@ -135,16 +135,16 @@ namespace ShaiRandom
             switch (selection)
             {
                 case 0:
-                    stateA = value;
+                    StateA = value;
                     break;
                 case 1:
-                    stateB = value;
+                    StateB = value;
                     break;
                 case 2:
-                    stateC = value;
+                    StateC = value;
                     break;
                 default:
-                    stateD = value;
+                    StateD = value;
                     break;
             }
         }
@@ -165,19 +165,19 @@ namespace ShaiRandom
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                stateA = x ^ x >> 27;
+                StateA = x ^ x >> 27;
                 x = (seed += 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                stateB = x ^ x >> 27;
+                StateB = x ^ x >> 27;
                 x = (seed += 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                stateC = x ^ x >> 27;
+                StateC = x ^ x >> 27;
                 x = (seed + 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
@@ -201,43 +201,54 @@ namespace ShaiRandom
          */
         public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
-            this.stateA = stateA;
-            this.stateB = stateB;
-            this.stateC = stateC;
-            this.stateD = stateD;
+            StateA = stateA;
+            StateB = stateB;
+            StateC = stateC;
+            StateD = stateD;
         }
 
+        /// <inheritdoc />
         public override ulong NextULong()
         {
             unchecked
             {
-                ulong result = BitExtensions.RotateLeft(stateB * 5UL, 7) * 9UL;
-                ulong t = stateB << 17;
-                stateC ^= stateA;
-                _d ^= stateB;
-                stateB ^= stateC;
-                stateA ^= _d;
-                stateC ^= t;
+                ulong result = (StateB * 5UL).RotateLeft(7) * 9UL;
+                ulong t = StateB << 17;
+                StateC ^= StateA;
+                _d ^= StateB;
+                StateB ^= StateC;
+                StateA ^= _d;
+                StateC ^= t;
                 _d.RotateLeftInPlace(45);
                 return result;
             }
         }
 
-        public override IEnhancedRandom Copy() => new Xoshiro256StarStarRandom(stateA, stateB, stateC, stateD);
-        public override string StringSerialize() => $"#XSSR`{stateA:X}~{stateB:X}~{stateC:X}~{stateD:X}`";
+        /// <inheritdoc />
+        public override IEnhancedRandom Copy() => new Xoshiro256StarStarRandom(StateA, StateB, StateC, StateD);
+
+        /// <inheritdoc />
+        public override string StringSerialize() => $"#XSSR`{StateA:X}~{StateB:X}~{StateC:X}~{StateD:X}`";
+
+        /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
-            stateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            stateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            stateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            stateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
+            StateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            StateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            StateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            StateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
 
+        /// <inheritdoc />
         public override bool Equals(object? obj) => Equals(obj as Xoshiro256StarStarRandom);
-        public bool Equals(Xoshiro256StarStarRandom? other) => other != null && stateA == other.stateA && stateB == other.stateB && stateC == other.stateC && stateD == other.stateD;
-        public override int GetHashCode() => HashCode.Combine(stateA, stateB, stateC, _d);
+
+        /// <inheritdoc />
+        public bool Equals(Xoshiro256StarStarRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB && StateC == other.StateC && StateD == other.StateD;
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine(StateA, StateB, StateC, _d);
 
         public static bool operator ==(Xoshiro256StarStarRandom? left, Xoshiro256StarStarRandom? right) => EqualityComparer<Xoshiro256StarStarRandom>.Default.Equals(left, right);
         public static bool operator !=(Xoshiro256StarStarRandom? left, Xoshiro256StarStarRandom? right) => !(left == right);

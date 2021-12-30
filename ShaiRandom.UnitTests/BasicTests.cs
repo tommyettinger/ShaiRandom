@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using ShaiRandom.Generators;
+using ShaiRandom.Wrappers;
+using Xunit;
 namespace ShaiRandom.UnitTests
 {
     public class BasicTests
@@ -18,28 +20,28 @@ namespace ShaiRandom.UnitTests
                 Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
                 Assert.InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
             }
-            fwr.stateD = 1UL;
+            fwr.StateD = 1UL;
             Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
 
-            fwr.stateD = 0UL;
+            fwr.StateD = 0UL;
             Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
 
-            fwr.stateD = 0xFFFFFFFFFFFFFFFFUL;
+            fwr.StateD = 0xFFFFFFFFFFFFFFFFUL;
             Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
 
-            fwr.stateD = 0x8000000000000000UL;
+            fwr.StateD = 0x8000000000000000UL;
             Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
 
-            fwr.stateD = 1UL;
+            fwr.StateD = 1UL;
             Assert.InRange(fwr.NextExclusiveFloat(), 1.0842022E-19f, 0.99999994f);
 
-            fwr.stateD = 0UL;
+            fwr.StateD = 0UL;
             Assert.InRange(fwr.NextExclusiveFloat(), 1.0842022E-19f, 0.99999994f);
 
-            fwr.stateD = 0xFFFFFFFFFFFFFFFFUL;
+            fwr.StateD = 0xFFFFFFFFFFFFFFFFUL;
             Assert.InRange(fwr.NextExclusiveFloat(), 1.0842022E-19f, 0.99999994f);
 
-            fwr.stateD = 0x8000000000000000UL;
+            fwr.StateD = 0x8000000000000000UL;
             Assert.InRange(fwr.NextExclusiveFloat(), 1.0842022E-19f, 0.99999994f);
         }
         [Fact]
