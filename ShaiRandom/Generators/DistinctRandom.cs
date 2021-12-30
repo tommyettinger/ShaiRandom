@@ -21,14 +21,14 @@ namespace ShaiRandom
         /**
          * The first state; can be any ulong.
          */
-        public ulong state { get; set; }
+        public ulong State { get; set; }
 
         /**
          * Creates a new DistinctRandom with a random state.
          */
         public DistinctRandom()
         {
-            state = MakeSeed();
+            State = MakeSeed();
         }
 
         /**
@@ -38,7 +38,7 @@ namespace ShaiRandom
          */
         public DistinctRandom(ulong seed)
         {
-            this.state = seed;
+            State = seed;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace ShaiRandom
          */
         public override ulong SelectState(int selection)
         {
-            return state;
+            return State;
         }
 
         /**
@@ -79,7 +79,7 @@ namespace ShaiRandom
          */
         public override void SetSelectedState(int selection, ulong value)
         {
-            state = value;
+            State = value;
         }
 
         /**
@@ -89,7 +89,7 @@ namespace ShaiRandom
          */
         public override void Seed(ulong seed)
         {
-            state = seed;
+            State = seed;
         }
 
         /**
@@ -99,14 +99,15 @@ namespace ShaiRandom
          */
         public override void SetState(ulong state)
         {
-            this.state = state;
+            this.State = state;
         }
 
+        /// <inheritdoc />
         public override ulong NextULong()
         {
             unchecked
             {
-                ulong x = (state += 0x9E3779B97F4A7C15UL);
+                ulong x = (State += 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
@@ -115,11 +116,12 @@ namespace ShaiRandom
             }
         }
 
+        /// <inheritdoc />
         public override ulong Skip(ulong distance)
         {
             unchecked
             {
-                ulong x = (state += 0x9E3779B97F4A7C15UL * distance);
+                ulong x = (State += 0x9E3779B97F4A7C15UL * distance);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
@@ -128,11 +130,12 @@ namespace ShaiRandom
             }
         }
 
+        /// <inheritdoc />
         public override ulong PreviousULong()
         {
             unchecked
             {
-                ulong x = (state -= 0x9E3779B97F4A7C15UL);
+                ulong x = (State -= 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
@@ -141,18 +144,28 @@ namespace ShaiRandom
             }
         }
 
-        public override IEnhancedRandom Copy() => new DistinctRandom(state);
-        public override string StringSerialize() => $"#DisR`{state:X}`";
+        /// <inheritdoc />
+        public override IEnhancedRandom Copy() => new DistinctRandom(State);
+
+        /// <inheritdoc />
+        public override string StringSerialize() => $"#DisR`{State:X}`";
+
+        /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
-            state = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
+            State = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
 
+        /// <inheritdoc />
         public override bool Equals(object? obj) => Equals(obj as DistinctRandom);
-        public bool Equals(DistinctRandom? other) => other != null && state == other.state;
-        public override int GetHashCode() => HashCode.Combine(state);
+
+        /// <inheritdoc />
+        public bool Equals(DistinctRandom? other) => other != null && State == other.State;
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine(State);
 
         public static bool operator ==(DistinctRandom? left, DistinctRandom? right) => EqualityComparer<DistinctRandom>.Default.Equals(left, right);
         public static bool operator !=(DistinctRandom? left, DistinctRandom? right) => !(left == right);

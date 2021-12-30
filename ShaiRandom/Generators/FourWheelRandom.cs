@@ -21,30 +21,30 @@ namespace ShaiRandom
         /**
          * The first state; can be any long.
          */
-        public ulong stateA { get; set; }
+        public ulong StateA { get; set; }
         /**
          * The second state; can be any long.
          */
-        public ulong stateB { get; set; }
+        public ulong StateB { get; set; }
         /**
          * The third state; can be any long.
          */
-        public ulong stateC { get; set; }
+        public ulong StateC { get; set; }
         /**
          * The fourth state; can be any long. If this has just been set to some value, then the next call to
          * {@link #nextLong()} will return that value as-is. Later calls will be more random.
          */
-        public ulong stateD { get; set; }
+        public ulong StateD { get; set; }
 
         /**
          * Creates a new FourWheelRandom with a random state.
          */
         public FourWheelRandom()
         {
-            stateA = MakeSeed();
-            stateB = MakeSeed();
-            stateC = MakeSeed();
-            stateD = MakeSeed();
+            StateA = MakeSeed();
+            StateB = MakeSeed();
+            StateC = MakeSeed();
+            StateD = MakeSeed();
         }
 
         /**
@@ -67,10 +67,10 @@ namespace ShaiRandom
          */
         public FourWheelRandom(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
-            this.stateA = stateA;
-            this.stateB = stateB;
-            this.stateC = stateC;
-            this.stateD = stateD;
+            StateA = stateA;
+            StateB = stateB;
+            StateC = stateC;
+            StateD = stateD;
         }
 
         /// <summary>
@@ -104,13 +104,13 @@ namespace ShaiRandom
             switch (selection)
             {
                 case 0:
-                    return stateA;
+                    return StateA;
                 case 1:
-                    return stateB;
+                    return StateB;
                 case 2:
-                    return stateC;
+                    return StateC;
                 default:
-                    return stateD;
+                    return StateD;
             }
         }
 
@@ -126,16 +126,16 @@ namespace ShaiRandom
             switch (selection)
             {
                 case 0:
-                    stateA = value;
+                    StateA = value;
                     break;
                 case 1:
-                    stateB = value;
+                    StateB = value;
                     break;
                 case 2:
-                    stateC = value;
+                    StateC = value;
                     break;
                 default:
-                    stateD = value;
+                    StateD = value;
                     break;
             }
         }
@@ -156,25 +156,25 @@ namespace ShaiRandom
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                stateA = x ^ x >> 27;
+                StateA = x ^ x >> 27;
                 x = (seed += 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                stateB = x ^ x >> 27;
+                StateB = x ^ x >> 27;
                 x = (seed += 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                stateC = x ^ x >> 27;
+                StateC = x ^ x >> 27;
                 x = (seed + 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                stateD = x ^ x >> 27;
+                StateD = x ^ x >> 27;
             }
         }
 
@@ -192,58 +192,70 @@ namespace ShaiRandom
          */
         public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
-            this.stateA = stateA;
-            this.stateB = stateB;
-            this.stateC = stateC;
-            this.stateD = stateD;
+            StateA = stateA;
+            StateB = stateB;
+            StateC = stateC;
+            StateD = stateD;
         }
 
+        /// <inheritdoc />
         public override ulong NextULong()
         {
-            ulong fa = stateA;
-            ulong fb = stateB;
-            ulong fc = stateC;
-            ulong fd = stateD;
+            ulong fa = StateA;
+            ulong fb = StateB;
+            ulong fc = StateC;
+            ulong fd = StateD;
             unchecked
             {
-                stateA = 0xD1342543DE82EF95UL * fd;
-                stateB = fa + 0xC6BC279692B5C323UL;
-                stateC = fb.RotateLeft(47) - fd;
-                stateD = fb ^ fc;
+                StateA = 0xD1342543DE82EF95UL * fd;
+                StateB = fa + 0xC6BC279692B5C323UL;
+                StateC = fb.RotateLeft(47) - fd;
+                StateD = fb ^ fc;
             }
             return fd;
         }
 
+        /// <inheritdoc />
         public override ulong PreviousULong()
         {
-            ulong fa = stateA;
-            ulong fb = stateB;
-            ulong fc = stateC;
+            ulong fa = StateA;
+            ulong fb = StateB;
+            ulong fc = StateC;
             unchecked
             {
-                stateD = 0x572B5EE77A54E3BDUL * fa;
-                stateA = fb - 0xC6BC279692B5C323UL;
-                stateB = BitExtensions.RotateRight(fc + stateD, 47);
-                stateC = stateD ^ stateB;
-                return 0x572B5EE77A54E3BDUL * stateA;
+                StateD = 0x572B5EE77A54E3BDUL * fa;
+                StateA = fb - 0xC6BC279692B5C323UL;
+                StateB = (fc + StateD).RotateRight(47);
+                StateC = StateD ^ StateB;
+                return 0x572B5EE77A54E3BDUL * StateA;
             }
         }
 
-        public override IEnhancedRandom Copy() => new FourWheelRandom(stateA, stateB, stateC, stateD);
-        public override string StringSerialize() => $"#FoWR`{stateA:X}~{stateB:X}~{stateC:X}~{stateD:X}`";
+        /// <inheritdoc />
+        public override IEnhancedRandom Copy() => new FourWheelRandom(StateA, StateB, StateC, StateD);
+
+        /// <inheritdoc />
+        public override string StringSerialize() => $"#FoWR`{StateA:X}~{StateB:X}~{StateC:X}~{StateD:X}`";
+
+        /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
-            stateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            stateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            stateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            stateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
+            StateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            StateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            StateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            StateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
 
+        /// <inheritdoc />
         public override bool Equals(object? obj) => Equals(obj as FourWheelRandom);
-        public bool Equals(FourWheelRandom? other) => other != null && stateA == other.stateA && stateB == other.stateB && stateC == other.stateC && stateD == other.stateD;
-        public override int GetHashCode() => HashCode.Combine(stateA, stateB, stateC, stateD);
+
+        /// <inheritdoc />
+        public bool Equals(FourWheelRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB && StateC == other.StateC && StateD == other.StateD;
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine(StateA, StateB, StateC, StateD);
 
         public static bool operator ==(FourWheelRandom? left, FourWheelRandom? right) => EqualityComparer<FourWheelRandom>.Default.Equals(left, right);
         public static bool operator !=(FourWheelRandom? left, FourWheelRandom? right) => !(left == right);

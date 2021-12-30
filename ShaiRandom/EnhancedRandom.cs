@@ -1765,7 +1765,7 @@ namespace ShaiRandom
                 (items[i], items[ii]) = (items[ii], items[i]);
             }
         }
-        
+
         /// <summary>
         /// Shuffles a section of the given IList in-place pseudo-randomly, using this to generate
         /// {@code length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.

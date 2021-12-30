@@ -43,13 +43,13 @@ namespace ShaiRandom
          * If this has just been set to some value, then the next call to
          * {@link #nextULong()} will return that value as-is. Later calls will be more random.
          */
-        public ulong stateA { get; set; }
+        public ulong StateA { get; set; }
 
         private ulong _b;
         /**
          * The second state; can be any long except that the whole state must not all be 0.
          */
-        public ulong stateB
+        public ulong StateB
         {
             get => _b;
             set => _b = value;
@@ -62,10 +62,10 @@ namespace ShaiRandom
          * If all other states are 0, and this would be set to 0,
          * then this is instead set to 0xFFFFFFFFFFFFFFFFUL.
          */
-        public ulong stateC
+        public ulong StateC
         {
             get => _c;
-            set => _c = (stateA | stateB | value) == 0UL ? 0xFFFFFFFFFFFFFFFFUL : value;
+            set => _c = (StateA | StateB | value) == 0UL ? 0xFFFFFFFFFFFFFFFFUL : value;
         }
 
         /**
@@ -73,9 +73,9 @@ namespace ShaiRandom
          */
         public RomuTrioRandom()
         {
-            stateA = MakeSeed();
-            stateB = MakeSeed();
-            stateC = MakeSeed();
+            StateA = MakeSeed();
+            StateB = MakeSeed();
+            StateC = MakeSeed();
         }
 
         /**
@@ -97,9 +97,9 @@ namespace ShaiRandom
          */
         public RomuTrioRandom(ulong stateA, ulong stateB, ulong stateC)
         {
-            this.stateA = stateA;
-            this.stateB = stateB;
-            this.stateC = stateC;
+            StateA = stateA;
+            StateB = stateB;
+            StateC = stateC;
         }
 
         /// <summary>
@@ -133,11 +133,11 @@ namespace ShaiRandom
             switch (selection)
             {
                 case 0:
-                    return stateA;
+                    return StateA;
                 case 1:
-                    return stateB;
+                    return StateB;
                 default:
-                    return stateC;
+                    return StateC;
             }
         }
 
@@ -153,13 +153,13 @@ namespace ShaiRandom
             switch (selection)
             {
                 case 0:
-                    stateA = value;
+                    StateA = value;
                     break;
                 case 1:
-                    stateB = value;
+                    StateB = value;
                     break;
                 default:
-                    stateC = value;
+                    StateC = value;
                     break;
             }
         }
@@ -180,19 +180,19 @@ namespace ShaiRandom
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                stateA = x ^ x >> 27;
+                StateA = x ^ x >> 27;
                 x = (seed += 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                stateB = x ^ x >> 27;
+                StateB = x ^ x >> 27;
                 x = (seed + 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                stateC = x ^ x >> 27;
+                StateC = x ^ x >> 27;
             }
         }
 
@@ -209,17 +209,18 @@ namespace ShaiRandom
          */
         public override void SetState(ulong stateA, ulong stateB, ulong stateC)
         {
-            this.stateA = stateA;
-            this.stateB = stateB;
-            this.stateC = stateC;
+            StateA = stateA;
+            StateB = stateB;
+            StateC = stateC;
         }
 
+        /// <inheritdoc />
         public override ulong NextULong()
         {
             unchecked
             {
-                ulong fa = stateA;
-                stateA = 15241094284759029579UL * _c;
+                ulong fa = StateA;
+                StateA = 15241094284759029579UL * _c;
                 _c -= _b;
                 _b -= fa;
                 _b.RotateLeftInPlace(12);
@@ -228,20 +229,30 @@ namespace ShaiRandom
             }
         }
 
-        public override IEnhancedRandom Copy() => new RomuTrioRandom(stateA, stateB, stateC);
-        public override string StringSerialize() => $"#RTrR`{stateA:X}~{stateB:X}~{stateC:X}`";
+        /// <inheritdoc />
+        public override IEnhancedRandom Copy() => new RomuTrioRandom(StateA, StateB, StateC);
+
+        /// <inheritdoc />
+        public override string StringSerialize() => $"#RTrR`{StateA:X}~{StateB:X}~{StateC:X}`";
+
+        /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
-            stateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            stateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            stateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
+            StateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            StateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            StateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
 
+        /// <inheritdoc />
         public override bool Equals(object? obj) => Equals(obj as RomuTrioRandom);
-        public bool Equals(RomuTrioRandom? other) => other != null && stateA == other.stateA && stateB == other.stateB && stateC == other.stateC;
-        public override int GetHashCode() => HashCode.Combine(stateA, stateB, stateC);
+
+        /// <inheritdoc />
+        public bool Equals(RomuTrioRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB && StateC == other.StateC;
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine(StateA, StateB, StateC);
 
         public static bool operator ==(RomuTrioRandom? left, RomuTrioRandom? right) => EqualityComparer<RomuTrioRandom>.Default.Equals(left, right);
         public static bool operator !=(RomuTrioRandom? left, RomuTrioRandom? right) => !(left == right);

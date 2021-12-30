@@ -22,20 +22,20 @@ namespace ShaiRandom
         /**
          * The first state; can be any long except 0.
          */
-        public ulong stateA { get => _a; set => _a = value == 0UL ? 0xD3833E804F4C574BUL : value; }
+        public ulong StateA { get => _a; set => _a = value == 0UL ? 0xD3833E804F4C574BUL : value; }
         /**
          * The second state; can be any long except 0.
          */
-        public ulong stateB { get => _b; set => _b = value == 0UL ? 0x790B300BF9FE738FUL : value; }
+        public ulong StateB { get => _b; set => _b = value == 0UL ? 0x790B300BF9FE738FUL : value; }
         /**
          * The third state; can be any long. If this has just been set to some value, then the next call to
          * {@link #nextLong()} will return that value as-is. Later calls will be more random.
          */
-        public ulong stateC { get; set; }
+        public ulong StateC { get; set; }
         /**
          * The fourth state; can be any long.
          */
-        public ulong stateD { get; set; }
+        public ulong StateD { get; set; }
 
         public static ulong Jump(ulong state)
         {
@@ -57,10 +57,10 @@ namespace ShaiRandom
          */
         public StrangerRandom()
         {
-            stateA = MakeSeed();
+            StateA = MakeSeed();
             _b = Jump(_a);
-            stateC = MakeSeed();
-            stateD = MakeSeed();
+            StateC = MakeSeed();
+            StateD = MakeSeed();
         }
 
         /**
@@ -96,10 +96,10 @@ namespace ShaiRandom
          */
         public StrangerRandom(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
-            this.stateA = stateA;
-            this.stateB = stateB;
-            this.stateC = stateC;
-            this.stateD = stateD;
+            StateA = stateA;
+            StateB = stateB;
+            StateC = stateC;
+            StateD = stateD;
         }
 
         /// <summary>
@@ -133,13 +133,13 @@ namespace ShaiRandom
             switch (selection)
             {
                 case 0:
-                    return stateA;
+                    return StateA;
                 case 1:
-                    return stateB;
+                    return StateB;
                 case 2:
-                    return stateC;
+                    return StateC;
                 default:
-                    return stateD;
+                    return StateD;
             }
         }
 
@@ -155,16 +155,16 @@ namespace ShaiRandom
             switch (selection)
             {
                 case 0:
-                    stateA = value;
+                    StateA = value;
                     break;
                 case 1:
-                    stateB = value;
+                    StateB = value;
                     break;
                 case 2:
-                    stateC = value;
+                    StateC = value;
                     break;
                 default:
-                    stateD = value;
+                    StateD = value;
                     break;
             }
         }
@@ -178,11 +178,11 @@ namespace ShaiRandom
          */
         public override void Seed(ulong seed)
         {
-            stateA = seed ^ 0xFA346CBFD5890825UL;
-            if (stateA == 0UL) stateA = 0xD3833E804F4C574BUL;
+            StateA = seed ^ 0xFA346CBFD5890825UL;
+            if (StateA == 0UL) StateA = 0xD3833E804F4C574BUL;
             _b = Jump(_a);
-            stateC = Jump(_b - seed);
-            stateD = Jump(stateC + 0xC6BC279692B5C323UL);
+            StateC = Jump(_b - seed);
+            StateD = Jump(StateC + 0xC6BC279692B5C323UL);
         }
 
         /**
@@ -199,10 +199,10 @@ namespace ShaiRandom
          */
         public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
-            this.stateA = stateA;
-            this.stateB = stateB;
-            this.stateC = stateC;
-            this.stateD = stateD;
+            StateA = stateA;
+            StateB = stateB;
+            StateC = stateC;
+            StateD = stateD;
         }
         /// <summary>
         /// Sets the A and B states in this using the giveb stateA, and sets states C and D to stateC and stateD verbatim.
@@ -213,43 +213,53 @@ namespace ShaiRandom
         /// <param name="stateD">Can be any ulong.</param>
         public override void SetState(ulong stateA, ulong stateC, ulong stateD)
         {
-            this.stateA = stateA;
+            StateA = stateA;
             _b = Jump(_a);
-            this.stateC = stateC;
-            this.stateD = stateD;
+            StateC = stateC;
+            StateD = stateD;
         }
 
         public override ulong NextULong()
         {
             ulong fa = _a;
             ulong fb = _b;
-            ulong fc = stateC;
-            ulong fd = stateD;
+            ulong fc = StateC;
+            ulong fd = StateD;
             unchecked
             {
                 _a = fb ^ fb << 7;
                 _b = fa ^ fa >> 9;
-                stateC = fd.RotateLeft(39) - fb;
-                stateD = fa - fc + 0xC6BC279692B5C323UL;
+                StateC = fd.RotateLeft(39) - fb;
+                StateD = fa - fc + 0xC6BC279692B5C323UL;
                 return fc;
             }
         }
 
-        public override IEnhancedRandom Copy() => new StrangerRandom(stateA, stateB, stateC, stateD);
-        public override string StringSerialize() => $"#StrR`{stateA:X}~{stateB:X}~{stateC:X}~{stateD:X}`";
+        /// <inheritdoc />
+        public override IEnhancedRandom Copy() => new StrangerRandom(StateA, StateB, StateC, StateD);
+
+        /// <inheritdoc />
+        public override string StringSerialize() => $"#StrR`{StateA:X}~{StateB:X}~{StateC:X}~{StateD:X}`";
+
+        /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(string data)
         {
             int idx = data.IndexOf('`');
-            stateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            stateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            stateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            stateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
+            StateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            StateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            StateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
+            StateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
 
+        /// <inheritdoc />
         public override bool Equals(object? obj) => Equals(obj as StrangerRandom);
-        public bool Equals(StrangerRandom? other) => other != null && stateA == other.stateA && stateB == other.stateB && stateC == other.stateC && stateD == other.stateD;
-        public override int GetHashCode() => HashCode.Combine(stateA, stateB, stateC, stateD);
+
+        /// <inheritdoc />
+        public bool Equals(StrangerRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB && StateC == other.StateC && StateD == other.StateD;
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine(StateA, StateB, StateC, StateD);
 
         public static bool operator ==(StrangerRandom? left, StrangerRandom? right) => EqualityComparer<StrangerRandom>.Default.Equals(left, right);
         public static bool operator !=(StrangerRandom? left, StrangerRandom? right) => !(left == right);
