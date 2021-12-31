@@ -97,6 +97,11 @@ namespace ShaiRandom.Wrappers
         /// <inheritdoc />
         public bool Equals(ReversingWrapper? other) => other != null && EqualityComparer<IEnhancedRandom>.Default.Equals(Wrapped, other.Wrapped);
 
+        /// <inheritdoc />
+        public override ulong SelectState(int selection) => Wrapped.SelectState(selection);
+        /// <inheritdoc />
+        public override void SetSelectedState(int selection, ulong value) => Wrapped.SetSelectedState(selection, value);
+
         public static bool operator ==(ReversingWrapper? left, ReversingWrapper? right) => EqualityComparer<ReversingWrapper>.Default.Equals(left, right);
         public static bool operator !=(ReversingWrapper? left, ReversingWrapper? right) => !(left == right);
     }
