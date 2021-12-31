@@ -1,0 +1,600 @@
+﻿using System;
+using System.Collections.Generic;
+using ShaiRandom.Wrappers;
+
+namespace ShaiRandom.Generators
+{
+    /// <summary>
+    /// The abstract parent class of nearly all random number generators here.
+    /// </summary>
+    /// <remarks>
+    /// Almost all subclasses of AbstractRandom should implement <see cref="SelectState(int)"/> so that individual states can be retrieved; this is used by many of
+    /// the other methods here, and some of them throw exceptions if that method is not available. Similarly, <see cref="SetSelectedState(int, ulong)"/> should
+    /// be implemented to set specific states, especially if there is more than one state variable.
+    /// </remarks>
+    [Serializable]
+    public abstract class AbstractRandom : IEnhancedRandom
+    {
+        private static readonly float FLOAT_ADJUST = MathF.Pow(2f, -24f);
+        private static readonly double DOUBLE_ADJUST = Math.Pow(2.0, -53.0);
+        /// <summary>
+        /// Used by <see cref="MakeSeed"/> to produce mid-low quality random numbers as a starting seed, as a "don't care" option for seeding.
+        /// </summary>
+        protected static readonly Random SeedingRandom = new Random();
+
+        /// <summary>
+        /// Used by zero-argument constructors, typically, as a "don't care" option for seeding that creates a random ulong state.
+        /// </summary>
+        /// <returns></returns>
+        protected static ulong MakeSeed()
+        {
+            unchecked {
+                return (ulong)SeedingRandom.Next() ^ (ulong)SeedingRandom.Next() << 21 ^ (ulong)SeedingRandom.Next() << 42;
+            }
+        }
+        /// <summary>
+        /// Must have a zero-argument constructor.
+        /// </summary>
+        protected AbstractRandom()
+        {
+        }
+        /// <summary>
+        /// This calls <see cref="Seed(ulong)"/> with it seed by default.
+        /// </summary>
+        /// <param name="seed">A ulong that will either be used as a state verbatim or, more commonly, to determine multiple states.</param>
+        protected AbstractRandom(ulong seed)
+        {
+            Seed(seed);
+        }
+        /// <summary>
+        /// Copies another AbstractRandom, typically with the same class, into this newly-constructed one.
+        /// </summary>
+        /// <param name="other">Another AbstractRandom to copy into this one.</param>
+        protected AbstractRandom(AbstractRandom other)
+        {
+            SetWith(other);
+        }
+
+        /// <inheritdoc />
+        public abstract void Seed(ulong seed);
+
+        /// <inheritdoc />
+        public abstract int StateCount { get; }
+
+        /// <inheritdoc />
+        public abstract bool SupportsReadAccess { get; }
+
+        /// <inheritdoc />
+        public abstract bool SupportsWriteAccess { get; }
+
+        /// <inheritdoc />
+        public abstract bool SupportsSkip { get; }
+
+        /// <inheritdoc />
+        public abstract bool SupportsPrevious { get; }
+
+        /// <summary>
+        /// The exactly-four-character string that will identify this AbstractRandom for serialization purposes.
+        /// </summary>
+        public abstract string Tag { get; }
+
+        private static Dictionary<string, IEnhancedRandom> TAGS = new Dictionary<string, IEnhancedRandom>();
+
+        /// <summary>
+        /// Registers an instance of a subclass of AbstractRandom by its four-character string <see cref="Tag"/>.
+        /// </summary>
+        /// <param name="instance">An instance of a subclass of AbstractRandom, which will be copied as needed; its state does not matter,
+        /// as long as it is non-null and has a four-character <see cref="Tag"/>.</param>
+        /// <returns>Returns true if the tag was successfully registered for the first time, or false if the tags are unchanged.</returns>
+        protected static bool RegisterTag(AbstractRandom instance)
+        {
+            if (TAGS.ContainsKey(instance.Tag)) return false;
+            if (instance.Tag.Length == 4)
+            {
+                TAGS.Add(instance.Tag, instance);
+                return true;
+            }
+            return false;
+        }
+
+        /// <inheritdoc />
+        public abstract string StringSerialize();
+
+        /// <inheritdoc />
+        public abstract IEnhancedRandom StringDeserialize(string data);
+
+        /// <summary>
+        /// Given a string produced by <see cref="StringSerialize()"/> on any valid subclass of AbstractRandom,
+        /// this returns a new IEnhancedRandom with the same implementation and state it had when it was serialized.
+        /// This handles all AbstractRandom implementations in this library, including <see cref="TRGeneratorWrapper"/> and
+        /// <see cref="ReversingWrapper"/> (both of which it currently handles with a special case).
+        /// </summary>
+        /// <param name="data">A string produced by an AbstractRandom's StringSerialize() method.</param>
+        /// <returns>A newly-allocated IEnhancedRandom matching the implementation and state of the serialized AbstractRandom.</returns>
+        public static IEnhancedRandom Deserialize(string data)
+        {
+            if (data.StartsWith('T'))
+                return new TRGeneratorWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
+            if (data.StartsWith('R'))
+                return new ReversingWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
+            return TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data);
+        }
+
+        /// <inheritdoc />
+        public virtual ulong SelectState(int selection)
+        {
+            throw new NotSupportedException("SelectState() not supported.");
+        }
+
+        /// <inheritdoc />
+        public virtual void SetSelectedState(int selection, ulong value)
+        {
+            Seed(value);
+        }
+
+        /// <inheritdoc />
+        public virtual void SetState(ulong state)
+        {
+            for (int i = StateCount - 1; i >= 0; i--)
+            {
+                SetSelectedState(i, state);
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual void SetState(ulong stateA, ulong stateB)
+        {
+            int c = StateCount;
+            for (int i = 0; i < c; i += 2)
+            {
+                SetSelectedState(i, stateA);
+            }
+            for (int i = 1; i < c; i += 2)
+            {
+                SetSelectedState(i, stateB);
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual void SetState(ulong stateA, ulong stateB, ulong stateC)
+        {
+            int c = StateCount;
+            for (int i = 0; i < c; i += 3)
+            {
+                SetSelectedState(i, stateA);
+            }
+            for (int i = 1; i < c; i += 3)
+            {
+                SetSelectedState(i, stateB);
+            }
+            for (int i = 2; i < c; i += 3)
+            {
+                SetSelectedState(i, stateC);
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
+        {
+            int c = StateCount;
+            for (int i = 0; i < c; i += 4)
+            {
+                SetSelectedState(i, stateA);
+            }
+            for (int i = 1; i < c; i += 4)
+            {
+                SetSelectedState(i, stateB);
+            }
+            for (int i = 2; i < c; i += 4)
+            {
+                SetSelectedState(i, stateC);
+            }
+            for (int i = 3; i < c; i += 4)
+            {
+                SetSelectedState(i, stateD);
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual void SetState(params ulong[] states)
+        {
+            int c = StateCount, sl = states.Length;
+            for (int b = 0; b < sl; b++)
+            {
+                for (int i = b; i < c; i += sl)
+                {
+                    SetSelectedState(i, states[b]);
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public abstract ulong NextULong();
+
+        /// <inheritdoc />
+        public long NextLong()
+        {
+            unchecked
+            {
+                return (long)NextULong();
+            }
+        }
+
+        /// <inheritdoc />
+        public ulong NextULong(ulong bound)
+        {
+            return NextULong(0UL, bound);
+        }
+
+        /// <inheritdoc />
+        public long NextLong(long outerBound)
+        {
+            return NextLong(0L, outerBound);
+        }
+
+        /// <inheritdoc />
+        public ulong NextULong(ulong inner, ulong outer)
+        {
+            ulong rand = NextULong();
+            if (inner >= outer) return inner;
+            ulong bound = outer - inner;
+            ulong randLow = rand & 0xFFFFFFFFUL;
+            ulong boundLow = bound & 0xFFFFFFFFUL;
+            ulong randHigh = (rand >> 32);
+            ulong boundHigh = (bound >> 32);
+            return inner + (randHigh * boundLow >> 32) + (randLow * boundHigh >> 32) + randHigh * boundHigh;
+        }
+
+        /// <inheritdoc />
+        public long NextLong(long inner, long outer)
+        {
+            ulong rand = NextULong();
+            ulong i2, o2;
+            if (outer < inner)
+            {
+                ulong t = (ulong)outer;
+                o2 = (ulong)inner + 1UL;
+                i2 = t + 1UL;
+            }
+            else
+            {
+                o2 = (ulong)outer;
+                i2 = (ulong)inner;
+            }
+            ulong bound = o2 - i2;
+            ulong randLow = rand & 0xFFFFFFFFUL;
+            ulong boundLow = bound & 0xFFFFFFFFUL;
+            ulong randHigh = (rand >> 32);
+            ulong boundHigh = (bound >> 32);
+            return (long)(i2 + (randHigh * boundLow >> 32) + (randLow * boundHigh >> 32) + randHigh * boundHigh);
+        }
+
+        /// <summary>
+        /// Generates the next pseudorandom number with a specific maximum size in bits (not a max number).
+        /// </summary>
+        /// <remarks>
+        /// If you want to get a random number in a range, you should usually use <see cref="NextUInt(uint)"/> instead.
+        /// However, for some specific cases, this method is more efficient and less biased than <see cref="NextUInt(uint)"/>
+        /// If you know you need a number from a range from 0 (inclusive) to a power of two (exclusive), you can use this method optimally.
+        /// <br/>
+        /// Note that you can give this values for bits that are outside its expected range of 1 to 32,
+        /// but the value used, as long as bits is positive, will effectively be <code>bits % 32</code>. As stated
+        /// before, a value of 0 for bits is the same as a value of 32.
+        /// </remarks>
+        /// <param name="bits">The amount of random bits to request, from 1 to 32.</param>
+        /// <returns>The next pseudorandom value from this random number generator's sequence.</returns>
+        ///
+        public uint NextBits(int bits)
+        {
+            return (uint)(NextULong() >> 64 - bits);
+        }
+
+        /// <inheritdoc />
+        public void NextBytes(byte[] bytes)
+        {
+            int bl = bytes.Length;
+            for (int i = 0; i < bl;)
+            {
+                int n = Math.Min(bl - i, 8);
+                for (ulong r = NextULong(); n-- > 0; r >>= 8)
+                {
+                    bytes[i++] = (byte)r;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public int NextInt()
+        {
+            return (int)NextULong();
+        }
+
+        /// <inheritdoc />
+        public uint NextUInt()
+        {
+            return (uint)NextULong();
+        }
+
+        /// <inheritdoc />
+        public uint NextUInt(uint bound)
+        {
+            return (uint)(bound * (NextULong() & 0xFFFFFFFFUL) >> 32);
+        }
+
+        /// <inheritdoc />
+        public int NextInt(int outerBound)
+        {
+            outerBound = (int)(outerBound * ((long)NextULong() & 0xFFFFFFFFL) >> 32);
+            return outerBound + (outerBound >> 31);
+        }
+
+        /// <inheritdoc />
+        public uint NextUInt(uint innerBound, uint outerBound)
+        {
+            return (uint)NextULong(innerBound, outerBound);
+        }
+
+        /// <inheritdoc />
+        public int NextInt(int innerBound, int outerBound)
+        {
+            return (int)NextLong(innerBound, outerBound);
+        }
+
+        /// <inheritdoc />
+        public virtual bool NextBool()
+        {
+            return (NextULong() & 0x8000000000000000UL) == 0x8000000000000000UL;
+        }
+
+        /// <inheritdoc />
+        public virtual float NextFloat()
+        {
+            return (NextULong() >> 40) * FLOAT_ADJUST;
+        }
+
+        /// <inheritdoc />
+        public float NextFloat(float outerBound)
+        {
+            return NextFloat() * outerBound;
+        }
+
+        /// <inheritdoc />
+        public float NextFloat(float innerBound, float outerBound)
+        {
+            return innerBound + NextFloat() * (outerBound - innerBound);
+        }
+
+
+        /// <inheritdoc />
+        public virtual double NextDouble()
+        {
+            return (NextULong() >> 11) * DOUBLE_ADJUST;
+        }
+
+        /// <inheritdoc />
+        public double NextDouble(double outerBound)
+        {
+            return NextDouble() * outerBound;
+        }
+
+        /// <inheritdoc />
+        public double NextDouble(double innerBound, double outerBound)
+        {
+            return innerBound + NextDouble() * (outerBound - innerBound);
+        }
+
+        /// <inheritdoc />
+        public double NextInclusiveDouble()
+        {
+            return NextULong(0x20000000000001L) * DOUBLE_ADJUST;
+        }
+
+        /// <inheritdoc />
+        public double NextInclusiveDouble(double outerBound)
+        {
+            return NextInclusiveDouble() * outerBound;
+        }
+
+        /// <inheritdoc />
+        public double NextInclusiveDouble(double innerBound, double outerBound)
+        {
+            return innerBound + NextInclusiveDouble() * (outerBound - innerBound);
+        }
+
+        /// <inheritdoc />
+        public float NextInclusiveFloat()
+        {
+            return NextInt(0x1000001) * FLOAT_ADJUST;
+        }
+
+        /// <inheritdoc />
+        public float NextInclusiveFloat(float outerBound)
+        {
+            return NextInclusiveFloat() * outerBound;
+        }
+
+        /// <inheritdoc />
+        public float NextInclusiveFloat(float innerBound, float outerBound)
+        {
+            return innerBound + NextInclusiveFloat() * (outerBound - innerBound);
+        }
+
+        //Commented out because it was replaced by the bitwise technique below, but we may want to switch back later or on some platforms.
+
+        //**
+        //* Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
+        //* values between 1.1102230246251564E-16 and 0.9999999999999999, or 0x1.fffffffffffffp-54 and 0x1.fffffffffffffp-1 in hex
+        //* notation. It cannot return 0 or 1.
+        //* <br/>
+        //* The default implementation simply uses <see cref="NextLong()"/> to get a uniform long, shifts it to remove 11 bits, adds 1, and
+        //* multiplies by a value just slightly less than what nextDouble() usually uses.
+        //* @return a random uniform double between 0 and 1 (both exclusive)
+        //*/
+        //public double NextExclusiveDouble()
+        //{
+        //    return ((NextULong() >> 11) + 1UL) * 1.1102230246251564E-16;
+        //}
+
+
+        /// <summary>
+        /// Gets a random double between 0.0 and 1.0, exclusive at both ends, using a technique that can produce more of the valid values for a double
+        /// (near to 0) than other methods.
+        /// </summary>
+        /// <remarks>
+        /// The code for this is small, but extremely unorthodox. The technique is related to <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>,
+        /// but because the ability to get the number of leading or trailing zeros is in a method not present in .NET Standard, we get close to that by using
+        /// <see cref="BitConverter.DoubleToInt64Bits(double)"/> on a negative long and using its exponent bits directly. The smallest double this can return is 1.0842021724855044E-19 ; the largest it
+        /// can return is 0.9999999999999999 . The smallest result is significantly closer to 0 than <see cref="NextDouble()"/> can produce without actually returning 0.
+        /// <br/>If you decide to edit this, be advised: here be dragons.
+        /// </remarks>
+        /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
+        public double NextExclusiveDouble()
+        {
+            long bits = NextLong();
+            return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
+        }
+
+
+        /// <inheritdoc />
+        public double NextExclusiveDouble(double outerBound)
+        {
+            return NextExclusiveDouble() * outerBound;
+        }
+
+        /// <inheritdoc />
+        public double NextExclusiveDouble(double innerBound, double outerBound)
+        {
+            return innerBound + NextExclusiveDouble() * (outerBound - innerBound);
+        }
+
+
+        /// <inheritdoc />
+        public float NextExclusiveFloat()
+        {
+            // return ((NextUInt() >> 9) + 1u) * 5.960464E-8f;
+            long bits = NextLong();
+            return BitConverter.Int32BitsToSingle((1089 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF));
+        }
+
+        /// <inheritdoc />
+        public float NextExclusiveFloat(float outerBound)
+        {
+            return NextExclusiveFloat() * outerBound;
+        }
+
+        /// <inheritdoc />
+        public float NextExclusiveFloat(float innerBound, float outerBound)
+        {
+            return innerBound + NextExclusiveFloat() * (outerBound - innerBound);
+        }
+
+        /// <inheritdoc />
+        public virtual ulong Skip(ulong distance)
+        {
+            throw new NotSupportedException("Skip() is not implemented for this generator.");
+        }
+
+        /// <summary>
+        /// (Optional) If implemented, jumps the generator back to the previous state and returns what NextULong() would have produced at that state.
+        /// </summary>
+        /// <remarks>
+        /// The default implementation calls <see cref="Skip(ulong)"/> with the equivalent of (ulong)(-1L) . If Skip() is not implemented, this throws a NotSupportedException.
+        /// Be aware that if Skip() has a non-constant-time implementation, the default here will generally take the most time possible for that method.
+        /// </remarks>
+        /// <returns>The result of what NextULong() would return at the previous state.</returns>
+        public virtual ulong PreviousULong()
+        {
+            return Skip(0xFFFFFFFFFFFFFFFFUL);
+        }
+
+        /// <inheritdoc />
+        public abstract IEnhancedRandom Copy();
+
+        /// <summary>
+        /// Sets each state in this IEnhancedRandom to the corresponding state in the other IEnhancedRandom.
+        /// This generally only works correctly if both objects have the same class.
+        /// </summary>
+        /// <param name="other">Another IEnhancedRandom that almost always should have the same class as this one.</param>
+        public void SetWith(IEnhancedRandom other)
+        {
+            int myCount = StateCount, otherCount = other.StateCount;
+            int i = 0;
+            for (; i < myCount && i < otherCount; i++)
+            {
+                SetSelectedState(i, other.SelectState(i));
+            }
+            for (; i < myCount; i++)
+            {
+                SetSelectedState(i, 0xFFFFFFFFFFFFFFFFUL);
+            }
+        }
+
+        /// <summary>
+        /// Given two EnhancedRandom objects that could have the same or different classes,
+        /// this returns true if they have the same class and same state, or false otherwise.
+        /// </summary>
+        /// <remarks>
+        /// Both of the arguments should implement <see cref="SelectState(int)"/>, or this
+        /// will throw an UnsupportedOperationException. This can be useful for comparing
+        /// EnhancedRandom classes that do not implement Equals(), for whatever reason.
+        /// </remarks>
+        /// <param name="left">An EnhancedRandom to compare for equality</param>
+        /// <param name="right">Another EnhancedRandom to compare for equality</param>
+        /// <returns>true if the two EnhancedRandom objects have the same class and state, or false otherwise</returns>
+        public static bool AreEqual(IEnhancedRandom left, IEnhancedRandom right)
+        {
+            if (left == right)
+                return true;
+            if (left.GetType() != right.GetType())
+                return false;
+
+            int count = left.StateCount;
+            for (int i = 0; i < count; i++)
+            {
+                if (left.SelectState(i) != right.SelectState(i))
+                    return false;
+            }
+            return true;
+        }
+
+        /// <inheritdoc />
+        public bool NextBool(float chance)
+        {
+            return NextFloat() < chance;
+        }
+
+        /// <inheritdoc />
+        public int NextSign()
+        {
+            return 1 | NextInt() >> 31;
+        }
+
+        /// <inheritdoc/>
+        public float NextTriangular()
+        {
+            return NextFloat() - NextFloat();
+        }
+
+        /// <inheritdoc/>
+        public float NextTriangular(float max)
+        {
+            return (NextFloat() - NextFloat()) * max;
+        }
+
+        /// <inheritdoc/>
+
+        public float NextTriangular(float min, float max)
+        {
+            return NextTriangular(min, max, (min + max) * 0.5f);
+        }
+
+        /// <inheritdoc />
+        public float NextTriangular(float min, float max, float mode)
+        {
+            float u = NextFloat();
+            float d = max - min;
+            if (u <= (mode - min) / d) { return min + MathF.Sqrt(u * d * (mode - min)); }
+            return max - MathF.Sqrt((1 - u) * d * (max - mode));
+        }
+    }
+}

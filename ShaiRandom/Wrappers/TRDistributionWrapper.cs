@@ -1,4 +1,5 @@
 ﻿using ShaiRandom.Distributions;
+using ShaiRandom.Generators;
 using Troschuetz.Random;
 
 namespace ShaiRandom.Wrappers
