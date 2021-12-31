@@ -709,182 +709,327 @@ namespace ShaiRandom
         /// <param name="mode">the point around which the values are more likely</param>
         float NextTriangular(float min, float max, float mode);
 
+
+
+    }
+
+    /// <summary>
+    /// A collection of useful extension methods for IEnhancedRandom implementations.
+    /// </summary>
+    public static class EnhancedRandomExtensions
+    {
         /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextInt(int, int)"/> using the given innerBound
-        /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
+        /// Returns the minimum result of trials calls to <see cref="IEnhancedRandom.NextInt(int, int)"/> using the
+        /// given innerBound and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        int MinIntOf(int innerBound, int outerBound, int trials);
+        public static int MinIntOf(this IEnhancedRandom rng, int innerBound, int outerBound, int trials)
+        {
+            int v = rng.NextInt(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Min(v, rng.NextInt(innerBound, outerBound));
+            }
+            return v;
+        }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextInt(int, int)"/> using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="IEnhancedRandom.NextInt(int, int)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        int MaxIntOf(int innerBound, int outerBound, int trials);
+        public static int MaxIntOf(this IEnhancedRandom rng, int innerBound, int outerBound, int trials)
+        {
+            int v = rng.NextInt(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Max(v, rng.NextInt(innerBound, outerBound));
+            }
+            return v;
+        }
 
         /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextLong(long, long)"/> using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="IEnhancedRandom.NextLong(long, long)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        long MinLongOf(long innerBound, long outerBound, int trials);
+        public static long MinLongOf(this IEnhancedRandom rng, long innerBound, long outerBound, int trials)
+        {
+            long v = rng.NextLong(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Min(v, rng.NextLong(innerBound, outerBound));
+            }
+            return v;
+        }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextLong(long, long)"/> using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="IEnhancedRandom.NextLong(long, long)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        long MaxLongOf(long innerBound, long outerBound, int trials);
+        public static long MaxLongOf(this IEnhancedRandom rng, long innerBound, long outerBound, int trials)
+        {
+            long v = rng.NextLong(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Max(v, rng.NextLong(innerBound, outerBound));
+            }
+            return v;
+        }
+
         /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextUInt(uint, uint)"/> using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="IEnhancedRandom.NextUInt(uint, uint)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        uint MinUIntOf(uint innerBound, uint outerBound, int trials);
+        public static uint MinUIntOf(this IEnhancedRandom rng, uint innerBound, uint outerBound, int trials)
+        {
+            uint v = rng.NextUInt(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Min(v, rng.NextUInt(innerBound, outerBound));
+            }
+            return v;
+        }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextUInt(uint, uint)"/> using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="IEnhancedRandom.NextUInt(uint, uint)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        uint MaxUIntOf(uint innerBound, uint outerBound, int trials);
+        public static uint MaxUIntOf(this IEnhancedRandom rng, uint innerBound, uint outerBound, int trials)
+        {
+            uint v = rng.NextUInt(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Max(v, rng.NextUInt(innerBound, outerBound));
+            }
+            return v;
+        }
 
         /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextULong(ulong, ulong)"/> using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="IEnhancedRandom.NextULong(ulong, ulong)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        ulong MinULongOf(ulong innerBound, ulong outerBound, int trials);
+        public static ulong MinULongOf(this IEnhancedRandom rng, ulong innerBound, ulong outerBound, int trials)
+        {
+            ulong v = rng.NextULong(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Min(v, rng.NextULong(innerBound, outerBound));
+            }
+            return v;
+        }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextULong(ulong, ulong)"/> using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="IEnhancedRandom.NextULong(ulong, ulong)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        ulong MaxULongOf(ulong innerBound, ulong outerBound, int trials);
+        public static ulong MaxULongOf(this IEnhancedRandom rng, ulong innerBound, ulong outerBound, int trials)
+        {
+            ulong v = rng.NextULong(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Max(v, rng.NextULong(innerBound, outerBound));
+            }
+            return v;
+        }
 
         /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextDouble(double, double)"/> using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="IEnhancedRandom.NextDouble(double, double)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        double MinDoubleOf(double innerBound, double outerBound, int trials);
+        public static double MinDoubleOf(this IEnhancedRandom rng, double innerBound, double outerBound, int trials)
+        {
+            double v = rng.NextDouble(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Min(v, rng.NextDouble(innerBound, outerBound));
+            }
+            return v;
+        }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextDouble(double, double)"/> using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="IEnhancedRandom.NextDouble(double, double)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        double MaxDoubleOf(double innerBound, double outerBound, int trials);
+        public static double MaxDoubleOf(this IEnhancedRandom rng, double innerBound, double outerBound, int trials)
+        {
+            double v = rng.NextDouble(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Max(v, rng.NextDouble(innerBound, outerBound));
+            }
+            return v;
+        }
 
         /// <summary>
-        /// Returns the minimum result of trials calls to <see cref="NextFloat(float, float)"/> using the given innerBound
+        /// Returns the minimum result of trials calls to <see cref="IEnhancedRandom.NextFloat(float, float)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the lower the average value this returns.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the lowest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        float MinFloatOf(float innerBound, float outerBound, int trials);
+        public static float MinFloatOf(this IEnhancedRandom rng, float innerBound, float outerBound, int trials)
+        {
+            float v = rng.NextFloat(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Min(v, rng.NextFloat(innerBound, outerBound));
+            }
+            return v;
+        }
 
         /// <summary>
-        /// Returns the maximum result of trials calls to <see cref="NextFloat(float, float)"/> using the given innerBound
+        /// Returns the maximum result of trials calls to <see cref="IEnhancedRandom.NextFloat(float, float)"/> using the given innerBound
         /// and outerBound. The innerBound is inclusive; the outerBound is exclusive.
         /// The higher trials is, the higher the average value this returns.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <param name="trials">how many random numbers to acquire and compare</param>
         /// <returns>the highest random number between innerBound (inclusive) and outerBound (exclusive) this found</returns>
-        float MaxFloatOf(float innerBound, float outerBound, int trials);
+        public static float MaxFloatOf(this IEnhancedRandom rng, float innerBound, float outerBound, int trials)
+        {
+            float v = rng.NextFloat(innerBound, outerBound);
+            for (int i = 1; i < trials; i++)
+            {
+                v = Math.Max(v, rng.NextFloat(innerBound, outerBound));
+            }
+            return v;
+        }
 
 
         /// <summary>
         /// Gets a randomly-chosen item from the given non-null, non-empty array.
         /// </summary>
+        /// <param name="rng" />
         /// <typeparam name="T">The type of items in the array.</typeparam>
         /// <param name="array">Must be non-null and non-empty.</param>
         /// <returns>A randomly-chosen item from array.</returns>
-        T RandomElement<T>(T[] array);
+        public static T RandomElement<T>(this IEnhancedRandom rng, T[] array)
+            => array[rng.NextInt(array.Length)];
 
         /// <summary>
         /// Gets a randomly-chosen item from the given non-null, non-empty IList.
         /// </summary>
+        /// <param name="rng" />
         /// <typeparam name="T">The type of items in the list.</typeparam>
         /// <param name="list">Must be non-null and non-empty.</param>
         /// <returns>A randomly-chosen item from list.</returns>
-        T RandomElement<T>(IList<T> list);
+        public static T RandomElement<T>(this IEnhancedRandom rng, IList<T> list)
+            => list[rng.NextInt(list.Count)];
 
         /// <summary>
         /// Shuffles the given array in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
-        void Shuffle<T>(T[] items);
+        public static void Shuffle<T>(this IEnhancedRandom rng, T[] items)
+            => rng.Shuffle(items, 0, items.Length);
 
         /// <summary>
         /// Shuffles the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="items">an IList; must be non-null but may contain null items</param>
-        void Shuffle<T>(IList<T> items);
+        public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items)
+            => rng.Shuffle(items, 0, items.Count);
 
         /// <summary>
         /// Shuffles a section of the given array in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
         /// <param name="offset">the index of the first element of the array that can be shuffled</param>
         /// <param name="length">the length of the section to shuffle</param>
-        void Shuffle<T>(T[] items, int offset, int length);
+        public static void Shuffle<T>(this IEnhancedRandom rng, T[] items, int offset, int length)
+        {
+            offset = Math.Min(Math.Max(0, offset), items.Length);
+            length = Math.Min(items.Length - offset, Math.Max(0, length));
+            for (int i = offset + length - 1; i > offset; i--)
+            {
+                int ii = rng.NextInt(offset, i + 1);
+                (items[i], items[ii]) = (items[ii], items[i]);
+            }
+        }
 
         /// <summary>
         /// Shuffles a section of the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
         /// </summary>
+        /// <param name="rng" />
         /// <param name="items">an IList; must be non-null but may contain null items</param>
         /// <param name="offset">the index of the first element of the IList that can be shuffled</param>
         /// <param name="length">the length of the section to shuffle</param>
-        void Shuffle<T>(IList<T> items, int offset, int length);
-
+        public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items, int offset, int length)
+        {
+            offset = Math.Min(Math.Max(0, offset), items.Count);
+            length = Math.Min(items.Count - offset, Math.Max(0, length));
+            for (int i = offset + length - 1; i > offset; i--)
+            {
+                int ii = rng.NextInt(offset, i + 1);
+                (items[i], items[ii]) = (items[ii], items[i]);
+            }
+        }
     }
 
 
@@ -1561,207 +1706,5 @@ namespace ShaiRandom
             if (u <= (mode - min) / d) { return min + MathF.Sqrt(u * d * (mode - min)); }
             return max - MathF.Sqrt((1 - u) * d * (max - mode));
         }
-
-
-        /// <inheritdoc />
-        public int MinIntOf(int innerBound, int outerBound, int trials)
-        {
-            int v = NextInt(innerBound, outerBound);
-            for (int i = 1; i < trials; i++)
-            {
-                v = Math.Min(v, NextInt(innerBound, outerBound));
-            }
-            return v;
-        }
-
-        /// <inheritdoc />
-        public int MaxIntOf(int innerBound, int outerBound, int trials)
-        {
-            int v = NextInt(innerBound, outerBound);
-            for (int i = 1; i < trials; i++)
-            {
-                v = Math.Max(v, NextInt(innerBound, outerBound));
-            }
-            return v;
-        }
-
-        /// <inheritdoc />
-        public long MinLongOf(long innerBound, long outerBound, int trials)
-        {
-            long v = NextLong(innerBound, outerBound);
-            for (int i = 1; i < trials; i++)
-            {
-                v = Math.Min(v, NextLong(innerBound, outerBound));
-            }
-            return v;
-        }
-
-        /// <inheritdoc />
-        public long MaxLongOf(long innerBound, long outerBound, int trials)
-        {
-            long v = NextLong(innerBound, outerBound);
-            for (int i = 1; i < trials; i++)
-            {
-                v = Math.Max(v, NextLong(innerBound, outerBound));
-            }
-            return v;
-        }
-
-        /// <inheritdoc />
-        public uint MinUIntOf(uint innerBound, uint outerBound, int trials)
-        {
-            uint v = NextUInt(innerBound, outerBound);
-            for (int i = 1; i < trials; i++)
-            {
-                v = Math.Min(v, NextUInt(innerBound, outerBound));
-            }
-            return v;
-        }
-
-        /// <inheritdoc />
-        public uint MaxUIntOf(uint innerBound, uint outerBound, int trials)
-        {
-            uint v = NextUInt(innerBound, outerBound);
-            for (int i = 1; i < trials; i++)
-            {
-                v = Math.Max(v, NextUInt(innerBound, outerBound));
-            }
-            return v;
-        }
-
-        /// <inheritdoc />
-        public ulong MinULongOf(ulong innerBound, ulong outerBound, int trials)
-        {
-            ulong v = NextULong(innerBound, outerBound);
-            for (int i = 1; i < trials; i++)
-            {
-                v = Math.Min(v, NextULong(innerBound, outerBound));
-            }
-            return v;
-        }
-
-        /// <inheritdoc />
-        public ulong MaxULongOf(ulong innerBound, ulong outerBound, int trials)
-        {
-            ulong v = NextULong(innerBound, outerBound);
-            for (int i = 1; i < trials; i++)
-            {
-                v = Math.Max(v, NextULong(innerBound, outerBound));
-            }
-            return v;
-        }
-
-        /// <inheritdoc />
-        public double MinDoubleOf(double innerBound, double outerBound, int trials)
-        {
-            double v = NextDouble(innerBound, outerBound);
-            for (int i = 1; i < trials; i++)
-            {
-                v = Math.Min(v, NextDouble(innerBound, outerBound));
-            }
-            return v;
-        }
-
-        /// <inheritdoc />
-        public double MaxDoubleOf(double innerBound, double outerBound, int trials)
-        {
-            double v = NextDouble(innerBound, outerBound);
-            for (int i = 1; i < trials; i++)
-            {
-                v = Math.Max(v, NextDouble(innerBound, outerBound));
-            }
-            return v;
-        }
-
-        /// <inheritdoc />
-        public float MinFloatOf(float innerBound, float outerBound, int trials)
-        {
-            float v = NextFloat(innerBound, outerBound);
-            for (int i = 1; i < trials; i++)
-            {
-                v = Math.Min(v, NextFloat(innerBound, outerBound));
-            }
-            return v;
-        }
-
-        /// <inheritdoc />
-        public float MaxFloatOf(float innerBound, float outerBound, int trials)
-        {
-            float v = NextFloat(innerBound, outerBound);
-            for (int i = 1; i < trials; i++)
-            {
-                v = Math.Max(v, NextFloat(innerBound, outerBound));
-            }
-            return v;
-        }
-
-        /// <inheritdoc />
-        public T RandomElement<T>(T[] array)
-        {
-            return array[NextInt(array.Length)];
-        }
-
-        /// <inheritdoc />
-        public T RandomElement<T>(IList<T> list)
-        {
-            return list[NextInt(list.Count)];
-        }
-
-        /// <summary>
-        /// Shuffles the given array in-place pseudo-randomly, using this to generate
-        /// {@code items.Length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
-        /// </summary>
-        /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
-        public void Shuffle<T>(T[] items)
-        {
-            Shuffle(items, 0, items.Length);
-        }
-
-        /// <summary>
-        /// Shuffles the given IList in-place pseudo-randomly, using this to generate
-        /// {@code items.Count - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
-        /// </summary>
-        /// <param name="items">an IList; must be non-null but may contain null items</param>
-        public void Shuffle<T>(IList<T> items)
-        {
-            Shuffle(items, 0, items.Count);
-        }
-
-        /// <summary>
-        /// Shuffles a section of the given array in-place pseudo-randomly, using this to generate
-        /// {@code length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
-        /// </summary>
-        /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
-        /// <param name="offset">the index of the first element of the array that can be shuffled</param>
-        /// <param name="length">the length of the section to shuffle</param>
-        public void Shuffle<T>(T[] items, int offset, int length)
-        {
-            offset = Math.Min(Math.Max(0, offset), items.Length);
-            length = Math.Min(items.Length - offset, Math.Max(0, length));
-            for (int i = offset + length - 1; i > offset; i--)
-            {
-                int ii = NextInt(offset, i + 1);
-                (items[i], items[ii]) = (items[ii], items[i]);
-            }
-        }
-
-        /// <summary>
-        /// Shuffles a section of the given IList in-place pseudo-randomly, using this to generate
-        /// {@code length - 1} random numbers and using the Fisher-Yates (also called Knuth) shuffle algorithm.
-        /// </summary>
-        /// <param name="items">an IList; must be non-null but may contain null items</param>
-        /// <param name="offset">the index of the first element of the IList that can be shuffled</param>
-        /// <param name="length">the length of the section to shuffle</param>
-        public void Shuffle<T>(IList<T> items, int offset, int length)
-        {
-            offset = Math.Min(Math.Max(0, offset), items.Count);
-            length = Math.Min(items.Count - offset, Math.Max(0, length));
-            for (int i = offset + length - 1; i > offset; i--)
-            {
-                int ii = NextInt(offset, i + 1);
-                (items[i], items[ii]) = (items[ii], items[i]);
-            }
-        }
-
     }
 }
