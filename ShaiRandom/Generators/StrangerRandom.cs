@@ -229,6 +229,7 @@ namespace ShaiRandom.Generators
             StateD = stateD;
         }
 
+        /// <inheritdoc />
         public override ulong NextULong()
         {
             ulong fa = _a;

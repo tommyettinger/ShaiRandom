@@ -12,7 +12,7 @@ namespace ShaiRandom.Wrappers
     /// ReversingWrapper will permit calls to its Skip, and they will also go in reverse. The most common use for this would be to run
     /// the wrapped generator forward and track the number of calls made, then run the ReversingWrapper by the same number of calls
     /// (potentially using Skip(), if supported) to revert the state to its original value. This is more convenient for the usage where
-    /// you use <see cref="IEnhancedRandom.Shuffle{T}(T[])"/> with both the wrapped generator and wrapper, since they will use the same amount of
+    /// you use <see cref="EnhancedRandomExtensions.Shuffle{T}(IEnhancedRandom, T[])"/> with both the wrapped generator and wrapper, since they will use the same amount of
     /// calls, and this will even un-shuffle the array (restoring it to its order before the shuffle).
     /// </summary>
     [Serializable]

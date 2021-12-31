@@ -195,7 +195,7 @@ namespace ShaiRandom.Generators
 
         public override bool NextBool() => ReturnValueFrom(_boolSeries, ref _boolIndex);
 
-        public new bool NextBool(float chance) => NextBool();
+        public bool NextBool(float chance) => NextBool();
 
         public new int NextInt() => ReturnValueFrom(_intSeries, ref _intIndex);
         public new int NextInt(int outerBound) => NextInt(0, outerBound);
@@ -239,13 +239,13 @@ namespace ShaiRandom.Generators
         public new float NextExclusiveFloat() => NextExclusiveFloat(0f, 1f);
         public new float NextExclusiveFloat(float outerBound) => NextExclusiveFloat(0f, outerBound);
         public new float NextExclusiveFloat(float minBound, float maxBound) => ReturnIfRangeBothExclusive(minBound, maxBound, _floatSeries, ref _floatIndex);
-        public new float NextTriangular()
+        public float NextTriangular()
         {
             NextFloat(); // Used only to advance state the same number of times.
             return NextExclusiveFloat(-1f, 1f);
         }
-        public new float NextTriangular(float min, float max) => NextExclusiveFloat(min, max);
-        public new float NextTriangular(float min, float max, float mode) => NextExclusiveFloat(min, max);
+        public float NextTriangular(float min, float max) => NextExclusiveFloat(min, max);
+        public float NextTriangular(float min, float max, float mode) => NextExclusiveFloat(min, max);
         public new long NextLong() => ReturnValueFrom(_longSeries, ref _longIndex);
         public new long NextLong(long outerBound) => NextLong(0, outerBound);
         /// <summary>
