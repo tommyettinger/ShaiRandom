@@ -42,7 +42,7 @@ namespace ShaiRandom.Distributions.Continuous
     ///   <para>The thread safety of this class depends on the one of the underlying generator.</para>
     /// </remarks>
     [Serializable]
-    public sealed class KumaraswamyDistribution : IContinuousDistribution
+    public sealed class KumaraswamyDistribution : IEnhancedContinuousDistribution
     {
         #region Constants
 

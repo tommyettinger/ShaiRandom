@@ -6,10 +6,15 @@ using Troschuetz.Random;
 namespace ShaiRandom.Wrappers
 {
     /// <summary>
-    /// Wraps a ShaiRandom AbstractRandom object so it can also be used as a Troschuetz.Random IGenerator.
+    /// Wraps a ShaiRandom IEnhancedRandom object so it can also be used as a Troschuetz.Random IGenerator.
     /// </summary>
+    /// <remarks>
+    /// This class implements both IGenerator and IEnhancedRandom.  Any IEnhancedRandom member is implemented by
+    /// simply forwarding to the ShaiRandom generator being wrapped;  all IGenerator methods are explicitly implemented
+    /// and are implemented in terms of IEnhancedRandom methods.
+    /// </remarks>
     [System.Serializable]
-    public class TRWrapper : AbstractRandom, IGenerator, IEquatable<TRWrapper?>
+    public class TRGeneratorWrapper : AbstractRandom, IGenerator, IEquatable<TRGeneratorWrapper?>
     {
         /// <summary>
         /// The identifying tag here is "T" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
@@ -21,31 +26,61 @@ namespace ShaiRandom.Wrappers
         /// </summary>
         public IEnhancedRandom Wrapped { get; set; }
 
-        public TRWrapper() => Wrapped = new FourWheelRandom();
+        /// <summary>
+        /// Creates a wrapper around a new FourWheelRandom generator with a random state.
+        /// </summary>
+        public TRGeneratorWrapper() => Wrapped = new FourWheelRandom();
 
-        public TRWrapper(ulong seed) => Wrapped = new FourWheelRandom(seed);
+        /// <summary>
+        /// Creates a wrapper around a new FourWheelRandom generator, whose state will be initialized with the given seed.
+        /// </summary>
+        /// <param name="seed">Seed to initialize the new generator with.</param>
+        public TRGeneratorWrapper(ulong seed) => Wrapped = new FourWheelRandom(seed);
 
-        public TRWrapper(IEnhancedRandom wrapped) => Wrapped = wrapped;
+        /// <summary>
+        /// Creates a wrapper around the given ShaiRandom generator.
+        /// </summary>
+        /// <param name="wrapped">The ShaiRandom generator to wrap.</param>
+        public TRGeneratorWrapper(IEnhancedRandom wrapped) => Wrapped = wrapped;
 
+        /// <inheritdoc />
         public override int StateCount => Wrapped.StateCount;
+        /// <inheritdoc />
         public override bool SupportsReadAccess => Wrapped.SupportsReadAccess;
+        /// <inheritdoc />
         public override bool SupportsWriteAccess => Wrapped.SupportsWriteAccess;
+        /// <inheritdoc />
         public override bool SupportsSkip => Wrapped.SupportsSkip;
+        /// <inheritdoc />
         public override bool SupportsPrevious => Wrapped.SupportsPrevious;
 
-        public override IEnhancedRandom Copy() => new TRWrapper(Wrapped.Copy());
+        /// <inheritdoc />
+        public override IEnhancedRandom Copy() => new TRGeneratorWrapper(Wrapped.Copy());
+        /// <inheritdoc />
         public override double NextDouble() => Wrapped.NextDouble();
+        /// <inheritdoc />
         public override ulong NextULong() => Wrapped.NextULong();
+        /// <inheritdoc />
         public override ulong SelectState(int selection) => Wrapped.SelectState(selection);
+        /// <inheritdoc />
         public override void Seed(ulong seed) => Wrapped.Seed(seed);
+        /// <inheritdoc />
         public override void SetState(ulong stateA) => Wrapped.SetState(stateA);
+        /// <inheritdoc />
         public override void SetState(ulong stateA, ulong stateB) => Wrapped.SetState(stateA, stateB);
+        /// <inheritdoc />
         public override void SetState(ulong stateA, ulong stateB, ulong stateC) => Wrapped.SetState(stateA, stateB, stateC);
+        /// <inheritdoc />
         public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD) => Wrapped.SetState(stateA, stateB, stateC, stateD);
+        /// <inheritdoc />
         public override void SetState(params ulong[] states) => Wrapped.SetState(states);
+        /// <inheritdoc />
         public override ulong Skip(ulong distance) => Wrapped.Skip(distance);
+        /// <inheritdoc />
         public override ulong PreviousULong() => Wrapped.PreviousULong();
+        /// <inheritdoc />
         public override string StringSerialize() => "T"+ Wrapped.StringSerialize().Substring(1);
+        /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(string data)
         {
             Wrapped.StringDeserialize(data);
@@ -73,11 +108,13 @@ namespace ShaiRandom.Wrappers
         bool IGenerator.Reset(uint seed) => false;
         #endregion
 
-        public override bool Equals(object? obj) => Equals(obj as TRWrapper);
-        public bool Equals(TRWrapper? other) => other != null && EqualityComparer<IEnhancedRandom>.Default.Equals(Wrapped, other.Wrapped);
+        /// <inheritdoc />
+        public override bool Equals(object? obj) => Equals(obj as TRGeneratorWrapper);
+        /// <inheritdoc />
+        public bool Equals(TRGeneratorWrapper? other) => other != null && EqualityComparer<IEnhancedRandom>.Default.Equals(Wrapped, other.Wrapped);
 
-        public static bool operator ==(TRWrapper? left, TRWrapper? right) => EqualityComparer<TRWrapper>.Default.Equals(left, right);
-        public static bool operator !=(TRWrapper? left, TRWrapper? right) => !(left == right);
+        public static bool operator ==(TRGeneratorWrapper? left, TRGeneratorWrapper? right) => EqualityComparer<TRGeneratorWrapper>.Default.Equals(left, right);
+        public static bool operator !=(TRGeneratorWrapper? left, TRGeneratorWrapper? right) => !(left == right);
 
 
     }
