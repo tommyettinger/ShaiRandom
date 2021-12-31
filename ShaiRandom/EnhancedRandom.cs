@@ -996,7 +996,7 @@ namespace ShaiRandom
         /// <summary>
         /// Given a string produced by <see cref="StringSerialize()"/> on any valid subclass of AbstractRandom,
         /// this returns a new IEnhancedRandom with the same implementation and state it had when it was serialized.
-        /// This handles all AbstractRandom implementations in this library, including <see cref="TRWrapper"/> and
+        /// This handles all AbstractRandom implementations in this library, including <see cref="TRGeneratorWrapper"/> and
         /// <see cref="ReversingWrapper"/> (both of which it currently handles with a special case).
         /// </summary>
         /// <param name="data">A string produced by an AbstractRandom's StringSerialize() method.</param>
@@ -1004,7 +1004,7 @@ namespace ShaiRandom
         public static IEnhancedRandom Deserialize(string data)
         {
             if (data.StartsWith('T'))
-                return new TRWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
+                return new TRGeneratorWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
             if (data.StartsWith('R'))
                 return new ReversingWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
             return TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data);

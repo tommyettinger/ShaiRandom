@@ -120,7 +120,7 @@ namespace ShaiRandom.UnitTests
         [Fact]
         public void TRWrapperSerDeserTest()
         {
-            TRWrapper random = new TRWrapper(new FourWheelRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL));
+            TRGeneratorWrapper random = new TRGeneratorWrapper(new FourWheelRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL));
             random.NextULong();
             string data = random.StringSerialize();
             Assert.StartsWith("TFoWR`", data);
