@@ -556,45 +556,5 @@ namespace ShaiRandom.Generators
             }
             return true;
         }
-
-        /// <inheritdoc />
-        public bool NextBool(float chance)
-        {
-            return NextFloat() < chance;
-        }
-
-        /// <inheritdoc />
-        public int NextSign()
-        {
-            return 1 | NextInt() >> 31;
-        }
-
-        /// <inheritdoc/>
-        public float NextTriangular()
-        {
-            return NextFloat() - NextFloat();
-        }
-
-        /// <inheritdoc/>
-        public float NextTriangular(float max)
-        {
-            return (NextFloat() - NextFloat()) * max;
-        }
-
-        /// <inheritdoc/>
-
-        public float NextTriangular(float min, float max)
-        {
-            return NextTriangular(min, max, (min + max) * 0.5f);
-        }
-
-        /// <inheritdoc />
-        public float NextTriangular(float min, float max, float mode)
-        {
-            float u = NextFloat();
-            float d = max - min;
-            if (u <= (mode - min) / d) { return min + MathF.Sqrt(u * d * (mode - min)); }
-            return max - MathF.Sqrt((1 - u) * d * (max - mode));
-        }
     }
 }

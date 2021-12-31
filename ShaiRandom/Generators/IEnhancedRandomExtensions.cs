@@ -398,5 +398,84 @@ namespace ShaiRandom.Generators
         {
             return rng.Probit(rng.NextExclusiveDouble()) * stdDev + mean;
         }
+
+        /// <summary>
+        /// Returns true if a random value between 0 and 1 is less than the specified value.
+        /// </summary>
+        /// <param name="rng" />
+        /// <param name="chance">a float between 0.0 and 1.0; higher values are more likely to result in true</param>
+        /// <returns>a bool selected with the given chance of being true</returns>
+        public static bool NextBool(this IEnhancedRandom rng, float chance)
+        {
+            return rng.NextFloat() < chance;
+        }
+
+        /// <summary>
+        /// Returns -1 or 1, randomly.
+        /// </summary>
+        /// <param name="rng" />
+        /// <returns>-1 or 1, selected with approximately equal likelihood</returns>
+        public static int NextSign(this IEnhancedRandom rng)
+        {
+            return 1 | rng.NextInt() >> 31;
+        }
+
+        /// <summary>
+        /// Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
+        /// more likely. Typically advances the state twice.
+        /// </summary>
+        /// <remarks>
+        /// This can be an optimized version of <see cref="NextTriangular(IEnhancedRandom, float, float, float)"/>, or: <code> NextTriangular(-1, 1, 0)</code>
+        /// </remarks>
+        /// <param name="rng" />
+        public static float NextTriangular(this IEnhancedRandom rng)
+        {
+            return rng.NextFloat() - rng.NextFloat();
+        }
+
+        /// <summary>
+        /// Returns a triangularly distributed random number between {@code -max} (exclusive) and max (exclusive), where values
+        /// around zero are more likely. Advances the state twice.
+        /// </summary>
+        /// <remarks>
+        /// This is an optimized version of <see cref="NextTriangular(IEnhancedRandom, float, float, float)"/>, or: <code> NextTriangular(-max, max, 0)</code>
+        /// </remarks>
+        /// <param name="rng" />
+        /// <param name="max">the outer exclusive limit</param>
+        public static float NextTriangular(this IEnhancedRandom rng, float max)
+        {
+            return (rng.NextFloat() - rng.NextFloat()) * max;
+        }
+
+        /// <summary>
+        /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where the
+        /// mode argument defaults to the midpoint between the bounds, giving a symmetric distribution. Advances the state once.
+        /// </summary>
+        /// <remarks>
+        /// This is an optimized version of <see cref="NextTriangular(IEnhancedRandom, float, float, float)"/>, or: <code> NextTriangular(min, max, (min + max) * 0.5f)</code>
+        /// </remarks>
+        /// <param name="rng" />
+        /// <param name="min">the lower limit</param>
+        /// <param name="max">the upper limit</param>
+        public static float NextTriangular(this IEnhancedRandom rng, float min, float max)
+        {
+            return rng.NextTriangular(min, max, (min + max) * 0.5f);
+        }
+
+        /// <summary>
+        /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where values
+        /// around mode are more likely.
+        /// </summary>
+        /// <param name="rng" />
+        /// <param name="min"> the lower limit</param>
+        /// <param name="max"> the upper limit</param>
+        /// <param name="mode">the point around which the values are more likely</param>
+        public static float NextTriangular(this IEnhancedRandom rng, float min, float max, float mode)
+        {
+            float u = rng.NextFloat();
+            float d = max - min;
+            if (u <= (mode - min) / d) { return min + MathF.Sqrt(u * d * (mode - min)); }
+            return max - MathF.Sqrt((1 - u) * d * (max - mode));
+        }
     }
 }

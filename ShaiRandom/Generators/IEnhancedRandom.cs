@@ -1,4 +1,6 @@
-﻿namespace ShaiRandom.Generators
+﻿using System;
+
+namespace ShaiRandom.Generators
 {
     /// <summary>
     /// The interface view of the functionality typically provided by <see cref="AbstractRandom"/>.
@@ -612,57 +614,5 @@
         /// </summary>
         /// <param name="other">Another IEnhancedRandom that almost always should have the same class as this one, or wrap an IEnhancedRandom with the same class.</param>
         void SetWith(IEnhancedRandom other);
-
-        /// <summary>
-        /// Returns true if a random value between 0 and 1 is less than the specified value.
-        /// </summary>
-        /// <param name="chance">a float between 0.0 and 1.0; higher values are more likely to result in true</param>
-        /// <returns>a bool selected with the given chance of being true</returns>
-        bool NextBool(float chance);
-
-        /// <summary>
-        /// Returns -1 or 1, randomly.
-        /// </summary>
-        /// <returns>-1 or 1, selected with approximately equal likelihood</returns>
-        int NextSign();
-
-        /// <summary>
-        /// Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
-        /// more likely. Typically advances the state twice.
-        /// </summary>
-        /// <remarks>
-        /// This can be an optimized version of <see cref="NextTriangular(float, float, float)"/>, or: <code> NextTriangular(-1, 1, 0)</code>
-        /// </remarks>
-        float NextTriangular();
-
-        /// <summary>
-        /// Returns a triangularly distributed random number between {@code -max} (exclusive) and max (exclusive), where values
-        /// around zero are more likely. Advances the state twice.
-        /// </summary>
-        /// <remarks>
-        /// This is an optimized version of <see cref="NextTriangular(float, float, float)"/>, or: <code> NextTriangular(-max, max, 0)</code>
-        /// </remarks>
-        /// <param name="max">the outer exclusive limit</param>
-        float NextTriangular(float max);
-
-        /// <summary>
-        /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where the
-        /// mode argument defaults to the midpoint between the bounds, giving a symmetric distribution. Advances the state once.
-        /// </summary>
-        /// <remarks>
-        /// This is an optimized version of <see cref="NextTriangular(float, float, float)"/>, or: <code> NextTriangular(min, max, (min + max) * 0.5f)</code>
-        /// </remarks>
-        /// <param name="min">the lower limit</param>
-        /// <param name="max">the upper limit</param>
-        float NextTriangular(float min, float max);
-
-        /// <summary>
-        /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where values
-        /// around mode are more likely.
-        /// </summary>
-        /// <param name="min"> the lower limit</param>
-        /// <param name="max"> the upper limit</param>
-        /// <param name="mode">the point around which the values are more likely</param>
-        float NextTriangular(float min, float max, float mode);
     }
 }
