@@ -606,13 +606,5 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <returns>The result of what NextULong() would return at the previous state.</returns>
         ulong PreviousULong();
-
-        /// <summary>
-        /// Sets each state in this IEnhancedRandom to the corresponding state in the other IEnhancedRandom.
-        /// This generally only works correctly if both objects have the same class, but may also function correctly if this, other, or both are wrappers
-        /// around the same type of IEnhancedRandom.
-        /// </summary>
-        /// <param name="other">Another IEnhancedRandom that almost always should have the same class as this one, or wrap an IEnhancedRandom with the same class.</param>
-        void SetWith(IEnhancedRandom other);
     }
 }

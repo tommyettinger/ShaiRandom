@@ -322,71 +322,6 @@ namespace ShaiRandom.Generators
         }
 
         /// <summary>
-        /// A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
-        /// inputs correspond to high outputs, and similarly for the low range.
-        /// </summary>
-        /// <remarks>This is centered on 0.0 and its standard
-        /// deviation seems to be 1.0 (the same as {@link java.util.Random#nextGaussian()}). If this is given an input of 0.0
-        /// or less, it returns -38.5, which is slightly less than the result when given <see cref="double.MinValue"/>. If it is
-        /// given an input of 1.0 or more, it returns 38.5, which is significantly larger than the result when given the
-        /// largest double less than 1.0 (this value is further from 1.0 than <see cref="double.MinValue"/> is from 0.0). If
-        /// given <see cref="double.NaN"/>, it returns NaN. It uses an algorithm by Peter John Acklam, as
-        /// implemented by Sherali Karimov.
-        /// <a href="https://web.archive.org/web/20150910002142/http://home.online.no/~pjacklam/notes/invnorm/impl/karimov/StatUtil.java">Original source</a>.
-        /// <a href="https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/">Information on the algorithm</a>.
-        /// <a href="https://en.wikipedia.org/wiki/Probit_function">Wikipedia's page on the probit function</a> may help, but
-        /// is more likely to just be confusing.
-        /// <br/>
-        /// Acklam's algorithm and Karimov's implementation are both quite fast. This appears faster than generating
-        /// Gaussian-distributed numbers using either the Box-Muller Transform or Marsaglia's Polar Method, though it isn't
-        /// as precise and can't produce as extreme min and max results in the extreme cases they should appear. If given
-        /// a typical uniform random double that's exclusive on 1.0, it won't produce a result higher than
-        /// {@code 8.209536145151493}, and will only produce results of at least {@code -8.209536145151493} if 0.0 is
-        /// excluded from the inputs (if 0.0 is an input, the result is {@code -38.5}). A chief advantage of using this with
-        /// a random number generator is that it only requires one random double to obtain one Gaussian value;
-        /// {@link java.util.Random#nextGaussian()} generates at least two random doubles for each two Gaussian values, but
-        /// may rarely require much more random generation.
-        /// <br/>
-        /// This can be used both as an optimization for generating Gaussian random values, and as a way of generating
-        /// Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
-        /// as the input, such as those produced by a van der Corput, Halton, Sobol or R2 sequence). Most methods of generating
-        /// Gaussian values (e.g. Box-Muller and Marsaglia polar) do not have any way to preserve a particular pattern.
-        /// </remarks>
-        /// <param name="rng" />
-        /// <param name="d">should be between 0 and 1, exclusive, but other values are tolerated</param>
-        /// <returns>a normal-distributed double centered on 0.0; all results will be between -38.5 and 38.5, both inclusive</returns>
-        public static double Probit(this IEnhancedRandom rng, double d)
-        {
-            if (d <= 0)
-            {
-                return -38.5;
-            }
-            else if (d >= 1)
-            {
-                return 38.5;
-            }
-            else if (d < 0.02425)
-            {
-                double q = Math.Sqrt(-2.0 * Math.Log(d));
-                return (((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
-                    (((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
-            }
-            else if (0.97575 < d)
-            {
-                double q = Math.Sqrt(-2.0 * Math.Log(1 - d));
-                return -(((((-7.784894002430293e-03 * q + -3.223964580411365e-01) * q + -2.400758277161838e+00) * q + -2.549732539343734e+00) * q + 4.374664141464968e+00) * q + 2.938163982698783e+00) / (
-                    (((7.784695709041462e-03 * q + 3.224671290700398e-01) * q + 2.445134137142996e+00) * q + 3.754408661907416e+00) * q + 1.0);
-            }
-            else
-            {
-                double q = d - 0.5;
-                double r = q * q;
-                return (((((-3.969683028665376e+01 * r + 2.209460984245205e+02) * r + -2.759285104469687e+02) * r + 1.383577518672690e+02) * r + -3.066479806614716e+01) * r + 2.506628277459239e+00) * q / (
-                    ((((-5.447609879822406e+01 * r + 1.615858368580409e+02) * r + -1.556989798598866e+02) * r + 6.680131188771972e+01) * r + -1.328068155288572e+01) * r + 1.0);
-            }
-        }
-
-        /// <summary>
         /// Gets a normally-distributed (Gaussian) double, with a the specified mean (default 0.0) and standard deviation (default 1.0).
         /// If the standard deviation is 1.0 and the mean is 0.0, then this can produce results between -8.209536145151493 and 8.209536145151493 (both extremely rarely).
         /// </summary>
@@ -396,7 +331,7 @@ namespace ShaiRandom.Generators
         /// <returns>A double from the normal distribution with the specified mean (default 0.0) and standard deviation (default 1.0).</returns>
         public static double NextNormal(this IEnhancedRandom rng, double mean = 0.0, double stdDev = 1.0)
         {
-            return rng.Probit(rng.NextExclusiveDouble()) * stdDev + mean;
+            return MathUtils.Probit(rng.NextExclusiveDouble()) * stdDev + mean;
         }
 
         /// <summary>
@@ -476,6 +411,26 @@ namespace ShaiRandom.Generators
             float d = max - min;
             if (u <= (mode - min) / d) { return min + MathF.Sqrt(u * d * (mode - min)); }
             return max - MathF.Sqrt((1 - u) * d * (max - mode));
+        }
+
+        /// <summary>
+        /// Sets each state in this IEnhancedRandom to the corresponding state in the other IEnhancedRandom.
+        /// This generally only works correctly if both objects have the same class.
+        /// </summary>
+        /// <param name="rng" />
+        /// <param name="other">Another IEnhancedRandom that almost always should have the same class as this one.</param>
+        public static void SetWith(this IEnhancedRandom rng, IEnhancedRandom other)
+        {
+            int myCount = rng.StateCount, otherCount = other.StateCount;
+            int i = 0;
+            for (; i < myCount && i < otherCount; i++)
+            {
+                rng.SetSelectedState(i, other.SelectState(i));
+            }
+            for (; i < myCount; i++)
+            {
+                rng.SetSelectedState(i, 0xFFFFFFFFFFFFFFFFUL);
+            }
         }
     }
 }

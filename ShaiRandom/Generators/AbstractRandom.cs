@@ -52,7 +52,7 @@ namespace ShaiRandom.Generators
         /// <param name="other">Another AbstractRandom to copy into this one.</param>
         protected AbstractRandom(AbstractRandom other)
         {
-            SetWith(other);
+            this.SetWith(other);
         }
 
         /// <inheritdoc />
@@ -509,25 +509,6 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public abstract IEnhancedRandom Copy();
-
-        /// <summary>
-        /// Sets each state in this IEnhancedRandom to the corresponding state in the other IEnhancedRandom.
-        /// This generally only works correctly if both objects have the same class.
-        /// </summary>
-        /// <param name="other">Another IEnhancedRandom that almost always should have the same class as this one.</param>
-        public void SetWith(IEnhancedRandom other)
-        {
-            int myCount = StateCount, otherCount = other.StateCount;
-            int i = 0;
-            for (; i < myCount && i < otherCount; i++)
-            {
-                SetSelectedState(i, other.SelectState(i));
-            }
-            for (; i < myCount; i++)
-            {
-                SetSelectedState(i, 0xFFFFFFFFFFFFFFFFUL);
-            }
-        }
 
         /// <summary>
         /// Given two EnhancedRandom objects that could have the same or different classes,
