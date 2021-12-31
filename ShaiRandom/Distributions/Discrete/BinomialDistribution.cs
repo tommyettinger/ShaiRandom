@@ -42,7 +42,7 @@ namespace ShaiRandom.Distributions.Discrete
     ///   <para>The thread safety of this class depends on the one of the underlying generator.</para>
     /// </remarks>
     [Serializable]
-    public sealed class BinomialDistribution : IDiscreteDistribution
+    public sealed class BinomialDistribution : IEnhancedDiscreteDistribution
     {
         #region Constants
 
