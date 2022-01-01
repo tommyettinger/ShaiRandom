@@ -33,6 +33,10 @@ namespace ShaiRandom.Generators
         private int _ulongIndex;
         private readonly List<ulong> _ulongSeries;
 
+        /// <summary>
+        /// Creates a KnownSeriesRandom that is a copy of the given one.
+        /// </summary>
+        /// <param name="other">Generator to copy state from.</param>
         public KnownSeriesRandom(KnownSeriesRandom other) : this(other._intSeries, other._uintSeries, other._doubleSeries, other._boolSeries, other._byteSeries, other._floatSeries, other._longSeries, other._ulongSeries)
         {
             _intIndex = other._intIndex;
@@ -45,54 +49,40 @@ namespace ShaiRandom.Generators
             _ulongIndex = other._ulongIndex;
         }
 
+
         /// <summary>
         /// Creates a new known series generator, with parameters to indicate which series to use for
         /// the integer, unsigned integer, double, bool, and byte-based RNG functions. If null is
         /// specified, no values of that type may be returned, and functions that try to return a
         /// value of that type will throw an exception.
         /// </summary>
-        public KnownSeriesRandom(IEnumerable<int>? intSeries = null, IEnumerable<uint>? uintSeries = null, IEnumerable<double>? doubleSeries = null, IEnumerable<bool>? boolSeries = null, IEnumerable<byte>? byteSeries = null,
-            IEnumerable<float>? floatSeries = null, IEnumerable<long>? longSeries = null, IEnumerable<ulong>? ulongSeries = null) : base(0UL)
+        /// <remarks>
+        /// The values given for each series are looped over repeatedly as the appropriate function is called, so the
+        /// RNG functions can be called an arbitrary number of times; doing so will simply result in values from the
+        /// sequence being reused.
+        /// </remarks>
+        /// <param name="intSeries">Series of values to return via <see cref="NextInt()"/>.</param>
+        /// <param name="uintSeries">Series of values to return via <see cref="NextUInt()"/>.</param>
+        /// <param name="doubleSeries">Series of values to return via <see cref="NextDouble()"/>.</param>
+        /// <param name="boolSeries">Series of values to return via <see cref="NextBool()"/>.</param>
+        /// <param name="byteSeries">Series of values to return via <see cref="NextBytes(byte[])"/>.</param>
+        /// <param name="floatSeries">Series of values to return via <see cref="NextFloat()"/>.</param>
+        /// <param name="longSeries">Series of values to return via <see cref="NextLong()"/>.</param>
+        /// <param name="ulongSeries">Series of values to return via <see cref="NextULong()"/>.</param>
+        public KnownSeriesRandom(IEnumerable<int>? intSeries = null, IEnumerable<uint>? uintSeries = null,
+                                 IEnumerable<double>? doubleSeries = null, IEnumerable<bool>? boolSeries = null,
+                                 IEnumerable<byte>? byteSeries = null, IEnumerable<float>? floatSeries = null,
+                                 IEnumerable<long>? longSeries = null,IEnumerable<ulong>? ulongSeries = null)
+            : base(0UL)
         {
-            if (intSeries == null)
-                _intSeries = new List<int>();
-            else
-                _intSeries = intSeries.ToList();
-
-            if (uintSeries == null)
-                _uintSeries = new List<uint>();
-            else
-                _uintSeries = uintSeries.ToList();
-
-            if (longSeries == null)
-                _longSeries = new List<long>();
-            else
-                _longSeries = longSeries.ToList();
-
-            if (ulongSeries == null)
-                _ulongSeries = new List<ulong>();
-            else
-                _ulongSeries = ulongSeries.ToList();
-
-            if (doubleSeries == null)
-                _doubleSeries = new List<double>();
-            else
-                _doubleSeries = doubleSeries.ToList();
-
-            if (floatSeries == null)
-                _floatSeries = new List<float>();
-            else
-                _floatSeries = floatSeries.ToList();
-
-            if (boolSeries == null)
-                _boolSeries = new List<bool>();
-            else
-                _boolSeries = boolSeries.ToList();
-
-            if (byteSeries == null)
-                _byteSeries = new List<byte>();
-            else
-                _byteSeries = byteSeries.ToList();
+            _intSeries = intSeries == null ? new List<int>() : intSeries.ToList();
+            _uintSeries = uintSeries == null ? new List<uint>() : uintSeries.ToList();
+            _longSeries = longSeries == null ? new List<long>() : longSeries.ToList();
+            _ulongSeries = ulongSeries == null ? new List<ulong>() : ulongSeries.ToList();
+            _doubleSeries = doubleSeries == null ? new List<double>() : doubleSeries.ToList();
+            _floatSeries = floatSeries == null ? new List<float>() : floatSeries.ToList();
+            _boolSeries = boolSeries == null ? new List<bool>() : boolSeries.ToList();
+            _byteSeries = byteSeries == null ? new List<byte>() : byteSeries.ToList();
         }
 
         /// <summary>
@@ -184,9 +174,9 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public bool Equals(KnownSeriesRandom? random) => random != null && StateCount == random.StateCount && _boolIndex == random._boolIndex && EqualityComparer<List<bool>>.Default.Equals(_boolSeries, random._boolSeries) && _byteIndex == random._byteIndex && EqualityComparer<List<byte>>.Default.Equals(_byteSeries, random._byteSeries) && _doubleIndex == random._doubleIndex && EqualityComparer<List<double>>.Default.Equals(_doubleSeries, random._doubleSeries) && _floatIndex == random._floatIndex && EqualityComparer<List<float>>.Default.Equals(_floatSeries, random._floatSeries) && _intIndex == random._intIndex && EqualityComparer<List<int>>.Default.Equals(_intSeries, random._intSeries) && _uintIndex == random._uintIndex && EqualityComparer<List<uint>>.Default.Equals(_uintSeries, random._uintSeries) && _longIndex == random._longIndex && EqualityComparer<List<long>>.Default.Equals(_longSeries, random._longSeries) && _ulongIndex == random._ulongIndex && EqualityComparer<List<ulong>>.Default.Equals(_ulongSeries, random._ulongSeries);
 
+        /// <inheritdoc />
         public override bool NextBool() => ReturnValueFrom(_boolSeries, ref _boolIndex);
 
-        public bool NextBool(float chance) => NextBool();
 
         public new int NextInt() => ReturnValueFrom(_intSeries, ref _intIndex);
         public new int NextInt(int outerBound) => NextInt(0, outerBound);
