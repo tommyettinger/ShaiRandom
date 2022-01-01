@@ -28,7 +28,6 @@ using ShaiRandom.Generators;
 namespace ShaiRandom.Distributions.Discrete
 {
     using System;
-    using ShaiRandom;
 
     /// <summary>
     ///   Provides generation of Binomial distributed random numbers.
