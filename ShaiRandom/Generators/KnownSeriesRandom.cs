@@ -263,12 +263,48 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <returns>The next double in the underlying series, if it is within the bound.</returns>
         public double NextInclusiveDouble() => NextInclusiveDouble(0f, 1f);
+
+        /// <summary>
+        /// Returns the next double in the underlying series.  If it is outside of the bound [0, <paramref name="outerBound"/>], throws
+        /// an exception.
+        /// </summary>
+        /// <param name="outerBound">The maximum value of the returned number, inclusive.</param>
+        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
         public double NextInclusiveDouble(double outerBound) => NextInclusiveDouble(0f, outerBound);
+
+        /// <summary>
+        /// Returns the next double in the underlying series.  If it is outside of the bound [<paramref name="minBound"/>, <paramref name="maxBound"/>], throws
+        /// an exception.
+        /// </summary>
+        /// <param name="minBound">The minimum value of the returned number, inclusive.</param>
+        /// <param name="maxBound">The maximum value of the returned number, inclusive.</param>
+        /// <returns>The next double in the underlying series, if it is within the bounds.</returns>
         public double NextInclusiveDouble(double minBound, double maxBound) => ReturnIfRangeInclusive(minBound, maxBound, _doubleSeries, ref _doubleIndex);
+
+        /// <summary>
+        /// Returns the next double in the underlying series.  If it is outside of the bound (0, 1), throws
+        /// an exception.
+        /// </summary>
+        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
         public double NextExclusiveDouble() => NextExclusiveDouble(0f, 1f);
+
+        /// <summary>
+        /// Returns the next double in the underlying series.  If it is outside of the bound ([)0, <paramref name="outerBound"/>), throws
+        /// an exception.
+        /// </summary>
+        /// <param name="outerBound">The maximum value of the returned number, exclusive.</param>
+        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
         public double NextExclusiveDouble(double outerBound) => NextExclusiveDouble(0f, outerBound);
+
+        /// <summary>
+        /// Returns the next double in the underlying series.  If it is outside of the bound (<paramref name="minBound"/>, <paramref name="maxBound"/>), throws
+        /// an exception.
+        /// </summary>
+        /// <param name="minBound">The minimum value of the returned number, exclusive.</param>
+        /// <param name="maxBound">The maximum value of the returned number, exclusive.</param>
+        /// <returns>The next double in the underlying series, if it is within the bounds.</returns>
         public double NextExclusiveDouble(double minBound, double maxBound) => ReturnIfRangeBothExclusive(minBound, maxBound, _doubleSeries, ref _doubleIndex);
-        public float NextFloat() => ReturnValueFrom(_floatSeries, ref _floatIndex);
+        public float NextFloat() => NextFloat(0f, 1f);
         public float NextFloat(float outerBound) => NextFloat(0f, outerBound);
         public float NextFloat(float minBound, float maxBound) => ReturnIfRange(minBound, maxBound, _floatSeries, ref _floatIndex);
         public float NextInclusiveFloat() => NextInclusiveFloat(0f, 1f);
@@ -309,7 +345,16 @@ namespace ShaiRandom.Generators
             for (int i = 0; i < buffer.Length; i++)
                 buffer[i] = ReturnValueFrom(_byteSeries, ref _byteIndex);
         }
+
+        /// <summary>
+        /// Not supported by this generator.
+        /// </summary>
         public ulong PreviousULong() => throw new NotSupportedException();
+
+        /// <summary>
+        /// Sets the current index of each given sequence to the given seed value.
+        /// </summary>
+        /// <param name="seed">Index for the sequences.</param>
         public void Seed(ulong seed)
         {
             int idx = (int)seed;
@@ -322,6 +367,7 @@ namespace ShaiRandom.Generators
             _longIndex = idx;
             _ulongIndex = idx;
         }
+
         public ulong SelectState(int selection)
         {
             switch (selection)
@@ -336,6 +382,23 @@ namespace ShaiRandom.Generators
                 default: return (ulong)_ulongIndex;
             }
         }
+
+        /// <summary>
+        /// Sets the index for the given number series to the given value.
+        /// </summary>
+        /// <remarks>
+        /// The selection values start at 0, and they correspond to the constructor sequences as follows:
+        ///     - 0: intSeries
+        ///     - 1: uintSeries
+        ///     - 2: doubleSeries
+        ///     - 3: boolSeries
+        ///     - 4: byteSeries
+        ///     - 5: floatSeries
+        ///     - 6: longSeries
+        ///     - 7: ulongSeries
+        /// </remarks>
+        /// <param name="selection">Selection value of index to set.</param>
+        /// <param name="value">Value to set the index to.</param>
         public void SetSelectedState(int selection, ulong value)
         {
             switch (selection)
@@ -354,8 +417,20 @@ namespace ShaiRandom.Generators
         public void SetState(ulong stateA, ulong stateB) => Seed(stateA);
         public void SetState(ulong stateA, ulong stateB, ulong stateC) => Seed(stateA);
         public void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD) => Seed(stateA);
+
+        /// <summary>
+        /// Not supported by this generator.
+        /// </summary>
         public ulong Skip(ulong distance) => throw new NotSupportedException();
+
+        /// <summary>
+        /// Serialization is not supported by this generator.
+        /// </summary>
         public IEnhancedRandom StringDeserialize(string data) => throw new NotSupportedException();
+
+        /// <summary>
+        /// Serialization is not supported by this generator.
+        /// </summary>
         public string StringSerialize() => throw new NotSupportedException();
 
         public static bool operator ==(KnownSeriesRandom? left, KnownSeriesRandom? right) => EqualityComparer<KnownSeriesRandom>.Default.Equals(left, right);
