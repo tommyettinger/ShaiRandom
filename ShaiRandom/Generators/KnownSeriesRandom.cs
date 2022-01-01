@@ -33,15 +33,6 @@ namespace ShaiRandom.Generators
         private int _ulongIndex;
         private readonly List<ulong> _ulongSeries;
 
-        public KnownSeriesRandom() : this(0UL)
-        {
-        }
-
-        public KnownSeriesRandom(ulong seed) : this(null, null, null, null, null, null, null, null)
-        {
-            Seed(seed);
-        }
-
         public KnownSeriesRandom(KnownSeriesRandom other) : this(other._intSeries, other._uintSeries, other._doubleSeries, other._boolSeries, other._byteSeries, other._floatSeries, other._longSeries, other._ulongSeries)
         {
             _intIndex = other._intIndex;
@@ -132,7 +123,7 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// Generator is not serializable, and thus has no tag.
         /// </summary>
-        public override string Tag => "";
+        public override string Tag => throw new NotSupportedException("KnownSeriesRandom generators are not serializable, and thus have no Tag.");
 
         private static T ReturnIfRange<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
         {
