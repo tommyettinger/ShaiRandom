@@ -551,7 +551,7 @@ namespace ShaiRandom.Generators
         /// <param name="stateB">Index value to set for uintSeries and floatSeries.</param>
         /// <param name="stateC">Index value to set for doubleSeries and longSeries.</param>
         /// <param name="stateD">Index value to set for boolSeries and ulongSeries.</param>
-        public void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD) => Seed(stateA);
+        public void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD) => ((IEnhancedRandom)this).SetState(stateA, stateB, stateC, stateD);
 
         /// <inheritdoc />
         public void SetState(params ulong[] states) => ((IEnhancedRandom)this).SetState(states);
