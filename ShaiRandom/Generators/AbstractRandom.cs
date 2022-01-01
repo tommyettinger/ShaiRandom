@@ -133,80 +133,19 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public virtual void SetState(ulong state)
-        {
-            for (int i = StateCount - 1; i >= 0; i--)
-            {
-                SetSelectedState(i, state);
-            }
-        }
+        public virtual void SetState(ulong state) => ((IEnhancedRandom)this).SetState(state);
 
         /// <inheritdoc />
-        public virtual void SetState(ulong stateA, ulong stateB)
-        {
-            int c = StateCount;
-            for (int i = 0; i < c; i += 2)
-            {
-                SetSelectedState(i, stateA);
-            }
-            for (int i = 1; i < c; i += 2)
-            {
-                SetSelectedState(i, stateB);
-            }
-        }
+        public virtual void SetState(ulong stateA, ulong stateB) => ((IEnhancedRandom)this).SetState(stateA, stateB);
 
         /// <inheritdoc />
-        public virtual void SetState(ulong stateA, ulong stateB, ulong stateC)
-        {
-            int c = StateCount;
-            for (int i = 0; i < c; i += 3)
-            {
-                SetSelectedState(i, stateA);
-            }
-            for (int i = 1; i < c; i += 3)
-            {
-                SetSelectedState(i, stateB);
-            }
-            for (int i = 2; i < c; i += 3)
-            {
-                SetSelectedState(i, stateC);
-            }
-        }
+        public virtual void SetState(ulong stateA, ulong stateB, ulong stateC) => ((IEnhancedRandom)this).SetState(stateA, stateB, stateC);
 
         /// <inheritdoc />
-        public virtual void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
-        {
-            int c = StateCount;
-            for (int i = 0; i < c; i += 4)
-            {
-                SetSelectedState(i, stateA);
-            }
-            for (int i = 1; i < c; i += 4)
-            {
-                SetSelectedState(i, stateB);
-            }
-            for (int i = 2; i < c; i += 4)
-            {
-                SetSelectedState(i, stateC);
-            }
-            for (int i = 3; i < c; i += 4)
-            {
-                SetSelectedState(i, stateD);
-            }
-        }
+        public virtual void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD) => ((IEnhancedRandom)this).SetState(stateA, stateB, stateC, stateD);
 
         /// <inheritdoc />
-        public virtual void SetState(params ulong[] states)
-        {
-            int c = StateCount, sl = states.Length;
-            for (int b = 0; b < sl; b++)
-            {
-                for (int i = b; i < c; i += sl)
-                {
-                    SetSelectedState(i, states[b]);
-                }
-            }
-        }
+        public virtual void SetState(params ulong[] states) => ((IEnhancedRandom)this).SetState(states);
 
         /// <inheritdoc />
         public abstract ulong NextULong();

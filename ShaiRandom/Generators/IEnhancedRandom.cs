@@ -104,7 +104,13 @@ namespace ShaiRandom.Generators
         /// If StateCount is more than 1, then all states will be set in the same way (using SetSelectedState(), all to state).
         /// </remarks>
         /// <param name="state">The ulong variable to use for every state variable.</param>
-        void SetState(ulong state);
+        void SetState(ulong state)
+        {
+            for (int i = StateCount - 1; i >= 0; i--)
+            {
+                SetSelectedState(i, state);
+            }
+        }
 
         /// <summary>
         /// Sets each state variable to either stateA or stateB, alternating.
@@ -117,7 +123,18 @@ namespace ShaiRandom.Generators
         /// </remarks>
         /// <param name="stateA">The ulong value to use for states at index 0, 2, 4, 6...</param>
         /// <param name="stateB">The ulong value to use for states at index 1, 3, 5, 7...</param>
-        void SetState(ulong stateA, ulong stateB);
+        void SetState(ulong stateA, ulong stateB)
+        {
+            int c = StateCount;
+            for (int i = 0; i < c; i += 2)
+            {
+                SetSelectedState(i, stateA);
+            }
+            for (int i = 1; i < c; i += 2)
+            {
+                SetSelectedState(i, stateB);
+            }
+        }
 
         /// <summary>
         /// Sets each state variable to stateA, stateB, or stateC, alternating.
@@ -134,7 +151,22 @@ namespace ShaiRandom.Generators
         /// <param name="stateA">The ulong value to use for states at index 0, 3, 6, 9...</param>
         /// <param name="stateB">The ulong value to use for states at index 1, 4, 7, 10...</param>
         /// <param name="stateC">The ulong value to use for states at index 2, 5, 8, 11...</param>
-        void SetState(ulong stateA, ulong stateB, ulong stateC);
+        void SetState(ulong stateA, ulong stateB, ulong stateC)
+        {
+            int c = StateCount;
+            for (int i = 0; i < c; i += 3)
+            {
+                SetSelectedState(i, stateA);
+            }
+            for (int i = 1; i < c; i += 3)
+            {
+                SetSelectedState(i, stateB);
+            }
+            for (int i = 2; i < c; i += 3)
+            {
+                SetSelectedState(i, stateC);
+            }
+        }
 
         /// <summary>
         /// Sets each state variable to stateA, stateB, stateC, or stateD, alternating.
@@ -154,7 +186,26 @@ namespace ShaiRandom.Generators
         /// <param name="stateB">the ulong value to use for states at index 1, 5, 9, 13...</param>
         /// <param name="stateC">the ulong value to use for states at index 2, 6, 10, 14...</param>
         /// <param name="stateD">the ulong value to use for states at index 3, 7, 11, 15...</param>
-        void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD);
+        void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
+        {
+            int c = StateCount;
+            for (int i = 0; i < c; i += 4)
+            {
+                SetSelectedState(i, stateA);
+            }
+            for (int i = 1; i < c; i += 4)
+            {
+                SetSelectedState(i, stateB);
+            }
+            for (int i = 2; i < c; i += 4)
+            {
+                SetSelectedState(i, stateC);
+            }
+            for (int i = 3; i < c; i += 4)
+            {
+                SetSelectedState(i, stateD);
+            }
+        }
 
         /// <summary>
         /// Sets all state variables to alternating values chosen from states. If states is empty,
@@ -164,7 +215,18 @@ namespace ShaiRandom.Generators
         /// uses <see cref="SetSelectedState(int, ulong)"/> to change the states.
         /// </summary>
         /// <param name="states">an array or varargs of ulong values to use as states</param>
-        void SetState(params ulong[] states);
+        void SetState(params ulong[] states)
+        {
+            int c = StateCount, sl = states.Length;
+            for (int b = 0; b < sl; b++)
+            {
+                for (int i = b; i < c; i += sl)
+                {
+                    SetSelectedState(i, states[b]);
+                }
+            }
+        }
+
         /// <summary>
         /// Can return any ulong.
         /// </summary>

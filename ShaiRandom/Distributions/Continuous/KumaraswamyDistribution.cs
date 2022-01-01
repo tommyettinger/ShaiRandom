@@ -28,7 +28,6 @@ using ShaiRandom.Generators;
 namespace ShaiRandom.Distributions.Continuous
 {
     using System;
-    using ShaiRandom;
 
     /// <summary>
     ///   Provides generation of Kumaraswamy distributed random numbers.
