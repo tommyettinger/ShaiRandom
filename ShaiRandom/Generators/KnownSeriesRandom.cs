@@ -454,19 +454,34 @@ namespace ShaiRandom.Generators
             _ulongIndex = idx;
         }
 
+        /// <summary>
+        /// Retrieves the index of a given series based on the selection given. The selection values start at 0, and
+        /// they correspond to the constructor sequences as follows:
+        ///     - 0: intSeries
+        ///     - 1: uintSeries
+        ///     - 2: doubleSeries
+        ///     - 3: boolSeries
+        ///     - 4: byteSeries
+        ///     - 5: floatSeries
+        ///     - 6: longSeries
+        ///     - 7: ulongSeries
+        /// </summary>
+        /// <param name="selection">Selection value.</param>
+        /// <returns>The index of the selected series that will be returned next time that series is used.</returns>
         public ulong SelectState(int selection)
         {
-            switch (selection)
+            return selection switch
             {
-                case 0: return (ulong)_intIndex;
-                case 1: return (ulong)_uintIndex;
-                case 2: return (ulong)_doubleIndex;
-                case 3: return (ulong)_boolIndex;
-                case 4: return (ulong)_byteIndex;
-                case 5: return (ulong)_floatIndex;
-                case 6: return (ulong)_longIndex;
-                default: return (ulong)_ulongIndex;
-            }
+                0 => (ulong)_intIndex,
+                1 => (ulong)_uintIndex,
+                2 => (ulong)_doubleIndex,
+                3 => (ulong)_boolIndex,
+                4 => (ulong)_byteIndex,
+                5 => (ulong)_floatIndex,
+                6 => (ulong)_longIndex,
+                7 => (ulong)_ulongIndex,
+                _ => throw new ArgumentException("Invalid selector given to SelectState.", nameof(selection))
+            };
         }
 
         /// <summary>
@@ -499,10 +514,47 @@ namespace ShaiRandom.Generators
                 default: _ulongIndex = (int)value; break;
             }
         }
+        /// <summary>
+        /// Sets all the number series to the current index value.
+        /// </summary>
+        /// <param name="state">Value to set to all of the series indices.</param>
         public void SetState(ulong state) => Seed(state);
-        public void SetState(ulong stateA, ulong stateB) => Seed(stateA);
-        public void SetState(ulong stateA, ulong stateB, ulong stateC) => Seed(stateA);
+
+        /// <summary>
+        /// Sets the current indices in sequences as follows:
+        ///     - intSeries, doubleSeries, byteSeries, longSeries : stateA
+        ///     - uintSeries, boolSeries, floatSeries, ulongSeries: stateB
+        /// </summary>
+        /// <param name="stateA">Index value to set for intSeries, doubleSeries, byteSeries, and longSeries.</param>
+        /// <param name="stateB">Index value to set for uintSeries, boolSeries, floatSeries, ulongSeries.</param>
+        public void SetState(ulong stateA, ulong stateB) => ((IEnhancedRandom)this).SetState(stateA, stateB);
+
+        /// <summary>
+        /// Sets the current indices in sequences as follows:
+        ///     - intSeries, boolSeries, longSeries  : stateA
+        ///     - uintSeries, byteSeries, ulongSeries: stateB
+        ///     - doubleSeries, floatSeries          : stateC
+        /// </summary>
+        /// <param name="stateA">Index value to set for intSeries, boolSeries, and longSeries.</param>
+        /// <param name="stateB">Index value to set for uintSeries, byteSeries, ulongSeries.</param>
+        /// <param name="stateC">Index value to set for doubleSeries and floatSeries.</param>
+        public void SetState(ulong stateA, ulong stateB, ulong stateC) => ((IEnhancedRandom)this).SetState(stateA, stateB, stateC);
+
+        /// <summary>
+        /// Sets the current indices in sequences as follows:
+        ///     - intSeries, byteSeries   : stateA
+        ///     - uintSeries, floatSeries : stateB
+        ///     - doubleSeries, longSeries: stateC
+        ///     - boolSeries, ulongSeries : stateC
+        /// </summary>
+        /// <param name="stateA">Index value to set for intSeries and byteSeries.</param>
+        /// <param name="stateB">Index value to set for uintSeries and floatSeries.</param>
+        /// <param name="stateC">Index value to set for doubleSeries and longSeries.</param>
+        /// <param name="stateD">Index value to set for boolSeries and ulongSeries.</param>
         public void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD) => Seed(stateA);
+
+        /// <inheritdoc />
+        public void SetState(params ulong[] states) => ((IEnhancedRandom)this).SetState(states);
 
         /// <summary>
         /// Not supported by this generator.
