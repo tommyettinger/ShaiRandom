@@ -304,17 +304,92 @@ namespace ShaiRandom.Generators
         /// <param name="maxBound">The maximum value of the returned number, exclusive.</param>
         /// <returns>The next double in the underlying series, if it is within the bounds.</returns>
         public double NextExclusiveDouble(double minBound, double maxBound) => ReturnIfRangeBothExclusive(minBound, maxBound, _doubleSeries, ref _doubleIndex);
+
+        /// <summary>
+        /// Returns the next float in the underlying series.  If it is outside of the bound [0, 1), throws
+        /// an exception.
+        /// </summary>
+        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
         public float NextFloat() => NextFloat(0f, 1f);
+
+        /// <summary>
+        /// Returns the next float in the underlying series.  If it is outside of the bound specified, throws an exception.
+        /// </summary>
+        /// <param name="outerBound">The upper bound for the returned float, exclusive.</param>
+        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
         public float NextFloat(float outerBound) => NextFloat(0f, outerBound);
+
+        /// <summary>
+        /// Returns the next float in the underlying series. If the value is less than
+        /// <paramref name="minBound"/>, or greater than/equal to <paramref name="maxBound"/>, throws an exception.
+        /// </summary>
+        /// <param name="minBound">The minimum value for the returned number, inclusive.</param>
+        /// <param name="maxBound">The maximum value for the returned number, exclusive.</param>
+        /// <returns>The next float in the underlying series.</returns>
         public float NextFloat(float minBound, float maxBound) => ReturnIfRange(minBound, maxBound, _floatSeries, ref _floatIndex);
+
+        /// <summary>
+        /// Returns the next float in the underlying series.  If it is outside of the bound [0, 1], throws
+        /// an exception.
+        /// </summary>
+        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
         public float NextInclusiveFloat() => NextInclusiveFloat(0f, 1f);
+
+        /// <summary>
+        /// Returns the next float in the underlying series.  If it is outside of the bound [0, <paramref name="outerBound"/>], throws
+        /// an exception.
+        /// </summary>
+        /// <param name="outerBound">The maximum value of the returned number, inclusive.</param>
+        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
         public float NextInclusiveFloat(float outerBound) => NextInclusiveFloat(0f, outerBound);
+
+        /// <summary>
+        /// Returns the next float in the underlying series.  If it is outside of the bound [<paramref name="minBound"/>, <paramref name="maxBound"/>], throws
+        /// an exception.
+        /// </summary>
+        /// <param name="minBound">The minimum value of the returned number, inclusive.</param>
+        /// <param name="maxBound">The maximum value of the returned number, inclusive.</param>
+        /// <returns>The next float in the underlying series, if it is within the bounds.</returns>
         public float NextInclusiveFloat(float minBound, float maxBound) => ReturnIfRangeInclusive(minBound, maxBound, _floatSeries, ref _floatIndex);
+
+        /// <summary>
+        /// Returns the next float in the underlying series.  If it is outside of the bound (0, 1), throws
+        /// an exception.
+        /// </summary>
+        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
         public float NextExclusiveFloat() => NextExclusiveFloat(0f, 1f);
+
+        /// <summary>
+        /// Returns the next float in the underlying series.  If it is outside of the bound ([)0, <paramref name="outerBound"/>), throws
+        /// an exception.
+        /// </summary>
+        /// <param name="outerBound">The maximum value of the returned number, exclusive.</param>
+        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
         public float NextExclusiveFloat(float outerBound) => NextExclusiveFloat(0f, outerBound);
+
+        /// <summary>
+        /// Returns the next float in the underlying series.  If it is outside of the bound (<paramref name="minBound"/>, <paramref name="maxBound"/>), throws
+        /// an exception.
+        /// </summary>
+        /// <param name="minBound">The minimum value of the returned number, exclusive.</param>
+        /// <param name="maxBound">The maximum value of the returned number, exclusive.</param>
+        /// <returns>The next float in the underlying series, if it is within the bounds.</returns>
         public float NextExclusiveFloat(float minBound, float maxBound) => ReturnIfRangeBothExclusive(minBound, maxBound, _floatSeries, ref _floatIndex);
+
+        /// <summary>
+        /// Returns the next long from the underlying series.
+        /// </summary>
+        /// <returns>The next long from the underlying series.</returns>
         public long NextLong() => ReturnValueFrom(_longSeries, ref _longIndex);
+
+        /// <summary>
+        /// Returns the next long from underlying series, if it is within the bound; if not,
+        /// throws an exception.
+        /// </summary>
+        /// <param name="outerBound">The upper bound for the returned long, exclusive.</param>
+        /// <returns>The next long from the underlying series, if it is within the bound.</returns>
         public long NextLong(long outerBound) => NextLong(0, outerBound);
+
         /// <summary>
         /// Returns the next long in the underlying series. If the value is less than
         /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
@@ -324,8 +399,20 @@ namespace ShaiRandom.Generators
         /// <returns>The next long in the underlying series.</returns>
         public long NextLong(long minValue, long maxValue) => ReturnIfRange(minValue, maxValue, _longSeries, ref _longIndex);
 
+        /// <summary>
+        /// Returns the next ulong from the underlying series.
+        /// </summary>
+        /// <returns>The next ulong from the underlying series.</returns>
         public ulong NextULong() => ReturnValueFrom(_ulongSeries, ref _ulongIndex);
+
+        /// <summary>
+        /// Returns the next ulong from underlying series, if it is within the bound; if not,
+        /// throws an exception.
+        /// </summary>
+        /// <param name="outerBound">The upper bound for the returned ulong, exclusive.</param>
+        /// <returns>The next ulong from the underlying series, if it is within the bound.</returns>
         public ulong NextULong(ulong outerBound) => NextULong(0, outerBound);
+
         /// <summary>
         /// Returns the next ulong in the underlying series. If the value is less than
         /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
@@ -334,7 +421,6 @@ namespace ShaiRandom.Generators
         /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
         /// <returns>The next ulong in the underlying series.</returns>
         public ulong NextULong(ulong minValue, ulong maxValue) => ReturnIfRange(minValue, maxValue, _ulongSeries, ref _ulongIndex);
-
 
         /// <summary>
         /// Fills the specified buffer with values from the underlying byte series.
