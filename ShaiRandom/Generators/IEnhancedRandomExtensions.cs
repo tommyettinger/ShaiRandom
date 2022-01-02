@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace ShaiRandom.Generators
 {
@@ -354,23 +356,74 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <param name="rng" />
         /// <param name="items">an IList; must be non-null but may contain null items</param>
+        /// <typeparam name="T">Type of elements in the list</typeparam>
         public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items)
-            => rng.Shuffle(items, 0, items.Count);
+            => ShuffleUnchecked(rng, items, 0, items.Count);
+
+        /// <summary>
+        /// Shuffles a section of the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// Only items from the given index onward will be shuffled.
+        /// </summary>
+        /// <param name="rng" />
+        /// <param name="items">an IList; must be non-null but may contain null items</param>
+        /// <param name="startIndex">Index of the first element in the list to shuffle</param>
+        /// <typeparam name="T">Type of elements in the list</typeparam>
+        public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items, Index startIndex)
+        {
+            int length = items.Count;
+            int start = startIndex.GetOffset(items.Count);
+            length -= start;
+
+            rng.Shuffle(items, start, length);
+        }
+
+        /// <summary>
+        /// Shuffles a section of the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// Only items within the given range will be shuffled.
+        /// </summary>
+        /// <param name="rng" />
+        /// <param name="items">an IList; must be non-null but may contain null items</param>
+        /// <param name="range">Range of items in the list to shuffle</param>
+        /// <typeparam name="T">Type of elements in the list</typeparam>
+        public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items, Range range)
+        {
+            var (offset, length) = range.GetOffsetAndLength(items.Count);
+            ShuffleUnchecked(rng, items, offset, length);
+        }
 
         /// <summary>
         /// Shuffles a section of the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
         /// </summary>
         /// <param name="rng" />
         /// <param name="items">an IList; must be non-null but may contain null items</param>
-        /// <param name="offset">the index of the first element of the IList that can be shuffled</param>
+        /// <param name="start">the index of the first element of the IList that can be shuffled</param>
+        public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items, int start)
+            => rng.Shuffle(items, start, items.Count - start);
+
+        /// <summary>
+        /// Shuffles a section of the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// </summary>
+        /// <param name="rng" />
+        /// <param name="items">an IList; must be non-null but may contain null items</param>
+        /// <param name="start">the index of the first element of the IList that can be shuffled</param>
         /// <param name="length">the length of the section to shuffle</param>
-        public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items, int offset, int length)
+        public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items, int start, int length)
         {
-            offset = Math.Min(Math.Max(0, offset), items.Count);
-            length = Math.Min(items.Count - offset, Math.Max(0, length));
-            for (int i = offset + length - 1; i > offset; i--)
+            if (start < 0 || start >= items.Count)
+                throw new ArgumentOutOfRangeException(nameof(start), "Index given was out of range");
+
+            if (length < 0 || length > items.Count - start)
+                throw new ArgumentOutOfRangeException(nameof(length), "Index given was out of range");
+
+            ShuffleUnchecked(rng, items, start, length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void ShuffleUnchecked<T>(IEnhancedRandom rng, IList<T> items, int start, int length)
+        {
+            for (int i = start + length - 1; i > start; i--)
             {
-                int ii = rng.NextInt(offset, i + 1);
+                int ii = rng.NextInt(start, i + 1);
                 (items[i], items[ii]) = (items[ii], items[i]);
             }
         }
