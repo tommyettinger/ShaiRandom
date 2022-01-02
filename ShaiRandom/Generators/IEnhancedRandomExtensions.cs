@@ -346,7 +346,7 @@ namespace ShaiRandom.Generators
         {
             for (int i = items.Length - 1; i > 0; i--)
             {
-                int ii = rng.NextInt(0, i + 1);
+                int ii = rng.NextInt(i + 1);
                 (items[i], items[ii]) = (items[ii], items[i]);
             }
         }
