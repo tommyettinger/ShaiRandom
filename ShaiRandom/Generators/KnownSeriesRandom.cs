@@ -423,13 +423,14 @@ namespace ShaiRandom.Generators
         public ulong NextULong(ulong minValue, ulong maxValue) => ReturnIfRange(minValue, maxValue, _ulongSeries, ref _ulongIndex);
 
         /// <summary>
-        /// Fills the specified buffer with values from the underlying byte series.
+        /// Fills the specified buffer with values from the underlying byte series.  See <see cref="IEnhancedRandom.NextBytes"/>
+        /// for detailed examples on various uses.
         /// </summary>
-        /// <param name="buffer">Buffer to fill.</param>
-        public void NextBytes(byte[] buffer)
+        /// <param name="bytes">Buffer to fill.</param>
+        public void NextBytes(Span<byte> bytes)
         {
-            for (int i = 0; i < buffer.Length; i++)
-                buffer[i] = ReturnValueFrom(_byteSeries, ref _byteIndex);
+            for (int i = 0; i < bytes.Length; i++)
+                bytes[i] = ReturnValueFrom(_byteSeries, ref _byteIndex);
         }
 
         /// <summary>
