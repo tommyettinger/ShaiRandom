@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ShaiRandom.Generators;
 
 namespace ShaiRandom.Wrappers
@@ -12,32 +11,47 @@ namespace ShaiRandom.Wrappers
     /// ReversingWrapper will permit calls to its Skip, and they will also go in reverse. The most common use for this would be to run
     /// the wrapped generator forward and track the number of calls made, then run the ReversingWrapper by the same number of calls
     /// (potentially using Skip(), if supported) to revert the state to its original value. This is more convenient for the usage where
-    /// you use <see cref="EnhancedRandomExtensions.Shuffle{T}(IEnhancedRandom, T[])"/> with both the wrapped generator and wrapper, since they will use the same amount of
-    /// calls, and this will even un-shuffle the array (restoring it to its order before the shuffle).
+    /// you use <see cref="EnhancedRandomExtensions.Shuffle{T}(IEnhancedRandom, Span&lt;T&gt;)"/> or other Shuffle variants with both the wrapped
+    /// generator and wrapper, since they will use the same amount of calls, and this will even un-shuffle the array (restoring it to its order before the shuffle).
     /// </summary>
     [Serializable]
-    public class ReversingWrapper : AbstractRandom, IEquatable<ReversingWrapper?>
+    public class ReversingWrapper : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "R" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
         /// </summary>
         public override string Tag => "R";
+
+        /// <summary>
+        /// The ShaiRandom generator being wrapped, which must never be null.
+        /// </summary>
         public IEnhancedRandom Wrapped { get; set; }
 
+        /// <summary>
+        /// Creates a new ReversingWrapper around a new <see cref="FourWheelRandom"/> generator with a random initial
+        /// state.
+        /// </summary>
         public ReversingWrapper()
         {
             Wrapped = new FourWheelRandom();
         }
 
+        /// <summary>
+        /// Creates a new ReversingWrapper around a new <see cref="FourWheelRandom"/> generator seeded with the given
+        /// value.
+        /// </summary>
         public ReversingWrapper(ulong seed)
         {
             Wrapped = new FourWheelRandom(seed);
         }
 
+        /// <summary>
+        /// Creates a new ReversingWrapper around the given generator, which must support <see cref="IEnhancedRandom.PreviousULong"/>.
+        /// </summary>
         public ReversingWrapper(IEnhancedRandom wrapping)
         {
             if (!wrapping.SupportsPrevious)
-                throw new NotSupportedException($"The AbstractRandom to wrap must support PreviousULong(), and {nameof(wrapping)} does not.");
+                throw new ArgumentException($"The AbstractRandom to wrap must support PreviousULong().", nameof(wrapping));
             Wrapped = wrapping;
         }
 
@@ -92,17 +106,8 @@ namespace ShaiRandom.Wrappers
         public override ulong PreviousULong() => Wrapped.NextULong();
 
         /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as ReversingWrapper);
-
-        /// <inheritdoc />
-        public bool Equals(ReversingWrapper? other) => other != null && EqualityComparer<IEnhancedRandom>.Default.Equals(Wrapped, other.Wrapped);
-
-        /// <inheritdoc />
         public override ulong SelectState(int selection) => Wrapped.SelectState(selection);
         /// <inheritdoc />
         public override void SetSelectedState(int selection, ulong value) => Wrapped.SetSelectedState(selection, value);
-
-        public static bool operator ==(ReversingWrapper? left, ReversingWrapper? right) => EqualityComparer<ReversingWrapper>.Default.Equals(left, right);
-        public static bool operator !=(ReversingWrapper? left, ReversingWrapper? right) => !(left == right);
     }
 }

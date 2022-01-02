@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ShaiRandom.Generators
 {
@@ -7,7 +6,7 @@ namespace ShaiRandom.Generators
     /// It's an AbstractRandom with 2 states, more here later. This one supports <see cref="Skip(ulong)"/>.
     /// </summary>
     [Serializable]
-    public class LaserRandom : AbstractRandom, IEquatable<LaserRandom?>
+    public class LaserRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "LasR" .
@@ -52,7 +51,7 @@ namespace ShaiRandom.Generators
          */
         public LaserRandom(ulong seed)
         {
-            Seed(seed);
+            SetSeed(this, seed);
         }
 
         /**
@@ -129,7 +128,9 @@ namespace ShaiRandom.Generators
          * (2 to the 64) possible initial generator states can be produced here.
          * @param seed the initial seed; may be any long
          */
-        public override void Seed(ulong seed)
+        public override void Seed(ulong seed) => SetSeed(this, seed);
+
+        private static void SetSeed(LaserRandom rng, ulong seed)
         {
             unchecked
             {
@@ -138,13 +139,13 @@ namespace ShaiRandom.Generators
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                StateA = x ^ x >> 27;
+                rng.StateA = x ^ x >> 27;
                 x = (seed + 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                _b = (x ^ x >> 27) | 1UL;
+                rng._b = (x ^ x >> 27) | 1UL;
             }
         }
 
@@ -210,17 +211,5 @@ namespace ShaiRandom.Generators
             StateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as LaserRandom);
-
-        /// <inheritdoc />
-        public bool Equals(LaserRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB;
-
-        /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(StateA, StateB);
-
-        public static bool operator ==(LaserRandom? left, LaserRandom? right) => EqualityComparer<LaserRandom>.Default.Equals(left, right);
-        public static bool operator !=(LaserRandom? left, LaserRandom? right) => !(left == right);
     }
 }

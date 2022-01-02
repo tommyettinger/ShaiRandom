@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ShaiRandom.Generators
 {
@@ -7,7 +6,7 @@ namespace ShaiRandom.Generators
     /// It's an AbstractRandom with 4 states, more here later.
     /// </summary>
     [Serializable]
-    public class FourWheelRandom : AbstractRandom, IEquatable<FourWheelRandom?>
+    public class FourWheelRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "FoWR" .
@@ -54,7 +53,7 @@ namespace ShaiRandom.Generators
          */
         public FourWheelRandom(ulong seed)
         {
-            Seed(seed);
+            SetSeed(this, seed);
         }
 
         /**
@@ -147,7 +146,9 @@ namespace ShaiRandom.Generators
          * different for every different {@code seed}).
          * @param seed the initial seed; may be any long
          */
-        public override void Seed(ulong seed)
+        public override void Seed(ulong seed) => SetSeed(this, seed);
+
+        private static void SetSeed(FourWheelRandom rng, ulong seed)
         {
             unchecked
             {
@@ -156,25 +157,25 @@ namespace ShaiRandom.Generators
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                StateA = x ^ x >> 27;
+                rng.StateA = x ^ x >> 27;
                 x = (seed += 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                StateB = x ^ x >> 27;
+                rng.StateB = x ^ x >> 27;
                 x = (seed += 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                StateC = x ^ x >> 27;
+                rng.StateC = x ^ x >> 27;
                 x = (seed + 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                StateD = x ^ x >> 27;
+                rng.StateD = x ^ x >> 27;
             }
         }
 
@@ -247,17 +248,5 @@ namespace ShaiRandom.Generators
             StateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as FourWheelRandom);
-
-        /// <inheritdoc />
-        public bool Equals(FourWheelRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB && StateC == other.StateC && StateD == other.StateD;
-
-        /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(StateA, StateB, StateC, StateD);
-
-        public static bool operator ==(FourWheelRandom? left, FourWheelRandom? right) => EqualityComparer<FourWheelRandom>.Default.Equals(left, right);
-        public static bool operator !=(FourWheelRandom? left, FourWheelRandom? right) => !(left == right);
     }
 }

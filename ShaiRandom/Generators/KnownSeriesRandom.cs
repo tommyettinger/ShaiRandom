@@ -14,7 +14,7 @@ namespace ShaiRandom.Generators
     ///
     /// This class is mostly from GoRogue, with some modifications for ShaiRandom's API.
     /// </remarks>
-    public class KnownSeriesRandom : IEnhancedRandom, IEquatable<KnownSeriesRandom?>
+    public class KnownSeriesRandom : IEnhancedRandom
     {
         private int _boolIndex;
         private readonly List<bool> _boolSeries;
@@ -66,7 +66,7 @@ namespace ShaiRandom.Generators
         /// <param name="uintSeries">Series of values to return via <see cref="NextUInt()"/>.</param>
         /// <param name="doubleSeries">Series of values to return via <see cref="NextDouble()"/>.</param>
         /// <param name="boolSeries">Series of values to return via <see cref="NextBool()"/>.</param>
-        /// <param name="byteSeries">Series of values to return via <see cref="NextBytes(byte[])"/>.</param>
+        /// <param name="byteSeries">Series of values to return via <see cref="NextBytes(Span&lt;byte&gt;)"/>.</param>
         /// <param name="floatSeries">Series of values to return via <see cref="NextFloat()"/>.</param>
         /// <param name="longSeries">Series of values to return via <see cref="NextLong()"/>.</param>
         /// <param name="ulongSeries">Series of values to return via <see cref="NextULong()"/>.</param>
@@ -169,12 +169,6 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public IEnhancedRandom Copy() => new KnownSeriesRandom(this);
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => obj is KnownSeriesRandom random && StateCount == random.StateCount && _boolIndex == random._boolIndex && EqualityComparer<List<bool>>.Default.Equals(_boolSeries, random._boolSeries) && _byteIndex == random._byteIndex && EqualityComparer<List<byte>>.Default.Equals(_byteSeries, random._byteSeries) && _doubleIndex == random._doubleIndex && EqualityComparer<List<double>>.Default.Equals(_doubleSeries, random._doubleSeries) && _floatIndex == random._floatIndex && EqualityComparer<List<float>>.Default.Equals(_floatSeries, random._floatSeries) && _intIndex == random._intIndex && EqualityComparer<List<int>>.Default.Equals(_intSeries, random._intSeries) && _uintIndex == random._uintIndex && EqualityComparer<List<uint>>.Default.Equals(_uintSeries, random._uintSeries) && _longIndex == random._longIndex && EqualityComparer<List<long>>.Default.Equals(_longSeries, random._longSeries) && _ulongIndex == random._ulongIndex && EqualityComparer<List<ulong>>.Default.Equals(_ulongSeries, random._ulongSeries);
-
-        /// <inheritdoc />
-        public bool Equals(KnownSeriesRandom? random) => random != null && StateCount == random.StateCount && _boolIndex == random._boolIndex && EqualityComparer<List<bool>>.Default.Equals(_boolSeries, random._boolSeries) && _byteIndex == random._byteIndex && EqualityComparer<List<byte>>.Default.Equals(_byteSeries, random._byteSeries) && _doubleIndex == random._doubleIndex && EqualityComparer<List<double>>.Default.Equals(_doubleSeries, random._doubleSeries) && _floatIndex == random._floatIndex && EqualityComparer<List<float>>.Default.Equals(_floatSeries, random._floatSeries) && _intIndex == random._intIndex && EqualityComparer<List<int>>.Default.Equals(_intSeries, random._intSeries) && _uintIndex == random._uintIndex && EqualityComparer<List<uint>>.Default.Equals(_uintSeries, random._uintSeries) && _longIndex == random._longIndex && EqualityComparer<List<long>>.Default.Equals(_longSeries, random._longSeries) && _ulongIndex == random._ulongIndex && EqualityComparer<List<ulong>>.Default.Equals(_ulongSeries, random._ulongSeries);
 
         /// <summary>
         /// Returns the next boolean value from the underlying series.
@@ -571,8 +565,5 @@ namespace ShaiRandom.Generators
         /// Serialization is not supported by this generator.
         /// </summary>
         public string StringSerialize() => throw new NotSupportedException();
-
-        public static bool operator ==(KnownSeriesRandom? left, KnownSeriesRandom? right) => EqualityComparer<KnownSeriesRandom>.Default.Equals(left, right);
-        public static bool operator !=(KnownSeriesRandom? left, KnownSeriesRandom? right) => !(left == right);
     }
 }

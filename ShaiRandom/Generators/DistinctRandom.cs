@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ShaiRandom.Generators
 {
@@ -8,7 +7,7 @@ namespace ShaiRandom.Generators
     /// Note that this generator only returns each ulong result exactly once over its period.
     /// </summary>
     [Serializable]
-    public class DistinctRandom : AbstractRandom, IEquatable<DistinctRandom?>
+    public class DistinctRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "DisR" .
@@ -157,17 +156,5 @@ namespace ShaiRandom.Generators
             State = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as DistinctRandom);
-
-        /// <inheritdoc />
-        public bool Equals(DistinctRandom? other) => other != null && State == other.State;
-
-        /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(State);
-
-        public static bool operator ==(DistinctRandom? left, DistinctRandom? right) => EqualityComparer<DistinctRandom>.Default.Equals(left, right);
-        public static bool operator !=(DistinctRandom? left, DistinctRandom? right) => !(left == right);
     }
 }

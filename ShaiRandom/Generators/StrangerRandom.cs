@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ShaiRandom.Generators
 {
@@ -7,7 +6,7 @@ namespace ShaiRandom.Generators
     /// It's an AbstractRandom with 4 states, more here later. This one has a good guaranteed minimum period, (2 to the 65) - 2.
     /// </summary>
     [Serializable]
-    public class StrangerRandom : AbstractRandom, IEquatable<StrangerRandom?>
+    public class StrangerRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "StrR" .
@@ -80,7 +79,7 @@ namespace ShaiRandom.Generators
          */
         public StrangerRandom(ulong seed)
         {
-            Seed(seed);
+            SetSeed(this, seed);
         }
 
         /**
@@ -93,7 +92,10 @@ namespace ShaiRandom.Generators
          */
         public StrangerRandom(ulong stateA, ulong stateC, ulong stateD)
         {
-            SetState(stateA, stateC, stateD);
+            StateA = stateA;
+            _b = Jump(_a);
+            StateC = stateC;
+            StateD = stateD;
         }
 
         /**
@@ -186,13 +188,15 @@ namespace ShaiRandom.Generators
          * different for every different {@code seed}).
          * @param seed the initial seed; may be any long
          */
-        public override void Seed(ulong seed)
+        public override void Seed(ulong seed) => SetSeed(this, seed);
+
+        private static void SetSeed(StrangerRandom rng, ulong seed)
         {
-            StateA = seed ^ 0xFA346CBFD5890825UL;
-            if (StateA == 0UL) StateA = 0xD3833E804F4C574BUL;
-            _b = Jump(_a);
-            StateC = Jump(_b - seed);
-            StateD = Jump(StateC + 0xC6BC279692B5C323UL);
+            rng.StateA = seed ^ 0xFA346CBFD5890825UL;
+            if (rng.StateA == 0UL) rng.StateA = 0xD3833E804F4C574BUL;
+            rng._b = Jump(rng._a);
+            rng.StateC = Jump(rng._b - seed);
+            rng.StateD = Jump(rng.StateC + 0xC6BC279692B5C323UL);
         }
 
         /**
@@ -262,17 +266,5 @@ namespace ShaiRandom.Generators
             StateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as StrangerRandom);
-
-        /// <inheritdoc />
-        public bool Equals(StrangerRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB && StateC == other.StateC && StateD == other.StateD;
-
-        /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(StateA, StateB, StateC, StateD);
-
-        public static bool operator ==(StrangerRandom? left, StrangerRandom? right) => EqualityComparer<StrangerRandom>.Default.Equals(left, right);
-        public static bool operator !=(StrangerRandom? left, StrangerRandom? right) => !(left == right);
     }
 }

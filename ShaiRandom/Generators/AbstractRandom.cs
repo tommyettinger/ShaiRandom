@@ -15,8 +15,8 @@ namespace ShaiRandom.Generators
     [Serializable]
     public abstract class AbstractRandom : IEnhancedRandom
     {
-        private static readonly float FLOAT_ADJUST = MathF.Pow(2f, -24f);
-        private static readonly double DOUBLE_ADJUST = Math.Pow(2.0, -53.0);
+        private static readonly float s_floatAdjust = MathF.Pow(2f, -24f);
+        private static readonly double s_doubleAdjust = Math.Pow(2.0, -53.0);
         /// <summary>
         /// Used by <see cref="MakeSeed"/> to produce mid-low quality random numbers as a starting seed, as a "don't care" option for seeding.
         /// </summary>
@@ -31,28 +31,6 @@ namespace ShaiRandom.Generators
             unchecked {
                 return (ulong)SeedingRandom.Next() ^ (ulong)SeedingRandom.Next() << 21 ^ (ulong)SeedingRandom.Next() << 42;
             }
-        }
-        /// <summary>
-        /// Must have a zero-argument constructor.
-        /// </summary>
-        protected AbstractRandom()
-        {
-        }
-        /// <summary>
-        /// This calls <see cref="Seed(ulong)"/> with it seed by default.
-        /// </summary>
-        /// <param name="seed">A ulong that will either be used as a state verbatim or, more commonly, to determine multiple states.</param>
-        protected AbstractRandom(ulong seed)
-        {
-            Seed(seed);
-        }
-        /// <summary>
-        /// Copies another AbstractRandom, typically with the same class, into this newly-constructed one.
-        /// </summary>
-        /// <param name="other">Another AbstractRandom to copy into this one.</param>
-        protected AbstractRandom(AbstractRandom other)
-        {
-            this.SetWith(other);
         }
 
         /// <inheritdoc />
@@ -288,7 +266,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public virtual float NextFloat()
         {
-            return (NextULong() >> 40) * FLOAT_ADJUST;
+            return (NextULong() >> 40) * s_floatAdjust;
         }
 
         /// <inheritdoc />
@@ -307,7 +285,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public virtual double NextDouble()
         {
-            return (NextULong() >> 11) * DOUBLE_ADJUST;
+            return (NextULong() >> 11) * s_doubleAdjust;
         }
 
         /// <inheritdoc />
@@ -325,7 +303,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public double NextInclusiveDouble()
         {
-            return NextULong(0x20000000000001L) * DOUBLE_ADJUST;
+            return NextULong(0x20000000000001L) * s_doubleAdjust;
         }
 
         /// <inheritdoc />
@@ -343,7 +321,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public float NextInclusiveFloat()
         {
-            return NextInt(0x1000001) * FLOAT_ADJUST;
+            return NextInt(0x1000001) * s_floatAdjust;
         }
 
         /// <inheritdoc />
@@ -448,33 +426,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public abstract IEnhancedRandom Copy();
-
-        /// <summary>
-        /// Given two EnhancedRandom objects that could have the same or different classes,
-        /// this returns true if they have the same class and same state, or false otherwise.
-        /// </summary>
-        /// <remarks>
-        /// Both of the arguments should implement <see cref="SelectState(int)"/>, or this
-        /// will throw an UnsupportedOperationException. This can be useful for comparing
-        /// EnhancedRandom classes that do not implement Equals(), for whatever reason.
-        /// </remarks>
-        /// <param name="left">An EnhancedRandom to compare for equality</param>
-        /// <param name="right">Another EnhancedRandom to compare for equality</param>
-        /// <returns>true if the two EnhancedRandom objects have the same class and state, or false otherwise</returns>
-        public static bool AreEqual(IEnhancedRandom left, IEnhancedRandom right)
-        {
-            if (left == right)
-                return true;
-            if (left.GetType() != right.GetType())
-                return false;
-
-            int count = left.StateCount;
-            for (int i = 0; i < count; i++)
-            {
-                if (left.SelectState(i) != right.SelectState(i))
-                    return false;
-            }
-            return true;
-        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace ShaiRandom.Generators
@@ -538,6 +537,31 @@ namespace ShaiRandom.Generators
             {
                 rng.SetSelectedState(i, 0xFFFFFFFFFFFFFFFFUL);
             }
+        }
+
+        /// <summary>
+        /// Given two IEnhancedRandom objects that could have the same or different classes,
+        /// this returns true if they have the same class and same state, or false otherwise.
+        /// </summary>
+        /// <remarks>
+        /// Both of the arguments should implement <see cref="IEnhancedRandom.SelectState(int)"/>, or this
+        /// will throw an exception. This can be useful for comparing IEnhancedRandom classes.
+        /// </remarks>
+        /// <returns>true if the two objects have the same class and state, or false otherwise</returns>
+        public static bool Matches(this IEnhancedRandom left, IEnhancedRandom right)
+        {
+            if (left == right)
+                return true;
+            if (left.GetType() != right.GetType())
+                return false;
+
+            int count = left.StateCount;
+            for (int i = 0; i < count; i++)
+            {
+                if (left.SelectState(i) != right.SelectState(i))
+                    return false;
+            }
+            return true;
         }
     }
 }

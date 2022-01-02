@@ -18,7 +18,6 @@
 // implementation of https://romu-random.org/ .
 
 using System;
-using System.Collections.Generic;
 
 namespace ShaiRandom.Generators
 {
@@ -27,7 +26,7 @@ namespace ShaiRandom.Generators
     /// TricycleRandom or FourWheelRandom may be about the same speed or faster.
     /// </summary>
     [Serializable]
-    public class RomuTrioRandom : AbstractRandom, IEquatable<RomuTrioRandom?>
+    public class RomuTrioRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "RTrR" .
@@ -85,7 +84,7 @@ namespace ShaiRandom.Generators
          */
         public RomuTrioRandom(ulong seed)
         {
-            Seed(seed);
+            SetSeed(this, seed);
         }
 
         /**
@@ -171,7 +170,9 @@ namespace ShaiRandom.Generators
          * different for every different {@code seed}).
          * @param seed the initial seed; may be any long
          */
-        public override void Seed(ulong seed)
+        public override void Seed(ulong seed) => SetSeed(this, seed);
+
+        private static void SetSeed(RomuTrioRandom rng, ulong seed)
         {
             unchecked
             {
@@ -180,19 +181,19 @@ namespace ShaiRandom.Generators
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                StateA = x ^ x >> 27;
+                rng.StateA = x ^ x >> 27;
                 x = (seed += 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                StateB = x ^ x >> 27;
+                rng.StateB = x ^ x >> 27;
                 x = (seed + 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                StateC = x ^ x >> 27;
+                rng.StateC = x ^ x >> 27;
             }
         }
 
@@ -244,17 +245,5 @@ namespace ShaiRandom.Generators
             StateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as RomuTrioRandom);
-
-        /// <inheritdoc />
-        public bool Equals(RomuTrioRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB && StateC == other.StateC;
-
-        /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(StateA, StateB, StateC);
-
-        public static bool operator ==(RomuTrioRandom? left, RomuTrioRandom? right) => EqualityComparer<RomuTrioRandom>.Default.Equals(left, right);
-        public static bool operator !=(RomuTrioRandom? left, RomuTrioRandom? right) => !(left == right);
     }
 }

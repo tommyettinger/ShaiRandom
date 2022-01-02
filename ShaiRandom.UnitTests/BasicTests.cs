@@ -103,7 +103,7 @@ namespace ShaiRandom.UnitTests
             Assert.StartsWith("#FoWR`", data);
             IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
             Assert.Equal(random.NextULong(), random2.NextULong());
-            Assert.True(AbstractRandom.AreEqual(random, random2));
+            Assert.True(random.Matches(random2));
         }
         [Fact]
         public void StrangerSerDeserTest()
@@ -114,7 +114,7 @@ namespace ShaiRandom.UnitTests
             Assert.StartsWith("#StrR`", data);
             IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
             Assert.Equal(random.NextULong(), random2.NextULong());
-            Assert.True(AbstractRandom.AreEqual(random, random2));
+            Assert.True(random.Matches(random2));
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace ShaiRandom.UnitTests
             Assert.StartsWith("TFoWR`", data);
             IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
             Assert.Equal(random.NextULong(), random2.NextULong());
-            Assert.True(AbstractRandom.AreEqual(random, random2));
+            Assert.True(random.Matches(random2));
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace ShaiRandom.UnitTests
             Assert.StartsWith("RFoWR`", data);
             IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
             Assert.Equal(random.NextULong(), random2.NextULong());
-            Assert.True(AbstractRandom.AreEqual(random, random2));
+            Assert.True(random.Matches(random2));
         }
     }
 }
