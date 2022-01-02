@@ -63,7 +63,7 @@ namespace ShaiRandom.Generators
          */
         public Xoshiro256StarStarRandom(ulong seed)
         {
-            Seed(seed);
+            SetSeed(this, seed);
         }
 
         /**
@@ -156,7 +156,9 @@ namespace ShaiRandom.Generators
          * different for every different {@code seed}).
          * @param seed the initial seed; may be any long
          */
-        public override void Seed(ulong seed)
+        public override void Seed(ulong seed) => SetSeed(this, seed);
+
+        private static void SetSeed(Xoshiro256StarStarRandom rng, ulong seed)
         {
             unchecked
             {
@@ -165,25 +167,25 @@ namespace ShaiRandom.Generators
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                StateA = x ^ x >> 27;
+                rng.StateA = x ^ x >> 27;
                 x = (seed += 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                StateB = x ^ x >> 27;
+                rng.StateB = x ^ x >> 27;
                 x = (seed += 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                StateC = x ^ x >> 27;
+                rng.StateC = x ^ x >> 27;
                 x = (seed + 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                _d = x ^ x >> 27;
+                rng._d = x ^ x >> 27;
             }
         }
 

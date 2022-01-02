@@ -80,7 +80,7 @@ namespace ShaiRandom.Generators
          */
         public StrangerRandom(ulong seed)
         {
-            Seed(seed);
+            SetSeed(this, seed);
         }
 
         /**
@@ -93,7 +93,10 @@ namespace ShaiRandom.Generators
          */
         public StrangerRandom(ulong stateA, ulong stateC, ulong stateD)
         {
-            SetState(stateA, stateC, stateD);
+            StateA = stateA;
+            _b = Jump(_a);
+            StateC = stateC;
+            StateD = stateD;
         }
 
         /**
@@ -186,13 +189,15 @@ namespace ShaiRandom.Generators
          * different for every different {@code seed}).
          * @param seed the initial seed; may be any long
          */
-        public override void Seed(ulong seed)
+        public override void Seed(ulong seed) => SetSeed(this, seed);
+
+        private static void SetSeed(StrangerRandom rng, ulong seed)
         {
-            StateA = seed ^ 0xFA346CBFD5890825UL;
-            if (StateA == 0UL) StateA = 0xD3833E804F4C574BUL;
-            _b = Jump(_a);
-            StateC = Jump(_b - seed);
-            StateD = Jump(StateC + 0xC6BC279692B5C323UL);
+            rng.StateA = seed ^ 0xFA346CBFD5890825UL;
+            if (rng.StateA == 0UL) rng.StateA = 0xD3833E804F4C574BUL;
+            rng._b = Jump(rng._a);
+            rng.StateC = Jump(rng._b - seed);
+            rng.StateD = Jump(rng.StateC + 0xC6BC279692B5C323UL);
         }
 
         /**

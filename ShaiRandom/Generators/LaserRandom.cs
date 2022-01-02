@@ -52,7 +52,7 @@ namespace ShaiRandom.Generators
          */
         public LaserRandom(ulong seed)
         {
-            Seed(seed);
+            SetSeed(this, seed);
         }
 
         /**
@@ -129,7 +129,9 @@ namespace ShaiRandom.Generators
          * (2 to the 64) possible initial generator states can be produced here.
          * @param seed the initial seed; may be any long
          */
-        public override void Seed(ulong seed)
+        public override void Seed(ulong seed) => SetSeed(this, seed);
+
+        private static void SetSeed(LaserRandom rng, ulong seed)
         {
             unchecked
             {
@@ -138,13 +140,13 @@ namespace ShaiRandom.Generators
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                StateA = x ^ x >> 27;
+                rng.StateA = x ^ x >> 27;
                 x = (seed + 0x9E3779B97F4A7C15UL);
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
-                _b = (x ^ x >> 27) | 1UL;
+                rng._b = (x ^ x >> 27) | 1UL;
             }
         }
 

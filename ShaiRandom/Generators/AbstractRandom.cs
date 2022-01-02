@@ -38,14 +38,7 @@ namespace ShaiRandom.Generators
         protected AbstractRandom()
         {
         }
-        /// <summary>
-        /// This calls <see cref="Seed(ulong)"/> with it seed by default.
-        /// </summary>
-        /// <param name="seed">A ulong that will either be used as a state verbatim or, more commonly, to determine multiple states.</param>
-        protected AbstractRandom(ulong seed)
-        {
-            Seed(seed);
-        }
+
         /// <summary>
         /// Copies another AbstractRandom, typically with the same class, into this newly-constructed one.
         /// </summary>

@@ -66,7 +66,7 @@ namespace ShaiRandom.Generators
         /// <param name="uintSeries">Series of values to return via <see cref="NextUInt()"/>.</param>
         /// <param name="doubleSeries">Series of values to return via <see cref="NextDouble()"/>.</param>
         /// <param name="boolSeries">Series of values to return via <see cref="NextBool()"/>.</param>
-        /// <param name="byteSeries">Series of values to return via <see cref="NextBytes(byte[])"/>.</param>
+        /// <param name="byteSeries">Series of values to return via <see cref="NextBytes(Span&lt;byte&gt;)"/>.</param>
         /// <param name="floatSeries">Series of values to return via <see cref="NextFloat()"/>.</param>
         /// <param name="longSeries">Series of values to return via <see cref="NextLong()"/>.</param>
         /// <param name="ulongSeries">Series of values to return via <see cref="NextULong()"/>.</param>
