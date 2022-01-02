@@ -229,7 +229,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public void NextBytes(byte[] bytes)
+        public void NextBytes(Span<byte> bytes)
         {
             int bl = bytes.Length;
             for (int i = 0; i < bl;)

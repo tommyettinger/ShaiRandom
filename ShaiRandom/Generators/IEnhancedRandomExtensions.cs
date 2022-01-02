@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace ShaiRandom.Generators
 {
@@ -250,57 +252,143 @@ namespace ShaiRandom.Generators
 
 
         /// <summary>
-        /// Gets a randomly-chosen item from the given non-null, non-empty array.
+        /// Gets a randomly-chosen item from the given non-empty span.
         /// </summary>
+        /// <remarks>
+        /// Note that this function can easily accept an array as well, or anything else that can convert to span
+        /// via either implicit or explicit conversion (see examples).  There is also an overload taking IReadOnlyList,
+        /// which can also take arrays.
+        /// <example>
+        /// <code>
+        /// myRng.RandomElement&lt;TypeOfElementsInMyArray&gt;(myArray.AsSpan());
+        /// </code>
+        /// </example>
+        /// </remarks>
         /// <param name="rng" />
-        /// <typeparam name="T">The type of items in the array.</typeparam>
-        /// <param name="array">Must be non-null and non-empty.</param>
-        /// <returns>A randomly-chosen item from array.</returns>
-        public static T RandomElement<T>(this IEnhancedRandom rng, T[] array)
-            => array[rng.NextInt(array.Length)];
+        /// <typeparam name="T">The type of items in the span.</typeparam>
+        /// <param name="items">Must be non-empty.</param>
+        /// <returns>A randomly-chosen item from the span.</returns>
+        public static T RandomElement<T>(this IEnhancedRandom rng, ReadOnlySpan<T> items)
+            => items[rng.NextInt(items.Length)];
 
         /// <summary>
-        /// Gets a randomly-chosen item from the given non-null, non-empty IList.
+        /// Gets a randomly-chosen item from the given non-null, non-empty IReadOnlyList.
         /// </summary>
         /// <param name="rng" />
         /// <typeparam name="T">The type of items in the list.</typeparam>
-        /// <param name="list">Must be non-null and non-empty.</param>
+        /// <param name="items">Must be non-null and non-empty.</param>
         /// <returns>A randomly-chosen item from list.</returns>
-        public static T RandomElement<T>(this IEnhancedRandom rng, IList<T> list)
-            => list[rng.NextInt(list.Count)];
+        public static T RandomElement<T>(this IEnhancedRandom rng, IReadOnlyList<T> items)
+            => items[rng.NextInt(items.Count)];
 
         /// <summary>
-        /// Shuffles the given array in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// Gets a randomly-chosen value that is a valid index for an item from the given non-empty span.
+        /// </summary>
+        /// <remarks>
+        /// Note that this function can easily accept an array as well, or anything else that can convert to span either
+        /// via either implicit or explicit conversion (see examples).  There is also an overload taking IReadOnlyList,
+        /// which can also take arrays.
+        /// <example>
+        /// <code>
+        /// myRng.RandomIndex&lt;TypeOfElementsInMyArray&gt;(myArray.AsSpan());
+        /// </code>
+        /// </example>
+        /// </remarks>
+        /// <param name="rng" />
+        /// <typeparam name="T">The type of items in the span.</typeparam>
+        /// <param name="items">Must be non-empty.</param>
+        /// <returns>A randomly-chosen value that is a valid index in the span.</returns>
+        public static int RandomIndex<T>(this IEnhancedRandom rng, ReadOnlySpan<T> items)
+            => rng.NextInt(items.Length);
+
+        /// <summary>
+        /// Gets a randomly-chosen value that is a valid index for an item from the given non-null non-empty IReadOnlyList.
         /// </summary>
         /// <param name="rng" />
-        /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
-        public static void Shuffle<T>(this IEnhancedRandom rng, T[] items)
-            => rng.Shuffle(items, 0, items.Length);
+        /// <typeparam name="T">The type of items in the list.</typeparam>
+        /// <param name="items">Must be non-null and non-empty.</param>
+        /// <returns>A randomly-chosen value that is a valid index in the list.</returns>
+        public static int RandomIndex<T>(this IEnhancedRandom rng, IReadOnlyList<T> items)
+            => rng.NextInt(items.Count);
+
+        /// <summary>
+        /// Shuffles the given Span in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// </summary>
+        /// <remarks>
+        /// Note that this function can easily accept an array as well, or anything else that can convert to span either
+        /// via either implicit or explicit conversion.  It can also shuffle only part of any such array or structure
+        /// (see examples).
+        /// <example>
+        /// <code>
+        /// // Shuffle whole array (either works)
+        /// myRng.Shuffle&lt;TypeOfElementsInMyArray&gt;(myArray);
+        /// myRng.Shuffle(myArray.AsSpan());
+        /// </code>
+        /// </example>
+        ///
+        /// <example>
+        /// <code>
+        /// // Shuffle the three elements starting at index 1
+        /// myRng.Shuffle(myArray.AsSpan(1, 3));
+        /// </code>
+        /// </example>
+        /// <example>
+        /// <code>
+        /// // Shuffle all elements from index 1 to (but not including) the last element
+        /// myRng.Shuffle(myArray.AsSpan(1..^1));
+        /// </code>
+        /// </example>
+        /// </remarks>
+        /// <typeparam name="T">Type of elements in the span</typeparam>
+        /// <param name="rng" />
+        /// <param name="items">A span of some type; may contain null items</param>
+        public static void Shuffle<T>(this IEnhancedRandom rng, Span<T> items)
+        {
+            for (int i = items.Length - 1; i > 0; i--)
+            {
+                int ii = rng.NextInt(i + 1);
+                (items[i], items[ii]) = (items[ii], items[i]);
+            }
+        }
 
         /// <summary>
         /// Shuffles the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
         /// </summary>
         /// <param name="rng" />
         /// <param name="items">an IList; must be non-null but may contain null items</param>
+        /// <typeparam name="T">Type of elements in the list</typeparam>
         public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items)
-            => rng.Shuffle(items, 0, items.Count);
+            => ShuffleUnchecked(rng, items, 0, items.Count);
 
         /// <summary>
-        /// Shuffles a section of the given array in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// Shuffles a section of the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// Only items from the given index onward will be shuffled.
         /// </summary>
         /// <param name="rng" />
-        /// <param name="items">an array of some reference type; must be non-null but may contain null items</param>
-        /// <param name="offset">the index of the first element of the array that can be shuffled</param>
-        /// <param name="length">the length of the section to shuffle</param>
-        public static void Shuffle<T>(this IEnhancedRandom rng, T[] items, int offset, int length)
+        /// <param name="items">an IList; must be non-null but may contain null items</param>
+        /// <param name="startIndex">Index of the first element in the list to shuffle</param>
+        /// <typeparam name="T">Type of elements in the list</typeparam>
+        public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items, Index startIndex)
         {
-            offset = Math.Min(Math.Max(0, offset), items.Length);
-            length = Math.Min(items.Length - offset, Math.Max(0, length));
-            for (int i = offset + length - 1; i > offset; i--)
-            {
-                int ii = rng.NextInt(offset, i + 1);
-                (items[i], items[ii]) = (items[ii], items[i]);
-            }
+            int length = items.Count;
+            int start = startIndex.GetOffset(items.Count);
+            length -= start;
+
+            rng.Shuffle(items, start, length);
+        }
+
+        /// <summary>
+        /// Shuffles a section of the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// Only items within the given range will be shuffled.
+        /// </summary>
+        /// <param name="rng" />
+        /// <param name="items">an IList; must be non-null but may contain null items</param>
+        /// <param name="range">Range of items in the list to shuffle</param>
+        /// <typeparam name="T">Type of elements in the list</typeparam>
+        public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items, Range range)
+        {
+            var (offset, length) = range.GetOffsetAndLength(items.Count);
+            ShuffleUnchecked(rng, items, offset, length);
         }
 
         /// <summary>
@@ -308,15 +396,34 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <param name="rng" />
         /// <param name="items">an IList; must be non-null but may contain null items</param>
-        /// <param name="offset">the index of the first element of the IList that can be shuffled</param>
+        /// <param name="start">the index of the first element of the IList that can be shuffled</param>
+        public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items, int start)
+            => rng.Shuffle(items, start, items.Count - start);
+
+        /// <summary>
+        /// Shuffles a section of the given IList in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.
+        /// </summary>
+        /// <param name="rng" />
+        /// <param name="items">an IList; must be non-null but may contain null items</param>
+        /// <param name="start">the index of the first element of the IList that can be shuffled</param>
         /// <param name="length">the length of the section to shuffle</param>
-        public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items, int offset, int length)
+        public static void Shuffle<T>(this IEnhancedRandom rng, IList<T> items, int start, int length)
         {
-            offset = Math.Min(Math.Max(0, offset), items.Count);
-            length = Math.Min(items.Count - offset, Math.Max(0, length));
-            for (int i = offset + length - 1; i > offset; i--)
+            if (start < 0 || start >= items.Count)
+                throw new ArgumentOutOfRangeException(nameof(start), "Index given was out of range");
+
+            if (length < 0 || length > items.Count - start)
+                throw new ArgumentOutOfRangeException(nameof(length), "Index given was out of range");
+
+            ShuffleUnchecked(rng, items, start, length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void ShuffleUnchecked<T>(IEnhancedRandom rng, IList<T> items, int start, int length)
+        {
+            for (int i = start + length - 1; i > start; i--)
             {
-                int ii = rng.NextInt(offset, i + 1);
+                int ii = rng.NextInt(start, i + 1);
                 (items[i], items[ii]) = (items[ii], items[i]);
             }
         }

@@ -317,11 +317,36 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// Generates random bytes and places them into a user-supplied
-        /// byte array.  The number of random bytes produced is equal to
-        /// the length of the byte array.
+        /// span.  The number of random bytes produced is equal to
+        /// the length of the span.
         /// </summary>
-        /// <param name="bytes">the byte array to fill with random bytes</param>
-        void NextBytes(byte[] bytes);
+        /// <remarks>
+        /// Note that this function can easily accept an array as well, or anything else that can convert to span either
+        /// via either implicit or explicit conversion.  It can also fill only part of any such array or structure
+        /// (see examples).
+        /// <example>
+        /// <code>
+        /// // Fill whole array
+        /// myRng.NextBytes(myArray);
+        /// </code>
+        /// </example>
+        ///
+        /// <example>
+        /// <code>
+        /// // Fill the three elements starting at index 1
+        /// myRng.NextBytes(myArray.AsSpan(1, 3));
+        /// </code>
+        /// </example>
+        ///
+        /// <example>
+        /// <code>
+        /// // Fill all elements from index 1 to (but not including) the last element
+        /// myRng.NextBytes(myArray.AsSpan(1..^1));
+        /// </code>
+        /// </example>
+        /// </remarks>
+        /// <param name="bytes">The Span to fill with random bytes.</param>
+        void NextBytes(Span<byte> bytes);
 
         /// <summary>
         /// Returns the next pseudorandom, uniformly distributed int
