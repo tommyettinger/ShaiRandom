@@ -441,33 +441,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public abstract IEnhancedRandom Copy();
-
-        /// <summary>
-        /// Given two EnhancedRandom objects that could have the same or different classes,
-        /// this returns true if they have the same class and same state, or false otherwise.
-        /// </summary>
-        /// <remarks>
-        /// Both of the arguments should implement <see cref="SelectState(int)"/>, or this
-        /// will throw an UnsupportedOperationException. This can be useful for comparing
-        /// EnhancedRandom classes that do not implement Equals(), for whatever reason.
-        /// </remarks>
-        /// <param name="left">An EnhancedRandom to compare for equality</param>
-        /// <param name="right">Another EnhancedRandom to compare for equality</param>
-        /// <returns>true if the two EnhancedRandom objects have the same class and state, or false otherwise</returns>
-        public static bool AreEqual(IEnhancedRandom left, IEnhancedRandom right)
-        {
-            if (left == right)
-                return true;
-            if (left.GetType() != right.GetType())
-                return false;
-
-            int count = left.StateCount;
-            for (int i = 0; i < count; i++)
-            {
-                if (left.SelectState(i) != right.SelectState(i))
-                    return false;
-            }
-            return true;
-        }
     }
 }
