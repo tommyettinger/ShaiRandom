@@ -32,21 +32,6 @@ namespace ShaiRandom.Generators
                 return (ulong)SeedingRandom.Next() ^ (ulong)SeedingRandom.Next() << 21 ^ (ulong)SeedingRandom.Next() << 42;
             }
         }
-        /// <summary>
-        /// Must have a zero-argument constructor.
-        /// </summary>
-        protected AbstractRandom()
-        {
-        }
-
-        /// <summary>
-        /// Copies another AbstractRandom, typically with the same class, into this newly-constructed one.
-        /// </summary>
-        /// <param name="other">Another AbstractRandom to copy into this one.</param>
-        protected AbstractRandom(AbstractRandom other)
-        {
-            this.SetWith(other);
-        }
 
         /// <inheritdoc />
         public abstract void Seed(ulong seed);
