@@ -255,12 +255,12 @@ namespace ShaiRandom.Generators
         /// Gets a randomly-chosen item from the given non-empty span.
         /// </summary>
         /// <remarks>
-        /// Note that this function can easily accept an array as well, or anything else that can convert to span either
-        /// via either implicit or explicit conversion (see examples).
+        /// Note that this function can easily accept an array as well, or anything else that can convert to span
+        /// via either implicit or explicit conversion (see examples).  There is also an overload taking IReadOnlyList,
+        /// which can also take arrays.
         /// <example>
         /// <code>
-        /// myRng.RandomElement&lt;TypeOfElementsInMyArray&gt;(myArray);
-        /// myRng.RandomElement(myArray.AsSpan());
+        /// myRng.RandomElement&lt;TypeOfElementsInMyArray&gt;(myArray.AsSpan());
         /// </code>
         /// </example>
         /// </remarks>
@@ -272,7 +272,7 @@ namespace ShaiRandom.Generators
             => items[rng.NextInt(items.Length)];
 
         /// <summary>
-        /// Gets a randomly-chosen item from the given non-null, non-empty IList.
+        /// Gets a randomly-chosen item from the given non-null, non-empty IReadOnlyList.
         /// </summary>
         /// <param name="rng" />
         /// <typeparam name="T">The type of items in the list.</typeparam>
@@ -286,11 +286,11 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <remarks>
         /// Note that this function can easily accept an array as well, or anything else that can convert to span either
-        /// via either implicit or explicit conversion (see examples).
+        /// via either implicit or explicit conversion (see examples).  There is also an overload taking IReadOnlyList,
+        /// which can also take arrays.
         /// <example>
         /// <code>
-        /// myRng.RandomIndex&lt;TypeOfElementsInMyArray&gt;(myArray);
-        /// myRng.RandomIndex(myArray.AsSpan());
+        /// myRng.RandomIndex&lt;TypeOfElementsInMyArray&gt;(myArray.AsSpan());
         /// </code>
         /// </example>
         /// </remarks>
@@ -302,7 +302,7 @@ namespace ShaiRandom.Generators
             => rng.NextInt(items.Length);
 
         /// <summary>
-        /// Gets a randomly-chosen value that is a valid index for an item from the given non-null non-empty list.
+        /// Gets a randomly-chosen value that is a valid index for an item from the given non-null non-empty IReadOnlyList.
         /// </summary>
         /// <param name="rng" />
         /// <typeparam name="T">The type of items in the list.</typeparam>
