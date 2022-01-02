@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ShaiRandom.Generators;
+﻿using ShaiRandom.Generators;
 using Troschuetz.Random;
 
 namespace ShaiRandom.Wrappers
@@ -14,7 +12,7 @@ namespace ShaiRandom.Wrappers
     /// and are implemented in terms of IEnhancedRandom methods.
     /// </remarks>
     [System.Serializable]
-    public class TRGeneratorWrapper : AbstractRandom, IGenerator, IEquatable<TRGeneratorWrapper?>
+    public class TRGeneratorWrapper : AbstractRandom, IGenerator
     {
         /// <summary>
         /// The identifying tag here is "T" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
@@ -107,15 +105,5 @@ namespace ShaiRandom.Wrappers
         bool IGenerator.Reset() => false;
         bool IGenerator.Reset(uint seed) => false;
         #endregion
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as TRGeneratorWrapper);
-        /// <inheritdoc />
-        public bool Equals(TRGeneratorWrapper? other) => other != null && EqualityComparer<IEnhancedRandom>.Default.Equals(Wrapped, other.Wrapped);
-
-        public static bool operator ==(TRGeneratorWrapper? left, TRGeneratorWrapper? right) => EqualityComparer<TRGeneratorWrapper>.Default.Equals(left, right);
-        public static bool operator !=(TRGeneratorWrapper? left, TRGeneratorWrapper? right) => !(left == right);
-
-
     }
 }

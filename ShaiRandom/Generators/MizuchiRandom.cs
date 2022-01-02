@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ShaiRandom.Generators
 {
@@ -12,7 +11,7 @@ namespace ShaiRandom.Generators
     /// and since this supports multiple streams (by changing StateB), the waterway theme seemed fitting.
     /// </remarks>
     [Serializable]
-    public class MizuchiRandom : AbstractRandom, IEquatable<MizuchiRandom?>
+    public class MizuchiRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "MizR" .
@@ -205,17 +204,5 @@ namespace ShaiRandom.Generators
             StateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as MizuchiRandom);
-
-        /// <inheritdoc />
-        public bool Equals(MizuchiRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB;
-
-        /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(StateA, StateB);
-
-        public static bool operator ==(MizuchiRandom? left, MizuchiRandom? right) => EqualityComparer<MizuchiRandom>.Default.Equals(left, right);
-        public static bool operator !=(MizuchiRandom? left, MizuchiRandom? right) => !(left == right);
     }
 }

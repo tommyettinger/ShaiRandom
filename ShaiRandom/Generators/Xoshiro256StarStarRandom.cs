@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ShaiRandom.Generators
 {
@@ -7,7 +6,7 @@ namespace ShaiRandom.Generators
     /// It's an AbstractRandom with 4 states, implementing a known-rather-good algorithm, more here later.
     /// </summary>
     [Serializable]
-    public class Xoshiro256StarStarRandom : AbstractRandom, IEquatable<Xoshiro256StarStarRandom?>
+    public class Xoshiro256StarStarRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "XSSR" .
@@ -242,17 +241,5 @@ namespace ShaiRandom.Generators
             StateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as Xoshiro256StarStarRandom);
-
-        /// <inheritdoc />
-        public bool Equals(Xoshiro256StarStarRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB && StateC == other.StateC && StateD == other.StateD;
-
-        /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(StateA, StateB, StateC, _d);
-
-        public static bool operator ==(Xoshiro256StarStarRandom? left, Xoshiro256StarStarRandom? right) => EqualityComparer<Xoshiro256StarStarRandom>.Default.Equals(left, right);
-        public static bool operator !=(Xoshiro256StarStarRandom? left, Xoshiro256StarStarRandom? right) => !(left == right);
     }
 }

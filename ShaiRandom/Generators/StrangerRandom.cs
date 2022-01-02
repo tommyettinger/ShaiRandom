@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ShaiRandom.Generators
 {
@@ -7,7 +6,7 @@ namespace ShaiRandom.Generators
     /// It's an AbstractRandom with 4 states, more here later. This one has a good guaranteed minimum period, (2 to the 65) - 2.
     /// </summary>
     [Serializable]
-    public class StrangerRandom : AbstractRandom, IEquatable<StrangerRandom?>
+    public class StrangerRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "StrR" .
@@ -267,17 +266,5 @@ namespace ShaiRandom.Generators
             StateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as StrangerRandom);
-
-        /// <inheritdoc />
-        public bool Equals(StrangerRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB && StateC == other.StateC && StateD == other.StateD;
-
-        /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(StateA, StateB, StateC, StateD);
-
-        public static bool operator ==(StrangerRandom? left, StrangerRandom? right) => EqualityComparer<StrangerRandom>.Default.Equals(left, right);
-        public static bool operator !=(StrangerRandom? left, StrangerRandom? right) => !(left == right);
     }
 }

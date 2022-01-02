@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ShaiRandom.Generators
 {
@@ -7,7 +6,7 @@ namespace ShaiRandom.Generators
     /// It's an AbstractRandom with 2 states, more here later. This one supports <see cref="Skip(ulong)"/>.
     /// </summary>
     [Serializable]
-    public class LaserRandom : AbstractRandom, IEquatable<LaserRandom?>
+    public class LaserRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "LasR" .
@@ -212,17 +211,5 @@ namespace ShaiRandom.Generators
             StateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
             return this;
         }
-
-        /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as LaserRandom);
-
-        /// <inheritdoc />
-        public bool Equals(LaserRandom? other) => other != null && StateA == other.StateA && StateB == other.StateB;
-
-        /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(StateA, StateB);
-
-        public static bool operator ==(LaserRandom? left, LaserRandom? right) => EqualityComparer<LaserRandom>.Default.Equals(left, right);
-        public static bool operator !=(LaserRandom? left, LaserRandom? right) => !(left == right);
     }
 }
