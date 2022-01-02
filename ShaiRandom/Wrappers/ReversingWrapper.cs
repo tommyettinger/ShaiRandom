@@ -21,22 +21,37 @@ namespace ShaiRandom.Wrappers
         /// The identifying tag here is "R" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
         /// </summary>
         public override string Tag => "R";
+
+        /// <summary>
+        /// The ShaiRandom generator being wrapped, which must never be null.
+        /// </summary>
         public IEnhancedRandom Wrapped { get; set; }
 
+        /// <summary>
+        /// Creates a new ReversingWrapper around a new <see cref="FourWheelRandom"/> generator with a random initial
+        /// state.
+        /// </summary>
         public ReversingWrapper()
         {
             Wrapped = new FourWheelRandom();
         }
 
+        /// <summary>
+        /// Creates a new ReversingWrapper around a new <see cref="FourWheelRandom"/> generator seeded with the given
+        /// value.
+        /// </summary>
         public ReversingWrapper(ulong seed)
         {
             Wrapped = new FourWheelRandom(seed);
         }
 
+        /// <summary>
+        /// Creates a new ReversingWrapper around the given generator, which must support <see cref="IEnhancedRandom.PreviousULong"/>.
+        /// </summary>
         public ReversingWrapper(IEnhancedRandom wrapping)
         {
             if (!wrapping.SupportsPrevious)
-                throw new NotSupportedException($"The AbstractRandom to wrap must support PreviousULong(), and {nameof(wrapping)} does not.");
+                throw new ArgumentException($"The AbstractRandom to wrap must support PreviousULong(), and {nameof(wrapping)} does not.", nameof(wrapping));
             Wrapped = wrapping;
         }
 

@@ -20,7 +20,7 @@ namespace ShaiRandom.Wrappers
         public override string Tag => "T";
 
         /// <summary>
-        /// The wrapped AbstractRandom, which must never be null.
+        /// The wrapped RNG, which must never be null.
         /// </summary>
         public IEnhancedRandom Wrapped { get; set; }
 
