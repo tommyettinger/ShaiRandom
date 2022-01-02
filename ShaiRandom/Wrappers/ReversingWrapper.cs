@@ -51,7 +51,7 @@ namespace ShaiRandom.Wrappers
         public ReversingWrapper(IEnhancedRandom wrapping)
         {
             if (!wrapping.SupportsPrevious)
-                throw new ArgumentException($"The AbstractRandom to wrap must support PreviousULong(), and {nameof(wrapping)} does not.", nameof(wrapping));
+                throw new ArgumentException($"The AbstractRandom to wrap must support PreviousULong().", nameof(wrapping));
             Wrapped = wrapping;
         }
 
