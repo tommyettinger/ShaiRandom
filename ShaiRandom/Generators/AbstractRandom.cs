@@ -15,8 +15,8 @@ namespace ShaiRandom.Generators
     [Serializable]
     public abstract class AbstractRandom : IEnhancedRandom
     {
-        private static readonly float FLOAT_ADJUST = MathF.Pow(2f, -24f);
-        private static readonly double DOUBLE_ADJUST = Math.Pow(2.0, -53.0);
+        private static readonly float s_floatAdjust = MathF.Pow(2f, -24f);
+        private static readonly double s_doubleAdjust = Math.Pow(2.0, -53.0);
         /// <summary>
         /// Used by <see cref="MakeSeed"/> to produce mid-low quality random numbers as a starting seed, as a "don't care" option for seeding.
         /// </summary>
@@ -281,7 +281,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public virtual float NextFloat()
         {
-            return (NextULong() >> 40) * FLOAT_ADJUST;
+            return (NextULong() >> 40) * s_floatAdjust;
         }
 
         /// <inheritdoc />
@@ -300,7 +300,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public virtual double NextDouble()
         {
-            return (NextULong() >> 11) * DOUBLE_ADJUST;
+            return (NextULong() >> 11) * s_doubleAdjust;
         }
 
         /// <inheritdoc />
@@ -318,7 +318,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public double NextInclusiveDouble()
         {
-            return NextULong(0x20000000000001L) * DOUBLE_ADJUST;
+            return NextULong(0x20000000000001L) * s_doubleAdjust;
         }
 
         /// <inheritdoc />
@@ -336,7 +336,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public float NextInclusiveFloat()
         {
-            return NextInt(0x1000001) * FLOAT_ADJUST;
+            return NextInt(0x1000001) * s_floatAdjust;
         }
 
         /// <inheritdoc />
