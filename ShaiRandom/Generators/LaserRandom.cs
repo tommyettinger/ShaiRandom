@@ -5,7 +5,6 @@ namespace ShaiRandom.Generators
     /// <summary>
     /// It's an AbstractRandom with 2 states, more here later. This one supports <see cref="Skip(ulong)"/>.
     /// </summary>
-    [Serializable]
     public class LaserRandom : AbstractRandom
     {
         /// <summary>

@@ -14,7 +14,6 @@ namespace ShaiRandom.Wrappers
     /// you use <see cref="EnhancedRandomExtensions.Shuffle{T}(IEnhancedRandom, Span&lt;T&gt;)"/> or other Shuffle variants with both the wrapped
     /// generator and wrapper, since they will use the same amount of calls, and this will even un-shuffle the array (restoring it to its order before the shuffle).
     /// </summary>
-    [Serializable]
     public class ReversingWrapper : AbstractRandom
     {
         /// <summary>

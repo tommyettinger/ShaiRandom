@@ -12,7 +12,6 @@ namespace ShaiRandom.Generators
     /// the other methods here, and some of them throw exceptions if that method is not available. Similarly, <see cref="SetSelectedState(int, ulong)"/> should
     /// be implemented to set specific states, especially if there is more than one state variable.
     /// </remarks>
-    [Serializable]
     public abstract class AbstractRandom : IEnhancedRandom
     {
         private static readonly float s_floatAdjust = MathF.Pow(2f, -24f);

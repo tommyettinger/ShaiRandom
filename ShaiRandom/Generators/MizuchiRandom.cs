@@ -10,7 +10,6 @@ namespace ShaiRandom.Generators
     /// It's based on a permutation of an LCG, like PCG-Random by way of SplitMix64. A mizuchi is a mythological river dragon,
     /// and since this supports multiple streams (by changing StateB), the waterway theme seemed fitting.
     /// </remarks>
-    [Serializable]
     public class MizuchiRandom : AbstractRandom
     {
         /// <summary>

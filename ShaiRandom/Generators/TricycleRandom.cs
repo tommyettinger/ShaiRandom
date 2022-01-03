@@ -5,7 +5,6 @@ namespace ShaiRandom.Generators
     /// <summary>
     /// It's an AbstractRandom with 3 states, more here later.
     /// </summary>
-    [Serializable]
     public class TricycleRandom : AbstractRandom
     {
         /// <summary>

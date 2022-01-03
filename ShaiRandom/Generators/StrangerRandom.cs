@@ -5,7 +5,6 @@ namespace ShaiRandom.Generators
     /// <summary>
     /// It's an AbstractRandom with 4 states, more here later. This one has a good guaranteed minimum period, (2 to the 65) - 2.
     /// </summary>
-    [Serializable]
     public class StrangerRandom : AbstractRandom
     {
         /// <summary>
