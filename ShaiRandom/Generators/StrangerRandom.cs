@@ -60,9 +60,10 @@ namespace ShaiRandom.Generators
                 return val;
             }
         }
-        /**
-         * Creates a new StrangerRandom with a random state.
-         */
+
+        /// <summary>
+        /// Creates a new StrangerRandom with a random state.
+        /// </summary>
         public StrangerRandom()
         {
             StateA = MakeSeed();
@@ -130,9 +131,9 @@ namespace ShaiRandom.Generators
         /// </summary>
         public override bool SupportsSkip => false;
         /// <summary>
-        /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/>.
+        /// This supports <see cref="PreviousULong()"/>.
         /// </summary>
-        public override bool SupportsPrevious => false;
+        public override bool SupportsPrevious => true;
         /**
          * Gets the state determined by {@code selection}, as-is. The value for selection should be
          * between 0 and 3, inclusive; if it is any other value this gets state D as if 3 was given.
@@ -248,6 +249,31 @@ namespace ShaiRandom.Generators
                 return fc;
             }
         }
+
+        /// <inheritdoc/>
+        public override ulong PreviousULong()
+        {
+            ulong fa = _a;
+            ulong fb = _b;
+            ulong fc = StateC;
+            ulong fd = StateD;
+            ulong t = fb ^ fb >> 9;
+            t ^= t >> 18;
+            t ^= t >> 36;
+            ulong m = fa ^ fa << 7;
+            m ^= m << 14;
+            m ^= m << 28;
+            m ^= m << 56;
+            StateA = t;
+            StateB = m;
+            StateC = t - fd + 0xC6BC279692B5C323UL;
+            StateD = (fc + m).RotateRight(39);
+            t = m ^ m >> 9;
+            t ^= t >> 18;
+            t ^= t >> 36;
+            return t - StateD + 0xC6BC279692B5C323UL;
+        }
+
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new StrangerRandom(StateA, StateB, StateC, StateD);

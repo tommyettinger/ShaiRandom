@@ -139,6 +139,14 @@ namespace ShaiRandom.UnitTests
             IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
             Assert.Equal(random.NextULong(), random2.NextULong());
             Assert.True(random.Matches(random2));
+
+            random.Wrapped = new StrangerRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL);
+            random.NextULong();
+            data = random.StringSerialize();
+            Assert.StartsWith("RStrR`", data);
+            random2 = AbstractRandom.Deserialize(data);
+            Assert.Equal(random.NextULong(), random2.NextULong());
+            Assert.True(random.Matches(random2));
         }
     }
 }
