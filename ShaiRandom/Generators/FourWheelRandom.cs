@@ -16,22 +16,22 @@ namespace ShaiRandom.Generators
         {
             RegisterTag(new FourWheelRandom(1UL, 1UL, 1UL, 1UL));
         }
-        /**
-         * The first state; can be any long.
-         */
+        /// <summary>
+        /// The first state; can be any ulong.
+        /// </summary>
         public ulong StateA { get; set; }
-        /**
-         * The second state; can be any long.
-         */
+        /// <summary>
+        /// The second state; can be any ulong.
+        /// </summary>
         public ulong StateB { get; set; }
-        /**
-         * The third state; can be any long.
-         */
+        /// <summary>
+        /// The third state; can be any ulong.
+        /// </summary>
         public ulong StateC { get; set; }
-        /**
-         * The fourth state; can be any long. If this has just been set to some value, then the next call to
-         * {@link #nextLong()} will return that value as-is. Later calls will be more random.
-         */
+        /// <summary>
+        /// The fourth state; can be any ulong.
+        /// </summary>
+        /// <remarks>If this has just been set to some value, then the next call to <see cref="NextULong()">NextUlong()</see> will return that value as-is. Later calls will be more random.</remarks>
         public ulong StateD { get; set; }
 
         /**

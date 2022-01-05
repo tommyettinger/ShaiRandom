@@ -18,21 +18,21 @@ namespace ShaiRandom.Generators
         }
         private ulong _a, _b;
         /// <summary>
-        /// The first state; can be any long except 0.
+        /// The first state; can be any ulong except 0.
         /// </summary>
         public ulong StateA { get => _a; set => _a = value == 0UL ? 0xD3833E804F4C574BUL : value; }
         /// <summary>
-        /// The second state; can be any long except 0.
+        /// The second state; can be any ulong except 0.
         /// </summary>
         public ulong StateB { get => _b; set => _b = value == 0UL ? 0x790B300BF9FE738FUL : value; }
 
         /// <summary>
-        /// The third state; can be any long. If this has just been set to some value, then the next call to
+        /// The third state; can be any ulong. If this has just been set to some value, then the next call to
         /// <see cref="NextULong()"/> will return that value as-is. Later calls will be more random.
         /// </summary>
         public ulong StateC { get; set; }
         /// <summary>
-        /// The fourth state; can be any long.
+        /// The fourth state; can be any ulong.
         /// </summary>
         public ulong StateD { get; set; }
 

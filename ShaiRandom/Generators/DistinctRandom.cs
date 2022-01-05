@@ -16,9 +16,9 @@ namespace ShaiRandom.Generators
         {
             RegisterTag(new DistinctRandom(1UL));
         }
-        /**
-         * The first state; can be any ulong.
-         */
+        /// <summary>
+        /// The first state; can be any ulong.
+        /// </summary>
         public ulong State { get; set; }
 
         /**

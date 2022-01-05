@@ -21,14 +21,14 @@ namespace ShaiRandom.Generators
         {
             RegisterTag(new MizuchiRandom(1UL, 1UL));
         }
-        /**
-         * The first state; can be any ulong.
-         */
+        /// <summary>
+        /// The first state; can be any ulong.
+        /// </summary>
         public ulong StateA { get; set; }
         private ulong _b;
-        /**
-         * The second state; can be any odd ulong (the last bit must be 1)
-         */
+        /// <summary>
+        /// The second state; can be any odd ulong (the last bit must be 1).
+        /// </summary>
         public ulong StateB { get
             {
                 return _b;

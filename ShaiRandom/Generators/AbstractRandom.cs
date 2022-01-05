@@ -337,15 +337,14 @@ namespace ShaiRandom.Generators
 
         //Commented out because it was replaced by the bitwise technique below, but we may want to switch back later or on some platforms.
 
-        //**
-        //* Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
-        //* values between 1.1102230246251564E-16 and 0.9999999999999999, or 0x1.fffffffffffffp-54 and 0x1.fffffffffffffp-1 in hex
-        //* notation. It cannot return 0 or 1.
-        //* <br/>
-        //* The default implementation simply uses <see cref="NextLong()"/> to get a uniform long, shifts it to remove 11 bits, adds 1, and
-        //* multiplies by a value just slightly less than what nextDouble() usually uses.
-        //* @return a random uniform double between 0 and 1 (both exclusive)
-        //*/
+        // ///Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
+        // ///values between 1.1102230246251564E-16 and 0.9999999999999999, or 0x1.fffffffffffffp-54 and 0x1.fffffffffffffp-1 in hex
+        // ///notation. It cannot return 0 or 1.
+        // ///<br/>
+        // ///The default implementation simply uses <see cref="NextLong()"/> to get a uniform long, shifts it to remove 11 bits, adds 1, and
+        // ///multiplies by a value just slightly less than what nextDouble() usually uses.
+        // ///@return a random uniform double between 0 and 1 (both exclusive)
+        // ///
         //public double NextExclusiveDouble()
         //{
         //    return ((NextULong() >> 11) + 1UL) * 1.1102230246251564E-16;

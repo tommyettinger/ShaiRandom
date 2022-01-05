@@ -36,17 +36,17 @@ namespace ShaiRandom.Generators
         {
             RegisterTag(new RomuTrioRandom(1UL, 1UL, 1UL));
         }
-        /**
-         * The first state; can be any long except that the whole state must not all be 0.
-         * If this has just been set to some value, then the next call to
-         * {@link #nextULong()} will return that value as-is. Later calls will be more random.
-         */
+        /// <summary>
+        /// The first state; can be any ulong except that the whole state must not all be 0.
+        /// </summary>
+        /// <remarks>
+        /// If this has just been set to some value, then the next call to <see cref="NextULong">NextULong</see> will return that value as-is. Later calls will be more random.</remarks>
         public ulong StateA { get; set; }
 
         private ulong _b;
-        /**
-         * The second state; can be any long except that the whole state must not all be 0.
-         */
+        /// <summary>
+        /// The second state; can be any ulong except that the whole state must not all be 0.
+        /// </summary>
         public ulong StateB
         {
             get => _b;
@@ -55,11 +55,10 @@ namespace ShaiRandom.Generators
 
 
         private ulong _c;
-        /**
-         * The third state; can be any long except that the whole state must not all be 0.
-         * If all other states are 0, and this would be set to 0,
-         * then this is instead set to 0xFFFFFFFFFFFFFFFFUL.
-         */
+        /// <summary>
+        /// The third state; can be any ulong except that the whole state must not all be 0.
+        /// </summary>
+        /// <remarks>If all other states are 0, and this would be set to 0, then this is instead set to 0xFFFFFFFFFFFFFFFFUL.</remarks>
         public ulong StateC
         {
             get => _c;
