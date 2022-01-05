@@ -3,9 +3,15 @@
 namespace ShaiRandom.Generators
 {
     /// <summary>
-    /// It's an AbstractRandom with 1 state, more here later. This one supports <see cref="Skip(ulong)"/>.
-    /// Note that this generator only returns each ulong result exactly once over its period.
+    /// It's an AbstractRandom with 1 state that only returns each ulong result exactly once over its period.
     /// </summary>
+    /// <remarks>
+    /// This generator supports <see cref="Skip(ulong)"/>, along with all other optional operations.
+    /// It is very similar to Java 8's SplittableRandom, though not identical, and only if using one stream of that generator.
+    /// It uses the same pattern of generation; add a large odd constant to the state, then run the value of that state through a
+    /// unary hash (SplittableRandom uses something close to murmurhash3's finalizer; this uses a similar function that is better
+    /// in some measurable ways) and return the hash' result.
+    /// </remarks>
     public class DistinctRandom : AbstractRandom
     {
         /// <summary>
@@ -16,24 +22,27 @@ namespace ShaiRandom.Generators
         {
             RegisterTag(new DistinctRandom(1UL));
         }
+
         /// <summary>
         /// The first state; can be any ulong.
         /// </summary>
         public ulong State { get; set; }
 
-        /**
-         * Creates a new DistinctRandom with a random state.
-         */
+        /// <summary>
+        /// Creates a new DistinctRandom with a random state.
+        /// </summary>
         public DistinctRandom()
         {
             State = MakeSeed();
         }
 
-        /**
-         * Creates a new DistinctRandom with the given seed; all {@code long} values are permitted.
-         * The seed will be passed to used as-is for the one state here.
-         * @param seed any {@code long} value
-         */
+        /// <summary>
+        /// Creates a new DistinctRandom with the given four states; all ulong values are permitted.
+        /// </summary>
+        /// <remarks>
+        /// The seed will be used verbatim as the State.
+        /// </remarks>
+        /// <param name="seed">Any ulong.</param>
         public DistinctRandom(ulong seed)
         {
             State = seed;
@@ -60,44 +69,49 @@ namespace ShaiRandom.Generators
         /// </summary>
         public override bool SupportsPrevious => true;
 
-        /**
-         * Gets the state, regardless of {@code selection}, as-is.
-         * @param selection ignored
-         * @return the value of the selected state
-         */
+        /// <summary>
+        /// Gets the state, regardless of selection, as-is.
+        /// </summary>
+        /// <param name="selection">Ignored.</param>
+        /// <returns>The value of the selected state.</returns>
         public override ulong SelectState(int selection)
         {
             return State;
         }
 
-        /**
-         * Sets the state, regardless of {@code selection}, to {@code value}, as-is.
-         * @param selection ignored
-         * @param value the exact value to use for the selected state, if valid
-         */
+        /// <summary>
+        /// Sets the State, regardless of selection, to value, as-is.
+        /// </summary>
+        /// <param name="selection">Ignored</param>
+        /// <param name="value">The exact value to use for the State.</param>
         public override void SetSelectedState(int selection, ulong value)
         {
             State = value;
         }
 
-        /**
-         * This initializes the states of the generator to the given seed, exactly.
-         * All (2 to the 64) possible initial generator states can be produced here.
-         * @param seed the initial seed; may be any ulong
-         */
+        /// <summary>
+        /// This initializes the states of the generator to the given seed, exactly.
+        /// </summary>
+        /// <remarks>
+        /// All (2 to the 64) possible initial generator states can be produced here.
+        /// </remarks>
+        /// <param name="seed">The initial seed; may be any ulong.</param>
         public override void Seed(ulong seed)
         {
             State = seed;
         }
 
-        /**
-         * Sets the state completely to the given state variable.
-         * This is the same as calling {@link #Seed(ulong)}.
-         * @param stateA the first state; can be any ulong
-         */
+        /// <summary>
+        /// This initializes the states of the generator to the given seed, exactly.
+        /// </summary>
+        /// <remarks>
+        /// All (2 to the 64) possible initial generator states can be produced here.
+        /// This is the same as calling <see cref="Seed(ulong)">Seed(ulong)</see>.
+        /// </remarks>
+        /// <param name="state">The initial state value; may be any ulong.</param>
         public override void SetState(ulong state)
         {
-            this.State = state;
+            State = state;
         }
 
         /// <inheritdoc />
