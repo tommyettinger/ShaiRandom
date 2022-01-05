@@ -3,8 +3,14 @@
 namespace ShaiRandom.Generators
 {
     /// <summary>
-    /// It's an AbstractRandom with 4 states, implementing a known-rather-good algorithm, more here later.
+    /// It's an AbstractRandom with 4 states, implementing a known-rather-good algorithm that is 4-dimensionally equidistributed.
     /// </summary>
+    /// <remarks>
+    /// Being 4-dimensionally equidistributed means this produces every group of 4 consecutive ulong values with equal likelihood
+    /// (except for four 0s, which this never returns consecutively). This generator is not perfect (it isn't as fast as most others
+    /// on .NET, and there's a known problem if all results are multiplied by a constant with a specific last byte in its 64 bits),
+    /// but it's very hard to get this level of equidistribution and keep up competitive speed.
+    /// </remarks>
     public class Xoshiro256StarStarRandom : AbstractRandom
     {
         /// <summary>
@@ -16,26 +22,27 @@ namespace ShaiRandom.Generators
         {
             RegisterTag(new Xoshiro256StarStarRandom(1UL, 1UL, 1UL, 1UL));
         }
-        /**
-         * The first state; can be any long except that the whole state must not all be 0.
-         */
+        /// <summary>
+        /// The first state; can be any ulong except that the whole state must not all be 0.
+        /// </summary>
         public ulong StateA { get; set; }
-        /**
-         * The second state; can be any long except that the whole state must not all be 0.
-         * This is the state that is scrambled and returned; if it is 0 before a number
-         * is generated, then the next number will be 0.
-         */
+
+        /// <summary>
+        /// The second state; can be any ulong except that the whole state must not all be 0.
+        /// </summary>
+        /// <remarks>
+        /// This is the state that is scrambled and returned; if it is 0 before a number is generated, then the next number will be 0.
+        /// </remarks>
         public ulong StateB { get; set; }
-        /**
-         * The third state; can be any long except that the whole state must not all be 0.
-         */
+        /// <summary>
+        /// The third state; can be any ulong except that the whole state must not all be 0.
+        /// </summary>
         public ulong StateC { get; set; }
         private ulong _d;
-        /**
-         * The fourth state; can be any long except that the whole state must not all be 0.
-         * If all other states are 0, and this would be set to 0,
-         * then this is instead set to 0xFFFFFFFFFFFFFFFFUL.
-         */
+        /// <summary>
+        /// The fourth state; can be any ulong except that the whole state must not all be 0.
+        /// </summary>
+        /// <remarks>If all other states are 0, and this would be set to 0, then this is instead set to 0xFFFFFFFFFFFFFFFFUL.</remarks>
         public ulong StateD
         {
             get => _d;
@@ -43,9 +50,9 @@ namespace ShaiRandom.Generators
         }
 
 
-        /**
-         * Creates a new Xoshiro256StarStarRandom with a random state.
-         */
+        /// <summary>
+        /// Creates a new Xoshiro256StarStarRandom with a random state.
+        /// </summary>
         public Xoshiro256StarStarRandom()
         {
             StateA = MakeSeed();
@@ -54,24 +61,29 @@ namespace ShaiRandom.Generators
             StateD = MakeSeed();
         }
 
-        /**
-         * Creates a new Xoshiro256StarStarRandom with the given seed; all {@code long} values are permitted.
-         * The seed will be passed to {@link #setSeed(long)} to attempt to adequately distribute the seed randomly.
-         * @param seed any {@code long} value
-         */
+
+        /// <summary>
+        /// Creates a new Xoshiro256StarStarRandom with the given seed; all ulong values are permitted.
+        /// </summary>
+        /// <remarks>
+        /// The seed will be passed to <see cref="SetSeed(Xoshiro256StarStarRandom, ulong)">SetSeed(Xoshiro256StarStarRandom, ulong)</see>, to attempt to adequately distribute the seed randomly.
+        /// </remarks>
+        /// <param name="seed">Any ulong.</param>
         public Xoshiro256StarStarRandom(ulong seed)
         {
             SetSeed(this, seed);
         }
 
-        /**
-         * Creates a new Xoshiro256StarStarRandom with the given four states; all {@code long} values are permitted.
-         * These states will be used verbatim.
-         * @param stateA any {@code long} value
-         * @param stateB any {@code long} value
-         * @param stateC any {@code long} value
-         * @param stateD any {@code long} value
-         */
+        /// <summary>
+        /// Creates a new Xoshiro256StarStarRandom with the given four states; all ulong values are permitted except for when all states are 0.
+        /// </summary>
+        /// <remarks>
+        /// The states will be used verbatim.
+        /// </remarks>
+        /// <param name="stateA">Any ulong.</param>
+        /// <param name="stateB">Any ulong.</param>
+        /// <param name="stateC">Any ulong.</param>
+        /// <param name="stateD">Any ulong.</param>
         public Xoshiro256StarStarRandom(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
             StateA = stateA;
@@ -100,12 +112,13 @@ namespace ShaiRandom.Generators
         /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/>.
         /// </summary>
         public override bool SupportsPrevious => false;
-        /**
-         * Gets the state determined by {@code selection}, as-is. The value for selection should be
-         * between 0 and 3, inclusive; if it is any other value this gets state D as if 3 was given.
-         * @param selection used to select which state variable to get; generally 0, 1, 2, or 3
-         * @return the value of the selected state
-         */
+
+        /// <summary>
+        /// Gets the state determined by selection, as-is.
+        /// </summary>
+        /// <remarks>The value for selection should be between 0 and 3, inclusive; if it is any other value this gets state D as if 3 was given.</remarks>
+        /// <param name="selection">used to select which state variable to get; generally 0, 1, 2, or 3.</param>
+        /// <returns>The value of the selected state.</returns>
         public override ulong SelectState(int selection)
         {
             switch (selection)
@@ -121,13 +134,14 @@ namespace ShaiRandom.Generators
             }
         }
 
-        /**
-         * Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
-         * Selections 0, 1, 2, and 3 refer to states A, B, C, and D,  and if the selection is anything
-         * else, this treats it as 3 and sets stateD.
-         * @param selection used to select which state variable to set; generally 0, 1, 2, or 3
-         * @param value the exact value to use for the selected state, if valid
-         */
+        /// <summary>
+        /// Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
+        /// </summary>
+        /// <remarks>
+        /// Selections 0, 1, 2, and 3 refer to states A, B, C, and D,  and if the selection is anything else, this treats it as 3 and sets stateD.
+        /// </remarks>
+        /// <param name="selection">Used to select which state variable to set; generally 0, 1, 2, or 3.</param>
+        /// <param name="value">The exact value to use for the selected state, if valid.</param>
         public override void SetSelectedState(int selection, ulong value)
         {
             switch (selection)
@@ -147,13 +161,15 @@ namespace ShaiRandom.Generators
             }
         }
 
-        /**
-         * This initializes all 4 states of the generator to random values based on the given seed.
-         * (2 to the 64) possible initial generator states can be produced here, all with a different
-         * first value returned by {@link #nextLong()} (because {@code stateB} is guaranteed to be
-         * different for every different {@code seed}).
-         * @param seed the initial seed; may be any long
-         */
+        /// <summary>
+        /// Initializes all 4 states of the generator to random values based on the given seed.
+        /// </summary>
+        /// <remarks>
+        /// (2 to the 64) possible initial generator states can be produced here, all with a different first value returned
+        /// by <see cref="NextULong()">NextUlong()</see> (because stateB is guaranteed to be different for every different seed).
+        /// </remarks>
+        /// <param name="seed">The initial seed; may be any ulong.</param>
+
         public override void Seed(ulong seed) => SetSeed(this, seed);
 
         private static void SetSeed(Xoshiro256StarStarRandom rng, ulong seed)
@@ -187,18 +203,19 @@ namespace ShaiRandom.Generators
             }
         }
 
-        /**
-         * Sets the state completely to the given four state variables.
-         * This is the same as calling {@link #setStateA(long)}, {@link #setStateB(long)},
-         * {@link #setStateC(long)}, and {@link #setStateD(long)} as a group. You may want
-         * to call {@link #nextLong()} a few times after setting the states like this, unless
-         * the value for stateB (in particular) is already adequately random. If all parameters
-         * are 0 here, this will assign 0xFFFFFFFFFFFFFFFFUL to stateD and 0 to the rest.
-         * @param stateA the first state; can be any long
-         * @param stateB the second state; can be any long
-         * @param stateC the third state; can be any long
-         * @param stateD the fourth state; can be any long
-         */
+        /// <summary>
+        /// Sets the state completely to the given four state variables.
+        /// </summary>
+        /// <remarks>
+        /// This is the same as calling setStateA(ulong), setStateB(ulong), setStateC(ulong), and setStateD(ulong) as a group.
+        /// You may want to call <see cref="NextULong()">NextUlong()</see> a few times after setting the states like this, unless
+        /// the value for stateB (in particular) is already adequately random; the first call to NextULong(), if it is made immediately after calling this, will return stateB as-is.
+        /// If all parameters are 0 here, this will assign 0xFFFFFFFFFFFFFFFFUL to stateD and 0 to the rest.
+        /// </remarks>
+        /// <param name="stateA">The first state; can be any long.</param>
+        /// <param name="stateB">The second state; can be any long.</param>
+        /// <param name="stateC">The third state; can be any long.</param>
+        /// <param name="stateD">The fourth state; this will be returned as-is if the next call is to NextULong().</param>
         public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {
             StateA = stateA;
