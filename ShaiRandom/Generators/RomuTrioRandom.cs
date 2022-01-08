@@ -65,9 +65,9 @@ namespace ShaiRandom.Generators
             set => _c = (StateA | StateB | value) == 0UL ? 0xFFFFFFFFFFFFFFFFUL : value;
         }
 
-        /**
-         * Creates a new RomuTrioRandom with a random state.
-         */
+        /// <summary>
+        /// Creates a new RomuTrioRandom with a random state.
+        /// </summary>
         public RomuTrioRandom()
         {
             StateA = MakeSeed();
@@ -75,23 +75,27 @@ namespace ShaiRandom.Generators
             StateC = MakeSeed();
         }
 
-        /**
-         * Creates a new RomuTrioRandom with the given seed; all {@code long} values are permitted.
-         * The seed will be passed to {@link #Seed(long)} to attempt to adequately distribute the seed randomly.
-         * @param seed any {@code long} value
-         */
+        /// <summary>
+        /// Creates a new RomuTrioRandom with the given seed; any ulong value is permitted.
+        /// </summary>
+        /// <remarks>
+        /// The seed will be passed to <see cref="Seed(ulong)">Seed(ulong)</see> to attempt to adequately distribute the seed randomly.
+        /// </remarks>
+        /// <param name="seed">Any ulong.</param>
         public RomuTrioRandom(ulong seed)
         {
             SetSeed(this, seed);
         }
 
-        /**
-         * Creates a new RomuTrioRandom with the given three states; all {@code long} values are permitted.
-         * These states will be used verbatim.
-         * @param stateA any {@code long} value
-         * @param stateB any {@code long} value
-         * @param stateC any {@code long} value
-         */
+        /// <summary>
+        /// Creates a new RomuTrioRandom with the given three states; all ulong values are permitted except for all 0s.
+        /// </summary>
+        /// <remarks>
+        /// The states will be used verbatim unless all states are 0, in which case stateC is considered <see cref="ulong.MaxValue">ulong.MaxValue</see>.
+        /// </remarks>
+        /// <param name="stateA">Any ulong.</param>
+        /// <param name="stateB">Any ulong.</param>
+        /// <param name="stateC">Any ulong.</param>
         public RomuTrioRandom(ulong stateA, ulong stateB, ulong stateC)
         {
             StateA = stateA;
@@ -119,12 +123,13 @@ namespace ShaiRandom.Generators
         /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/>.
         /// </summary>
         public override bool SupportsPrevious => false;
-        /**
-         * Gets the state determined by {@code selection}, as-is. The value for selection should be
-         * between 0 and 2, inclusive; if it is any other value this gets state C as if 2 was given.
-         * @param selection used to select which state variable to get; generally 0, 1, or 2
-         * @return the value of the selected state
-         */
+
+        /// <summary>
+        /// Gets the state determined by selection, as-is.
+        /// </summary>
+        /// <remarks>The value for selection should be between 0 and 2, inclusive; if it is any other value this gets state C as if 2 was given.</remarks>
+        /// <param name="selection">used to select which state variable to get; generally 0, 1, or 2.</param>
+        /// <returns>The value of the selected state.</returns>
         public override ulong SelectState(int selection)
         {
             switch (selection)
@@ -138,13 +143,14 @@ namespace ShaiRandom.Generators
             }
         }
 
-        /**
-         * Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
-         * Selections 0, 1, and 2 refer to states A, B, and C, and if the selection is anything
-         * else, this treats it as 2 and sets stateC.
-         * @param selection used to select which state variable to set; generally 0, 1, or 2
-         * @param value the exact value to use for the selected state, if valid
-         */
+        /// <summary>
+        /// Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
+        /// </summary>
+        /// <remarks>
+        /// Selections 0, 1, and 2 refer to states A, B, and C,  and if the selection is anything else, this treats it as 2 and sets stateC.
+        /// </remarks>
+        /// <param name="selection">Used to select which state variable to set; generally 0, 1, or 2.</param>
+        /// <param name="value">The exact value to use for the selected state, if valid.</param>
         public override void SetSelectedState(int selection, ulong value)
         {
             switch (selection)
@@ -161,13 +167,15 @@ namespace ShaiRandom.Generators
             }
         }
 
-        /**
-         * This initializes all 3 states of the generator to different random values based on the given seed.
-         * (2 to the 64) possible initial generator states can be produced here, all with a different
-         * first value returned by {@link #nextLong()} (because {@code stateA} is guaranteed to be
-         * different for every different {@code seed}).
-         * @param seed the initial seed; may be any long
-         */
+        /// <summary>
+        /// This initializes all states of the generator to different pseudo-random values based on the given seed.
+        /// </summary>
+        /// <remarks>
+        /// (2 to the 64) possible initial generator states can be produced here, all with a different
+        /// first value returned by <see cref="NextULong()">NextULong()</see> (because stateA is guaranteed to be
+        /// different for every different seed).
+        /// </remarks>
+        /// <param name="seed">The initial seed; may be any ulong.</param>
         public override void Seed(ulong seed) => SetSeed(this, seed);
 
         private static void SetSeed(RomuTrioRandom rng, ulong seed)
@@ -195,17 +203,15 @@ namespace ShaiRandom.Generators
             }
         }
 
-        /**
-         * Sets the state completely to the given three state variables.
-         * This is the same as calling {@link #setStateA(long)}, {@link #setStateB(long)},
-         * and {@link #setStateC(long)} as a group. You may want
-         * to call {@link #nextLong()} a few times after setting the states like this, unless
-         * the value for stateA (in particular) is already adequately random; the first call
-         * to {@link #nextLong()}, if it is made immediately after calling this, will return {@code stateA} as-is.
-         * @param stateA the first state; this will be returned as-is if the next call is to {@link #nextLong()}
-         * @param stateB the second state; can be any long
-         * @param stateC the third state; can be any long
-         */
+        /// <summary>
+        /// Sets the state completely to the given three state variables.
+        /// </summary>
+        /// <remarks>
+        /// This is the same as setting StateA, setStateB, and StateC as a group.
+        /// </remarks>
+        /// <param name="stateA">The first state; can be any ulong.</param>
+        /// <param name="stateB">The second state; can be any ulong.</param>
+        /// <param name="stateC">The third state; can be any ulong</param>
         public override void SetState(ulong stateA, ulong stateB, ulong stateC)
         {
             StateA = stateA;
