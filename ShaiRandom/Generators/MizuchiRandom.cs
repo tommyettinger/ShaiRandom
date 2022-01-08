@@ -39,31 +39,35 @@ namespace ShaiRandom.Generators
             }
         }
 
-        /**
-         * Creates a new MizuchiRandom with a random state.
-         */
+        /// <summary>
+        /// Creates a new MizuchiRandom with a random state.
+        /// </summary>
         public MizuchiRandom()
         {
             StateA = MakeSeed();
             StateB = MakeSeed();
         }
 
-        /**
-         * Creates a new MizuchiRandom with the given seed; all {@code long} values are permitted.
-         * The seed will be passed to {@link #Seed(long)} to attempt to adequately distribute the seed randomly.
-         * @param seed any {@code long} value
-         */
+        /// <summary>
+        /// Creates a new MizuchiRandom with the given seed; any ulong value is permitted.
+        /// </summary>
+        /// <remarks>
+        /// The seed will be passed to <see cref="Seed(ulong)">Seed(ulong)</see> to attempt to adequately distribute the seed randomly.
+        /// </remarks>
+        /// <param name="seed">Any ulong.</param>
         public MizuchiRandom(ulong seed)
         {
             SetSeed(this, seed);
         }
 
-        /**
-         * Creates a new MizuchiRandom with the given two states; all {@code long} values are permitted.
-         * These states will be used verbatim.
-         * @param stateA any {@code long} value
-         * @param stateB any {@code long} value
-         */
+        /// <summary>
+        /// Creates a new MizuchiRandom with the given two states; all ulong values are permitted, but stateB will always be made odd.
+        /// </summary>
+        /// <remarks>
+        /// The states will be used verbatim, except if stateB is even (then 1 is added to it).
+        /// </remarks>
+        /// <param name="stateA">Any ulong.</param>
+        /// <param name="stateB">Any ulong; if even, 1 will be added.</param>
         public MizuchiRandom(ulong stateA, ulong stateB)
         {
             StateA = stateA;
@@ -90,12 +94,13 @@ namespace ShaiRandom.Generators
         /// This supports <see cref="PreviousULong()"/>.
         /// </summary>
         public override bool SupportsPrevious => true;
-        /**
-         * Gets the state determined by {@code selection}, as-is. The value for selection should be
-         * 0 or 1; if it is any other value this gets state A as if 0 was given.
-         * @param selection used to select which state variable to get; generally 0 or 1
-         * @return the value of the selected state
-         */
+
+        /// <summary>
+        /// Gets the state determined by selection, as-is.
+        /// </summary>
+        /// <remarks>The value for selection should be 0 or 1; if it is any other value this gets state A as if 0 was given.</remarks>
+        /// <param name="selection">used to select which state variable to get; generally 0 or 1.</param>
+        /// <returns>The value of the selected state.</returns>
         public override ulong SelectState(int selection)
         {
             switch (selection)
@@ -107,13 +112,14 @@ namespace ShaiRandom.Generators
             }
         }
 
-        /**
-         * Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
-         * Selections 0 and 1 refer to states A and B, and if the selection is anything
-         * else, this treats it as 0 and sets stateA.
-         * @param selection used to select which state variable to set; generally 0 or 1
-         * @param value the exact value to use for the selected state, if valid
-         */
+        /// <summary>
+        /// Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
+        /// </summary>
+        /// <remarks>
+        /// Selections 0 and 1 refer to states A and B, and if the selection is anything else, this treats it as 0 and sets stateA.
+        /// </remarks>
+        /// <param name="selection">Used to select which state variable to set; generally 0 or 1.</param>
+        /// <param name="value">The exact value to use for the selected state, if valid.</param>
         public override void SetSelectedState(int selection, ulong value)
         {
             switch (selection)
@@ -127,11 +133,13 @@ namespace ShaiRandom.Generators
             }
         }
 
-        /**
-         * This initializes both states of the generator to different random values based on the given seed.
-         * (2 to the 64) possible initial generator states can be produced here.
-         * @param seed the initial seed; may be any long
-         */
+        /// <summary>
+        /// This initializes all states of the generator to different pseudo-random values based on the given seed.
+        /// </summary>
+        /// <remarks>
+        /// (2 to the 64) possible initial generator states can be produced here.
+        /// </remarks>
+        /// <param name="seed">The initial seed; may be any ulong.</param>
         public override void Seed(ulong seed) => SetSeed(this, seed);
 
         private static void SetSeed(MizuchiRandom rng, ulong seed)
@@ -153,13 +161,16 @@ namespace ShaiRandom.Generators
             }
         }
 
-        /**
-         * Sets the state completely to the given two state variables.
-         * This is the same as calling {@link #setStateA(long)} and {@link #setStateB(long)}
-         * as a group.
-         * @param stateA the first state; can be any long
-         * @param stateB the second state; can be any odd-number long
-         */
+        /// <summary>
+        /// Sets the state completely to the given two state variables.
+        /// </summary>
+        /// <remarks>
+        /// This is the same as setting StateA and StateB as a group.
+        /// You may want to call <see cref="NextULong()">NextUlong()</see> a few times after setting the states like this, unless
+        /// the states have very little or no correlation, because certain very-similar combinations of seeds produce correlated sequences.
+        /// </remarks>
+        /// <param name="stateA">The first state; can be any ulong.</param>
+        /// <param name="stateB">The second state; can be any odd ulong.</param>
         public override void SetState(ulong stateA, ulong stateB)
         {
             StateA = stateA;
