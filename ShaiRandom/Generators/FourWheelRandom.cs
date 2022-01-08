@@ -193,13 +193,13 @@ namespace ShaiRandom.Generators
         /// Sets the state completely to the given four state variables.
         /// </summary>
         /// <remarks>
-        /// This is the same as calling setStateA(ulong), setStateB(ulong), setStateC(ulong), and setStateD(ulong) as a group.
+        /// This is the same as setting StateA, StateB, StateC, and StateD as a group.
         /// You may want to call <see cref="NextULong()">NextUlong()</see> a few times after setting the states like this, unless
         /// the value for stateD (in particular) is already adequately random; the first call to NextULong(), if it is made immediately after calling this, will return stateD as-is.
         /// </remarks>
-        /// <param name="stateA">The first state; can be any long.</param>
-        /// <param name="stateB">The second state; can be any long.</param>
-        /// <param name="stateC">The third state; can be any long.</param>
+        /// <param name="stateA">The first state; can be any ulong.</param>
+        /// <param name="stateB">The second state; can be any ulong.</param>
+        /// <param name="stateC">The third state; can be any ulong.</param>
         /// <param name="stateD">The fourth state; this will be returned as-is if the next call is to NextULong().</param>
         public override void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD)
         {

@@ -37,7 +37,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <summary>
-        /// Creates a new DistinctRandom with the given four states; all ulong values are permitted.
+        /// Creates a new DistinctRandom with the given state; any ulong value is permitted.
         /// </summary>
         /// <remarks>
         /// The seed will be used verbatim as the State.
