@@ -11,12 +11,12 @@
     Configure versioning information, making sure to append "debug" to Debug version to allow publishing
     to NuGet seperately from Release version.
     -->
-    <Version>0.0.1</Version>
+    <Version>0.0.1-alpha01</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
 
 	<!-- More nuget package settings-->
     <PackageId>ShaiRandom</PackageId>
-	<PackageReleaseNotes>Initial Version</PackageReleaseNotes>
+	<PackageReleaseNotes>Prerelease Version</PackageReleaseNotes>
 	<PackageProjectUrl>https://github.com/tommyettinger/ShaiRandom</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/tommyettinger/ShaiRandom/tree/develop-3.0</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
@@ -25,7 +25,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageTags>random;rng;generator;library</PackageTags>
+    <PackageTags>random;rng;generator;library;shai;shairandom</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
 	<!-- Enable C# 8.0 and its nullable reference feature -->
