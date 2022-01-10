@@ -8,6 +8,25 @@ namespace ShaiRandom
     public static class Mixers
     {
         /// <summary>
+        /// A fast, medium-quality mixing method that takes its state as a parameter; state is expected to change between calls to this.
+        /// </summary>
+        /// <remarks>
+        /// <remarks>It is suggested that you use <code>Mixers.MixFast(++state)</code> to produce a sequence of different numbers, but any increments are allowed
+        /// (even-number increments are discouraged because they won't be able to produce all outputs, but sometimes their quality will be decent for the numbers they
+        /// can produce). All longs are accepted by this method, and all longs can be produced. Passing 0 here does not cause this to produce 0.
+        /// <br />
+        /// This is a relatively simple unary hash function; it multiplies its input by a large odd-number constant, runs an XLCG step on the result (XORing with one constant,
+        /// then multiplying by another), then xorshifts, multiplies, and xorshifts again before returning. The function is bijective, but not especially strong when the inputs
+        /// don't change by an odd number.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixFast(++state)</code>.</param>
+        /// <returns>Any ulong.</returns>
+        public static ulong MixFast(ulong state)
+        {
+            return (state = ((state = (((state * 0x632BE59BD9B4E019UL) ^ 0x9E3779B97F4A7C15UL) * 0xC6BC279692B5CC83UL)) ^ state >> 27) * 0xAEF17502108EF2D9UL) ^ state >> 25;
+        }
+
+        /// <summary>
         /// A high-quality mixing method that takes its state as a parameter; state is expected to change between calls to this.
         /// </summary>
         /// <remarks>It is suggested that you use <code>Mixers.MixStrong(++state)</code> to produce a sequence of different numbers, but any increments are allowed
