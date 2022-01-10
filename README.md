@@ -15,7 +15,7 @@ Licenses for other projects which ShaiRandom depends on or from which inspiratio
 ShaiRandom depends on some other .NET Standard libraries for some of its functionality.  Those projects and their licenses are listed below.
 
 ### Troschuetz.Random
-ShaiRandom depends on this library to provide compatibility with the .NET `System.Random` format.  This project is also licensed under MIT:
+ShaiRandom depends on this library to provide compatibility with the .NET `System.Random` format, and to provide distributions.  This project is also licensed under MIT:
 - [Troschuetz.Random](https://gitlab.com/pomma89/troschuetz-random/-/tree/master)
 - [Troschuetz.Random License](https://gitlab.com/pomma89/troschuetz-random/-/blob/master/LICENSE)
 

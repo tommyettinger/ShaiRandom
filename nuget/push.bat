@@ -1,2 +1,2 @@
-nuget push ShaiRandom.%1-debug.nupkg -Source https://api.nuget.org/v3/index.json
-nuget push ShaiRandom.%1.nupkg -Source https://api.nuget.org/v3/index.json
+dotnet nuget push ShaiRandom.%1-debug.nupkg -s https://api.nuget.org/v3/index.json -k %2
+dotnet nuget push ShaiRandom.%1.nupkg -s https://api.nuget.org/v3/index.json -k %2
