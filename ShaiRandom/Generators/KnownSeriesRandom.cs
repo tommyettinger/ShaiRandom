@@ -560,12 +560,25 @@ namespace ShaiRandom.Generators
         /// </summary>
         public ulong Skip(ulong distance) => throw new NotSupportedException();
 
-        /// <summary>
-        /// Serialization is not supported by this generator.
-        /// </summary>
-        public IEnhancedRandom StringDeserialize(string data) => throw new NotSupportedException();
+        /// <inheritdoc />
+        public IEnhancedRandom StringDeserialize(string data)
+        {
+            int idx = data.IndexOf('`');
+            _intIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            List<int> ints = data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt32(s)).ToList();
+            _uintIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            List<uint> uints = data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToUInt32(s)).ToList();
+            _doubleIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _boolIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _byteIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _floatIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _longIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _ulongIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (data.IndexOf('`', idx + 1))));
+            return this;
 
-        /// <inheritdoc/>
+        }
+
+        /// <inheritdoc />
         public string StringSerialize()
         {
             string ser = "#KnSR`";
