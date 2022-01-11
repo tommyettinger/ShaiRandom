@@ -569,17 +569,16 @@ namespace ShaiRandom.Generators
         public string StringSerialize()
         {
             string ser = "#KnSR`";
-            ser += _intIndex.ToString();
-            ser += _intSeries.ToString();
-            ser += _uintIndex.ToString();
-            ser += _uintSeries.ToString();
-            ser += _doubleIndex.ToString();
-            ser += _doubleSeries.ToString();
-            ser += _boolIndex.ToString();
-            ser += _boolSeries.ToString();
-
-            return ser;
-
+            ser += _intIndex + "~";
+            ser = _intSeries.Aggregate(ser, (s, n) => s + n + ",").TrimEnd(',') + "~";
+            ser += _uintIndex + "~";
+            ser = _uintSeries.Aggregate(ser, (s, n) => s + n + ",").TrimEnd(',') + "~";
+            ser += _doubleIndex + "~";
+            ser = _doubleSeries.Aggregate(ser, (s, n) => s + n + ",").TrimEnd(',') + "~";
+            ser += _boolIndex + "~";
+            ser = _boolSeries.Aggregate(ser, (s, n) => s + n + ",").TrimEnd(',') + "~";
+            ser += _ulongIndex + "~";
+            return _ulongSeries.Aggregate(ser, (s, n) => s + n + ",").TrimEnd(',') + "`";
     }
 }
 }
