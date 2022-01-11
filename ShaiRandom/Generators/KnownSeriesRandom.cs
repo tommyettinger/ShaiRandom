@@ -577,6 +577,12 @@ namespace ShaiRandom.Generators
             ser = _doubleSeries.Aggregate(ser, (s, n) => s + n + ",").TrimEnd(',') + "~";
             ser += _boolIndex + "~";
             ser = _boolSeries.Aggregate(ser, (s, n) => s + n + ",").TrimEnd(',') + "~";
+            ser += _byteIndex + "~";
+            ser = _byteSeries.Aggregate(ser, (s, n) => s + n + ",").TrimEnd(',') + "~";
+            ser += _floatIndex + "~";
+            ser = _floatSeries.Aggregate(ser, (s, n) => s + n + ",").TrimEnd(',') + "~";
+            ser += _longIndex + "~";
+            ser = _longSeries.Aggregate(ser, (s, n) => s + n + ",").TrimEnd(',') + "~";
             ser += _ulongIndex + "~";
             return _ulongSeries.Aggregate(ser, (s, n) => s + n + ",").TrimEnd(',') + "`";
     }
