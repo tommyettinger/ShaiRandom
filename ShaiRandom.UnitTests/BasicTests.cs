@@ -148,5 +148,16 @@ namespace ShaiRandom.UnitTests
             Assert.Equal(random.NextULong(), random2.NextULong());
             Assert.True(random.Matches(random2));
         }
+        [Fact]
+        public void KnownSeriesSerDeserTest()
+        {
+            KnownSeriesRandom random = new KnownSeriesRandom(new int[] { 1, 3, -7 }, new uint[] { 2, 8, 12}, new double[] { -1.1, 2.0, 1e30}, null);
+            string data = random.StringSerialize();
+            Assert.StartsWith("#KnSR`", data);
+            //IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
+            //Assert.Equal(random.NextUInt(), random2.NextUInt());
+            //Assert.True(random.Matches(random2));
+        }
+
     }
 }

@@ -48,6 +48,14 @@ namespace ShaiRandom.Generators
         bool SupportsPrevious { get; }
 
         /// <summary>
+        /// The exactly-four-character string that may identify this IEnhancedRandom for serialization purposes.
+        /// </summary>
+        /// <remarks>
+        /// If this is not four characters in length, it will be ignored, and this IEnhancedRandom will not be serializable by the mechanisms here.
+        /// </remarks>
+        string Tag { get; }
+
+        /// <summary>
         /// Returns a full copy (deep, if necessary) of this IEnhancedRandom.
         /// </summary>
         /// <returns>A copy of this IEnhancedRandom.</returns>

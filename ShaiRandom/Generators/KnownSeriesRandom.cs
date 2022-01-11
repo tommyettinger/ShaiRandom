@@ -113,9 +113,13 @@ namespace ShaiRandom.Generators
         public bool SupportsPrevious => false;
 
         /// <summary>
-        /// Generator is not serializable, and thus has no tag.
+        /// The identifying tag here is "KnSR" .
         /// </summary>
-        public string Tag => throw new NotSupportedException("KnownSeriesRandom generators are not serializable, and thus have no Tag.");
+        public string Tag => "KnSR";
+        static KnownSeriesRandom()
+        {
+            AbstractRandom.RegisterTag(new KnownSeriesRandom());
+        }
 
         private static T ReturnIfRange<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
         {
@@ -561,9 +565,21 @@ namespace ShaiRandom.Generators
         /// </summary>
         public IEnhancedRandom StringDeserialize(string data) => throw new NotSupportedException();
 
-        /// <summary>
-        /// Serialization is not supported by this generator.
-        /// </summary>
-        public string StringSerialize() => throw new NotSupportedException();
+        /// <inheritdoc/>
+        public string StringSerialize()
+        {
+            string ser = "#KnSR`";
+            ser += _intIndex.ToString();
+            ser += _intSeries.ToString();
+            ser += _uintIndex.ToString();
+            ser += _uintSeries.ToString();
+            ser += _doubleIndex.ToString();
+            ser += _doubleSeries.ToString();
+            ser += _boolIndex.ToString();
+            ser += _boolSeries.ToString();
+
+            return ser;
+
     }
+}
 }

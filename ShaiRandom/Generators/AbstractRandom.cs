@@ -50,20 +50,17 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public abstract bool SupportsPrevious { get; }
 
-        /// <summary>
-        /// The exactly-four-character string that will identify this AbstractRandom for serialization purposes.
-        /// </summary>
         public abstract string Tag { get; }
 
         private static Dictionary<string, IEnhancedRandom> TAGS = new Dictionary<string, IEnhancedRandom>();
 
         /// <summary>
-        /// Registers an instance of a subclass of AbstractRandom by its four-character string <see cref="Tag"/>.
+        /// Registers an instance of an IEnhancedRandom implementation by its four-character string <see cref="Tag"/>.
         /// </summary>
-        /// <param name="instance">An instance of a subclass of AbstractRandom, which will be copied as needed; its state does not matter,
+        /// <param name="instance">An instance of an IEnhancedRandom implementation, which will be copied as needed; its state does not matter,
         /// as long as it is non-null and has a four-character <see cref="Tag"/>.</param>
         /// <returns>Returns true if the tag was successfully registered for the first time, or false if the tags are unchanged.</returns>
-        protected static bool RegisterTag(AbstractRandom instance)
+        public static bool RegisterTag(IEnhancedRandom instance)
         {
             if (TAGS.ContainsKey(instance.Tag)) return false;
             if (instance.Tag.Length == 4)
