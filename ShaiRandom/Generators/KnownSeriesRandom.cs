@@ -565,15 +565,21 @@ namespace ShaiRandom.Generators
         {
             int idx = data.IndexOf('`');
             _intIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
-            List<int> ints = data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt32(s)).ToList();
+            _intSeries.Clear(); _intSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt32(s)).ToList());
             _uintIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
-            List<uint> uints = data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToUInt32(s)).ToList();
+            _uintSeries.Clear(); _uintSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToUInt32(s)).ToList());
             _doubleIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _doubleSeries.Clear(); _doubleSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToDouble(s)).ToList());
             _boolIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _boolSeries.Clear(); _boolSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToBoolean(s)).ToList());
             _byteIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _byteSeries.Clear(); _byteSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToByte(s)).ToList());
             _floatIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _floatSeries.Clear(); _floatSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToSingle(s)).ToList());
             _longIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
-            _ulongIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (data.IndexOf('`', idx + 1))));
+            _longSeries.Clear(); _longSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt64(s)).ToList());
+            _ulongIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _ulongSeries.Clear(); _ulongSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('`', idx + 1))).Split(',', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToUInt64(s)).ToList());
             return this;
 
         }
