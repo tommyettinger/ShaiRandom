@@ -689,6 +689,14 @@ namespace ShaiRandom.Generators
         float NextExclusiveFloat(float innerBound, float outerBound);
 
         /// <summary>
+        /// Returns the next pseudorandom, rather-uniformly distributed
+        /// decimal value between 0.0M (inclusive) and 1.0M
+        /// (exclusive) from this random number generator's sequence.
+        /// </summary>
+        /// <returns>A rather-uniform random decimal between 0.0M inclusive and 1.0M exclusive.</returns>
+        decimal NextDecimal();
+
+        /// <summary>
         /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextULong()
         /// as if called at that step. The distance can be negative if a long is cast to a ulong, which jumps backwards if the period of the generator is 2 to the 64.
         /// </summary>
