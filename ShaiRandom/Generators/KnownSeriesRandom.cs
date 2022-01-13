@@ -438,8 +438,19 @@ namespace ShaiRandom.Generators
         /// This particular implementation of NextDecimal() is not fully deterministic, because it depends on the rounding behavior of doubles on the current system.
         /// If you are storing values that must be absolutely deterministic, with no bits varying, for use in a KnownSeriesRandom, you currently have to use an integer type.
         /// </remarks>
-        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
-        public decimal NextDecimal () => (decimal)NextDouble(0.0, 1.0);
+        /// <returns>The next double in the underlying series, if it is within the bound, cast to a decimal.</returns>
+        public decimal NextDecimal() => (decimal)NextDouble(0.0, 1.0);
+        /// <summary>
+        /// Returns the next double in the underlying series, treating it as a decimal.  If it is outside of the bound specified, throws an exception.
+        /// an exception.
+        /// </summary>
+        /// <remarks>
+        /// This casts outerBound to a double so that it can be compared with the known series of double values this produces. It casts its result back to a decimal.
+        /// This particular implementation of NextDecimal() is not fully deterministic, because it depends on the rounding behavior of doubles on the current system.
+        /// If you are storing values that must be absolutely deterministic, with no bits varying, for use in a KnownSeriesRandom, you currently have to use an integer type.
+        /// </remarks>
+        /// <returns>The next double in the underlying series, if it is within the bound, cast to a decimal.</returns>
+        public decimal NextDecimal(decimal outerBound) => (decimal)NextDouble(0.0, (double)outerBound);
 
         /// <summary>
         /// Not supported by this generator.
