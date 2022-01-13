@@ -407,9 +407,10 @@ namespace ShaiRandom.Generators
         /// inner bound of 0 (inclusive) and the specified outerBound (exclusive).
         /// </summary>
         /// <remarks>
-        /// If outerBound is less than or equal to innerBound,
-        /// this always returns innerBound. To generate an int that is inclusive on <see cref="int.MaxValue"/>,
-        /// use <see cref="NextBits(int)"/> (giving it a parameter of 31 to generate any positive int).
+        /// If outerBound is less than or equal to 0,
+        /// this always returns 0. To generate an int that is inclusive on <see cref="int.MaxValue"/>,
+        /// use <see cref="NextBits(int)"/> (giving it a parameter of 31 to generate any positive int), and cast the result to int.
+        /// To generate any int, including negative ones, use <see cref="NextInt()">NextInt()</see>.
         /// </remarks>
         /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="outerBound">the outer exclusive bound; may be any int value, allowing negative</param>
@@ -695,6 +696,17 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <returns>A rather-uniform random decimal between 0.0M inclusive and 1.0M exclusive.</returns>
         decimal NextDecimal();
+
+        /// <summary>
+        /// Gets a pseudo-random float between 0M (inclusive) and outerBound (exclusive).
+        /// The outerBound may be positive or negative.
+        /// </summary>
+        /// <remarks>
+        /// Exactly the same as: <code>NextDecimal() * outerBound</code>
+        /// </remarks>
+        /// <param name="outerBound">the exclusive outer bound</param>
+        /// <returns>a decimal between 0 (inclusive) and outerBound (exclusive)</returns>
+        decimal NextDecimal(decimal outerBound);
 
         /// <summary>
         /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextULong()

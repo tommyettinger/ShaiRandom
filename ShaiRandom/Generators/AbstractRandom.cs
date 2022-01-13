@@ -409,6 +409,12 @@ namespace ShaiRandom.Generators
             }
         }
         /// <inheritdoc />
+        public decimal NextDecimal(decimal outerBound)
+        {
+            return NextDecimal() * outerBound;
+        }
+
+        /// <inheritdoc />
         public virtual ulong Skip(ulong distance)
         {
             throw new NotSupportedException("Skip() is not implemented for this generator.");
