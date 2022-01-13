@@ -77,15 +77,94 @@ namespace ShaiRandom.UnitTests
             fwr.StateD = 0x8000000000000000UL;
             InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
 
-            int[] buckets = new int[256];
-            for(int i = 0; i < 0x4000000; i++)
+            //int[] buckets = new int[256];
+            //for(int i = 0; i < 0x4000000; i++)
+            //{
+            //    buckets[(int)(fwr.NextDecimal() * 256)]++;
+            //}
+            //List<int> bs = buckets.OrderBy(b => b).ToList();
+            //foreach(int i in bs)
+            //{
+            //    Console.WriteLine(i);
+            //}
             {
-                buckets[(int)(fwr.NextDecimal() * 256)]++;
+                IEnhancedRandom r = new MizuchiRandom(1);
+
+                int[] buckets = new int[256];
+                for (int i = 0; i < 0x100000; i++)
+                {
+                    buckets[(int)(r.NextDecimal() * 256)]++;
+                }
+                IOrderedEnumerable<int> ob = buckets.OrderBy(b => b);
+                int smallest = ob.First();
+                int biggest = ob.Last();
+                Console.WriteLine(smallest);
+                Console.WriteLine(biggest);
+                Console.WriteLine((biggest - smallest) / (biggest + 0.001));
             }
-            List<int> bs = buckets.OrderBy(b => b).ToList();
-            foreach(int i in bs)
+            Console.WriteLine();
             {
-                Console.WriteLine(i);
+                IEnhancedRandom r = new MizuchiRandom(1);
+
+                int[] buckets = new int[256];
+                for (int i = 0; i < 0x100000; i++)
+                {
+                    buckets[(int)(r.NextDouble() * 256)]++;
+                }
+                IOrderedEnumerable<int> ob = buckets.OrderBy(b => b);
+                int smallest = ob.First();
+                int biggest = ob.Last();
+                Console.WriteLine(smallest);
+                Console.WriteLine(biggest);
+                Console.WriteLine((biggest - smallest) / (biggest + 0.001));
+            }
+            Console.WriteLine();
+            {
+                IEnhancedRandom r = new MizuchiRandom(1);
+
+                int[] buckets = new int[256];
+                for (int i = 0; i < 0x100000; i++)
+                {
+                    buckets[(int)(r.NextFloat() * 256)]++;
+                }
+                IOrderedEnumerable<int> ob = buckets.OrderBy(b => b);
+                int smallest = ob.First();
+                int biggest = ob.Last();
+                Console.WriteLine(smallest);
+                Console.WriteLine(biggest);
+                Console.WriteLine((biggest - smallest) / (biggest + 0.001));
+            }
+            Console.WriteLine();
+            {
+                IEnhancedRandom r = new MizuchiRandom(1);
+
+                int[] buckets = new int[256];
+                for (int i = 0; i < 0x100000; i++)
+                {
+                    buckets[(int)(r.NextExclusiveDouble() * 256)]++;
+                }
+                IOrderedEnumerable<int> ob = buckets.OrderBy(b => b);
+                int smallest = ob.First();
+                int biggest = ob.Last();
+                Console.WriteLine(smallest);
+                Console.WriteLine(biggest);
+                Console.WriteLine((biggest - smallest) / (biggest + 0.001));
+            }
+            Console.WriteLine();
+            {
+                IEnhancedRandom r = new MizuchiRandom(1);
+
+                int[] buckets = new int[256];
+                for (int i = 0; i < 0x100000; i++)
+                {
+                    buckets[(int)(r.NextExclusiveFloat() * 256)]++;
+                }
+                IOrderedEnumerable<int> ob = buckets.OrderBy(b => b);
+                int smallest = ob.First();
+                int biggest = ob.Last();
+                Console.WriteLine(smallest);
+                Console.WriteLine(biggest);
+                Console.WriteLine((biggest - smallest) / (biggest + 0.001));
             }
         }
     }

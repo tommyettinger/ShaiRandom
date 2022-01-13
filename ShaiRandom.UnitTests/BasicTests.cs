@@ -1,4 +1,5 @@
-﻿using ShaiRandom.Generators;
+﻿using System.Linq;
+using ShaiRandom.Generators;
 using ShaiRandom.Wrappers;
 using Xunit;
 namespace ShaiRandom.UnitTests
@@ -90,6 +91,22 @@ namespace ShaiRandom.UnitTests
                 Assert.Equal(100UL, fwr.NextULong(100UL, 3UL));
             }
         }
+
+        [Fact]
+        public void NextDecimalDistributionTest()
+        {
+            MizuchiRandom r = new MizuchiRandom(1);
+            int[] buckets = new int[256];
+            for (int i = 0; i < 0x100000; i++)
+            {
+                buckets[(int)(r.NextDecimal() * 256)]++;
+            }
+            IOrderedEnumerable<int> ob = buckets.OrderBy(b => b);
+            int smallest = ob.First();
+            int biggest = ob.Last();
+            Assert.True((biggest - smallest) / (biggest + 0.001) < 0.11);
+        }
+
     }
 
     public class SerializationTests
@@ -159,6 +176,5 @@ namespace ShaiRandom.UnitTests
             Assert.Equal(random.NextULong(), random2.NextULong());
             Assert.True(random.Matches(random2));
         }
-
     }
 }
