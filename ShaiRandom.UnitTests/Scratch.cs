@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ShaiRandom.Generators;
 
 namespace ShaiRandom.UnitTests
@@ -75,18 +77,16 @@ namespace ShaiRandom.UnitTests
             fwr.StateD = 0x8000000000000000UL;
             InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
 
-            long bits = -1L;
-            Console.WriteLine(BitConverter.Int32BitsToSingle((127 + 962 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF)));
-            bits = 0L;
-            Console.WriteLine(BitConverter.Int32BitsToSingle((127 + 962 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF)));
-
-
-            fwr.StateD = 0xFFFFFFFFFFFFFFFFUL;
-            Console.WriteLine(fwr.NextExclusiveFloat());
-
-            fwr.StateD = 0xFFFFFFFFFFFFFFFFUL;
-            Console.WriteLine(fwr.NextExclusiveDouble());
-
+            int[] buckets = new int[256];
+            for(int i = 0; i < 0x4000000; i++)
+            {
+                buckets[(int)(fwr.NextDecimal() * 256)]++;
+            }
+            List<int> bs = buckets.OrderBy(b => b).ToList();
+            foreach(int i in bs)
+            {
+                Console.WriteLine(i);
+            }
         }
     }
 }
