@@ -379,11 +379,11 @@ namespace ShaiRandom.Generators
             return innerBound + NextExclusiveDouble() * (outerBound - innerBound);
         }
 
+        // return ((NextUInt() >> 9) + 1u) * 5.960464E-8f;
 
         /// <inheritdoc />
         public float NextExclusiveFloat()
         {
-            // return ((NextUInt() >> 9) + 1u) * 5.960464E-8f;
             long bits = NextLong();
             return BitConverter.Int32BitsToSingle((1089 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF));
         }
@@ -399,7 +399,15 @@ namespace ShaiRandom.Generators
         {
             return innerBound + NextExclusiveFloat() * (outerBound - innerBound);
         }
-
+        /// <inheritdoc />
+        public decimal NextDecimal()
+        {
+            unchecked
+            {
+                ulong bits = NextULong(0x204fce5e3e250262UL);
+                return new decimal((int)NextBits(28), (int)(bits & 0xFFFFFFFFUL), (int)(bits >> 32), false, 28);
+            }
+        }
         /// <inheritdoc />
         public virtual ulong Skip(ulong distance)
         {
