@@ -430,6 +430,16 @@ namespace ShaiRandom.Generators
             for (int i = 0; i < bytes.Length; i++)
                 bytes[i] = ReturnValueFrom(_byteSeries, ref _byteIndex);
         }
+        /// <summary>
+        /// Returns the next double in the underlying series, treating it as a decimal.  If it is outside of the bound [0, 1), throws
+        /// an exception.
+        /// </summary>
+        /// <remarks>
+        /// This particular implementation of NextDecimal() is not fully deterministic, because it depends on the rounding behavior of doubles on the current system.
+        /// If you are storing values that must be absolutely deterministic, with no bits varying, for use in a KnownSeriesRandom, you currently have to use an integer type.
+        /// </remarks>
+        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
+        public decimal NextDecimal () => (decimal)NextDouble(0.0, 1.0);
 
         /// <summary>
         /// Not supported by this generator.
