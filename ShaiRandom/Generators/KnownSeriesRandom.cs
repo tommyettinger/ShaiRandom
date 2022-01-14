@@ -134,6 +134,29 @@ namespace ShaiRandom.Generators
             return value;
         }
 
+        private static T ReturnIfBetweenBounds<T>(T innerValue, T outerValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
+        {
+            T value = ReturnValueFrom(series, ref seriesIndex);
+            T minValue, maxValue;
+            if(innerValue.CompareTo(outerValue) < 0)
+            {
+                minValue = outerValue;
+                maxValue = innerValue;
+            }
+            else
+            {
+                minValue = innerValue;
+                maxValue = outerValue;
+            }
+            if (minValue.CompareTo(value) < 0)
+                throw new ArgumentException("Value returned is less than minimum value.");
+
+            if (maxValue.CompareTo(value) >= 0)
+                throw new ArgumentException("Value returned is greater than/equal to maximum value.");
+
+            return value;
+        }
+
         private static T ReturnIfRangeBothExclusive<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
         {
             T value = ReturnValueFrom(series, ref seriesIndex);
@@ -240,20 +263,20 @@ namespace ShaiRandom.Generators
         public double NextDouble() => NextDouble(0.0, 1.0);
 
         /// <summary>
-        /// Returns the next double in the underlying series.  If it is outside of the bound specified, throws an exception.
+        /// Returns the next double in the underlying series. The inner bound is always 0.0. If the value from the series is outside of the bound specified, throws an exception.
         /// </summary>
-        /// <param name="outerBound">The upper bound for the returned double, exclusive.</param>
+        /// <param name="outerBound">The outer bound for the returned double, exclusive.</param>
         /// <returns>The next double in the underlying series, if it is within the bound.</returns>
         public double NextDouble(double outerBound) => NextDouble(0.0, outerBound);
 
         /// <summary>
-        /// Returns the next double in the underlying series. If the value is less than
-        /// <paramref name="minBound"/>, or greater than/equal to <paramref name="maxBound"/>, throws an exception.
+        /// Returns the next double in the underlying series. If the value is not between <paramref name="innerBound"/>
+        /// (inclusive), and <paramref name="outerBound"/> (exclusive), throws an exception.
         /// </summary>
-        /// <param name="minBound">The minimum value for the returned number, inclusive.</param>
-        /// <param name="maxBound">The maximum value for the returned number, exclusive.</param>
+        /// <param name="innerBound">The inner bound (usually the minimum) for the returned number, inclusive.</param>
+        /// <param name="outerBound">The outer bound (usually the maximum) for the returned number, exclusive.</param>
         /// <returns>The next double in the underlying series.</returns>
-        public double NextDouble(double minBound, double maxBound) => ReturnIfRange(minBound, maxBound, _doubleSeries, ref _doubleIndex);
+        public double NextDouble(double innerBound, double outerBound) => ReturnIfBetweenBounds(innerBound, outerBound, _doubleSeries, ref _doubleIndex);
 
         /// <summary>
         /// Returns the next double in the underlying series.  If it is outside of the bound [0, 1], throws
@@ -311,20 +334,20 @@ namespace ShaiRandom.Generators
         public float NextFloat() => NextFloat(0f, 1f);
 
         /// <summary>
-        /// Returns the next float in the underlying series.  If it is outside of the bound specified, throws an exception.
+        /// Returns the next float in the underlying series. The inner bound is always 0. If it is outside of the bound specified, throws an exception.
         /// </summary>
-        /// <param name="outerBound">The upper bound for the returned float, exclusive.</param>
+        /// <param name="outerBound">The louter bound for the returned float, exclusive.</param>
         /// <returns>The next float in the underlying series, if it is within the bound.</returns>
         public float NextFloat(float outerBound) => NextFloat(0f, outerBound);
 
         /// <summary>
-        /// Returns the next float in the underlying series. If the value is less than
-        /// <paramref name="minBound"/>, or greater than/equal to <paramref name="maxBound"/>, throws an exception.
+        /// Returns the next float in the underlying series. If the value is not between <paramref name="innerBound"/>
+        /// (inclusive), and <paramref name="outerBound"/> (exclusive), throws an exception.
         /// </summary>
-        /// <param name="minBound">The minimum value for the returned number, inclusive.</param>
-        /// <param name="maxBound">The maximum value for the returned number, exclusive.</param>
+        /// <param name="innerBound">The inner bound (usually the minimum) for the returned number, inclusive.</param>
+        /// <param name="outerBound">The outer bound (usually the maximum) for the returned number, exclusive.</param>
         /// <returns>The next float in the underlying series.</returns>
-        public float NextFloat(float minBound, float maxBound) => ReturnIfRange(minBound, maxBound, _floatSeries, ref _floatIndex);
+        public float NextFloat(float innerBound, float outerBound) => ReturnIfBetweenBounds(innerBound, outerBound, _floatSeries, ref _floatIndex);
 
         /// <summary>
         /// Returns the next float in the underlying series.  If it is outside of the bound [0, 1], throws
