@@ -709,6 +709,16 @@ namespace ShaiRandom.Generators
         decimal NextDecimal(decimal outerBound);
 
         /// <summary>
+        /// Gets a pseudo-random decimal between innerBound (inclusive) and outerBound (exclusive).
+        /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
+        /// inclusive and which is exclusive.
+        /// </summary>
+        /// <param name="innerBound">the inclusive inner bound; may be negative</param>
+        /// <param name="outerBound">the exclusive outer bound; may be negative</param>
+        /// <returns>a decimal between innerBound (inclusive) and outerBound (exclusive)</returns>
+        decimal NextDecimal(decimal innerBound, decimal outerBound);
+
+        /// <summary>
         /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextULong()
         /// as if called at that step. The distance can be negative if a long is cast to a ulong, which jumps backwards if the period of the generator is 2 to the 64.
         /// </summary>

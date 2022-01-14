@@ -413,6 +413,11 @@ namespace ShaiRandom.Generators
         {
             return NextDecimal() * outerBound;
         }
+        /// <inheritdoc />
+        public decimal NextDecimal(decimal innerBound, decimal outerBound)
+        {
+            return innerBound + NextDecimal() * (outerBound - innerBound);
+        }
 
         /// <inheritdoc />
         public virtual ulong Skip(ulong distance)
