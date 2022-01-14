@@ -476,6 +476,20 @@ namespace ShaiRandom.Generators
         public decimal NextDecimal(decimal outerBound) => (decimal)NextDouble(0.0, (double)outerBound);
 
         /// <summary>
+        /// Returns the next double in the underlying series, treating it as a decimal. If the value is not between <paramref name="innerBound"/>
+        /// (inclusive), and <paramref name="outerBound"/> (exclusive), with both cast to double before checking, throws an exception.
+        /// </summary>
+        /// <remarks>
+        /// This casts outerBound to a double so that it can be compared with the known series of double values this produces. It casts its result back to a decimal.
+        /// This particular implementation of NextDecimal() is not fully deterministic, because it depends on the rounding behavior of doubles on the current system.
+        /// If you are storing values that must be absolutely deterministic, with no bits varying, for use in a KnownSeriesRandom, you currently have to use an integer type.
+        /// </remarks>
+        /// <param name="innerBound">The inner bound (usually the minimum) for the returned number, inclusive.</param>
+        /// <param name="outerBound">The outer bound (usually the maximum) for the returned number, exclusive.</param>
+        /// <returns>The next double in the underlying series.</returns>
+        public decimal NextDecimal(decimal innerBound, decimal outerBound) => (decimal)ReturnIfBetweenBounds((double)innerBound, (double)outerBound, _doubleSeries, ref _doubleIndex);
+
+        /// <summary>
         /// Not supported by this generator.
         /// </summary>
         public ulong PreviousULong() => throw new NotSupportedException();
