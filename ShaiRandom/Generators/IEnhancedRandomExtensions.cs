@@ -294,7 +294,7 @@ namespace ShaiRandom.Generators
         /// <typeparam name="T">The type of items in the span.</typeparam>
         /// <param name="items">Must be non-empty.</param>
         /// <param name="selector">Function that should return true _only_ for a valid item to select.</param>
-        /// <returns>A randomly-chosen item from the span for which <see cref="selector"/> returns true.</returns>
+        /// <returns>A randomly-chosen item from the span for which <paramref name="selector"/> returns true.</returns>
         public static T RandomElement<T>(this IEnhancedRandom rng, ReadOnlySpan<T> items, Func<T, bool> selector)
         {
             T item = rng.RandomElement(items);
@@ -316,7 +316,7 @@ namespace ShaiRandom.Generators
         /// <param name="items">Must be non-empty.</param>
         /// <param name="selector">Function that should return true _only_ for a valid item to select.</param>
         /// <param name="maxTries">Maximum number of times to try generating a valid value before giving up and throwing an exception.</param>
-        /// <returns>A randomly-chosen item from the span for which <see cref="selector"/> returns true.</returns>
+        /// <returns>A randomly-chosen item from the span for which <paramref name="selector"/> returns true.</returns>
         public static T RandomElement<T>(this IEnhancedRandom rng, ReadOnlySpan<T> items, Func<T, bool> selector, int maxTries)
         {
             if (maxTries <= 0)
@@ -375,7 +375,7 @@ namespace ShaiRandom.Generators
         /// <typeparam name="T">The type of items in the list.</typeparam>
         /// <param name="items">Must be non-empty.</param>
         /// <param name="selector">Function that should return true _only_ for a valid item to select.</param>
-        /// <returns>A randomly-chosen item from the list for which <see cref="selector"/> returns true.</returns>
+        /// <returns>A randomly-chosen item from the list for which <paramref name="selector"/> returns true.</returns>
         public static T RandomElement<T>(this IEnhancedRandom rng, IReadOnlyList<T> items, Func<T, bool> selector)
         {
             T item = rng.RandomElement(items);
@@ -401,7 +401,7 @@ namespace ShaiRandom.Generators
         /// <param name="items">Must be non-empty.</param>
         /// <param name="selector">Function that should return true _only_ for a valid item to select.</param>
         /// <param name="maxTries">Maximum number of times to try generating a valid value before giving up and throwing an exception.</param>
-        /// <returns>A randomly-chosen item from the list for which <see cref="selector"/> returns true.</returns>
+        /// <returns>A randomly-chosen item from the list for which <paramref name="selector"/> returns true.</returns>
         public static T RandomElement<T>(this IEnhancedRandom rng, IReadOnlyList<T> items, Func<T, bool> selector, int maxTries)
         {
             if (maxTries <= 0)
@@ -469,7 +469,7 @@ namespace ShaiRandom.Generators
         /// <param name="items">Must be non-empty.</param>
         /// <param name="selector">Function that should return true _only_ for a valid index to select.</param>
         /// <param name="maxTries">Maximum number of times to try generating a valid value before giving up and throwing an exception.</param>
-        /// <returns>A randomly-chosen index from the span for which <see cref="selector"/> returns true.</returns>
+        /// <returns>A randomly-chosen index from the span for which <paramref name="selector"/> returns true.</returns>
         public static int RandomIndex<T>(this IEnhancedRandom rng, ReadOnlySpan<T> items, Func<int, bool> selector, int maxTries)
         {
             if (maxTries <= 0)
@@ -541,7 +541,7 @@ namespace ShaiRandom.Generators
         /// <param name="items">Must be non-empty.</param>
         /// <param name="selector">Function that should return true _only_ for a valid index to select.</param>
         /// <param name="maxTries">Maximum number of times to try generating a valid value before giving up and throwing an exception.</param>
-        /// <returns>A randomly-chosen index from the list for which <see cref="selector"/> returns true.</returns>
+        /// <returns>A randomly-chosen index from the list for which <paramref name="selector"/> returns true.</returns>
         public static int RandomIndex<T>(this IEnhancedRandom rng, IReadOnlyList<T> items, Func<int, bool> selector, int maxTries)
         {
             if (maxTries <= 0)
