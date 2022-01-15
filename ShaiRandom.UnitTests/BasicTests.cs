@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System;
 using ShaiRandom.Generators;
 using ShaiRandom.Wrappers;
 using Xunit;
@@ -101,9 +101,9 @@ namespace ShaiRandom.UnitTests
             {
                 buckets[(int)(r.NextDecimal() * 256)]++;
             }
-            IOrderedEnumerable<int> ob = buckets.OrderBy(b => b);
-            int smallest = ob.First();
-            int biggest = ob.Last();
+            Array.Sort(buckets);
+            int smallest = buckets[0];
+            int biggest = buckets[^1];
             Assert.True((biggest - smallest) / (biggest + 0.001) < 0.11);
         }
 
@@ -168,7 +168,7 @@ namespace ShaiRandom.UnitTests
         [Fact]
         public void KnownSeriesSerDeserTest()
         {
-            KnownSeriesRandom random = new KnownSeriesRandom(new int[] { 1, 3, -7 }, new uint[] { 2, 8, 12}, new double[] { -1.1, 2.0, 1e30}, null, null, null, null, new ulong[] { 0xB0BAFE77BA77UL, 0xDEADBEEFUL, 0x1337CAFEBABEUL });
+            KnownSeriesRandom random = new KnownSeriesRandom(new [] { 1, 3, -7 }, new uint[] { 2, 8, 12}, new [] { -1.1, 2.0, 1e30}, null, null, null, null, new [] { 0xB0BAFE77BA77UL, 0xDEADBEEFUL, 0x1337CAFEBABEUL });
             random.NextULong();
             string data = random.StringSerialize();
             Assert.StartsWith("#KnSR`", data);
