@@ -5,6 +5,18 @@ using System.Runtime.CompilerServices;
 namespace ShaiRandom.Generators
 {
     /// <summary>
+    /// Thrown when a list-based random selection function can't find an item satisfying its selector within the
+    /// number of attempts specified.
+    /// </summary>
+    public class MaxAttemptsReachedException : Exception
+    {
+        /// <inheritdoc />
+        public MaxAttemptsReachedException()
+            : base("Couldn't find random item satisfying selector within max attempts specified.")
+        { }
+    }
+
+    /// <summary>
     /// A collection of useful extension methods for IEnhancedRandom implementations.
     /// </summary>
     public static class EnhancedRandomExtensions
@@ -253,46 +265,165 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// Gets a randomly-chosen item from the given non-empty span.
         /// </summary>
-        /// <remarks>
-        /// Note that this function can easily accept an array as well, or anything else that can convert to span
-        /// via either implicit or explicit conversion (see examples).  There is also an overload taking IReadOnlyList,
-        /// which can also take arrays.
-        /// <example>
-        /// <code>
-        /// myRng.RandomElement&lt;TypeOfElementsInMyArray&gt;(myArray.AsSpan());
-        /// </code>
-        /// </example>
-        /// </remarks>
+        /// <exception cref="ArgumentException">An empty span was given.</exception>
         /// <param name="rng" />
         /// <typeparam name="T">The type of items in the span.</typeparam>
         /// <param name="items">Must be non-empty.</param>
         /// <returns>A randomly-chosen item from the span.</returns>
         public static T RandomElement<T>(this IEnhancedRandom rng, ReadOnlySpan<T> items)
-            => items[rng.NextInt(items.Length)];
+        {
+            if (items.Length == 0)
+                throw new ArgumentException("Items for random selection must be non-empty.", nameof(items));
+
+            return items[rng.NextInt(items.Length)];
+        }
+
+        /// <summary>
+        /// Continuously selects random items from the given non-empty span, until one is found for which
+        /// <paramref name="selector"/> returns true.
+        /// </summary>
+        /// <remarks>
+        /// This function will never return if there is no object in the span meeting the criteria of the selector
+        /// function, and may take an extremely long time if the list is very big and there are very few items in the
+        /// list meeting the selector's criteria.  For more deterministic termination, consider using the overload
+        /// of this function taking a maximum number of attempts:
+        /// <see cref="RandomElement{T}(ShaiRandom.Generators.IEnhancedRandom,System.ReadOnlySpan{T}, Func{T, bool}, int)"/>
+        /// </remarks>
+        /// <exception cref="ArgumentException">An empty span was given.</exception>
+        /// <param name="rng" />
+        /// <typeparam name="T">The type of items in the span.</typeparam>
+        /// <param name="items">Must be non-empty.</param>
+        /// <param name="selector">Function that should return true _only_ for a valid item to select.</param>
+        /// <returns>A randomly-chosen item from the span for which <paramref name="selector"/> returns true.</returns>
+        public static T RandomElement<T>(this IEnhancedRandom rng, ReadOnlySpan<T> items, Func<T, bool> selector)
+        {
+            T item = rng.RandomElement(items);
+            while (!selector(item))
+                item = rng.RandomElement(items);
+
+            return item;
+        }
+
+        /// <summary>
+        /// Continuously selects random items from the given non-empty span, until either one is found for which
+        /// <paramref name="selector"/> returns true, or the maximum number of attempts is reached.  An exception will
+        /// be thrown if the function is unable to generate a valid item within the number of attempts specified.
+        /// </summary>
+        /// <exception cref="ArgumentException">An empty span was given.</exception>
+        /// <exception cref="MaxAttemptsReachedException">The function could not find a valid element within the maximum number of tries.</exception>
+        /// <param name="rng" />
+        /// <typeparam name="T">The type of items in the span.</typeparam>
+        /// <param name="items">Must be non-empty.</param>
+        /// <param name="selector">Function that should return true _only_ for a valid item to select.</param>
+        /// <param name="maxTries">Maximum number of times to try generating a valid value before giving up and throwing an exception.</param>
+        /// <returns>A randomly-chosen item from the span for which <paramref name="selector"/> returns true.</returns>
+        public static T RandomElement<T>(this IEnhancedRandom rng, ReadOnlySpan<T> items, Func<T, bool> selector, int maxTries)
+        {
+            if (maxTries <= 0)
+                throw new ArgumentOutOfRangeException(nameof(maxTries),
+                    "Value must > 0; for infinite retries, use the overload without a maxTries parameter.");
+
+            int curTries = 0;
+            while (curTries < maxTries)
+            {
+                T item = rng.RandomElement(items);
+                if (selector(item))
+                    return item;
+
+                curTries++;
+            }
+
+            throw new MaxAttemptsReachedException();
+        }
 
         /// <summary>
         /// Gets a randomly-chosen item from the given non-null, non-empty IReadOnlyList.
         /// </summary>
+        /// <remarks>
+        /// Note that this function can take arrays as well as the <paramref name="items"/> value, since arrays implement
+        /// IReadOnlyList.
+        /// </remarks>
         /// <param name="rng" />
         /// <typeparam name="T">The type of items in the list.</typeparam>
         /// <param name="items">Must be non-null and non-empty.</param>
         /// <returns>A randomly-chosen item from list.</returns>
         public static T RandomElement<T>(this IEnhancedRandom rng, IReadOnlyList<T> items)
-            => items[rng.NextInt(items.Count)];
+        {
+            int count = items.Count;
+            if (count == 0)
+                throw new ArgumentException("Items for random selection must be non-empty.", nameof(items));
+
+            return items[rng.NextInt(count)];
+        }
+
+        /// <summary>
+        /// Continuously selects random items from the given non-empty IReadOnlyList, until one is found for which
+        /// <paramref name="selector"/> returns true.
+        /// </summary>
+        /// <remarks>
+        /// This function will never return if there is no object in the list meeting the criteria of the selector
+        /// function, and may take an extremely long time if the list is very big and there are very few items in the
+        /// list meeting the selector's criteria.  For more deterministic termination, consider using the overload
+        /// of this function taking a maximum number of attempts:
+        /// <see cref="RandomElement{T}(ShaiRandom.Generators.IEnhancedRandom, IReadOnlyList{T}, Func{T, bool}, int)"/>
+        ///
+        /// Note that this function can take arrays as well as the <paramref name="items"/> value, since arrays implement
+        /// IReadOnlyList.
+        /// </remarks>
+        /// <exception cref="ArgumentException">An empty list was given.</exception>
+        /// <param name="rng" />
+        /// <typeparam name="T">The type of items in the list.</typeparam>
+        /// <param name="items">Must be non-empty.</param>
+        /// <param name="selector">Function that should return true _only_ for a valid item to select.</param>
+        /// <returns>A randomly-chosen item from the list for which <paramref name="selector"/> returns true.</returns>
+        public static T RandomElement<T>(this IEnhancedRandom rng, IReadOnlyList<T> items, Func<T, bool> selector)
+        {
+            T item = rng.RandomElement(items);
+            while (!selector(item))
+                item = rng.RandomElement(items);
+
+            return item;
+        }
+
+        /// <summary>
+        /// Continuously selects random items from the given non-empty IReadOnlyList, until either one is found for which
+        /// <paramref name="selector"/> returns true, or the maximum number of attempts is reached.  An exception will
+        /// be thrown if the function is unable to generate a valid item within the number of attempts specified.
+        /// </summary>
+        /// <remarks>
+        /// Note that this function can take arrays as well as the <paramref name="items"/> value, since arrays implement
+        /// IReadOnlyList.
+        /// </remarks>
+        /// <exception cref="ArgumentException">An empty list was given.</exception>
+        /// <exception cref="MaxAttemptsReachedException">The function could not find a valid element within the maximum number of tries.</exception>
+        /// <param name="rng" />
+        /// <typeparam name="T">The type of items in the list.</typeparam>
+        /// <param name="items">Must be non-empty.</param>
+        /// <param name="selector">Function that should return true _only_ for a valid item to select.</param>
+        /// <param name="maxTries">Maximum number of times to try generating a valid value before giving up and throwing an exception.</param>
+        /// <returns>A randomly-chosen item from the list for which <paramref name="selector"/> returns true.</returns>
+        public static T RandomElement<T>(this IEnhancedRandom rng, IReadOnlyList<T> items, Func<T, bool> selector, int maxTries)
+        {
+            if (maxTries <= 0)
+                throw new ArgumentOutOfRangeException(nameof(maxTries),
+                    "Value must > 0; for infinite retries, use the overload without a maxTries parameter.");
+
+            int curTries = 0;
+            while (curTries < maxTries)
+            {
+                T item = rng.RandomElement(items);
+                if (selector(item))
+                    return item;
+
+                curTries++;
+            }
+
+            throw new MaxAttemptsReachedException();
+        }
 
         /// <summary>
         /// Gets a randomly-chosen value that is a valid index for an item from the given non-empty span.
         /// </summary>
-        /// <remarks>
-        /// Note that this function can easily accept an array as well, or anything else that can convert to span either
-        /// via either implicit or explicit conversion (see examples).  There is also an overload taking IReadOnlyList,
-        /// which can also take arrays.
-        /// <example>
-        /// <code>
-        /// myRng.RandomIndex&lt;TypeOfElementsInMyArray&gt;(myArray.AsSpan());
-        /// </code>
-        /// </example>
-        /// </remarks>
         /// <param name="rng" />
         /// <typeparam name="T">The type of items in the span.</typeparam>
         /// <param name="items">Must be non-empty.</param>
@@ -301,14 +432,134 @@ namespace ShaiRandom.Generators
             => rng.NextInt(items.Length);
 
         /// <summary>
+        /// Continuously selects random indices from the given (non-empty) span, until one is found for which the
+        /// given <paramref name="selector"/> returns true.
+        /// </summary>
+        /// <remarks>
+        /// This function will never return if there is no object in the span meeting the criteria of the selector
+        /// function, and may take an extremely long time if the list is very big and there are very few items in the
+        /// list meeting the selector's criteria.  For more deterministic termination, consider using the overload
+        /// of this function taking a maximum number of attempts:
+        /// <see cref="RandomIndex{T}(ShaiRandom.Generators.IEnhancedRandom,System.ReadOnlySpan{T}, Func{int, bool}, int)"/>
+        /// </remarks>
+        /// <exception cref="ArgumentException">An empty span was given.</exception>
+        /// <param name="rng" />
+        /// <param name="items">Must be non-empty.</param>
+        /// <param name="selector">Function that should return true _only_ for a valid selection of index.</param>
+        /// <typeparam name="T">The type of items in the span.</typeparam>
+        /// <returns>A randomly-chosen value that is a valid index in the span, for which <paramref name="selector"/> returns true.</returns>
+        public static int RandomIndex<T>(this IEnhancedRandom rng, ReadOnlySpan<T> items, Func<int, bool> selector)
+        {
+            int idx = rng.RandomIndex(items);
+            while (!selector(idx))
+                idx = rng.RandomIndex(items);
+
+            return idx;
+        }
+
+        /// <summary>
+        /// selects random indices from the given (non-empty) span, until either one is found for which
+        /// <paramref name="selector"/> returns true, or the maximum number of attempts is reached.  An exception will
+        /// be thrown if the function is unable to generate a valid index within the number of attempts specified.
+        /// </summary>
+        /// <exception cref="ArgumentException">An empty span was given.</exception>
+        /// <exception cref="MaxAttemptsReachedException">The function could not find a valid index within the maximum number of tries.</exception>
+        /// <param name="rng" />
+        /// <typeparam name="T">The type of items in the span.</typeparam>
+        /// <param name="items">Must be non-empty.</param>
+        /// <param name="selector">Function that should return true _only_ for a valid index to select.</param>
+        /// <param name="maxTries">Maximum number of times to try generating a valid value before giving up and throwing an exception.</param>
+        /// <returns>A randomly-chosen index from the span for which <paramref name="selector"/> returns true.</returns>
+        public static int RandomIndex<T>(this IEnhancedRandom rng, ReadOnlySpan<T> items, Func<int, bool> selector, int maxTries)
+        {
+            if (maxTries <= 0)
+                throw new ArgumentOutOfRangeException(nameof(maxTries),
+                    "Value must > 0; for infinite retries, use the overload without a maxTries parameter.");
+
+            int curTries = 0;
+            while (curTries < maxTries)
+            {
+                int idx = rng.RandomIndex(items);
+                if (selector(idx))
+                    return idx;
+
+                curTries++;
+            }
+
+            throw new MaxAttemptsReachedException();
+        }
+
+        /// <summary>
         /// Gets a randomly-chosen value that is a valid index for an item from the given non-null non-empty IReadOnlyList.
         /// </summary>
+        /// <remarks>
+        /// Note that this function can take arrays as well as the <paramref name="items"/> value, since arrays implement
+        /// IReadOnlyList.
+        /// </remarks>
         /// <param name="rng" />
         /// <typeparam name="T">The type of items in the list.</typeparam>
         /// <param name="items">Must be non-null and non-empty.</param>
         /// <returns>A randomly-chosen value that is a valid index in the list.</returns>
         public static int RandomIndex<T>(this IEnhancedRandom rng, IReadOnlyList<T> items)
             => rng.NextInt(items.Count);
+
+        /// <summary>
+        /// Continuously selects random indices from the given (non-empty) IReadOnlyList, until one is found for which the
+        /// given <paramref name="selector"/> returns true.
+        /// </summary>
+        /// <remarks>
+        /// This function will never return if there is no object in the list meeting the criteria of the selector
+        /// function, and may take an extremely long time if the list is very big and there are very few items in the
+        /// list meeting the selector's criteria.  For more deterministic termination, consider using the overload
+        /// of this function taking a maximum number of attempts:
+        /// <see cref="RandomIndex{T}(ShaiRandom.Generators.IEnhancedRandom, IReadOnlyList{T}, Func{int, bool}, int)"/>
+        /// </remarks>
+        /// <exception cref="ArgumentException">An empty list was given.</exception>
+        /// <param name="rng" />
+        /// <param name="items">Must be non-empty.</param>
+        /// <param name="selector">Function that should return true _only_ for a valid selection of index.</param>
+        /// <typeparam name="T">The type of items in the list.</typeparam>
+        /// <returns>A randomly-chosen value that is a valid index in the list, for which <paramref name="selector"/> returns true.</returns>
+        public static int RandomIndex<T>(this IEnhancedRandom rng, IReadOnlyList<T> items, Func<int, bool> selector)
+        {
+            int idx = rng.RandomIndex(items);
+            while (!selector(idx))
+                idx = rng.RandomIndex(items);
+
+            return idx;
+        }
+
+        /// <summary>
+        /// Continuously selects random indices from the given (non-empty) IReadOnlyList, until either one is found for which
+        /// <paramref name="selector"/> returns true, or the maximum number of attempts is reached.  An exception will
+        /// be thrown if the function is unable to generate a valid index within the number of attempts specified.
+        /// </summary>
+        /// <exception cref="ArgumentException">An empty list was given.</exception>
+        /// <exception cref="MaxAttemptsReachedException">The function could not find a valid index within the maximum number of tries.</exception>
+        /// <param name="rng" />
+        /// <typeparam name="T">The type of items in the list.</typeparam>
+        /// <param name="items">Must be non-empty.</param>
+        /// <param name="selector">Function that should return true _only_ for a valid index to select.</param>
+        /// <param name="maxTries">Maximum number of times to try generating a valid value before giving up and throwing an exception.</param>
+        /// <returns>A randomly-chosen index from the list for which <paramref name="selector"/> returns true.</returns>
+        public static int RandomIndex<T>(this IEnhancedRandom rng, IReadOnlyList<T> items, Func<int, bool> selector, int maxTries)
+        {
+            if (maxTries <= 0)
+                throw new ArgumentOutOfRangeException(nameof(maxTries),
+                    "Value must > 0; for infinite retries, use the overload without a maxTries parameter.");
+
+            int curTries = 0;
+            while (curTries < maxTries)
+            {
+                int idx = rng.RandomIndex(items);
+                if (selector(idx))
+                    return idx;
+
+                curTries++;
+            }
+
+            throw new MaxAttemptsReachedException();
+        }
 
         /// <summary>
         /// Shuffles the given Span in-place pseudo-randomly, using the Fisher-Yates (also called Knuth) shuffle algorithm.

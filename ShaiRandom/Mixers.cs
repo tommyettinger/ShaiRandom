@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ShaiRandom
+﻿namespace ShaiRandom
 {
     /// <summary>
     /// Static methods that each take a number and scramble or mix it to get a different number, often with a one-to-one relationship between inputs and outputs.
@@ -11,7 +9,7 @@ namespace ShaiRandom
         /// A fast, medium-quality mixing method that takes its state as a parameter; state is expected to change between calls to this.
         /// </summary>
         /// <remarks>
-        /// <remarks>It is suggested that you use <code>Mixers.MixFast(++state)</code> to produce a sequence of different numbers, but any increments are allowed
+        /// It is suggested that you use <code>Mixers.MixFast(++state)</code> to produce a sequence of different numbers, but any increments are allowed
         /// (even-number increments are discouraged because they won't be able to produce all outputs, but sometimes their quality will be decent for the numbers they
         /// can produce). All longs are accepted by this method, and all longs can be produced. Passing 0 here does not cause this to produce 0.
         /// <br />

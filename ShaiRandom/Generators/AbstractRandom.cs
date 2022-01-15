@@ -50,6 +50,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public abstract bool SupportsPrevious { get; }
 
+        /// <inheritdoc />
         public abstract string Tag { get; }
 
         private static Dictionary<string, IEnhancedRandom> TAGS = new Dictionary<string, IEnhancedRandom>();
