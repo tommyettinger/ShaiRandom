@@ -321,7 +321,7 @@ namespace ShaiRandom.Generators
         {
             if (maxTries <= 0)
                 throw new ArgumentOutOfRangeException(nameof(maxTries),
-                    "Value must >= 0; for infinite retries, use the overload without a maxTries parameter.");
+                    "Value must > 0; for infinite retries, use the overload without a maxTries parameter.");
 
             int curTries = 0;
             while (curTries < maxTries)
@@ -406,7 +406,7 @@ namespace ShaiRandom.Generators
         {
             if (maxTries <= 0)
                 throw new ArgumentOutOfRangeException(nameof(maxTries),
-                    "Value must >= 0; for infinite retries, use the overload without a maxTries parameter.");
+                    "Value must > 0; for infinite retries, use the overload without a maxTries parameter.");
 
             int curTries = 0;
             while (curTries < maxTries)
@@ -474,7 +474,7 @@ namespace ShaiRandom.Generators
         {
             if (maxTries <= 0)
                 throw new ArgumentOutOfRangeException(nameof(maxTries),
-                    "Value must >= 0; for infinite retries, use the overload without a maxTries parameter.");
+                    "Value must > 0; for infinite retries, use the overload without a maxTries parameter.");
 
             int curTries = 0;
             while (curTries < maxTries)
@@ -546,7 +546,7 @@ namespace ShaiRandom.Generators
         {
             if (maxTries <= 0)
                 throw new ArgumentOutOfRangeException(nameof(maxTries),
-                    "Value must >= 0; for infinite retries, use the overload without a maxTries parameter.");
+                    "Value must > 0; for infinite retries, use the overload without a maxTries parameter.");
 
             int curTries = 0;
             while (curTries < maxTries)
