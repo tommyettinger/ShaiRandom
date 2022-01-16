@@ -125,139 +125,75 @@ namespace ShaiRandom.Wrappers
             AbstractRandom.RegisterTag(new ArchivalWrapper());
         }
 
-        private static T ReturnIfRange<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
-        {
-            T value = ReturnValueFrom(series, ref seriesIndex);
-
-            if (minValue.CompareTo(value) < 0)
-                throw new ArgumentException("Value returned is less than minimum value.");
-
-            if (maxValue.CompareTo(value) >= 0)
-                throw new ArgumentException("Value returned is greater than/equal to maximum value.");
-
-            return value;
-        }
-
-        private static T ReturnIfBetweenBounds<T>(T innerValue, T outerValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
-        {
-            T value = ReturnValueFrom(series, ref seriesIndex);
-            T minValue, maxValue;
-            if(innerValue.CompareTo(outerValue) < 0)
-            {
-                minValue = outerValue;
-                maxValue = innerValue;
-            }
-            else
-            {
-                minValue = innerValue;
-                maxValue = outerValue;
-            }
-            if (minValue.CompareTo(value) < 0)
-                throw new ArgumentException("Value returned is less than minimum value.");
-
-            if (maxValue.CompareTo(value) >= 0)
-                throw new ArgumentException("Value returned is greater than/equal to maximum value.");
-
-            return value;
-        }
-
-        private static T ReturnIfRangeBothExclusive<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
-        {
-            T value = ReturnValueFrom(series, ref seriesIndex);
-
-            if (minValue.CompareTo(value) <= 0)
-                throw new ArgumentException("Value returned is less than/equal to minimum value.");
-
-            if (maxValue.CompareTo(value) >= 0)
-                throw new ArgumentException("Value returned is greater than/equal to maximum value.");
-
-            return value;
-        }
-
-        private static T ReturnIfRangeInclusive<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
-        {
-            T value = ReturnValueFrom(series, ref seriesIndex);
-
-            if (minValue.CompareTo(value) < 0)
-                throw new ArgumentException("Value returned is less than minimum value.");
-
-            if (maxValue.CompareTo(value) > 0)
-                throw new ArgumentException("Value returned is greater than/equal to maximum value.");
-
-            return value;
-        }
-
-        private static T ReturnValueFrom<T>(IReadOnlyList<T> series, ref int seriesIndex)
-        {
-            if (series.Count == 0)
-                throw new NotSupportedException("Tried to get value of type " + typeof(T).Name + ", but the KnownSeriesGenerator was not given any values of that type.");
-
-            T value = series[seriesIndex];
-            seriesIndex = MathUtils.WrapAround(seriesIndex + 1, series.Count);
-
-            return value;
-        }
-
         /// <inheritdoc />
         public IEnhancedRandom Copy() => new ArchivalWrapper(Wrapped.Copy(), _intSeries, _uintSeries, _doubleSeries, _boolSeries, _byteSeries, _floatSeries, _longSeries, _ulongSeries);
 
-        /// <summary>
-        /// Returns the next boolean value from the underlying series.
-        /// </summary>
-        /// <returns>The next boolean value from the underlying series.</returns>
-        public bool NextBool() => ReturnValueFrom(_boolSeries, ref _boolIndex);
+        /// <inheritdoc/>
+        public bool NextBool() {
+            bool v = Wrapped.NextBool();
+            _boolSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next integer from the underlying series.
-        /// </summary>
-        /// <returns>The next integer from the underlying series.</returns>
-        public int NextInt() => ReturnValueFrom(_intSeries, ref _intIndex);
+        /// <inheritdoc/>
+        public int NextInt()
+        {
+            int v = Wrapped.NextInt();
+            _intSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next integer from underlying series, if it is within the bound; if not,
-        /// throws an exception.
-        /// </summary>
-        /// <param name="outerBound">The upper bound for the returned integer, exclusive.</param>
-        /// <returns>The next integer from the underlying series, if it is within the bound.</returns>
-        public int NextInt(int outerBound) => NextInt(0, outerBound);
+        /// <inheritdoc/>
+        public int NextInt(int upperBound)
+        {
+            int v = Wrapped.NextInt(upperBound);
+            _intSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next integer in the underlying series. If the value is less than
-        /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
-        /// </summary>
-        /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
-        /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
-        /// <returns>The next integer in the underlying series.</returns>
-        public int NextInt(int minValue, int maxValue) => ReturnIfRange(minValue, maxValue, _intSeries, ref _intIndex);
+        /// <inheritdoc/>
+        public int NextInt(int minValue, int maxValue)
+        {
+            int v = Wrapped.NextInt(minValue, maxValue);
+            _intSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next uint in the underlying series.
-        /// </summary>
-        /// <returns>The next uint in the underlying series.</returns>
-        public uint NextUInt() => ReturnValueFrom(_uintSeries, ref _uintIndex);
+        /// <inheritdoc/>
+        public uint NextUInt()
+        {
+            uint v = Wrapped.NextUInt();
+            _uintSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next uint in the underlying series.  If it is outside of the bound specified, throws an exception.
-        /// </summary>
-        /// <param name="outerBound">The upper bound for the returned uint, exclusive.</param>
-        /// <returns>The next uint in the underlying series, if it is within the bound.</returns>
-        public uint NextUInt(uint outerBound) => NextUInt(0, outerBound);
+        /// <inheritdoc/>
+        public uint NextUInt(uint upperBound)
+        {
+            uint v = Wrapped.NextUInt(upperBound);
+            _uintSeries.Add(v);
+            return v;
+        }
 
         /// <summary>
         /// Uses the next unsigned integer from the underlying series to return the specified number of bits.
         /// </summary>
         /// <param name="bits">Number of bits to return</param>
         /// <returns>An integer containing the specified number of bits.</returns>
-        public uint NextBits(int bits) => (bits & 31) == 0 ? NextUInt() : NextUInt(0, 1U << bits);
+        public uint NextBits(int bits)
+        {
+            uint v = Wrapped.NextBits(bits);
+            _uintSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next unsigned integer in the underlying series. If the value is less than
-        /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
-        /// </summary>
-        /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
-        /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
-        /// <returns>The next unsigned integer in the underlying series.</returns>
-        public uint NextUInt(uint minValue, uint maxValue) => ReturnIfRange(minValue, maxValue, _uintSeries, ref _uintIndex);
+        /// <inheritdoc/>
+        public uint NextUInt(uint minValue, uint maxValue)
+        {
+            uint v = Wrapped.NextUInt(minValue, maxValue);
+            _uintSeries.Add(v);
+            return v;
+        }
 
         /// <summary>
         /// Returns the next double in the underlying series.  If it is outside of the bound [0, 1), throws
