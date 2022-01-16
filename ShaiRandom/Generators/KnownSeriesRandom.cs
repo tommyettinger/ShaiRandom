@@ -125,10 +125,10 @@ namespace ShaiRandom.Generators
         {
             T value = ReturnValueFrom(series, ref seriesIndex);
 
-            if (minValue.CompareTo(value) < 0)
+            if (value.CompareTo(minValue) < 0)
                 throw new ArgumentException("Value returned is less than minimum value.");
 
-            if (maxValue.CompareTo(value) >= 0)
+            if (value.CompareTo(maxValue) >= 0)
                 throw new ArgumentException("Value returned is greater than/equal to maximum value.");
 
             return value;
@@ -138,7 +138,7 @@ namespace ShaiRandom.Generators
         {
             T value = ReturnValueFrom(series, ref seriesIndex);
             T minValue, maxValue;
-            if(innerValue.CompareTo(outerValue) < 0)
+            if(outerValue.CompareTo(innerValue) < 0)
             {
                 minValue = outerValue;
                 maxValue = innerValue;
@@ -148,10 +148,10 @@ namespace ShaiRandom.Generators
                 minValue = innerValue;
                 maxValue = outerValue;
             }
-            if (minValue.CompareTo(value) < 0)
+            if (value.CompareTo(minValue) < 0)
                 throw new ArgumentException("Value returned is less than minimum value.");
 
-            if (maxValue.CompareTo(value) >= 0)
+            if (value.CompareTo(maxValue) >= 0)
                 throw new ArgumentException("Value returned is greater than/equal to maximum value.");
 
             return value;
@@ -161,10 +161,10 @@ namespace ShaiRandom.Generators
         {
             T value = ReturnValueFrom(series, ref seriesIndex);
 
-            if (minValue.CompareTo(value) <= 0)
+            if (value.CompareTo(minValue) <= 0)
                 throw new ArgumentException("Value returned is less than/equal to minimum value.");
 
-            if (maxValue.CompareTo(value) >= 0)
+            if (value.CompareTo(maxValue) >= 0)
                 throw new ArgumentException("Value returned is greater than/equal to maximum value.");
 
             return value;
@@ -174,10 +174,10 @@ namespace ShaiRandom.Generators
         {
             T value = ReturnValueFrom(series, ref seriesIndex);
 
-            if (minValue.CompareTo(value) < 0)
+            if (value.CompareTo(minValue) < 0)
                 throw new ArgumentException("Value returned is less than minimum value.");
 
-            if (maxValue.CompareTo(value) > 0)
+            if (value.CompareTo(maxValue) > 0)
                 throw new ArgumentException("Value returned is greater than/equal to maximum value.");
 
             return value;
