@@ -85,7 +85,7 @@ namespace ShaiRandom.Distributions.Discrete
             get { return _alpha; }
             set
             {
-                if (!IsValidAlpha(value)) throw new ArgumentOutOfRangeException(nameof(ParameterAlpha), "Parameter 0 (Alpha) must be >= 0.0 and <= 1.0.");
+                if (!IsValidAlpha(value)) throw new ArgumentOutOfRangeException(nameof(ParameterAlpha), "Parameter 0 (alpha) must be >= 0.0 and <= 1.0.");
                 _alpha = value;
             }
         }
@@ -105,7 +105,7 @@ namespace ShaiRandom.Distributions.Discrete
             get { return _beta; }
             set
             {
-                if (!IsValidBeta(value)) throw new ArgumentOutOfRangeException(nameof(ParameterBeta), "Parameter 1 (Beta) must be >= 0 .");
+                if (!IsValidBeta(value)) throw new ArgumentOutOfRangeException(nameof(ParameterBeta), "Parameter 1 (beta) must be >= 0 .");
                 _beta = value;
             }
         }
