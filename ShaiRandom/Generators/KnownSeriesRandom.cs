@@ -151,7 +151,7 @@ namespace ShaiRandom.Generators
             if (value.CompareTo(minValue) < 0)
                 throw new ArgumentException("Value returned is less than minimum value.");
 
-            if (value.CompareTo(maxValue) >= 0)
+            if (maxValue.CompareTo(minValue) > 0 && value.CompareTo(maxValue) >= 0)
                 throw new ArgumentException("Value returned is greater than/equal to maximum value.");
 
             return value;
@@ -164,7 +164,7 @@ namespace ShaiRandom.Generators
             if (value.CompareTo(minValue) <= 0)
                 throw new ArgumentException("Value returned is less than/equal to minimum value.");
 
-            if (value.CompareTo(maxValue) >= 0)
+            if (maxValue.CompareTo(minValue) > 0 && value.CompareTo(maxValue) >= 0)
                 throw new ArgumentException("Value returned is greater than/equal to maximum value.");
 
             return value;
@@ -177,8 +177,8 @@ namespace ShaiRandom.Generators
             if (value.CompareTo(minValue) < 0)
                 throw new ArgumentException("Value returned is less than minimum value.");
 
-            if (value.CompareTo(maxValue) > 0)
-                throw new ArgumentException("Value returned is greater than/equal to maximum value.");
+            if (maxValue.CompareTo(minValue) >= 0 && value.CompareTo(maxValue) > 0)
+                throw new ArgumentException("Value returned is greater than maximum value.");
 
             return value;
         }
