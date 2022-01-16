@@ -195,76 +195,86 @@ namespace ShaiRandom.Wrappers
             return v;
         }
 
-        /// <summary>
-        /// Returns the next double in the underlying series.  If it is outside of the bound [0, 1), throws
-        /// an exception.
-        /// </summary>
-        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
-        public double NextDouble() => NextDouble(0.0, 1.0);
+        /// <inheritdoc/>
+        public double NextDouble()
+        {
+            double v = Wrapped.NextDouble();
+            _doubleSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next double in the underlying series. The inner bound is always 0.0. If the value from the series is outside of the bound specified, throws an exception.
-        /// </summary>
-        /// <param name="outerBound">The outer bound for the returned double, exclusive.</param>
-        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
-        public double NextDouble(double outerBound) => NextDouble(0.0, outerBound);
 
-        /// <summary>
-        /// Returns the next double in the underlying series. If the value is not between <paramref name="innerBound"/>
-        /// (inclusive), and <paramref name="outerBound"/> (exclusive), throws an exception.
-        /// </summary>
-        /// <param name="innerBound">The inner bound (usually the minimum) for the returned number, inclusive.</param>
-        /// <param name="outerBound">The outer bound (usually the maximum) for the returned number, exclusive.</param>
-        /// <returns>The next double in the underlying series.</returns>
-        public double NextDouble(double innerBound, double outerBound) => ReturnIfBetweenBounds(innerBound, outerBound, _doubleSeries, ref _doubleIndex);
+        /// <inheritdoc/>
+        public double NextDouble(double outerBound)
+        {
+            double v = Wrapped.NextDouble(outerBound);
+            _doubleSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next double in the underlying series.  If it is outside of the bound [0, 1], throws
-        /// an exception.
-        /// </summary>
-        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
-        public double NextInclusiveDouble() => NextInclusiveDouble(0f, 1f);
 
-        /// <summary>
-        /// Returns the next double in the underlying series.  If it is outside of the bound [0, <paramref name="outerBound"/>], throws
-        /// an exception.
-        /// </summary>
-        /// <param name="outerBound">The maximum value of the returned number, inclusive.</param>
-        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
-        public double NextInclusiveDouble(double outerBound) => NextInclusiveDouble(0f, outerBound);
+        /// <inheritdoc/>
+        public double NextDouble(double innerBound, double outerBound)
+        {
+            double v = Wrapped.NextDouble(innerBound, outerBound);
+            _doubleSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next double in the underlying series.  If it is outside of the bound [<paramref name="minBound"/>, <paramref name="maxBound"/>], throws
-        /// an exception.
-        /// </summary>
-        /// <param name="minBound">The minimum value of the returned number, inclusive.</param>
-        /// <param name="maxBound">The maximum value of the returned number, inclusive.</param>
-        /// <returns>The next double in the underlying series, if it is within the bounds.</returns>
-        public double NextInclusiveDouble(double minBound, double maxBound) => ReturnIfRangeInclusive(minBound, maxBound, _doubleSeries, ref _doubleIndex);
 
-        /// <summary>
-        /// Returns the next double in the underlying series.  If it is outside of the bound (0, 1), throws
-        /// an exception.
-        /// </summary>
-        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
-        public double NextExclusiveDouble() => NextExclusiveDouble(0f, 1f);
+        /// <inheritdoc/>
+        public double NextInclusiveDouble()
+        {
+            double v = Wrapped.NextInclusiveDouble();
+            _doubleSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next double in the underlying series.  If it is outside of the bound ([)0, <paramref name="outerBound"/>), throws
-        /// an exception.
-        /// </summary>
-        /// <param name="outerBound">The maximum value of the returned number, exclusive.</param>
-        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
-        public double NextExclusiveDouble(double outerBound) => NextExclusiveDouble(0f, outerBound);
 
-        /// <summary>
-        /// Returns the next double in the underlying series.  If it is outside of the bound (<paramref name="minBound"/>, <paramref name="maxBound"/>), throws
-        /// an exception.
-        /// </summary>
-        /// <param name="minBound">The minimum value of the returned number, exclusive.</param>
-        /// <param name="maxBound">The maximum value of the returned number, exclusive.</param>
-        /// <returns>The next double in the underlying series, if it is within the bounds.</returns>
-        public double NextExclusiveDouble(double minBound, double maxBound) => ReturnIfRangeBothExclusive(minBound, maxBound, _doubleSeries, ref _doubleIndex);
+        /// <inheritdoc/>
+        public double NextInclusiveDouble(double outerBound)
+        {
+            double v = Wrapped.NextInclusiveDouble(outerBound);
+            _doubleSeries.Add(v);
+            return v;
+        }
+
+
+        /// <inheritdoc/>
+        public double NextInclusiveDouble(double innerBound, double outerBound)
+        {
+            double v = Wrapped.NextInclusiveDouble(innerBound, outerBound);
+            _doubleSeries.Add(v);
+            return v;
+        }
+
+
+        /// <inheritdoc/>
+        public double NextExclusiveDouble()
+        {
+            double v = Wrapped.NextExclusiveDouble();
+            _doubleSeries.Add(v);
+            return v;
+        }
+
+
+        /// <inheritdoc/>
+        public double NextExclusiveDouble(double outerBound)
+        {
+            double v = Wrapped.NextExclusiveDouble(outerBound);
+            _doubleSeries.Add(v);
+            return v;
+        }
+
+
+        /// <inheritdoc/>
+        public double NextExclusiveDouble(double innerBound, double outerBound)
+        {
+            double v = Wrapped.NextExclusiveDouble(innerBound, outerBound);
+            _doubleSeries.Add(v);
+            return v;
+        }
+
 
         /// <summary>
         /// Returns the next float in the underlying series.  If it is outside of the bound [0, 1), throws
