@@ -47,12 +47,12 @@ namespace ShaiRandom.UnitTests
         [Fact]
         public void NextDoubleLowerBound()
         {
-            double value = LowerValue;
+            double value = UpperValue;
 
-            Assert.Equal(value, _lowerRNG.NextDouble(value + 0.1));
-            Assert.Equal(value, _lowerRNG.NextDouble(value, value + 0.1));
+            Assert.Equal(value, _upperRNG.NextDouble(value + 0.1));
+            Assert.Equal(value, _upperRNG.NextDouble(value, value + 0.1));
 
-            Assert.Throws<ArgumentException>(() => _lowerRNG.NextDouble(value + 0.1, value + 0.2));
+            Assert.Throws<ArgumentException>(() => _upperRNG.NextDouble(value + 0.1, value + 0.2));
         }
 
         [Fact]
@@ -104,14 +104,14 @@ namespace ShaiRandom.UnitTests
         [Fact]
         public void NextIntCrossedBounds()
         {
-            int value = LowerValue;
+            int value = UpperValue;
 
             // Allowed range: value
-            Assert.Equal(value, _lowerRNG.NextInt(value, value));
+            Assert.Equal(value, _upperRNG.NextInt(value, value));
             // Allowed range: value
-            Assert.Equal(value, _lowerRNG.NextInt(value, value - 1));
+            Assert.Equal(value, _upperRNG.NextInt(value, value - 1));
             // Allowed range: [value - 1, value]
-            Assert.Equal(value, _lowerRNG.NextInt(value, value - 2));
+            Assert.Equal(value, _upperRNG.NextInt(value, value - 2));
         }
 
         [Fact]
@@ -126,5 +126,6 @@ namespace ShaiRandom.UnitTests
             Assert.Throws<ArgumentException>(() => _upperRNG.NextInt(value - 1, value));
         }
         #endregion
+
     }
 }
