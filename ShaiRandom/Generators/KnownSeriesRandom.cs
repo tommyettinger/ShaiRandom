@@ -121,72 +121,83 @@ namespace ShaiRandom.Generators
             AbstractRandom.RegisterTag(new KnownSeriesRandom());
         }
 
-        private static T ReturnIfRange<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
+        private static T ReturnIfBetweenBounds<T>(T innerValue, T outerValue, List<T> series, ref int seriesIndex)
+            where T : IComparable<T>
         {
             T value = ReturnValueFrom(series, ref seriesIndex);
 
-            if (value.CompareTo(minValue) < 0)
-                throw new ArgumentException("Value returned is less than minimum value.");
-
-            if (value.CompareTo(maxValue) >= 0)
-                throw new ArgumentException("Value returned is greater than/equal to maximum value.");
-
-            return value;
-        }
-
-        private static T ReturnIfBetweenBounds<T>(T innerValue, T outerValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
-        {
-            T value = ReturnValueFrom(series, ref seriesIndex);
-            T minValue, maxValue;
-            if(outerValue.CompareTo(innerValue) < 0)
+            // inner < outer; inner inclusive, outer exclusive
+            int compareResult = outerValue.CompareTo(innerValue);
+            if (compareResult > 0)
             {
-                minValue = outerValue;
-                maxValue = innerValue;
+                if (value.CompareTo(innerValue) < 0)
+                    throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+
+                if (value.CompareTo(outerValue) >= 0)
+                    throw new ArgumentException("Value returned is above the bounds of the generator function call.");
             }
+            // inner == outer; there is only one valid value
+            else if (compareResult == 0)
+            {
+                if (value.CompareTo(innerValue) != 0)
+                    throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+            }
+            // outer < inner; but outer is still _exclusive_, inner is _inclusive_
             else
             {
-                minValue = innerValue;
-                maxValue = outerValue;
+                if (value.CompareTo(outerValue) <= 0)
+                    throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+
+                if (value.CompareTo(innerValue) > 0)
+                    throw new ArgumentException("Value returned is above the bounds of the generator function call.");
             }
-            if (value.CompareTo(minValue) < 0)
-                throw new ArgumentException("Value returned is less than minimum value.");
-
-            if (maxValue.CompareTo(minValue) > 0 && value.CompareTo(maxValue) >= 0)
-                throw new ArgumentException("Value returned is greater than/equal to maximum value.");
 
             return value;
         }
 
-        private static T ReturnIfRangeBothExclusive<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
+        private static T ReturnIfBetweenBoundsExclusive<T>(T innerValue, T outerValue, List<T> series, ref int seriesIndex)
+            where T : IComparable<T>
         {
             T value = ReturnValueFrom(series, ref seriesIndex);
+            var (min, max) = GetMinAndMax(innerValue, outerValue);
 
-            if (value.CompareTo(minValue) <= 0)
-                throw new ArgumentException("Value returned is less than/equal to minimum value.");
+            if (min.CompareTo(max) == 0 && value.CompareTo(min) != 0)
+                throw new ArgumentException("Value returned is below the bounds of the generator function call.");
 
-            if (maxValue.CompareTo(minValue) > 0 && value.CompareTo(maxValue) >= 0)
-                throw new ArgumentException("Value returned is greater than/equal to maximum value.");
+            if (value.CompareTo(min) <= 0)
+                throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+
+            if (value.CompareTo(max) >= 0)
+                throw new ArgumentException("Value returned is above the bounds of the generator function call.");
 
             return value;
         }
 
-        private static T ReturnIfRangeInclusive<T>(T minValue, T maxValue, List<T> series, ref int seriesIndex) where T : IComparable<T>
+        private static T ReturnIfBetweenBoundsInclusive<T>(T innerValue, T outerValue, List<T> series, ref int seriesIndex)
+            where T : IComparable<T>
         {
             T value = ReturnValueFrom(series, ref seriesIndex);
+            var (min, max) = GetMinAndMax(innerValue, outerValue);
 
-            if (value.CompareTo(minValue) < 0)
-                throw new ArgumentException("Value returned is less than minimum value.");
+            if (min.CompareTo(max) == 0 && value.CompareTo(min) != 0)
+                throw new ArgumentException("Value returned is below the bounds of the generator function call.");
 
-            if (maxValue.CompareTo(minValue) >= 0 && value.CompareTo(maxValue) > 0)
-                throw new ArgumentException("Value returned is greater than maximum value.");
+            if (value.CompareTo(min) < 0)
+                throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+
+            if (value.CompareTo(max) > 0)
+                throw new ArgumentException("Value returned is above the bounds of the generator function call.");
 
             return value;
         }
+
+        private static (T min, T max) GetMinAndMax<T>(T inner, T outer)
+            where T : IComparable<T> => inner.CompareTo(outer) <= 0 ? (inner, outer) : (outer, inner);
 
         private static T ReturnValueFrom<T>(IReadOnlyList<T> series, ref int seriesIndex)
         {
             if (series.Count == 0)
-                throw new NotSupportedException("Tried to get value of type " + typeof(T).Name + ", but the KnownSeriesGenerator was not given any values of that type.");
+                throw new NotSupportedException($"Tried to get value of type {typeof(T).Name}, but the {nameof(KnownSeriesRandom)} was not given any values of that type.");
 
             T value = series[seriesIndex];
             seriesIndex = MathUtils.WrapAround(seriesIndex + 1, series.Count);
@@ -224,7 +235,7 @@ namespace ShaiRandom.Generators
         /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
         /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
         /// <returns>The next integer in the underlying series.</returns>
-        public int NextInt(int minValue, int maxValue) => ReturnIfRange(minValue, maxValue, _intSeries, ref _intIndex);
+        public int NextInt(int minValue, int maxValue) => ReturnIfBetweenBounds(minValue, maxValue, _intSeries, ref _intIndex);
 
         /// <summary>
         /// Returns the next uint in the underlying series.
@@ -253,7 +264,7 @@ namespace ShaiRandom.Generators
         /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
         /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
         /// <returns>The next unsigned integer in the underlying series.</returns>
-        public uint NextUInt(uint minValue, uint maxValue) => ReturnIfRange(minValue, maxValue, _uintSeries, ref _uintIndex);
+        public uint NextUInt(uint minValue, uint maxValue) => ReturnIfBetweenBounds(minValue, maxValue, _uintSeries, ref _uintIndex);
 
         /// <summary>
         /// Returns the next double in the underlying series.  If it is outside of the bound [0, 1), throws
@@ -300,7 +311,7 @@ namespace ShaiRandom.Generators
         /// <param name="minBound">The minimum value of the returned number, inclusive.</param>
         /// <param name="maxBound">The maximum value of the returned number, inclusive.</param>
         /// <returns>The next double in the underlying series, if it is within the bounds.</returns>
-        public double NextInclusiveDouble(double minBound, double maxBound) => ReturnIfRangeInclusive(minBound, maxBound, _doubleSeries, ref _doubleIndex);
+        public double NextInclusiveDouble(double minBound, double maxBound) => ReturnIfBetweenBoundsInclusive(minBound, maxBound, _doubleSeries, ref _doubleIndex);
 
         /// <summary>
         /// Returns the next double in the underlying series.  If it is outside of the bound (0, 1), throws
@@ -324,7 +335,7 @@ namespace ShaiRandom.Generators
         /// <param name="minBound">The minimum value of the returned number, exclusive.</param>
         /// <param name="maxBound">The maximum value of the returned number, exclusive.</param>
         /// <returns>The next double in the underlying series, if it is within the bounds.</returns>
-        public double NextExclusiveDouble(double minBound, double maxBound) => ReturnIfRangeBothExclusive(minBound, maxBound, _doubleSeries, ref _doubleIndex);
+        public double NextExclusiveDouble(double minBound, double maxBound) => ReturnIfBetweenBoundsExclusive(minBound, maxBound, _doubleSeries, ref _doubleIndex);
 
         /// <summary>
         /// Returns the next float in the underlying series.  If it is outside of the bound [0, 1), throws
@@ -371,7 +382,7 @@ namespace ShaiRandom.Generators
         /// <param name="minBound">The minimum value of the returned number, inclusive.</param>
         /// <param name="maxBound">The maximum value of the returned number, inclusive.</param>
         /// <returns>The next float in the underlying series, if it is within the bounds.</returns>
-        public float NextInclusiveFloat(float minBound, float maxBound) => ReturnIfRangeInclusive(minBound, maxBound, _floatSeries, ref _floatIndex);
+        public float NextInclusiveFloat(float minBound, float maxBound) => ReturnIfBetweenBoundsInclusive(minBound, maxBound, _floatSeries, ref _floatIndex);
 
         /// <summary>
         /// Returns the next float in the underlying series.  If it is outside of the bound (0, 1), throws
@@ -395,7 +406,7 @@ namespace ShaiRandom.Generators
         /// <param name="minBound">The minimum value of the returned number, exclusive.</param>
         /// <param name="maxBound">The maximum value of the returned number, exclusive.</param>
         /// <returns>The next float in the underlying series, if it is within the bounds.</returns>
-        public float NextExclusiveFloat(float minBound, float maxBound) => ReturnIfRangeBothExclusive(minBound, maxBound, _floatSeries, ref _floatIndex);
+        public float NextExclusiveFloat(float minBound, float maxBound) => ReturnIfBetweenBoundsExclusive(minBound, maxBound, _floatSeries, ref _floatIndex);
 
         /// <summary>
         /// Returns the next long from the underlying series.
@@ -418,7 +429,7 @@ namespace ShaiRandom.Generators
         /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
         /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
         /// <returns>The next long in the underlying series.</returns>
-        public long NextLong(long minValue, long maxValue) => ReturnIfRange(minValue, maxValue, _longSeries, ref _longIndex);
+        public long NextLong(long minValue, long maxValue) => ReturnIfBetweenBounds(minValue, maxValue, _longSeries, ref _longIndex);
 
         /// <summary>
         /// Returns the next ulong from the underlying series.
@@ -441,7 +452,7 @@ namespace ShaiRandom.Generators
         /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
         /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
         /// <returns>The next ulong in the underlying series.</returns>
-        public ulong NextULong(ulong minValue, ulong maxValue) => ReturnIfRange(minValue, maxValue, _ulongSeries, ref _ulongIndex);
+        public ulong NextULong(ulong minValue, ulong maxValue) => ReturnIfBetweenBounds(minValue, maxValue, _ulongSeries, ref _ulongIndex);
 
         /// <summary>
         /// Fills the specified buffer with values from the underlying byte series.  See <see cref="IEnhancedRandom.NextBytes"/>
@@ -662,6 +673,6 @@ namespace ShaiRandom.Generators
             ser = _longSeries.Aggregate(ser, (s, n) => s + n + "|").TrimEnd('|') + "~";
             ser += _ulongIndex + "~";
             return _ulongSeries.Aggregate(ser, (s, n) => s + n + "|").TrimEnd('|') + "`";
+        }
     }
-}
 }
