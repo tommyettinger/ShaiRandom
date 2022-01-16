@@ -5,9 +5,9 @@ namespace ShaiRandom.Wrappers
 {
 
     /// <summary>
-    /// Wraps another AbstractRandom without copying it, making all calls to "NextSomething()" on this ReversingWrapper move the state in reverse
-    /// instead of forward in the wrapped AbstractRandom. This only works for AbstractRandom implementations that support <see cref="PreviousULong"/>,
-    /// which can be checked with <see cref="SupportsPrevious"/>. If the wrapped AbstractRandom supports <see cref="Skip(ulong)"/>, then this
+    /// Wraps another IEnhancedRandom without copying it, making all calls to "NextSomething()" on this ReversingWrapper move the state in reverse
+    /// instead of forward in the wrapped IEnhancedRandom. This only works for IEnhancedRandom implementations that support <see cref="PreviousULong"/>,
+    /// which can be checked with <see cref="SupportsPrevious"/>. If the wrapped IEnhancedRandom supports <see cref="Skip(ulong)"/>, then this
     /// ReversingWrapper will permit calls to its Skip, and they will also go in reverse. The most common use for this would be to run
     /// the wrapped generator forward and track the number of calls made, then run the ReversingWrapper by the same number of calls
     /// (potentially using Skip(), if supported) to revert the state to its original value. This is more convenient for the usage where
