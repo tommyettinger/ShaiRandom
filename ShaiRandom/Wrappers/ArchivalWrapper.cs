@@ -429,10 +429,13 @@ namespace ShaiRandom.Wrappers
         }
 
 
-        /// <summary>
-        /// Not supported by this generator.
-        /// </summary>
-        public ulong PreviousULong() => throw new NotSupportedException();
+        /// <inheritdoc/>
+        public ulong PreviousULong()
+        {
+            ulong v = Wrapped.PreviousULong();
+            _ulongSeries.Add(v);
+            return v;
+        }
 
         /// <inheritdoc />
         public void Seed(ulong seed) => Wrapped.Seed(seed);
@@ -440,52 +443,28 @@ namespace ShaiRandom.Wrappers
         public ulong SelectState(int selection) => Wrapped.SelectState(selection);
         /// <inheritdoc />
         public void SetSelectedState(int selection, ulong value) => Wrapped.SetSelectedState(selection, value);
-        /// <summary>
-        /// Sets all the number series to the current index value.
-        /// </summary>
-        /// <param name="state">Value to set to all of the series indices.</param>
-        public void SetState(ulong state) => Seed(state);
-
-        /// <summary>
-        /// Sets the current indices in sequences as follows:
-        ///     - intSeries, doubleSeries, byteSeries, longSeries : stateA
-        ///     - uintSeries, boolSeries, floatSeries, ulongSeries: stateB
-        /// </summary>
-        /// <param name="stateA">Index value to set for intSeries, doubleSeries, byteSeries, and longSeries.</param>
-        /// <param name="stateB">Index value to set for uintSeries, boolSeries, floatSeries, ulongSeries.</param>
-        public void SetState(ulong stateA, ulong stateB) => ((IEnhancedRandom)this).SetState(stateA, stateB);
-
-        /// <summary>
-        /// Sets the current indices in sequences as follows:
-        ///     - intSeries, boolSeries, longSeries  : stateA
-        ///     - uintSeries, byteSeries, ulongSeries: stateB
-        ///     - doubleSeries, floatSeries          : stateC
-        /// </summary>
-        /// <param name="stateA">Index value to set for intSeries, boolSeries, and longSeries.</param>
-        /// <param name="stateB">Index value to set for uintSeries, byteSeries, ulongSeries.</param>
-        /// <param name="stateC">Index value to set for doubleSeries and floatSeries.</param>
-        public void SetState(ulong stateA, ulong stateB, ulong stateC) => ((IEnhancedRandom)this).SetState(stateA, stateB, stateC);
-
-        /// <summary>
-        /// Sets the current indices in sequences as follows:
-        ///     - intSeries, byteSeries   : stateA
-        ///     - uintSeries, floatSeries : stateB
-        ///     - doubleSeries, longSeries: stateC
-        ///     - boolSeries, ulongSeries : stateC
-        /// </summary>
-        /// <param name="stateA">Index value to set for intSeries and byteSeries.</param>
-        /// <param name="stateB">Index value to set for uintSeries and floatSeries.</param>
-        /// <param name="stateC">Index value to set for doubleSeries and longSeries.</param>
-        /// <param name="stateD">Index value to set for boolSeries and ulongSeries.</param>
-        public void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD) => ((IEnhancedRandom)this).SetState(stateA, stateB, stateC, stateD);
+        /// <inheritdoc />
+        public void SetState(ulong state) => Wrapped.SetState(state);
 
         /// <inheritdoc />
-        public void SetState(params ulong[] states) => ((IEnhancedRandom)this).SetState(states);
+        public void SetState(ulong stateA, ulong stateB) => Wrapped.SetState(stateA, stateB);
 
-        /// <summary>
-        /// Not supported by this generator.
-        /// </summary>
-        public ulong Skip(ulong distance) => throw new NotSupportedException();
+        /// <inheritdoc />
+        public void SetState(ulong stateA, ulong stateB, ulong stateC) => Wrapped.SetState(stateA, stateB, stateC);
+
+        /// <inheritdoc />
+        public void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD) => Wrapped.SetState(stateA, stateB, stateC, stateD);
+
+        /// <inheritdoc />
+        public void SetState(params ulong[] states) => Wrapped.SetState(states);
+
+        /// <inheritdoc />
+        public ulong Skip(ulong distance)
+        {
+            ulong v = Wrapped.Skip(distance);
+            _ulongSeries.Add(v);
+            return v;
+        }
 
         /// <inheritdoc />
         public string StringSerialize() => "A" + Wrapped.StringSerialize().Substring(1) + Series.StringSerialize();
