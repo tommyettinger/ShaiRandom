@@ -74,7 +74,7 @@ namespace ShaiRandom.Distributions.Continuous
             get { return 1.0 / _lambda; }
             set
             {
-                if (!IsValidParam(value)) throw new ArgumentOutOfRangeException(nameof(ParameterLambda), "Parameter 0 (Lambda) must be > 0.0 .");
+                if (!IsValidParam(value)) throw new ArgumentOutOfRangeException(nameof(ParameterLambda), "Parameter 0 (lambda) must be > 0.0 .");
                 _lambda = 1.0 / value;
             }
         }
