@@ -175,11 +175,7 @@ namespace ShaiRandom.Wrappers
             return v;
         }
 
-        /// <summary>
-        /// Uses the next unsigned integer from the underlying series to return the specified number of bits.
-        /// </summary>
-        /// <param name="bits">Number of bits to return</param>
-        /// <returns>An integer containing the specified number of bits.</returns>
+        /// <inheritdoc/>
         public uint NextBits(int bits)
         {
             uint v = Wrapped.NextBits(bits);
@@ -276,76 +272,79 @@ namespace ShaiRandom.Wrappers
         }
 
 
-        /// <summary>
-        /// Returns the next float in the underlying series.  If it is outside of the bound [0, 1), throws
-        /// an exception.
-        /// </summary>
-        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
-        public float NextFloat() => NextFloat(0f, 1f);
+        /// <inheritdoc/>
+        public float NextFloat()
+        {
+            float v = Wrapped.NextFloat();
+            _floatSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next float in the underlying series. The inner bound is always 0. If it is outside of the bound specified, throws an exception.
-        /// </summary>
-        /// <param name="outerBound">The louter bound for the returned float, exclusive.</param>
-        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
-        public float NextFloat(float outerBound) => NextFloat(0f, outerBound);
 
-        /// <summary>
-        /// Returns the next float in the underlying series. If the value is not between <paramref name="innerBound"/>
-        /// (inclusive), and <paramref name="outerBound"/> (exclusive), throws an exception.
-        /// </summary>
-        /// <param name="innerBound">The inner bound (usually the minimum) for the returned number, inclusive.</param>
-        /// <param name="outerBound">The outer bound (usually the maximum) for the returned number, exclusive.</param>
-        /// <returns>The next float in the underlying series.</returns>
-        public float NextFloat(float innerBound, float outerBound) => ReturnIfBetweenBounds(innerBound, outerBound, _floatSeries, ref _floatIndex);
+        /// <inheritdoc/>
+        public float NextFloat(float outerBound)
+        {
+            float v = Wrapped.NextFloat(outerBound);
+            _floatSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next float in the underlying series.  If it is outside of the bound [0, 1], throws
-        /// an exception.
-        /// </summary>
-        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
-        public float NextInclusiveFloat() => NextInclusiveFloat(0f, 1f);
+        /// <inheritdoc/>
+        public float NextFloat(float innerBound, float outerBound)
+        {
+            float v = Wrapped.NextFloat(innerBound, outerBound);
+            _floatSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next float in the underlying series.  If it is outside of the bound [0, <paramref name="outerBound"/>], throws
-        /// an exception.
-        /// </summary>
-        /// <param name="outerBound">The maximum value of the returned number, inclusive.</param>
-        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
-        public float NextInclusiveFloat(float outerBound) => NextInclusiveFloat(0f, outerBound);
+        /// <inheritdoc/>
+        public float NextInclusiveFloat()
+        {
+            float v = Wrapped.NextInclusiveFloat();
+            _floatSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next float in the underlying series.  If it is outside of the bound [<paramref name="minBound"/>, <paramref name="maxBound"/>], throws
-        /// an exception.
-        /// </summary>
-        /// <param name="minBound">The minimum value of the returned number, inclusive.</param>
-        /// <param name="maxBound">The maximum value of the returned number, inclusive.</param>
-        /// <returns>The next float in the underlying series, if it is within the bounds.</returns>
-        public float NextInclusiveFloat(float minBound, float maxBound) => ReturnIfRangeInclusive(minBound, maxBound, _floatSeries, ref _floatIndex);
+        /// <inheritdoc/>
+        public float NextInclusiveFloat(float outerBound)
+        {
+            float v = Wrapped.NextInclusiveFloat(outerBound);
+            _floatSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next float in the underlying series.  If it is outside of the bound (0, 1), throws
-        /// an exception.
-        /// </summary>
-        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
-        public float NextExclusiveFloat() => NextExclusiveFloat(0f, 1f);
+        /// <inheritdoc/>
+        public float NextInclusiveFloat(float innerBound, float outerBound)
+        {
+            float v = Wrapped.NextInclusiveFloat(innerBound, outerBound);
+            _floatSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next float in the underlying series.  If it is outside of the bound ([)0, <paramref name="outerBound"/>), throws
-        /// an exception.
-        /// </summary>
-        /// <param name="outerBound">The maximum value of the returned number, exclusive.</param>
-        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
-        public float NextExclusiveFloat(float outerBound) => NextExclusiveFloat(0f, outerBound);
+        /// <inheritdoc/>
+        public float NextExclusiveFloat()
+        {
+            float v = Wrapped.NextExclusiveFloat();
+            _floatSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next float in the underlying series.  If it is outside of the bound (<paramref name="minBound"/>, <paramref name="maxBound"/>), throws
-        /// an exception.
-        /// </summary>
-        /// <param name="minBound">The minimum value of the returned number, exclusive.</param>
-        /// <param name="maxBound">The maximum value of the returned number, exclusive.</param>
-        /// <returns>The next float in the underlying series, if it is within the bounds.</returns>
-        public float NextExclusiveFloat(float minBound, float maxBound) => ReturnIfRangeBothExclusive(minBound, maxBound, _floatSeries, ref _floatIndex);
+        /// <inheritdoc/>
+        public float NextExclusiveFloat(float outerBound)
+        {
+            float v = Wrapped.NextExclusiveFloat(outerBound);
+            _floatSeries.Add(v);
+            return v;
+        }
+
+        /// <inheritdoc/>
+        public float NextExclusiveFloat(float innerBound, float outerBound)
+        {
+            float v = Wrapped.NextExclusiveFloat(innerBound, outerBound);
+            _floatSeries.Add(v);
+            return v;
+        }
+
 
         /// <summary>
         /// Returns the next long from the underlying series.
