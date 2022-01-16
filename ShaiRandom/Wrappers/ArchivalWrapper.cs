@@ -345,98 +345,89 @@ namespace ShaiRandom.Wrappers
             return v;
         }
 
+        /// <inheritdoc/>
+        public long NextLong()
+        {
+            long v = Wrapped.NextLong();
+            _longSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next long from the underlying series.
-        /// </summary>
-        /// <returns>The next long from the underlying series.</returns>
-        public long NextLong() => ReturnValueFrom(_longSeries, ref _longIndex);
+        /// <inheritdoc/>
+        public long NextLong(long outerBound)
+        {
+            long v = Wrapped.NextLong(outerBound);
+            _longSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next long from underlying series, if it is within the bound; if not,
-        /// throws an exception.
-        /// </summary>
-        /// <param name="outerBound">The upper bound for the returned long, exclusive.</param>
-        /// <returns>The next long from the underlying series, if it is within the bound.</returns>
-        public long NextLong(long outerBound) => NextLong(0, outerBound);
+        /// <inheritdoc/>
+        public long NextLong(long innerBound, long outerBound)
+        {
+            long v = Wrapped.NextLong(innerBound, outerBound);
+            _longSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next long in the underlying series. If the value is less than
-        /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
-        /// </summary>
-        /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
-        /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
-        /// <returns>The next long in the underlying series.</returns>
-        public long NextLong(long minValue, long maxValue) => ReturnIfRange(minValue, maxValue, _longSeries, ref _longIndex);
+        /// <inheritdoc/>
+        public ulong NextULong()
+        {
+            ulong v = Wrapped.NextULong();
+            _ulongSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next ulong from the underlying series.
-        /// </summary>
-        /// <returns>The next ulong from the underlying series.</returns>
-        public ulong NextULong() => ReturnValueFrom(_ulongSeries, ref _ulongIndex);
+        /// <inheritdoc/>
+        public ulong NextULong(ulong outerBound)
+        {
+            ulong v = Wrapped.NextULong(outerBound);
+            _ulongSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next ulong from underlying series, if it is within the bound; if not,
-        /// throws an exception.
-        /// </summary>
-        /// <param name="outerBound">The upper bound for the returned ulong, exclusive.</param>
-        /// <returns>The next ulong from the underlying series, if it is within the bound.</returns>
-        public ulong NextULong(ulong outerBound) => NextULong(0, outerBound);
+        /// <inheritdoc/>
+        public ulong NextULong(ulong innerBound, ulong outerBound)
+        {
+            ulong v = Wrapped.NextULong(innerBound, outerBound);
+            _ulongSeries.Add(v);
+            return v;
+        }
 
-        /// <summary>
-        /// Returns the next ulong in the underlying series. If the value is less than
-        /// <paramref name="minValue"/>, or greater than/equal to <paramref name="maxValue"/>, throws an exception.
-        /// </summary>
-        /// <param name="minValue">The minimum value for the returned number, inclusive.</param>
-        /// <param name="maxValue">The maximum value for the returned number, exclusive.</param>
-        /// <returns>The next ulong in the underlying series.</returns>
-        public ulong NextULong(ulong minValue, ulong maxValue) => ReturnIfRange(minValue, maxValue, _ulongSeries, ref _ulongIndex);
-
-        /// <summary>
-        /// Fills the specified buffer with values from the underlying byte series.  See <see cref="IEnhancedRandom.NextBytes"/>
-        /// for detailed examples on various uses.
-        /// </summary>
-        /// <param name="bytes">Buffer to fill.</param>
+        /// <inheritdoc/>
         public void NextBytes(Span<byte> bytes)
         {
-            for (int i = 0; i < bytes.Length; i++)
-                bytes[i] = ReturnValueFrom(_byteSeries, ref _byteIndex);
+            Wrapped.NextBytes(bytes);
+            for(int i = 0; i < bytes.Length; i++)
+            {
+                _byteSeries.Add(bytes[i]);
+            }
         }
-        /// <summary>
-        /// Returns the next double in the underlying series, treating it as a decimal.  If it is outside of the bound [0, 1), throws
-        /// an exception.
-        /// </summary>
-        /// <remarks>
-        /// This particular implementation of NextDecimal() is not fully deterministic, because it depends on the rounding behavior of doubles on the current system.
-        /// If you are storing values that must be absolutely deterministic, with no bits varying, for use in a ArchivalWrapper, you currently have to use an integer type.
-        /// </remarks>
-        /// <returns>The next double in the underlying series, if it is within the bound, cast to a decimal.</returns>
-        public decimal NextDecimal() => (decimal)NextDouble(0.0, 1.0);
-        /// <summary>
-        /// Returns the next double in the underlying series, treating it as a decimal.  If it is outside of the bound specified, throws an exception.
-        /// an exception.
-        /// </summary>
-        /// <remarks>
-        /// This casts outerBound to a double so that it can be compared with the known series of double values this produces. It casts its result back to a decimal.
-        /// This particular implementation of NextDecimal() is not fully deterministic, because it depends on the rounding behavior of doubles on the current system.
-        /// If you are storing values that must be absolutely deterministic, with no bits varying, for use in a ArchivalWrapper, you currently have to use an integer type.
-        /// </remarks>
-        /// <returns>The next double in the underlying series, if it is within the bound, cast to a decimal.</returns>
-        public decimal NextDecimal(decimal outerBound) => (decimal)NextDouble(0.0, (double)outerBound);
 
-        /// <summary>
-        /// Returns the next double in the underlying series, treating it as a decimal. If the value is not between <paramref name="innerBound"/>
-        /// (inclusive), and <paramref name="outerBound"/> (exclusive), with both cast to double before checking, throws an exception.
-        /// </summary>
-        /// <remarks>
-        /// This casts outerBound to a double so that it can be compared with the known series of double values this produces. It casts its result back to a decimal.
-        /// This particular implementation of NextDecimal() is not fully deterministic, because it depends on the rounding behavior of doubles on the current system.
-        /// If you are storing values that must be absolutely deterministic, with no bits varying, for use in a ArchivalWrapper, you currently have to use an integer type.
-        /// </remarks>
-        /// <param name="innerBound">The inner bound (usually the minimum) for the returned number, inclusive.</param>
-        /// <param name="outerBound">The outer bound (usually the maximum) for the returned number, exclusive.</param>
-        /// <returns>The next double in the underlying series.</returns>
-        public decimal NextDecimal(decimal innerBound, decimal outerBound) => (decimal)ReturnIfBetweenBounds((double)innerBound, (double)outerBound, _doubleSeries, ref _doubleIndex);
+        /// <inheritdoc/>
+        public decimal NextDecimal()
+        {
+            decimal v = Wrapped.NextDecimal();
+            _doubleSeries.Add((double)v);
+            return v;
+        }
+
+        /// <inheritdoc/>
+        public decimal NextDecimal(decimal outerBound)
+        {
+            decimal v = Wrapped.NextDecimal(outerBound);
+            _doubleSeries.Add((double)v);
+            return v;
+        }
+
+
+        /// <inheritdoc/>
+        public decimal NextDecimal(decimal innerBound, decimal outerBound)
+        {
+            decimal v = Wrapped.NextDecimal(innerBound, outerBound);
+            _doubleSeries.Add((double)v);
+            return v;
+        }
+
 
         /// <summary>
         /// Not supported by this generator.
