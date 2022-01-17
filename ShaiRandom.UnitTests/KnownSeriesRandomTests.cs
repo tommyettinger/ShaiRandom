@@ -45,8 +45,8 @@ namespace ShaiRandom.UnitTests
         );
 
         private readonly KnownSeriesRandom _unboundedInclusiveRNG = new KnownSeriesRandom(
-            doubleSeries: new []{0.0, 1.0},
-            floatSeries: new []{0.0f, 1.0f}
+            doubleSeries: new []{0.0, 1.0, -double.Epsilon, 1.1},
+            floatSeries: new []{0.0f, 1.0f, -float.Epsilon, 1.1f}
         );
 
         private readonly KnownSeriesRandom _unboundedExclusiveRNG = new KnownSeriesRandom(
@@ -178,7 +178,8 @@ namespace ShaiRandom.UnitTests
             // Get proxies to call the functions we are testing
             var (unbounded, outerBound, zeroOuterBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest, _unboundedRNG);
 
-            // Check that the unbounded functions accepts only values within range [0.0, 1.0)
+            // Check that the unbounded functions accepts only values within range [0.0, 1.0).
+            // outer == 0.0 is a special case which always returns 0.0.
             Assert.Equal(zero, unbounded());
             Assert.Equal(maxValueLessThanOne, unbounded());
 
@@ -190,8 +191,9 @@ namespace ShaiRandom.UnitTests
 
             // Check that single bound function accepts only range [0.0, outer)
             Assert.Equal(zero, zeroOuterBound(value));           // Allowed range: [0.0, value)
-            Assert.Equal(value, outerBound(value + pointOne));   // Allowed range: [0.0, 0.1)
-            Assert.Equal(zero, zeroOuterBound(zero - pointOne)); // Allowed range: (-0.1, 0.0]
+            Assert.Equal(value, outerBound(value + pointOne));   // Allowed range: [0.0, value + 0.1)
+            Assert.Equal(zero, zeroOuterBound(zero));            // Allowed range: 0
+            Assert.Equal(zero, zeroOuterBound(zero - pointOne)); // Allowed range: (-0.1, value + 0.0]
 
             Assert.Throws<ArgumentException>(() => outerBound(zero - pointOne)); // Allowed range: (-0.1, 0.0]
             Assert.Throws<ArgumentException>(() => outerBound(value));           // Allowed range: [0.0, value)
@@ -206,6 +208,52 @@ namespace ShaiRandom.UnitTests
             Assert.Throws<ArgumentException>(() => dualBound(value - pointOne, value - pointTwo)); // Allowed Range: (value - 0.2, value - 0.1]
             Assert.Throws<ArgumentException>(() => dualBound(value + pointOne, value));            // Allowed Range: (value, value + 0.1]
             Assert.Throws<ArgumentException>(() => dualBound(value - pointOne, value));            // Allowed Range: [value - 0.1, value)
+        }
+
+        private void TestFloatingFunctionInclusiveBounds<T>(string nameOfFunctionToTest)
+            where T : IConvertible
+        {
+            // Duck-type the generic type so that we can add/subtract from it using the type's correct operators.
+            dynamic value = (T)Convert.ChangeType(ReturnedValue, typeof(T));
+
+            // Get the correct value types for type T for various constants we use
+            dynamic zero = (T)Convert.ChangeType(0.0, typeof(T));
+            T one = (T)Convert.ChangeType(1.0, typeof(T));
+            T pointOne = (T)Convert.ChangeType(0.1, typeof(T));
+            T pointTwo = (T)Convert.ChangeType(0.2, typeof(T));
+
+            // Get proxies to call the functions we are testing
+            var (unbounded, outerBound, zeroOuterBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest, _unboundedInclusiveRNG);
+
+            // Check that the unbounded functions accepts only values within range [0.0, 1.0)
+            Assert.Equal(zero, unbounded());
+            Assert.Equal(one, unbounded());
+
+            // NOTE: These two tests assume the state of the generator is still advances even on failure; that is the
+            // case when these were written, but there is no way to validate that in the unit test since the state
+            // is private.
+            Assert.Throws<ArgumentException>(() => unbounded());
+            Assert.Throws<ArgumentException>(() => unbounded());
+
+            // Check that single bound function accepts only range [0.0, outer].
+            // outer == 0.0 is a special case which always returns 0.0.
+            Assert.Equal(zero, zeroOuterBound(value));           // Allowed range: [0.0, value]
+            Assert.Equal(value, outerBound(value));              // Allowed range: [0.0, value]
+            Assert.Equal(zero, zeroOuterBound(zero));            // Allowed range: value
+            Assert.Equal(zero, zeroOuterBound(zero - pointOne)); // Allowed range: [-0.1, 0.0]
+
+            Assert.Throws<ArgumentException>(() => outerBound(zero - pointOne));  // Allowed range: [-0.1, 0.0]
+            Assert.Throws<ArgumentException>(() => outerBound(value - pointOne)); // Allowed range: [0.0, value - 0.1]
+
+
+            // Check that double bound function accepts only range [inner, outer], even if outer < inner.
+            // outer == inner is a special case which always returns inner.
+            Assert.Equal(value, dualBound(value - pointOne, value)); // Allowed range: [value - 0.1, value]
+            Assert.Equal(value, dualBound(value, value));            // Allowed range: value
+            Assert.Equal(value, dualBound(value, value - pointOne)); // Allowed range: [value - 0.1, value]
+
+            Assert.Throws<ArgumentException>(() => dualBound(value + pointOne, value + pointTwo)); // Allowed Range: [value + 0.1, value + 0.2]
+            Assert.Throws<ArgumentException>(() => dualBound(value - pointOne, value - pointTwo)); // Allowed Range: [value - 0.2, value - 0.1]
         }
         #endregion
 
@@ -232,13 +280,25 @@ namespace ShaiRandom.UnitTests
         public void NextDecimalBounds()
             => TestFloatingFunctionBounds(nameof(KnownSeriesRandom.NextDecimal), (decimal)s_doubleCloseTo1);
 
+        // [Fact]
+        // public void NextDecimalInclusiveBounds()
+        //     => TestFloatingFunctionInclusiveBounds(nameof(KnownSeriesRandom.NextInclusiveDecimal), (decimal)s_doubleCloseTo1);
+
         [Fact]
         public void NextDoubleBounds()
             => TestFloatingFunctionBounds(nameof(KnownSeriesRandom.NextDouble), s_doubleCloseTo1);
 
         [Fact]
+        public void NextDoubleInclusiveBounds()
+            => TestFloatingFunctionInclusiveBounds<double>(nameof(KnownSeriesRandom.NextInclusiveDouble));
+
+        [Fact]
         public void NextFloatBounds()
             => TestFloatingFunctionBounds(nameof(KnownSeriesRandom.NextFloat), s_floatCloseTo1);
+
+        [Fact]
+        public void NextFloatInclusiveBounds()
+            => TestFloatingFunctionInclusiveBounds<float>(nameof(KnownSeriesRandom.NextInclusiveFloat));
         #endregion
     }
 }
