@@ -34,9 +34,16 @@ namespace ShaiRandom.Wrappers
         public IEnhancedRandom Wrapped { get; set; }
 
         /// <summary>
-        /// The KnownSeriesRandom this builds up as this records calls to the various generation methods.
+        /// Creates a new KnownSeriesRandom that has the full sequence of archived results this has stored so far.
         /// </summary>
-        public KnownSeriesRandom Series { get; set; }
+        /// <remarks>
+        /// The result of this method does not share any state with this ArchivalWrapper, so if more method calls are archived, the KnownSeriesRandom won't know about them.
+        /// You can call this again at any point to get another snapshot of the archive, from start to present, and can serialize the KnownSeriesRandom for permanent safe-keeping.
+        /// </remarks>
+        public KnownSeriesRandom MakeArchivedSeries()
+        {
+            return new KnownSeriesRandom(_intSeries, _uintSeries, _doubleSeries, _boolSeries, _byteSeries, _floatSeries, _longSeries, _ulongSeries);
+        }
 
         /// <summary>
         /// Creates a ArchivalWrapper that is a copy of the given one.
@@ -90,8 +97,6 @@ namespace ShaiRandom.Wrappers
             _floatSeries = floatSeries == null ? new List<float>() : floatSeries.ToList();
             _boolSeries = boolSeries == null ? new List<bool>() : boolSeries.ToList();
             _byteSeries = byteSeries == null ? new List<byte>() : byteSeries.ToList();
-
-            Series = new KnownSeriesRandom(_intSeries, _uintSeries, _doubleSeries, boolSeries, _byteSeries, _floatSeries, _longSeries, _ulongSeries);
         }
 
         /// <summary>
@@ -467,14 +472,12 @@ namespace ShaiRandom.Wrappers
         }
 
         /// <inheritdoc />
-        public string StringSerialize() => "A" + Wrapped.StringSerialize().Substring(1) + Series.StringSerialize();
+        public string StringSerialize() => "A" + Wrapped.StringSerialize().Substring(1);
 
         /// <inheritdoc />
         public IEnhancedRandom StringDeserialize(string data)
         {
-            int breakPoint = data.IndexOf('`', 6) + 1;
-            Wrapped.StringDeserialize(data.Substring(0, breakPoint));
-            Series.StringDeserialize(data.Substring(breakPoint));
+            Wrapped.StringDeserialize(data);
             return this;
         }
     }
