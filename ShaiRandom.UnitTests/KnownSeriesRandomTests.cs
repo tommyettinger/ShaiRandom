@@ -139,68 +139,33 @@ namespace ShaiRandom.UnitTests
             // Get the correct 0-type for type T
             T zero = (T)Convert.ChangeType(0.0, typeof(T));
 
-            // Find the functions we're testing (via reflection)
-            var unbounded = typeof(KnownSeriesRandom).GetMethod(nameOfFunctionToTest, Array.Empty<Type>())
-                            ?? throw new Exception("Couldn't find unbounded generation method with the name given.");
-            var outerBound = typeof(KnownSeriesRandom).GetMethod(nameOfFunctionToTest, new []{typeof(T)})
-                             ?? throw new Exception("Couldn't generation method with the name given that takes a single (outer) bound.");
-            var dualBound = typeof(KnownSeriesRandom).GetMethod(nameOfFunctionToTest, new []{typeof(T), typeof(T)})
-                            ?? throw new Exception("Couldn't find generation method with the name given which takes both an inner and outer bound.");
+            // Get proxies to call the functions we are testing
+            var (unbounded, outerBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest);
 
             // Check that the unbounded functions allow everything within range [0, 1)
-            Assert.Equal(zero, unbounded.Invoke(_unboundedRNG, null)!);
-            Assert.Equal(maxValueLessThanOne, unbounded.Invoke(_unboundedRNG, null)!);
+            Assert.Equal(zero, unbounded());
+            Assert.Equal(maxValueLessThanOne, unbounded());
 
-            // TODO: rest below UnboundedFloatingFunction
-        }
+            // Check that bounded generation functions treat inner bounds as inclusive
+            Assert.Equal(value, outerBound(value + 0.1));
+            Assert.Equal(value, dualBound(value, value + 0.1));
 
-        // TODO: Combine
-        private static void TestUnboundedFloatingFunction<T>(Func<T> unboundedGenFunc, T maxValueLessThanOne)
-            where T : IConvertible
-        {
-            T zero = (T)Convert.ChangeType(0.0, typeof(T));
-            Assert.Equal(zero, unboundedGenFunc());
-            Assert.Equal(maxValueLessThanOne, unboundedGenFunc());
-        }
+            Assert.Throws<ArgumentException>(() => dualBound(value + 0.1, value + 0.2));
 
-        private static void TestLowerBoundFloatingFunction<T>(Func<T, T> upperBoundFunc, Func<T, T, T> dualBoundFunc)
-            where T : IConvertible
-        {
-            // Duck-type the generic type so that we can add/subtract from it using the type's correct operators.
-            dynamic value = (T)Convert.ChangeType(ReturnedValue, typeof(T));
+            // Check that behavior is appropriate when the inner and outer bounds are crossed on bounded generation
+            // functions (ie. outer <= inner)
+            Assert.Equal(value, dualBound(value, value)); // Allowed range: value
+            Assert.Equal(value, dualBound(value, value - 0.1)); // Allowed range: (value - 0.1, value]
 
-            Assert.Equal(value, upperBoundFunc(value + 0.1));
-            Assert.Equal(value, dualBoundFunc(value, value + 0.1));
+            Assert.Throws<ArgumentException>(() => dualBound(value - 0.1, value - 0.2));
+            Assert.Throws<ArgumentException>(() => dualBound(value + 0.1, value));
 
-            Assert.Throws<ArgumentException>(() => dualBoundFunc(value + 0.1, value + 0.2));
-        }
+            // Check that bounded generation functions treat outer bounds as exclusive
+            Assert.Equal(value, outerBound(value + 0.1));
+            Assert.Equal(value, dualBound(value, value + 0.1));
 
-        private static void TestCrossedBoundFloatingFunction<T>(Func<T, T, T> generatorFunc)
-            where T : IConvertible
-        {
-            // Duck-type the generic type so that we can add/subtract from it using the type's correct operators.
-            dynamic value = (T)Convert.ChangeType(ReturnedValue, typeof(T));
-
-            // Allowed range: value
-            Assert.Equal(value, generatorFunc(value, value));
-            // Allowed range: Allowed range: (value - 0.1, value]
-            Assert.Equal(value, generatorFunc(value, value - 0.1));
-
-            Assert.Throws<ArgumentException>(() => generatorFunc(value - 0.1, value - 0.2));
-            Assert.Throws<ArgumentException>(() => generatorFunc(value + 0.1, value));
-        }
-
-        private static void TestUpperBoundFloatingFunction<T>(Func<T, T> upperBoundFunc, Func<T, T, T> dualBoundFunc)
-            where T : IConvertible
-        {
-            // Duck-type the generic type so that we can add/subtract from it using the type's correct operators.
-            dynamic value = (T)Convert.ChangeType(ReturnedValue, typeof(T));
-
-            Assert.Equal(value, upperBoundFunc(value + 0.1));
-            Assert.Equal(value, dualBoundFunc(value, value + 0.1));
-
-            Assert.Throws<ArgumentException>(() => upperBoundFunc(value));
-            Assert.Throws<ArgumentException>(() => dualBoundFunc(value - 0.1, value));
+            Assert.Throws<ArgumentException>(() => outerBound(value));
+            Assert.Throws<ArgumentException>(() => dualBound(value - 0.1, value));
         }
         #endregion
 
@@ -208,23 +173,9 @@ namespace ShaiRandom.UnitTests
         public void NextIntBounds()
             => TestIntFunctionBounds<int>(nameof(KnownSeriesRandom.NextInt));
 
-
-        #region Test Double
-
         [Fact]
-        public void NextDoubleUnbounded()
-            => TestUnboundedFloatingFunction(_unboundedRNG.NextDouble, 1 - s_doubleCloseTo1);
+        public void NextDoubleBounds()
+            => TestFloatingFunctionBounds<double>(nameof(KnownSeriesRandom.NextDouble), 1 - s_doubleCloseTo1);
 
-        [Fact]
-        public void NextDoubleLowerBound()
-            => TestLowerBoundFloatingFunction<double>(_boundedRNG.NextDouble, _boundedRNG.NextDouble);
-
-        [Fact]
-        public void NextDoubleCrossedBounds() => TestCrossedBoundFloatingFunction<double>(_boundedRNG.NextDouble);
-
-        [Fact]
-        public void NextDoubleUpperBound()
-            => TestUpperBoundFloatingFunction<double>(_boundedRNG.NextDouble, _boundedRNG.NextDouble);
-        #endregion
     }
 }
