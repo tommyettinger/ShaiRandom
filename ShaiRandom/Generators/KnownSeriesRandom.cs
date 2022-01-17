@@ -161,8 +161,13 @@ namespace ShaiRandom.Generators
             T value = ReturnValueFrom(series, ref seriesIndex);
             var (min, max) = GetMinAndMax(innerValue, outerValue);
 
-            if (min.CompareTo(max) == 0 && value.CompareTo(min) != 0)
-                throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+            if (min.CompareTo(max) == 0)
+            {
+                if (value.CompareTo(min) != 0)
+                    throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+
+                return value; // If bounds are the same, the bound is returned.
+            }
 
             if (value.CompareTo(min) <= 0)
                 throw new ArgumentException("Value returned is below the bounds of the generator function call.");

@@ -283,9 +283,6 @@ namespace ShaiRandom.UnitTests
 
             // Check that single bound function accepts only range (0.0, outer).
             // outer == 0.0 is a special case which always returns 0.0.
-            // TODO: This outer == 0.0 behavior is not documented; either the documentation should be updated to reflect
-            // that this is the expected behavior, or the documentation should reflect it's undefined behavior and the
-            // test case for it should be removed.
             Assert.Equal(value, outerBound(value + pointOne));   // Allowed range: (0.0, value + 0.1)
             Assert.Equal(zero, zeroOuterBound(zero));            // Allowed range: 0
 
@@ -296,7 +293,6 @@ namespace ShaiRandom.UnitTests
 
             // Check that double bound function accepts only range (inner, outer), even if outer < inner.
             // outer == inner is a special case which always returns inner.
-            // TODO: Ditto above on the inner == outer behavior
             Assert.Equal(value, dualBound(value - pointOne, value + pointOne)); // Allowed range: (value - 0.1, value + 0.1)
             Assert.Equal(value, dualBound(value, value));                       // Allowed range: value
 
