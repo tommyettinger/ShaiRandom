@@ -44,9 +44,18 @@ namespace ShaiRandom.UnitTests
             ulongSeries: new []{ulong.MinValue, ulong.MaxValue}
         );
 
+        private readonly KnownSeriesRandom _unboundedInclusiveRNG = new KnownSeriesRandom(
+            doubleSeries: new []{0.0, 1.0},
+            floatSeries: new []{0.0f, 1.0f}
+        );
+
+        private readonly KnownSeriesRandom _unboundedExclusiveRNG = new KnownSeriesRandom(
+            doubleSeries: new []{double.Epsilon, s_doubleCloseTo1},
+            floatSeries: new []{float.Epsilon, s_floatCloseTo1}
+        );
         #region Template Tests
 
-        private (Func<T> unbounded, Func<T, T> outerBound, Func<T, T> zeroOuterBound, Func<T, T, T> dualBound) GetGenerationFunctions<T>(string name)
+        private (Func<T> unbounded, Func<T, T> outerBound, Func<T, T> zeroOuterBound, Func<T, T, T> dualBound) GetGenerationFunctions<T>(string name, KnownSeriesRandom unboundedRNG)
             where T : notnull
         {
             // Find info for the functions
@@ -62,13 +71,12 @@ namespace ShaiRandom.UnitTests
             {
                 try
                 {
-                    return (T)unboundedInfo.Invoke(_unboundedRNG, null)!;
+                    return (T)unboundedInfo.Invoke(unboundedRNG, null)!;
                 }
                 catch (TargetInvocationException ex)
                 {
                     throw ex.InnerException!;
                 }
-
             }
 
             T OuterBound(T outer)
@@ -118,39 +126,42 @@ namespace ShaiRandom.UnitTests
             dynamic value = (T)Convert.ChangeType(ReturnedValue, typeof(T));
 
             // Get proxies to call the functions we are testing
-            var (unbounded, outerBound, zeroOuterBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest);
+            var (unbounded, outerBound, zeroOuterBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest, _unboundedRNG);
 
             // Find min/max for unbounded functions, which should be the min/max values for the type itself
             T minValue = (T)typeof(T).GetField("MinValue")!.GetValue(null)!;
             T maxValue = (T)typeof(T).GetField("MaxValue")!.GetValue(null)!;
-            T zero = (T)Convert.ChangeType(0, typeof(T));
+            dynamic zero = (T)Convert.ChangeType(0, typeof(T));
 
             // Check that unbounded generation function allows anything in type's range
             Assert.Equal(minValue, unbounded());
             Assert.Equal(maxValue,unbounded());
 
+            // Check that single bound function accepts only range [0.0, outer)
+            Assert.Equal(zero, zeroOuterBound(value));  // Allowed range: [0, value); returns 0
+            Assert.Equal(value, outerBound(value + 1)); // Allowed range: [0, value + 1); returns value
+            // Depending on if T is signed or unsigned, either this will underflow and wrap, or it will create -1.
+            // We only need to test for signed types, since <0 isn't possible for unsigned.
+            dynamic negative = zero - 1;
+            if (negative < 0)
+            {
+                Assert.Equal(zero, zeroOuterBound(zero - 1));                        // Allowed range: (-1, 0]
+                Assert.Throws<ArgumentException>(() => outerBound(zero - 1)); // Allowed range: (-1, 0]
+            }
 
-            // Check that bounded generation functions treat inner bounds as inclusive
-            Assert.Equal(zero, zeroOuterBound(value));
-            Assert.Equal(value, dualBound(value, value + 1));
+            Assert.Throws<ArgumentException>(() => outerBound(value)); // Allowed range: [0, value)
 
-            Assert.Throws<ArgumentException>(() => dualBound(value + 1, value + 2));
+            // Check that double bound function accepts only range [inner, outer), even if outer < inner.
+            // outer == inner is a special case which always returns inner.
+            Assert.Equal(value, dualBound(value, value + 1)); // Allowed range: [value, value + 1)
+            Assert.Equal(value, dualBound(value, value));     // Allowed range: value
+            Assert.Equal(value, dualBound(value, value - 1)); // Allowed range: (value - 1, value]
+            Assert.Equal(value, dualBound(value, value - 2)); // Allowed range: (value - 2, value]
 
-            // Check that behavior is appropriate when the inner and outer bounds are crossed on bounded generation
-            // functions (ie. outer <= inner)
-            Assert.Equal(value, dualBound(value, value)); // Allowed range: value
-            Assert.Equal(value, dualBound(value, value - 1)); // Allowed range: value
-            Assert.Equal(value, dualBound(value, value - 2)); // Allowed range: [value - 1, value]
-
-            Assert.Throws<ArgumentException>(() => dualBound(value - 1, value - 2));
-            Assert.Throws<ArgumentException>(() => dualBound(value + 1, value));
-
-            // Check that bounded generation functions treat outer bounds as exclusive
-            Assert.Equal(value, outerBound(value + 1));
-            Assert.Equal(value, dualBound(value, value + 1));
-
-            Assert.Throws<ArgumentException>(() => outerBound(value));
-            Assert.Throws<ArgumentException>(() => dualBound(value - 1, value));
+            Assert.Throws<ArgumentException>(() => dualBound(value + 1, value + 2)); // Allowed range: [value + 1, value + 2)
+            Assert.Throws<ArgumentException>(() => dualBound(value - 1, value - 2)); // Allowed range: (value - 2, value - 1]
+            Assert.Throws<ArgumentException>(() => dualBound(value + 1, value));     // Allowed range: (value, value + 1]
+            Assert.Throws<ArgumentException>(() => dualBound(value - 1, value));     // Allowed range: [value - 1, value)
         }
 
         private void TestFloatingFunctionBounds<T>(string nameOfFunctionToTest, T maxValueLessThanOne)
@@ -165,7 +176,7 @@ namespace ShaiRandom.UnitTests
             T pointTwo = (T)Convert.ChangeType(0.2, typeof(T));
 
             // Get proxies to call the functions we are testing
-            var (unbounded, outerBound, zeroOuterBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest);
+            var (unbounded, outerBound, zeroOuterBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest, _unboundedRNG);
 
             // Check that the unbounded functions allow everything within range [0, 1)
             Assert.Equal(zero, unbounded());
