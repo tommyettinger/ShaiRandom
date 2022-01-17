@@ -24,6 +24,16 @@ namespace ShaiRandom.UnitTests
             ulongSeries: new []{(ulong)ReturnedValue}
         );
 
+        private readonly KnownSeriesRandom _zeroRNG = new KnownSeriesRandom(
+            new []{0},
+            new []{(uint)0},
+            new []{(double)0},
+            byteSeries: new []{(byte)0},
+            floatSeries: new []{(float)0},
+            longSeries: new []{(long)0},
+            ulongSeries: new []{(ulong)0}
+        );
+
         private readonly KnownSeriesRandom _unboundedRNG = new KnownSeriesRandom(
             new []{int.MinValue, int.MaxValue},
             new []{uint.MinValue, uint.MaxValue},
@@ -36,7 +46,7 @@ namespace ShaiRandom.UnitTests
 
         #region Template Tests
 
-        private (Func<T> unbounded, Func<T, T> outerBound, Func<T, T, T> dualBound) GetGenerationFunctions<T>(string name)
+        private (Func<T> unbounded, Func<T, T> outerBound, Func<T, T> zeroOuterBound, Func<T, T, T> dualBound) GetGenerationFunctions<T>(string name)
             where T : notnull
         {
             // Find info for the functions
@@ -45,7 +55,7 @@ namespace ShaiRandom.UnitTests
             var outerBoundInfo = typeof(KnownSeriesRandom).GetMethod(name, new []{typeof(T)})
                              ?? throw new Exception("Couldn't generation method with the name given that takes a single (outer) bound.");
             var dualBoundInfo = typeof(KnownSeriesRandom).GetMethod(name, new []{typeof(T), typeof(T)})
-                            ?? throw new Exception("Couldn't find generation method with the name given which takes both an inner and outer bound.");
+                                ?? throw new Exception("Couldn't find generation method with the name given which takes both an inner and outer bound.");
 
             // Create convenient Func wrappers from which we can call them.
             T Unbounded()
@@ -73,6 +83,18 @@ namespace ShaiRandom.UnitTests
                 }
             }
 
+            T ZeroOuterBound(T outer)
+            {
+                try
+                {
+                    return (T)outerBoundInfo.Invoke(_zeroRNG, new object[] { outer })!;
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException!;
+                }
+            }
+
             T DualBound(T inner, T outer)
             {
                 try
@@ -86,7 +108,7 @@ namespace ShaiRandom.UnitTests
             }
 
             // Return functions
-            return (Unbounded, OuterBound, DualBound);
+            return (Unbounded, OuterBound, ZeroOuterBound, DualBound);
         }
 
         private void TestIntFunctionBounds<T>(string nameOfFunctionToTest)
@@ -96,11 +118,12 @@ namespace ShaiRandom.UnitTests
             dynamic value = (T)Convert.ChangeType(ReturnedValue, typeof(T));
 
             // Get proxies to call the functions we are testing
-            var (unbounded, outerBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest);
+            var (unbounded, outerBound, zeroOuterBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest);
 
             // Find min/max for unbounded functions, which should be the min/max values for the type itself
             T minValue = (T)typeof(T).GetField("MinValue")!.GetValue(null)!;
             T maxValue = (T)typeof(T).GetField("MaxValue")!.GetValue(null)!;
+            T zero = (T)Convert.ChangeType(0, typeof(T));
 
             // Check that unbounded generation function allows anything in type's range
             Assert.Equal(minValue, unbounded());
@@ -108,7 +131,7 @@ namespace ShaiRandom.UnitTests
 
 
             // Check that bounded generation functions treat inner bounds as inclusive
-            Assert.Equal(value, outerBound(value + 1)); // TODO: Fix; currently duplicate of outerBound check below
+            Assert.Equal(zero, zeroOuterBound(value));
             Assert.Equal(value, dualBound(value, value + 1));
 
             Assert.Throws<ArgumentException>(() => dualBound(value + 1, value + 2));
@@ -142,14 +165,14 @@ namespace ShaiRandom.UnitTests
             T pointTwo = (T)Convert.ChangeType(0.2, typeof(T));
 
             // Get proxies to call the functions we are testing
-            var (unbounded, outerBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest);
+            var (unbounded, outerBound, zeroOuterBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest);
 
             // Check that the unbounded functions allow everything within range [0, 1)
             Assert.Equal(zero, unbounded());
             Assert.Equal(maxValueLessThanOne, unbounded());
 
             // Check that bounded generation functions treat inner bounds as inclusive
-            Assert.Equal(value, outerBound(value + pointOne));
+            Assert.Equal(zero, zeroOuterBound(value));
             Assert.Equal(value, dualBound(value, value + pointOne));
 
             Assert.Throws<ArgumentException>(() => dualBound(value + pointOne, value + pointTwo));
