@@ -37,9 +37,9 @@ namespace ShaiRandom.UnitTests
         private readonly KnownSeriesRandom _unboundedRNG = new KnownSeriesRandom(
             new []{int.MinValue, int.MaxValue},
             new []{uint.MinValue, uint.MaxValue},
-            new []{0.0, s_doubleCloseTo1},
+            new []{0.0, s_doubleCloseTo1, -double.Epsilon, 1.0},
             byteSeries: new []{byte.MinValue, byte.MaxValue},
-            floatSeries: new []{0.0f, s_floatCloseTo1},
+            floatSeries: new []{0.0f, s_floatCloseTo1, -float.Epsilon, 1.0f},
             longSeries: new []{long.MinValue, long.MaxValue},
             ulongSeries: new []{ulong.MinValue, ulong.MaxValue}
         );
@@ -137,7 +137,7 @@ namespace ShaiRandom.UnitTests
             Assert.Equal(minValue, unbounded());
             Assert.Equal(maxValue,unbounded());
 
-            // Check that single bound function accepts only range [0.0, outer)
+            // Check that single bound function accepts only range [0, outer)
             Assert.Equal(zero, zeroOuterBound(value));  // Allowed range: [0, value); returns 0
             Assert.Equal(value, outerBound(value + 1)); // Allowed range: [0, value + 1); returns value
             // Depending on if T is signed or unsigned, either this will underflow and wrap, or it will create -1.
@@ -171,37 +171,41 @@ namespace ShaiRandom.UnitTests
             dynamic value = (T)Convert.ChangeType(ReturnedValue, typeof(T));
 
             // Get the correct value types for type T for various constants we use
-            T zero = (T)Convert.ChangeType(0.0, typeof(T));
+            dynamic zero = (T)Convert.ChangeType(0.0, typeof(T));
             T pointOne = (T)Convert.ChangeType(0.1, typeof(T));
             T pointTwo = (T)Convert.ChangeType(0.2, typeof(T));
 
             // Get proxies to call the functions we are testing
             var (unbounded, outerBound, zeroOuterBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest, _unboundedRNG);
 
-            // Check that the unbounded functions allow everything within range [0, 1)
+            // Check that the unbounded functions accepts only values within range [0.0, 1.0)
             Assert.Equal(zero, unbounded());
             Assert.Equal(maxValueLessThanOne, unbounded());
 
-            // Check that bounded generation functions treat inner bounds as inclusive
-            Assert.Equal(zero, zeroOuterBound(value));
-            Assert.Equal(value, dualBound(value, value + pointOne));
+            // NOTE: These two tests assume the state of the generator is still advances even on failure; that is the
+            // case when these were written, but there is no way to validate that in the unit test since the state
+            // is private.
+            Assert.Throws<ArgumentException>(() => unbounded());
+            Assert.Throws<ArgumentException>(() => unbounded());
 
-            Assert.Throws<ArgumentException>(() => dualBound(value + pointOne, value + pointTwo));
+            // Check that single bound function accepts only range [0.0, outer)
+            Assert.Equal(zero, zeroOuterBound(value));           // Allowed range: [0.0, value)
+            Assert.Equal(value, outerBound(value + pointOne));   // Allowed range: [0.0, 0.1)
+            Assert.Equal(zero, zeroOuterBound(zero - pointOne)); // Allowed range: (-0.1, 0.0]
 
-            // Check that behavior is appropriate when the inner and outer bounds are crossed on bounded generation
-            // functions (ie. outer <= inner)
-            Assert.Equal(value, dualBound(value, value)); // Allowed range: value
+            Assert.Throws<ArgumentException>(() => outerBound(zero - pointOne)); // Allowed range: (-0.1, 0.0]
+            Assert.Throws<ArgumentException>(() => outerBound(value));           // Allowed range: [0.0, value)
+
+            // Check that double bound function accepts only range [inner, outer), even if outer < inner.
+            // outer == inner is a special case which always returns inner.
+            Assert.Equal(value, dualBound(value, value + pointOne)); // Allowed range: [value, value + 0.1)
+            Assert.Equal(value, dualBound(value, value));            // Allowed range: value
             Assert.Equal(value, dualBound(value, value - pointOne)); // Allowed range: (value - 0.1, value]
 
-            Assert.Throws<ArgumentException>(() => dualBound(value - pointOne, value - pointTwo));
-            Assert.Throws<ArgumentException>(() => dualBound(value + pointOne, value));
-
-            // Check that bounded generation functions treat outer bounds as exclusive
-            Assert.Equal(value, outerBound(value + pointOne));
-            Assert.Equal(value, dualBound(value, value + pointOne));
-
-            Assert.Throws<ArgumentException>(() => outerBound(value));
-            Assert.Throws<ArgumentException>(() => dualBound(value - pointOne, value));
+            Assert.Throws<ArgumentException>(() => dualBound(value + pointOne, value + pointTwo)); // Allowed Range: [value + 0.1, value + 0.2)
+            Assert.Throws<ArgumentException>(() => dualBound(value - pointOne, value - pointTwo)); // Allowed Range: (value - 0.2, value - 0.1]
+            Assert.Throws<ArgumentException>(() => dualBound(value + pointOne, value));            // Allowed Range: (value, value + 0.1]
+            Assert.Throws<ArgumentException>(() => dualBound(value - pointOne, value));            // Allowed Range: [value - 0.1, value)
         }
         #endregion
 
