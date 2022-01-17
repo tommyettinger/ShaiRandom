@@ -239,7 +239,7 @@ namespace ShaiRandom.Generators
         public int NextInt(int outerBound)
         {
             outerBound = (int)(outerBound * ((long)NextULong() & 0xFFFFFFFFL) >> 32);
-            return outerBound + (outerBound >> 31);
+            return outerBound - (outerBound >> 31);
         }
 
         /// <inheritdoc />
