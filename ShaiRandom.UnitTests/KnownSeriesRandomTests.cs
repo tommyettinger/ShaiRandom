@@ -67,6 +67,9 @@ namespace ShaiRandom.UnitTests
             Assert.Equal(value, generatorFunc(value, value - 1));
             // Allowed range: [value - 1, value]
             Assert.Equal(value, generatorFunc(value, value - 2));
+
+            Assert.Throws<ArgumentException>(() => generatorFunc(value - 1, value - 2));
+            Assert.Throws<ArgumentException>(() => generatorFunc(value + 1, value));
         }
 
         private static void TestUpperBoundIntFunction<T>(Func<T, T> upperBoundFunc, Func<T, T, T> dualBoundFunc)
@@ -112,6 +115,9 @@ namespace ShaiRandom.UnitTests
             Assert.Equal(value, generatorFunc(value, value));
             // Allowed range: Allowed range: (value - 0.1, value]
             Assert.Equal(value, generatorFunc(value, value - 0.1));
+
+            Assert.Throws<ArgumentException>(() => generatorFunc(value - 0.1, value - 0.2));
+            Assert.Throws<ArgumentException>(() => generatorFunc(value + 0.1, value));
         }
 
         private static void TestUpperBoundFloatingFunction<T>(Func<T, T> upperBoundFunc, Func<T, T, T> dualBoundFunc)
