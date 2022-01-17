@@ -10,23 +10,28 @@ namespace ShaiRandom.UnitTests
         private static FourWheelRandom fwr = new FourWheelRandom(1);
         private static void InRange(int checking, int lower, int upper)
         {
-
+            if (checking < lower || checking > upper)
+                Console.WriteLine(checking + " was outside of bounds");
         }
         private static void InRange(uint checking, uint lower, uint upper)
         {
-
+            if (checking < lower || checking > upper)
+                Console.WriteLine(checking + " was outside of bounds");
         }
         private static void InRange(long checking, long lower, long upper)
         {
-
+            if (checking < lower || checking > upper)
+                Console.WriteLine(checking + " was outside of bounds");
         }
         private static void InRange(ulong checking, ulong lower, ulong upper)
         {
-
+            if (checking < lower || checking > upper)
+                Console.WriteLine(checking + " was outside of bounds");
         }
         private static void InRange(double checking, double lower, double upper)
         {
-
+            if (checking < lower || checking > upper)
+                Console.WriteLine(checking + " was outside of bounds");
         }
         private static void InRange(float checking, float lower, float upper)
         {
@@ -53,9 +58,12 @@ namespace ShaiRandom.UnitTests
             Console.WriteLine();
             Console.WriteLine(fsum);
 
+            Console.WriteLine("Starting InRange checks:");
             fwr.Seed(1);
             for (int i = 0; i < 100; i++)
             {
+                InRange(fwr.NextInt(2), 0, 1);
+                InRange(fwr.NextInt(-2), -1, 0);
                 InRange(fwr.NextInt(-100, 101), -100, 100);
                 InRange(fwr.NextInt(100, -101), -100, 100);
                 InRange(fwr.NextUInt(100U, 301U), 100U, 300U);
