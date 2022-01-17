@@ -34,57 +34,45 @@ namespace ShaiRandom.UnitTests
         );
 
         #region Template Tests
-        private static void TestUnboundedIntFunction<T>(Func<T> unboundedGenFunc)
+
+        private static void TestIntFunctionBounds<T>(Func<T> unbounded, Func<T, T> outerBound, Func<T, T, T> dualBound)
+            where T : IConvertible
         {
+            // Duck-type the generic type so that we can add/subtract from it using the type's correct operators.
+            dynamic value = (T)Convert.ChangeType(ReturnedValue, typeof(T));
+
+            // Find min/max for unbounded functions, which should be the min/max values for the type itself
             T minValue = (T)typeof(T).GetField("MinValue")!.GetValue(null)!;
             T maxValue = (T)typeof(T).GetField("MaxValue")!.GetValue(null)!;
 
-            Assert.Equal(minValue, unboundedGenFunc());
-            Assert.Equal(maxValue,unboundedGenFunc());
+            // Check that unbounded generation function allows anything in type's range
+            Assert.Equal(minValue, unbounded());
+            Assert.Equal(maxValue,unbounded());
+
+            // Check that bounded generation functions treat inner bounds as inclusive
+            Assert.Equal(value, outerBound(value + 1)); // TODO: Fix; currently duplicate of outerBound check below
+            Assert.Equal(value, dualBound(value, value + 1));
+
+            Assert.Throws<ArgumentException>(() => dualBound(value + 1, value + 2));
+
+            // Check that behavior is appropriate when the inner and outer bounds are crossed on bounded generation
+            // functions (ie. outer <= inner)
+            Assert.Equal(value, dualBound(value, value)); // Allowed range: value
+            Assert.Equal(value, dualBound(value, value - 1)); // Allowed range: value
+            Assert.Equal(value, dualBound(value, value - 2)); // Allowed range: [value - 1, value]
+
+            Assert.Throws<ArgumentException>(() => dualBound(value - 1, value - 2));
+            Assert.Throws<ArgumentException>(() => dualBound(value + 1, value));
+
+            // Check that bounded generation functions treat outer bounds as exclusive
+            Assert.Equal(value, outerBound(value + 1));
+            Assert.Equal(value, dualBound(value, value + 1));
+
+            Assert.Throws<ArgumentException>(() => outerBound(value));
+            Assert.Throws<ArgumentException>(() => dualBound(value - 1, value));
         }
 
-        private static void TestLowerBoundIntFunction<T>(Func<T, T> upperBoundFunc, Func<T, T, T> dualBoundFunc)
-            where T : IConvertible
-        {
-            // Duck-type the generic type so that we can add/subtract from it using the type's correct operators.
-            dynamic value = (T)Convert.ChangeType(ReturnedValue, typeof(T));
-
-            Assert.Equal(value, upperBoundFunc(value + 1));
-            Assert.Equal(value, dualBoundFunc(value, value + 1));
-
-            Assert.Throws<ArgumentException>(() => dualBoundFunc(value + 1, value + 2));
-        }
-
-        private static void TestCrossedBoundIntFunction<T>(Func<T, T, T> generatorFunc)
-            where T : IConvertible
-        {
-            // Duck-type the generic type so that we can add/subtract from it using the type's correct operators.
-            dynamic value = (T)Convert.ChangeType(ReturnedValue, typeof(T));
-
-            // Allowed range: value
-            Assert.Equal(value, generatorFunc(value, value));
-            // Allowed range: value
-            Assert.Equal(value, generatorFunc(value, value - 1));
-            // Allowed range: [value - 1, value]
-            Assert.Equal(value, generatorFunc(value, value - 2));
-
-            Assert.Throws<ArgumentException>(() => generatorFunc(value - 1, value - 2));
-            Assert.Throws<ArgumentException>(() => generatorFunc(value + 1, value));
-        }
-
-        private static void TestUpperBoundIntFunction<T>(Func<T, T> upperBoundFunc, Func<T, T, T> dualBoundFunc)
-            where T : IConvertible
-        {
-            // Duck-type the generic type so that we can add/subtract from it using the type's correct operators.
-            dynamic value = (T)Convert.ChangeType(ReturnedValue, typeof(T));
-
-            Assert.Equal(value, upperBoundFunc(value + 1));
-            Assert.Equal(value, dualBoundFunc(value, value + 1));
-
-            Assert.Throws<ArgumentException>(() => upperBoundFunc(value));
-            Assert.Throws<ArgumentException>(() => dualBoundFunc(value - 1, value));
-        }
-
+        // TODO: Combine
         private static void TestUnboundedFloatingFunction<T>(Func<T> unboundedGenFunc, T maxValueLessThanOne)
             where T : IConvertible
         {
@@ -134,21 +122,10 @@ namespace ShaiRandom.UnitTests
         }
         #endregion
 
-        #region Test Int
-
         [Fact]
-        public void NextIntUnbounded() => TestUnboundedIntFunction(_unboundedRNG.NextInt);
+        public void NextIntBounds()
+            => TestIntFunctionBounds(_unboundedRNG.NextInt, _boundedRNG.NextInt, _boundedRNG.NextInt);
 
-        [Fact]
-        public void NextIntLowerBound() => TestLowerBoundIntFunction<int>(_boundedRNG.NextInt, _boundedRNG.NextInt);
-
-        [Fact]
-        public void NextIntCrossedBounds() => TestCrossedBoundIntFunction<int>(_boundedRNG.NextInt);
-
-        [Fact]
-        public void NextIntUpperBound() => TestUpperBoundIntFunction<int>(_boundedRNG.NextInt, _boundedRNG.NextInt);
-
-        #endregion
 
         #region Test Double
 
