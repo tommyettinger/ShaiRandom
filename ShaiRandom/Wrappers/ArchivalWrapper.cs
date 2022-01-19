@@ -102,7 +102,7 @@ namespace ShaiRandom.Wrappers
 
         /// <summary>
         /// This generator has the same number of states as the wrapped generator; the recorded values are not considered state.
-        /// They can be considered state for the <see cref="Series"/> this contains.
+        /// They can be considered state for the <see cref="KnownSeriesRandom"/> this creates.
         /// </summary>
         public int StateCount => Wrapped.StateCount;
 
