@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace ShaiRandom.Generators
 {
@@ -163,10 +164,10 @@ namespace ShaiRandom.Generators
         public override string StringSerialize() => $"#DisR`{State:X}`";
 
         /// <inheritdoc />
-        public override IEnhancedRandom StringDeserialize(string data)
+        public override IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
             int idx = data.IndexOf('`');
-            State = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
+            State = ulong.Parse(data.Slice(idx + 1, -1 - idx + data[(idx + 1)..].IndexOf('`')), NumberStyles.HexNumber);
             return this;
         }
     }

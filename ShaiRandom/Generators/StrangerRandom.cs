@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace ShaiRandom.Generators
 {
@@ -291,13 +292,13 @@ namespace ShaiRandom.Generators
         public override string StringSerialize() => $"#StrR`{StateA:X}~{StateB:X}~{StateC:X}~{StateD:X}`";
 
         /// <inheritdoc />
-        public override IEnhancedRandom StringDeserialize(string data)
+        public override IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
             int idx = data.IndexOf('`');
-            StateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            StateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            StateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            StateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
+            StateA = ulong.Parse(data.Slice(idx + 1, -1 - idx + (idx = data[(idx + 1)..].IndexOf('~'))), NumberStyles.HexNumber);
+            StateB = ulong.Parse(data.Slice(idx + 1, -1 - idx + (idx = data[(idx + 1)..].IndexOf('~'))), NumberStyles.HexNumber);
+            StateC = ulong.Parse(data.Slice(idx + 1, -1 - idx + (idx = data[(idx + 1)..].IndexOf('~'))), NumberStyles.HexNumber);
+            StateD = ulong.Parse(data.Slice(idx + 1, -1 - idx + (      data[(idx + 1)..].IndexOf('`'))), NumberStyles.HexNumber);
             return this;
         }
     }

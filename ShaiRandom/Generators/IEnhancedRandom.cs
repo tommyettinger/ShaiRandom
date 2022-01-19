@@ -69,13 +69,13 @@ namespace ShaiRandom.Generators
         string StringSerialize();
 
         /// <summary>
-        /// Given a string produced by <see cref="StringSerialize"/>, if the specified type is compatible,
+        /// Given data from a string produced by <see cref="StringSerialize"/>, if the specified type is compatible,
         /// then this method sets the state of this IEnhancedRandom to the specified stored state.
         /// This is an optional operation for classes that only implement IEnhancedRandom; AbstractRandom requires an implementation.
         /// </summary>
-        /// <param name="data">A string produced by StringSerialize.</param>
+        /// <param name="data">Data from a string produced by StringSerialize.</param>
         /// <returns>This IEnhancedRandom, after modifications.</returns>
-        IEnhancedRandom StringDeserialize(string data);
+        IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data);
 
         /// <summary>
         /// Gets a selected state value from this AbstractRandom, by index.
