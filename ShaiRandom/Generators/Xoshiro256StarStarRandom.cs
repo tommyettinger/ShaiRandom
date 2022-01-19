@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-
-namespace ShaiRandom.Generators
+﻿namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 4 states, implementing a known-rather-good algorithm that is 4-dimensionally equidistributed.

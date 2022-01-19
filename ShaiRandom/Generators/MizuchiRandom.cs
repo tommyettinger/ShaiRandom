@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-
-namespace ShaiRandom.Generators
+﻿namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 2 states, more here later.

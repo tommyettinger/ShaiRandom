@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-
-namespace ShaiRandom.Generators
+﻿namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 1 state that only returns each ulong result exactly once over its period.

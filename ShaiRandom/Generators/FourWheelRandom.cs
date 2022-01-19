@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-
-namespace ShaiRandom.Generators
+﻿namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 4 states, built around a "chaotic" construction with no guarantee of a minimum period, but likely to be a very long one.
