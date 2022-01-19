@@ -472,12 +472,32 @@ namespace ShaiRandom.Wrappers
         }
 
         /// <inheritdoc />
-        public string StringSerialize() => "A" + Wrapped.StringSerialize().Substring(1);
+        public string StringSerialize() => "A" + Wrapped.StringSerialize().Substring(1) + MakeArchivedSeries().StringSerialize();
 
         /// <inheritdoc />
         public IEnhancedRandom StringDeserialize(string data)
         {
-            Wrapped.StringDeserialize(data);
+            int breakPoint = data.IndexOf('`', 6) + 1;
+            Wrapped.StringDeserialize(data.Substring(0, breakPoint));
+            KnownSeriesRandom ksr = new KnownSeriesRandom();
+            ksr.StringDeserialize(data.Substring(breakPoint));
+            _boolSeries.Clear();
+            _byteSeries.Clear();
+            _doubleSeries.Clear();
+            _floatSeries.Clear();
+            _intSeries.Clear();
+            _uintSeries.Clear();
+            _longSeries.Clear();
+            _ulongSeries.Clear();
+
+            _boolSeries.AddRange(ksr._boolSeries);
+            _byteSeries.AddRange(ksr._byteSeries);
+            _doubleSeries.AddRange(ksr._doubleSeries);
+            _floatSeries.AddRange(ksr._floatSeries);
+            _intSeries.AddRange(ksr._intSeries);
+            _uintSeries.AddRange(ksr._uintSeries);
+            _longSeries.AddRange(ksr._longSeries);
+            _ulongSeries.AddRange(ksr._ulongSeries);
             return this;
         }
     }

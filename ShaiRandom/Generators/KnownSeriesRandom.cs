@@ -17,21 +17,21 @@ namespace ShaiRandom.Generators
     public class KnownSeriesRandom : IEnhancedRandom
     {
         private int _boolIndex;
-        private readonly List<bool> _boolSeries;
+        internal readonly List<bool> _boolSeries;
         private int _byteIndex;
-        private readonly List<byte> _byteSeries;
+        internal readonly List<byte> _byteSeries;
         private int _doubleIndex;
-        private readonly List<double> _doubleSeries;
+        internal readonly List<double> _doubleSeries;
         private int _floatIndex;
-        private readonly List<float> _floatSeries;
+        internal readonly List<float> _floatSeries;
         private int _intIndex;
-        private readonly List<int> _intSeries;
+        internal readonly List<int> _intSeries;
         private int _uintIndex;
-        private readonly List<uint> _uintSeries;
+        internal readonly List<uint> _uintSeries;
         private int _longIndex;
-        private readonly List<long> _longSeries;
+        internal readonly List<long> _longSeries;
         private int _ulongIndex;
-        private readonly List<ulong> _ulongSeries;
+        internal readonly List<ulong> _ulongSeries;
 
         /// <summary>
         /// Creates a KnownSeriesRandom that is a copy of the given one.
