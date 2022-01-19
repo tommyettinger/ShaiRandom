@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using ShaiRandom.Wrappers;
 
 namespace ShaiRandom.Generators
@@ -76,7 +77,17 @@ namespace ShaiRandom.Generators
         public abstract string StringSerialize();
 
         /// <inheritdoc />
-        public abstract IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data);
+        public virtual IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
+        {
+            int idx = data.IndexOf('`');
+
+            for (int i = 0; i < StateCount - 1; i++)
+                SetSelectedState(i, ulong.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), NumberStyles.HexNumber));
+
+            SetSelectedState(StateCount - 1, ulong.Parse(data.Slice(idx + 1, -1 - idx + data.IndexOf('`', idx + 1)), NumberStyles.HexNumber));
+
+            return this;
+        }
 
         /// <summary>
         /// Given data from a string produced by <see cref="StringSerialize()"/> on any valid subclass of AbstractRandom,

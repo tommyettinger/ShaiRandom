@@ -240,15 +240,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override string StringSerialize() => $"#RTrR`{StateA:X}~{StateB:X}~{StateC:X}`";
-
-        /// <inheritdoc />
-        public override IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
-        {
-            int idx = data.IndexOf('`');
-            StateA = ulong.Parse(data.Slice(idx + 1, -1 - idx + (idx = data[(idx + 1)..].IndexOf('~'))), NumberStyles.HexNumber);
-            StateB = ulong.Parse(data.Slice(idx + 1, -1 - idx + (idx = data[(idx + 1)..].IndexOf('~'))), NumberStyles.HexNumber);
-            StateC = ulong.Parse(data.Slice(idx + 1, -1 - idx + (      data[(idx + 1)..].IndexOf('`'))), NumberStyles.HexNumber);
-            return this;
-        }
     }
 }

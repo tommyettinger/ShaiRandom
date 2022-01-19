@@ -475,7 +475,7 @@ namespace ShaiRandom.Wrappers
         /// <inheritdoc />
         public string StringSerialize()
         {
-            var ser = new StringBuilder("A");
+            var ser = new StringBuilder(Tag);
             ser.Append(Wrapped.StringSerialize().AsSpan(1));
             ser.Append(MakeArchivedSeries().StringSerialize());
 

@@ -123,16 +123,19 @@ namespace ShaiRandom.UnitTests
 
         public static IEnumerable<IEnhancedRandom> Generators => _generators;
 
-            [Theory]
+        [Theory]
         [MemberDataEnumerable(nameof(Generators))]
         public void BasicSerDeserTest(IEnhancedRandom gen)
         {
             // Advance state, just to make sure we have a valid generator
             gen.NextULong();
 
-            // Serialize generator
+            // Serialize generator; wrappers have a special-case starting sequence
             string ser = gen.StringSerialize();
-            Assert.StartsWith(gen.Tag, ser);
+            if (gen.Tag.Length == 1)
+                Assert.StartsWith(gen.Tag, ser);
+            else
+                Assert.StartsWith("#" + gen.Tag, ser);
 
             // Deserialize generator
             var gen2 = AbstractRandom.Deserialize(ser);
@@ -158,7 +161,6 @@ namespace ShaiRandom.UnitTests
 
             // Serialize generator
             string ser = ksr.StringSerialize();
-            // TODO: Why is this special?
             Assert.StartsWith("#" + ksr.Tag, ser);
 
             // Deserialize generator
