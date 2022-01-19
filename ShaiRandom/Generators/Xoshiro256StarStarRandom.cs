@@ -244,8 +244,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new Xoshiro256StarStarRandom(StateA, StateB, StateC, StateD);
-
-        /// <inheritdoc />
-        public override string StringSerialize() => $"#XSSR`{StateA:X}~{StateB:X}~{StateC:X}~{StateD:X}`";
     }
 }

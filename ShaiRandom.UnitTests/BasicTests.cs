@@ -132,10 +132,8 @@ namespace ShaiRandom.UnitTests
 
             // Serialize generator; wrappers have a special-case starting sequence
             string ser = gen.StringSerialize();
-            if (gen.Tag.Length == 1)
-                Assert.StartsWith(gen.Tag, ser);
-            else
-                Assert.StartsWith("#" + gen.Tag, ser);
+            Assert.StartsWith(gen.Tag.Length == 1 ? $"{gen.Tag}" : $"#{gen.Tag}`", ser);
+            Assert.EndsWith("`", ser);
 
             // Deserialize generator
             var gen2 = AbstractRandom.Deserialize(ser);
@@ -161,7 +159,8 @@ namespace ShaiRandom.UnitTests
 
             // Serialize generator
             string ser = ksr.StringSerialize();
-            Assert.StartsWith("#" + ksr.Tag, ser);
+            Assert.StartsWith($"#{ksr.Tag}", ser);
+            Assert.EndsWith("`", ser);
 
             // Deserialize generator
             var ksr2 = (KnownSeriesRandom)AbstractRandom.Deserialize(ser);

@@ -211,7 +211,5 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new LaserRandom(StateA, StateB);
 
-        /// <inheritdoc />
-        public override string StringSerialize() => $"#LasR`{StateA:X}~{StateB:X}`";
     }
 }

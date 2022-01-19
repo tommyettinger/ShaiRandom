@@ -215,8 +215,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new TricycleRandom(StateA, StateB, StateC);
-
-        /// <inheritdoc />
-        public override string StringSerialize() => $"#TriR`{StateA:X}~{StateB:X}~{StateC:X}`";
     }
 }

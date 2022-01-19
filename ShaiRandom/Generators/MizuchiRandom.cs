@@ -203,8 +203,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new MizuchiRandom(StateA, StateB);
-
-        /// <inheritdoc />
-        public override string StringSerialize() => $"#MizR`{StateA:X}~{StateB:X}`";
     }
 }

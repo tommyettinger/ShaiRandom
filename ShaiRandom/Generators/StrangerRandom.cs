@@ -287,8 +287,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new StrangerRandom(StateA, StateB, StateC, StateD);
-
-        /// <inheritdoc />
-        public override string StringSerialize() => $"#StrR`{StateA:X}~{StateB:X}~{StateC:X}~{StateD:X}`";
     }
 }

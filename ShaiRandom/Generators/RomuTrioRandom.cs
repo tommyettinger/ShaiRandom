@@ -237,8 +237,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new RomuTrioRandom(StateA, StateB, StateC);
-
-        /// <inheritdoc />
-        public override string StringSerialize() => $"#RTrR`{StateA:X}~{StateB:X}~{StateC:X}`";
     }
 }

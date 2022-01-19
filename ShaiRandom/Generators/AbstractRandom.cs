@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using ShaiRandom.Wrappers;
 
 namespace ShaiRandom.Generators
@@ -74,7 +75,22 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public abstract string StringSerialize();
+        public virtual string StringSerialize()
+        {
+            var ser = new StringBuilder("#");
+            ser.Append(Tag);
+            ser.Append('`');
+            for (int i = 0; i < StateCount - 1; i++)
+            {
+                ser.Append($"{SelectState(i):X}");
+                ser.Append('~');
+            }
+
+            ser.Append($"{SelectState(StateCount - 1):X}");
+            ser.Append('`');
+
+            return ser.ToString();
+        }
 
         /// <inheritdoc />
         public virtual IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)

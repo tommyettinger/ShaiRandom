@@ -245,8 +245,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new FourWheelRandom(StateA, StateB, StateC, StateD);
-
-        /// <inheritdoc />
-        public override string StringSerialize() => $"#FoWR`{StateA:X}~{StateB:X}~{StateC:X}~{StateD:X}`";
     }
 }

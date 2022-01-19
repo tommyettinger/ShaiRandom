@@ -159,8 +159,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new DistinctRandom(State);
-
-        /// <inheritdoc />
-        public override string StringSerialize() => $"#DisR`{State:X}`";
     }
 }
