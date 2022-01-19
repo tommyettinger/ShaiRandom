@@ -92,7 +92,7 @@ namespace ShaiRandom.Wrappers
         public override string StringSerialize() => "R" + Wrapped.StringSerialize().Substring(1);
 
         /// <inheritdoc />
-        public override IEnhancedRandom StringDeserialize(string data)
+        public override IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
             Wrapped.StringDeserialize(data);
             return this;

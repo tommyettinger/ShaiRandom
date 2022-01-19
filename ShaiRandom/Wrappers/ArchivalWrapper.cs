@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using ShaiRandom.Generators;
 
 namespace ShaiRandom.Wrappers
@@ -472,15 +473,22 @@ namespace ShaiRandom.Wrappers
         }
 
         /// <inheritdoc />
-        public string StringSerialize() => "A" + Wrapped.StringSerialize().Substring(1) + MakeArchivedSeries().StringSerialize();
+        public string StringSerialize()
+        {
+            var ser = new StringBuilder("A");
+            ser.Append(Wrapped.StringSerialize().AsSpan(1));
+            ser.Append(MakeArchivedSeries().StringSerialize());
+
+            return ser.ToString();
+        }
 
         /// <inheritdoc />
-        public IEnhancedRandom StringDeserialize(string data)
+        public IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
-            int breakPoint = data.IndexOf('`', 6) + 1;
-            Wrapped.StringDeserialize(data.Substring(0, breakPoint));
+            int breakPoint = data[6..].IndexOf('`') + 1;
+            Wrapped.StringDeserialize(data[..breakPoint]);
             KnownSeriesRandom ksr = new KnownSeriesRandom();
-            ksr.StringDeserialize(data.Substring(breakPoint));
+            ksr.StringDeserialize(data[breakPoint..]);
             _boolSeries.Clear();
             _byteSeries.Clear();
             _doubleSeries.Clear();

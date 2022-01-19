@@ -1,4 +1,5 @@
-﻿using ShaiRandom.Generators;
+﻿using System;
+using ShaiRandom.Generators;
 using Troschuetz.Random;
 
 namespace ShaiRandom.Wrappers
@@ -79,7 +80,7 @@ namespace ShaiRandom.Wrappers
         /// <inheritdoc />
         public override string StringSerialize() => "T"+ Wrapped.StringSerialize().Substring(1);
         /// <inheritdoc />
-        public override IEnhancedRandom StringDeserialize(string data)
+        public override IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
             Wrapped.StringDeserialize(data);
             return this;
