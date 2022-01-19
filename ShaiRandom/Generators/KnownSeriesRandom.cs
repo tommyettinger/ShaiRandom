@@ -20,20 +20,59 @@ namespace ShaiRandom.Generators
     {
         private int _boolIndex;
         internal readonly List<bool> _boolSeries;
+        /// <summary>
+        /// Series of booleans returned by this generator.
+        /// </summary>
+        public IReadOnlyList<bool> BoolSeries => _boolSeries;
+
         private int _byteIndex;
         internal readonly List<byte> _byteSeries;
+        /// <summary>
+        /// Series of bytes returned by this generator.
+        /// </summary>
+        public IReadOnlyList<byte> ByteSeries => _byteSeries;
+
         private int _doubleIndex;
         internal readonly List<double> _doubleSeries;
+        /// <summary>
+        /// Series of doubles returned by this generator.
+        /// </summary>
+        public IReadOnlyList<double> DoubleSeries => _doubleSeries;
+
         private int _floatIndex;
         internal readonly List<float> _floatSeries;
+        /// <summary>
+        /// Series of floats returned by this generator.
+        /// </summary>
+        public IReadOnlyList<float> FloatSeries => _floatSeries;
+
         private int _intIndex;
         internal readonly List<int> _intSeries;
+        /// <summary>
+        /// Series of integers returned by this generator.
+        /// </summary>
+        public IReadOnlyList<int> IntSeries => _intSeries;
+
         private int _uintIndex;
         internal readonly List<uint> _uintSeries;
+        /// <summary>
+        /// Series of uints returned by this generator.
+        /// </summary>
+        public IReadOnlyList<uint> UIntSeries => _uintSeries;
+
         private int _longIndex;
         internal readonly List<long> _longSeries;
+        /// <summary>
+        /// Series of longs returned by this generator.
+        /// </summary>
+        public IReadOnlyList<long> LongSeries => _longSeries;
+
         private int _ulongIndex;
         internal readonly List<ulong> _ulongSeries;
+        /// <summary>
+        /// Series of ulong values returned by this generator.
+        /// </summary>
+        public IReadOnlyList<ulong> ULongSeries => _ulongSeries;
 
         /// <summary>
         /// Creates a KnownSeriesRandom that is a copy of the given one.
