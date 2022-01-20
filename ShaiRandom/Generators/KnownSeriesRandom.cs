@@ -648,7 +648,7 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <param name="stateA">Index value to set for intSeries, boolSeries, and longSeries.</param>
         /// <param name="stateB">Index value to set for uintSeries, byteSeries, ulongSeries.</param>
-        /// <param name="stateC">Index value to set for doubleSeries and floatSeries.</param>
+        /// <param name="stateC">Index value to set for doubleSeries, floatSeries, and decimalSeries.</param>
         public void SetState(ulong stateA, ulong stateB, ulong stateC) => ((IEnhancedRandom)this).SetState(stateA, stateB, stateC);
 
         /// <summary>
@@ -729,9 +729,16 @@ namespace ShaiRandom.Generators
             // ULong
             _ulongIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _ulongSeries.Clear();
-            seriesData = data.Slice(idx + 1, -1 - idx + data.IndexOf('`', idx + 1));
+            seriesData = data.Slice(idx + 1, -1 - idx + data.IndexOf('~', idx + 1));
             foreach (var numData in seriesData.Tokenize('|'))
                 _ulongSeries.Add(ulong.Parse(numData));
+
+            // Decimal
+            _decimalIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _decimalSeries.Clear();
+            seriesData = data.Slice(idx + 1, -1 - idx + data.IndexOf('`', idx + 1));
+            foreach (var numData in seriesData.Tokenize('|'))
+                _decimalSeries.Add(decimal.Parse(numData));
             return this;
 
         }
@@ -765,7 +772,9 @@ namespace ShaiRandom.Generators
             ser.Append(_longIndex); ser.Append('~');
             SerializeList(ser, _longSeries);
             ser.Append(_ulongIndex); ser.Append('~');
-            SerializeList(ser, _ulongSeries, '`');
+            SerializeList(ser, _ulongSeries);
+            ser.Append(_decimalIndex); ser.Append('~');
+            SerializeList(ser, _decimalSeries, '`');
 
             return ser.ToString();
         }
