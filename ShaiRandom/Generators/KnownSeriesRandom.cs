@@ -729,7 +729,7 @@ namespace ShaiRandom.Generators
             // ULong
             _ulongIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _ulongSeries.Clear();
-            seriesData = data.Slice(idx + 1, -1 - idx + data.IndexOf('~', idx + 1));
+            seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
             foreach (var numData in seriesData.Tokenize('|'))
                 _ulongSeries.Add(ulong.Parse(numData));
 

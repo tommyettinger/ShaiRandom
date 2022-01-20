@@ -13,6 +13,7 @@ namespace ShaiRandom.UnitTests
 
         private static readonly float s_floatCloseTo1 = 1.0f - MathF.Pow(2f, -24f);
         private static readonly double s_doubleCloseTo1 = 1.0 - Math.Pow(2, -53);
+        private static readonly decimal s_decimalCloseTo1 = 0.9999999999999999999999999999M;
 
         private readonly KnownSeriesRandom _boundedRNG = new KnownSeriesRandom(
             new []{ReturnedValue},
@@ -21,7 +22,8 @@ namespace ShaiRandom.UnitTests
             byteSeries: new []{(byte)ReturnedValue},
             floatSeries: new []{(float)ReturnedValue},
             longSeries: new []{(long)ReturnedValue},
-            ulongSeries: new []{(ulong)ReturnedValue}
+            ulongSeries: new []{(ulong)ReturnedValue},
+            decimalSeries: new []{(decimal)ReturnedValue}
         );
 
         private readonly KnownSeriesRandom _zeroRNG = new KnownSeriesRandom(
@@ -31,7 +33,8 @@ namespace ShaiRandom.UnitTests
             byteSeries: new []{(byte)0},
             floatSeries: new []{(float)0},
             longSeries: new []{(long)0},
-            ulongSeries: new []{(ulong)0}
+            ulongSeries: new []{(ulong)0},
+            decimalSeries: new[] {(decimal)0}
         );
 
         private readonly KnownSeriesRandom _unboundedRNG = new KnownSeriesRandom(
@@ -41,7 +44,8 @@ namespace ShaiRandom.UnitTests
             byteSeries: new []{byte.MinValue, byte.MaxValue},
             floatSeries: new []{0.0f, s_floatCloseTo1, -float.Epsilon, 1.0f},
             longSeries: new []{long.MinValue, long.MaxValue},
-            ulongSeries: new []{ulong.MinValue, ulong.MaxValue}
+            ulongSeries: new []{ulong.MinValue, ulong.MaxValue},
+            decimalSeries: new[] {decimal.Zero, s_decimalCloseTo1, -0.0000000000000000000000000001M, 1M }
         );
 
         private readonly KnownSeriesRandom _unboundedInclusiveRNG = new KnownSeriesRandom(
@@ -327,7 +331,7 @@ namespace ShaiRandom.UnitTests
         #region Floating-Point Function Tests
         [Fact]
         public void NextDecimalBounds()
-            => TestFloatingFunctionBounds(nameof(KnownSeriesRandom.NextDecimal), (decimal)s_doubleCloseTo1);
+            => TestFloatingFunctionBounds(nameof(KnownSeriesRandom.NextDecimal), s_decimalCloseTo1);
 
         // [Fact]
         // public void NextDecimalInclusiveBounds()
