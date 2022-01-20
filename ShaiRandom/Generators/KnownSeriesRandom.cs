@@ -74,6 +74,13 @@ namespace ShaiRandom.Generators
         /// </summary>
         public IReadOnlyList<ulong> ULongSeries => _ulongSeries;
 
+        private int _decimalIndex;
+        internal readonly List<decimal> _decimalSeries;
+        /// <summary>
+        /// Series of decimal values returned by this generator.
+        /// </summary>
+        public IReadOnlyList<decimal> DecimalSeries => _decimalSeries;
+
         /// <summary>
         /// Creates a KnownSeriesRandom that is a copy of the given one.
         /// </summary>
@@ -89,6 +96,7 @@ namespace ShaiRandom.Generators
             _floatIndex = other._floatIndex;
             _longIndex = other._longIndex;
             _ulongIndex = other._ulongIndex;
+            _decimalIndex = other._decimalIndex;
         }
 
 
@@ -114,7 +122,8 @@ namespace ShaiRandom.Generators
         public KnownSeriesRandom(IEnumerable<int>? intSeries = null, IEnumerable<uint>? uintSeries = null,
                                  IEnumerable<double>? doubleSeries = null, IEnumerable<bool>? boolSeries = null,
                                  IEnumerable<byte>? byteSeries = null, IEnumerable<float>? floatSeries = null,
-                                 IEnumerable<long>? longSeries = null,IEnumerable<ulong>? ulongSeries = null)
+                                 IEnumerable<long>? longSeries = null, IEnumerable<ulong>? ulongSeries = null,
+                                 IEnumerable<decimal>? decimalSeries = null)
         {
             Seed(0L);
 
@@ -122,6 +131,7 @@ namespace ShaiRandom.Generators
             _uintSeries = uintSeries == null ? new List<uint>() : uintSeries.ToList();
             _longSeries = longSeries == null ? new List<long>() : longSeries.ToList();
             _ulongSeries = ulongSeries == null ? new List<ulong>() : ulongSeries.ToList();
+            _decimalSeries = decimalSeries == null ? new List<decimal>() : decimalSeries.ToList();
             _doubleSeries = doubleSeries == null ? new List<double>() : doubleSeries.ToList();
             _floatSeries = floatSeries == null ? new List<float>() : floatSeries.ToList();
             _boolSeries = boolSeries == null ? new List<bool>() : boolSeries.ToList();
@@ -129,9 +139,9 @@ namespace ShaiRandom.Generators
         }
 
         /// <summary>
-        /// This generator has 8 states; one for each type of IEnumerable taken in the constructor.
+        /// This generator has 9 states; one for each type of IEnumerable taken in the constructor.
         /// </summary>
-        public int StateCount => 8;
+        public int StateCount => 9;
 
         /// <summary>
         /// This supports <see cref="SelectState(int)"/>.
@@ -511,40 +521,24 @@ namespace ShaiRandom.Generators
                 bytes[i] = ReturnValueFrom(_byteSeries, ref _byteIndex);
         }
         /// <summary>
-        /// Returns the next double in the underlying series, treating it as a decimal.  If it is outside of the bound [0, 1), throws
-        /// an exception.
+        /// Returns the next decimal in the underlying series.  If it is outside of the bound [0, 1), throws an exception.
         /// </summary>
-        /// <remarks>
-        /// This particular implementation of NextDecimal() is not fully deterministic, because it depends on the rounding behavior of doubles on the current system.
-        /// If you are storing values that must be absolutely deterministic, with no bits varying, for use in a KnownSeriesRandom, you currently have to use an integer type.
-        /// </remarks>
-        /// <returns>The next double in the underlying series, if it is within the bound, cast to a decimal.</returns>
-        public decimal NextDecimal() => (decimal)NextDouble(0.0, 1.0);
+        /// <returns>The next decimal in the underlying series, if it is within the bound.</returns>
+        public decimal NextDecimal() => NextDecimal(decimal.Zero, decimal.One);
         /// <summary>
-        /// Returns the next double in the underlying series, treating it as a decimal.  If it is outside of the bound specified, throws an exception.
-        /// an exception.
+        /// Returns the next decimal in the underlying series.  If it is outside of the bound specified, throws an exception.
         /// </summary>
-        /// <remarks>
-        /// This casts outerBound to a double so that it can be compared with the known series of double values this produces. It casts its result back to a decimal.
-        /// This particular implementation of NextDecimal() is not fully deterministic, because it depends on the rounding behavior of doubles on the current system.
-        /// If you are storing values that must be absolutely deterministic, with no bits varying, for use in a KnownSeriesRandom, you currently have to use an integer type.
-        /// </remarks>
-        /// <returns>The next double in the underlying series, if it is within the bound, cast to a decimal.</returns>
-        public decimal NextDecimal(decimal outerBound) => (decimal)NextDouble(0.0, (double)outerBound);
+        /// <returns>The next decimal in the underlying series, if it is within the bound.</returns>
+        public decimal NextDecimal(decimal outerBound) => NextDecimal(decimal.Zero, outerBound);
 
         /// <summary>
-        /// Returns the next double in the underlying series, treating it as a decimal. If the value is not between <paramref name="innerBound"/>
-        /// (inclusive), and <paramref name="outerBound"/> (exclusive), with both cast to double before checking, throws an exception.
+        /// Returns the next decimal in the underlying series. If the value is not between <paramref name="innerBound"/>
+        /// (inclusive), and <paramref name="outerBound"/> (exclusive), throws an exception.
         /// </summary>
-        /// <remarks>
-        /// This casts outerBound to a double so that it can be compared with the known series of double values this produces. It casts its result back to a decimal.
-        /// This particular implementation of NextDecimal() is not fully deterministic, because it depends on the rounding behavior of doubles on the current system.
-        /// If you are storing values that must be absolutely deterministic, with no bits varying, for use in a KnownSeriesRandom, you currently have to use an integer type.
-        /// </remarks>
         /// <param name="innerBound">The inner bound (usually the minimum) for the returned number, inclusive.</param>
         /// <param name="outerBound">The outer bound (usually the maximum) for the returned number, exclusive.</param>
-        /// <returns>The next double in the underlying series.</returns>
-        public decimal NextDecimal(decimal innerBound, decimal outerBound) => (decimal)ReturnIfBetweenBounds((double)innerBound, (double)outerBound, _doubleSeries, ref _doubleIndex);
+        /// <returns>The next decimal in the underlying series.</returns>
+        public decimal NextDecimal(decimal innerBound, decimal outerBound) => ReturnIfBetweenBounds(innerBound, outerBound, _decimalSeries, ref _decimalIndex);
 
         /// <summary>
         /// Not supported by this generator.
