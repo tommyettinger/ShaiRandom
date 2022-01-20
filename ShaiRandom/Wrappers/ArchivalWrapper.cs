@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using ShaiRandom.Generators;
 
 namespace ShaiRandom.Wrappers
@@ -101,7 +102,7 @@ namespace ShaiRandom.Wrappers
 
         /// <summary>
         /// This generator has the same number of states as the wrapped generator; the recorded values are not considered state.
-        /// They can be considered state for the <see cref="Series"/> this contains.
+        /// They can be considered state for the <see cref="KnownSeriesRandom"/> this creates.
         /// </summary>
         public int StateCount => Wrapped.StateCount;
 
@@ -472,15 +473,22 @@ namespace ShaiRandom.Wrappers
         }
 
         /// <inheritdoc />
-        public string StringSerialize() => "A" + Wrapped.StringSerialize().Substring(1) + MakeArchivedSeries().StringSerialize();
+        public string StringSerialize()
+        {
+            var ser = new StringBuilder(Tag);
+            ser.Append(Wrapped.StringSerialize().AsSpan(1));
+            ser.Append(MakeArchivedSeries().StringSerialize());
+
+            return ser.ToString();
+        }
 
         /// <inheritdoc />
-        public IEnhancedRandom StringDeserialize(string data)
+        public IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
             int breakPoint = data.IndexOf('`', 6) + 1;
-            Wrapped.StringDeserialize(data.Substring(0, breakPoint));
+            Wrapped.StringDeserialize(data[..breakPoint]);
             KnownSeriesRandom ksr = new KnownSeriesRandom();
-            ksr.StringDeserialize(data.Substring(breakPoint));
+            ksr.StringDeserialize(data[breakPoint..]);
             _boolSeries.Clear();
             _byteSeries.Clear();
             _doubleSeries.Clear();

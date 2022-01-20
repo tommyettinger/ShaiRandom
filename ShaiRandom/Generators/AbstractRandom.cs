@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 using ShaiRandom.Wrappers;
 
 namespace ShaiRandom.Generators
@@ -73,28 +75,60 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public abstract string StringSerialize();
+        public virtual string StringSerialize()
+        {
+            var ser = new StringBuilder("#");
+            ser.Append(Tag);
+            ser.Append('`');
+            for (int i = 0; i < StateCount - 1; i++)
+            {
+                ser.Append($"{SelectState(i):X}");
+                ser.Append('~');
+            }
+
+            ser.Append($"{SelectState(StateCount - 1):X}");
+            ser.Append('`');
+
+            return ser.ToString();
+        }
 
         /// <inheritdoc />
-        public abstract IEnhancedRandom StringDeserialize(string data);
+        public virtual IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
+        {
+            int idx = data.IndexOf('`');
+
+            for (int i = 0; i < StateCount - 1; i++)
+                SetSelectedState(i, ulong.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), NumberStyles.HexNumber));
+
+            SetSelectedState(StateCount - 1, ulong.Parse(data.Slice(idx + 1, -1 - idx + data.IndexOf('`', idx + 1)), NumberStyles.HexNumber));
+
+            return this;
+        }
 
         /// <summary>
-        /// Given a string produced by <see cref="StringSerialize()"/> on any valid subclass of AbstractRandom,
+        /// Given data from a string produced by <see cref="StringSerialize()"/> on any valid subclass of AbstractRandom,
         /// this returns a new IEnhancedRandom with the same implementation and state it had when it was serialized.
         /// This handles all AbstractRandom implementations in this library, including <see cref="TRGeneratorWrapper"/>,
         /// <see cref="ReversingWrapper"/>, and <see cref="ArchivalWrapper"/> (all of which it currently handles with a special case).
         /// </summary>
-        /// <param name="data">A string produced by an AbstractRandom's StringSerialize() method.</param>
+        /// <param name="data">Data from a string produced by an AbstractRandom's StringSerialize() method.</param>
         /// <returns>A newly-allocated IEnhancedRandom matching the implementation and state of the serialized AbstractRandom.</returns>
-        public static IEnhancedRandom Deserialize(string data)
+        public static IEnhancedRandom Deserialize(ReadOnlySpan<char> data)
         {
-            if (data.StartsWith('A'))
-                return new ArchivalWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
-            if (data.StartsWith('T'))
-                return new TRGeneratorWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
-            if (data.StartsWith('R'))
-                return new ReversingWrapper(TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data));
-            return TAGS[data.Substring(1, 4)].Copy().StringDeserialize(data);
+            if (data.Length <= 4)
+                throw new ArgumentException("String given cannot represent a valid generator.");
+
+            // Can't use Span as the key in a dictionary, so we have to allocate a string to perform the lookup.
+            // When the feature linked here is implemented, we could get around this:
+            // https://github.com/dotnet/runtime/issues/27229
+            string tagData = new string(data.Slice(1, 4));
+            return data[0] switch
+            {
+				'A' => new ArchivalWrapper(TAGS[tagData].Copy().StringDeserialize(data)),
+                'T' => new TRGeneratorWrapper(TAGS[tagData].Copy().StringDeserialize(data)),
+                'R' => new ReversingWrapper(TAGS[tagData].Copy().StringDeserialize(data)),
+                _ => TAGS[tagData].Copy().StringDeserialize(data)
+            };
         }
 
         /// <inheritdoc />

@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using ShaiRandom.Generators;
 using ShaiRandom.Wrappers;
 using Xunit;
+using XUnit.ValueTuples;
+
 namespace ShaiRandom.UnitTests
 {
     public class BasicTests
@@ -111,70 +114,67 @@ namespace ShaiRandom.UnitTests
 
     public class SerializationTests
     {
-        [Fact]
-        public void FourWheelSerDeserTest()
+        private static IEnhancedRandom[] _generators =
         {
-            FourWheelRandom random = new FourWheelRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL);
-            random.NextULong();
-            string data = random.StringSerialize();
-            Assert.StartsWith("#FoWR`", data);
-            IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
-            Assert.Equal(random.NextULong(), random2.NextULong());
-            Assert.True(random.Matches(random2));
-        }
-        [Fact]
-        public void StrangerSerDeserTest()
+            new DistinctRandom(), new FourWheelRandom(), new LaserRandom(), new MizuchiRandom(),
+            new RomuTrioRandom(), new StrangerRandom(), new TricycleRandom(), new Xoshiro256StarStarRandom(),
+            new ArchivalWrapper(), new ReversingWrapper(), new TRGeneratorWrapper()
+        };
+
+        public static IEnumerable<IEnhancedRandom> Generators => _generators;
+
+        [Theory]
+        [MemberDataEnumerable(nameof(Generators))]
+        public void BasicSerDeserTest(IEnhancedRandom gen)
         {
-            StrangerRandom random = new StrangerRandom(0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL);
-            random.NextULong();
-            string data = random.StringSerialize();
-            Assert.StartsWith("#StrR`", data);
-            IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
-            Assert.Equal(random.NextULong(), random2.NextULong());
-            Assert.True(random.Matches(random2));
+            // Advance state, just to make sure we have a valid generator
+            gen.NextULong();
+
+            // Serialize generator; wrappers have a special-case starting sequence
+            string ser = gen.StringSerialize();
+            Assert.StartsWith(gen.Tag.Length == 1 ? $"{gen.Tag}" : $"#{gen.Tag}`", ser);
+            Assert.EndsWith("`", ser);
+
+            // Deserialize generator
+            var gen2 = AbstractRandom.Deserialize(ser);
+
+            // Check that its state is equivalent and it generates identical numbers
+            Assert.True(gen.Matches(gen2));
+            Assert.Equal(gen.NextULong(), gen2.NextULong());
         }
 
+        // Needs special serialization tests to ensure that not only its state is the same, but also the series
+        // themselves, which is not represented in the state.
         [Fact]
-        public void TRWrapperSerDeserTest()
+        public void KnownSeriesRandomSerDeserTest()
         {
-            TRGeneratorWrapper random = new TRGeneratorWrapper(new FourWheelRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL));
-            random.NextULong();
-            string data = random.StringSerialize();
-            Assert.StartsWith("TFoWR`", data);
-            IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
-            Assert.Equal(random.NextULong(), random2.NextULong());
-            Assert.True(random.Matches(random2));
-        }
+            // Create a KSR with unique series per type
+            var ksr = new KnownSeriesRandom(
+                new[] { 1, 2 }, new[] { 2U, 3U }, new[] { 3.0, 4.0 },
+                new[] { true, false }, new[] { (byte)4, (byte)5 },
+                new[] { 5f, 6f }, new[] { 6L, 7L }, new[] { 7UL, 8UL });
 
-        [Fact]
-        public void ReversingWrapperSerDeserTest()
-        {
-            ReversingWrapper random = new ReversingWrapper(new FourWheelRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL));
-            random.NextULong();
-            string data = random.StringSerialize();
-            Assert.StartsWith("RFoWR`", data);
-            IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
-            Assert.Equal(random.NextULong(), random2.NextULong());
-            Assert.True(random.Matches(random2));
+            // Advance all states (so the indices are not their starting value)
+            ksr.SetState(1);
 
-            random.Wrapped = new StrangerRandom(123456789UL, 0xFA7BAB1E5UL, 0xB0BAFE77UL, 0x1234123412341234UL);
-            random.NextULong();
-            data = random.StringSerialize();
-            Assert.StartsWith("RStrR`", data);
-            random2 = AbstractRandom.Deserialize(data);
-            Assert.Equal(random.NextULong(), random2.NextULong());
-            Assert.True(random.Matches(random2));
-        }
-        [Fact]
-        public void KnownSeriesSerDeserTest()
-        {
-            KnownSeriesRandom random = new KnownSeriesRandom(new [] { 1, 3, -7 }, new uint[] { 2, 8, 12}, new [] { -1.1, 2.0, 1e30}, null, null, null, null, new [] { 0xB0BAFE77BA77UL, 0xDEADBEEFUL, 0x1337CAFEBABEUL });
-            random.NextULong();
-            string data = random.StringSerialize();
-            Assert.StartsWith("#KnSR`", data);
-            IEnhancedRandom random2 = AbstractRandom.Deserialize(data);
-            Assert.Equal(random.NextULong(), random2.NextULong());
-            Assert.True(random.Matches(random2));
+            // Serialize generator
+            string ser = ksr.StringSerialize();
+            Assert.StartsWith($"#{ksr.Tag}", ser);
+            Assert.EndsWith("`", ser);
+
+            // Deserialize generator
+            var ksr2 = (KnownSeriesRandom)AbstractRandom.Deserialize(ser);
+            // Check that its state (indices) are equivalent to the original
+            Assert.True(ksr.Matches(ksr2));
+            // Check that each list is identical
+            Assert.Equal(ksr.IntSeries, ksr2.IntSeries);
+            Assert.Equal(ksr.UIntSeries, ksr2.UIntSeries);
+            Assert.Equal(ksr.DoubleSeries, ksr2.DoubleSeries);
+            Assert.Equal(ksr.BoolSeries, ksr2.BoolSeries);
+            Assert.Equal(ksr.ByteSeries, ksr2.ByteSeries);
+            Assert.Equal(ksr.FloatSeries, ksr2.FloatSeries);
+            Assert.Equal(ksr.LongSeries, ksr2.LongSeries);
+            Assert.Equal(ksr.ULongSeries, ksr2.ULongSeries);
         }
     }
 }

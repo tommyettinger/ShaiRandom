@@ -17,8 +17,6 @@
 // Derived from https://github.com/bgrainger/RomuRandom , which is an
 // implementation of https://romu-random.org/ .
 
-using System;
-
 namespace ShaiRandom.Generators
 {
     /// <summary>
@@ -236,18 +234,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new RomuTrioRandom(StateA, StateB, StateC);
-
-        /// <inheritdoc />
-        public override string StringSerialize() => $"#RTrR`{StateA:X}~{StateB:X}~{StateC:X}`";
-
-        /// <inheritdoc />
-        public override IEnhancedRandom StringDeserialize(string data)
-        {
-            int idx = data.IndexOf('`');
-            StateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            StateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            StateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
-            return this;
-        }
     }
 }

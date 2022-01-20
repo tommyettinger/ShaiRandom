@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ShaiRandom.Generators
+﻿namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 1 state that only returns each ulong result exactly once over its period.
@@ -158,16 +156,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new DistinctRandom(State);
-
-        /// <inheritdoc />
-        public override string StringSerialize() => $"#DisR`{State:X}`";
-
-        /// <inheritdoc />
-        public override IEnhancedRandom StringDeserialize(string data)
-        {
-            int idx = data.IndexOf('`');
-            State = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
-            return this;
-        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using Microsoft.Toolkit.HighPerformance;
 
 namespace ShaiRandom.Generators
 {
@@ -18,20 +20,59 @@ namespace ShaiRandom.Generators
     {
         private int _boolIndex;
         internal readonly List<bool> _boolSeries;
+        /// <summary>
+        /// Series of booleans returned by this generator.
+        /// </summary>
+        public IReadOnlyList<bool> BoolSeries => _boolSeries;
+
         private int _byteIndex;
         internal readonly List<byte> _byteSeries;
+        /// <summary>
+        /// Series of bytes returned by this generator.
+        /// </summary>
+        public IReadOnlyList<byte> ByteSeries => _byteSeries;
+
         private int _doubleIndex;
         internal readonly List<double> _doubleSeries;
+        /// <summary>
+        /// Series of doubles returned by this generator.
+        /// </summary>
+        public IReadOnlyList<double> DoubleSeries => _doubleSeries;
+
         private int _floatIndex;
         internal readonly List<float> _floatSeries;
+        /// <summary>
+        /// Series of floats returned by this generator.
+        /// </summary>
+        public IReadOnlyList<float> FloatSeries => _floatSeries;
+
         private int _intIndex;
         internal readonly List<int> _intSeries;
+        /// <summary>
+        /// Series of integers returned by this generator.
+        /// </summary>
+        public IReadOnlyList<int> IntSeries => _intSeries;
+
         private int _uintIndex;
         internal readonly List<uint> _uintSeries;
+        /// <summary>
+        /// Series of uints returned by this generator.
+        /// </summary>
+        public IReadOnlyList<uint> UIntSeries => _uintSeries;
+
         private int _longIndex;
         internal readonly List<long> _longSeries;
+        /// <summary>
+        /// Series of longs returned by this generator.
+        /// </summary>
+        public IReadOnlyList<long> LongSeries => _longSeries;
+
         private int _ulongIndex;
         internal readonly List<ulong> _ulongSeries;
+        /// <summary>
+        /// Series of ulong values returned by this generator.
+        /// </summary>
+        public IReadOnlyList<ulong> ULongSeries => _ulongSeries;
 
         /// <summary>
         /// Creates a KnownSeriesRandom that is a copy of the given one.
@@ -635,49 +676,101 @@ namespace ShaiRandom.Generators
         public ulong Skip(ulong distance) => throw new NotSupportedException();
 
         /// <inheritdoc />
-        public IEnhancedRandom StringDeserialize(string data)
+        public IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
             int idx = data.IndexOf('`');
-            _intIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
-            _intSeries.Clear(); _intSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split('|', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt32(s)).ToList());
-            _uintIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
-            _uintSeries.Clear(); _uintSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split('|', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToUInt32(s)).ToList());
-            _doubleIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
-            _doubleSeries.Clear(); _doubleSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split('|', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToDouble(s)).ToList());
-            _boolIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
-            _boolSeries.Clear(); _boolSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split('|', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToBoolean(s)).ToList());
-            _byteIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
-            _byteSeries.Clear(); _byteSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split('|', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToByte(s)).ToList());
-            _floatIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
-            _floatSeries.Clear(); _floatSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split('|', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToSingle(s)).ToList());
-            _longIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
-            _longSeries.Clear(); _longSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))).Split('|', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt64(s)).ToList());
-            _ulongIndex = Convert.ToInt32(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
-            _ulongSeries.Clear(); _ulongSeries.AddRange(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('`', idx + 1))).Split('|', StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToUInt64(s)).ToList());
+
+            // Int
+            _intIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _intSeries.Clear();
+            var seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
+            foreach (var numData in seriesData.Tokenize('|'))
+                _intSeries.Add(int.Parse(numData));
+
+            // UInt
+            _uintIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _uintSeries.Clear();
+            seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
+            foreach (var numData in seriesData.Tokenize('|'))
+                _uintSeries.Add(uint.Parse(numData));
+
+            // Double
+            _doubleIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _doubleSeries.Clear();
+            seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
+            foreach (var numData in seriesData.Tokenize('|'))
+                _doubleSeries.Add(double.Parse(numData));
+
+            // Bool
+            _boolIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _boolSeries.Clear();
+            seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
+            foreach (var numData in seriesData.Tokenize('|'))
+                _boolSeries.Add(bool.Parse(numData));
+
+            // Byte
+            _byteIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _byteSeries.Clear();
+            seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
+            foreach (var numData in seriesData.Tokenize('|'))
+                _byteSeries.Add(byte.Parse(numData));
+
+            // Float
+            _floatIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _floatSeries.Clear();
+            seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
+            foreach (var numData in seriesData.Tokenize('|'))
+                _floatSeries.Add(float.Parse(numData));
+
+            // Long
+            _longIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _longSeries.Clear();
+            seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
+            foreach (var numData in seriesData.Tokenize('|'))
+                _longSeries.Add(long.Parse(numData));
+
+            // ULong
+            _ulongIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
+            _ulongSeries.Clear();
+            seriesData = data.Slice(idx + 1, -1 - idx + data.IndexOf('`', idx + 1));
+            foreach (var numData in seriesData.Tokenize('|'))
+                _ulongSeries.Add(ulong.Parse(numData));
             return this;
 
+        }
+
+        private void SerializeList<T>(StringBuilder ser, IReadOnlyList<T> series, char lastChar = '~')
+        {
+            foreach (var item in series)
+            {
+                ser.Append(item); ser.Append('|');
+            }
+            ser.Remove(ser.Length - 1, 1);
+            ser.Append(lastChar);
         }
 
         /// <inheritdoc />
         public string StringSerialize()
         {
-            string ser = "#KnSR`";
-            ser += _intIndex + "~";
-            ser = _intSeries.Aggregate(ser, (s, n) => s + n + "|").TrimEnd('|') + "~";
-            ser += _uintIndex + "~";
-            ser = _uintSeries.Aggregate(ser, (s, n) => s + n + "|").TrimEnd('|') + "~";
-            ser += _doubleIndex + "~";
-            ser = _doubleSeries.Aggregate(ser, (s, n) => s + n + "|").TrimEnd('|') + "~";
-            ser += _boolIndex + "~";
-            ser = _boolSeries.Aggregate(ser, (s, n) => s + n + "|").TrimEnd('|') + "~";
-            ser += _byteIndex + "~";
-            ser = _byteSeries.Aggregate(ser, (s, n) => s + n + "|").TrimEnd('|') + "~";
-            ser += _floatIndex + "~";
-            ser = _floatSeries.Aggregate(ser, (s, n) => s + n + "|").TrimEnd('|') + "~";
-            ser += _longIndex + "~";
-            ser = _longSeries.Aggregate(ser, (s, n) => s + n + "|").TrimEnd('|') + "~";
-            ser += _ulongIndex + "~";
-            return _ulongSeries.Aggregate(ser, (s, n) => s + n + "|").TrimEnd('|') + "`";
+            StringBuilder ser = new StringBuilder("#KnSR`");
+            ser.Append(_intIndex); ser.Append('~');
+            SerializeList(ser, _intSeries);
+            ser.Append(_uintIndex); ser.Append('~');
+            SerializeList(ser, _uintSeries);
+            ser.Append(_doubleIndex); ser.Append('~');
+            SerializeList(ser, _doubleSeries);
+            ser.Append(_boolIndex); ser.Append('~');
+            SerializeList(ser, _boolSeries);
+            ser.Append(_byteIndex); ser.Append('~');
+            SerializeList(ser, _byteSeries);
+            ser.Append(_floatIndex); ser.Append('~');
+            SerializeList(ser, _floatSeries);
+            ser.Append(_longIndex); ser.Append('~');
+            SerializeList(ser, _longSeries);
+            ser.Append(_ulongIndex); ser.Append('~');
+            SerializeList(ser, _ulongSeries, '`');
+
+            return ser.ToString();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using ShaiRandom.Generators;
 
 namespace ShaiRandom.Wrappers
@@ -89,10 +90,16 @@ namespace ShaiRandom.Wrappers
         public override void Seed(ulong seed) => Wrapped.Seed(seed);
 
         /// <inheritdoc />
-        public override string StringSerialize() => "R" + Wrapped.StringSerialize().Substring(1);
+        public override string StringSerialize()
+        {
+            var ser = new StringBuilder(Tag);
+            ser.Append(Wrapped.StringSerialize().AsSpan(1));
+
+            return ser.ToString();
+        }
 
         /// <inheritdoc />
-        public override IEnhancedRandom StringDeserialize(string data)
+        public override IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
             Wrapped.StringDeserialize(data);
             return this;

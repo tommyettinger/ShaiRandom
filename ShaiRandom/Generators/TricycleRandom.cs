@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ShaiRandom.Generators
+﻿namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 3 states, more here later.
@@ -214,18 +212,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new TricycleRandom(StateA, StateB, StateC);
-
-        /// <inheritdoc />
-        public override string StringSerialize() => $"#TriR`{StateA:X}~{StateB:X}~{StateC:X}`";
-
-        /// <inheritdoc />
-        public override IEnhancedRandom StringDeserialize(string data)
-        {
-            int idx = data.IndexOf('`');
-            StateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            StateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            StateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
-            return this;
-        }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ShaiRandom.Generators
+﻿namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 4 states, built around a "chaotic" construction with no guarantee of a minimum period, but likely to be a very long one.
@@ -244,19 +242,5 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new FourWheelRandom(StateA, StateB, StateC, StateD);
-
-        /// <inheritdoc />
-        public override string StringSerialize() => $"#FoWR`{StateA:X}~{StateB:X}~{StateC:X}~{StateD:X}`";
-
-        /// <inheritdoc />
-        public override IEnhancedRandom StringDeserialize(string data)
-        {
-            int idx = data.IndexOf('`');
-            StateA = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            StateB = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            StateC = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), 16);
-            StateD = Convert.ToUInt64(data.Substring(idx + 1, -1 - idx + (      data.IndexOf('`', idx + 1))), 16);
-            return this;
-        }
     }
 }
