@@ -560,6 +560,7 @@ namespace ShaiRandom.Generators
             _floatIndex = idx;
             _longIndex = idx;
             _ulongIndex = idx;
+            _decimalIndex = idx;
         }
 
         /// <summary>
@@ -588,6 +589,7 @@ namespace ShaiRandom.Generators
                 5 => (ulong)_floatIndex,
                 6 => (ulong)_longIndex,
                 7 => (ulong)_ulongIndex,
+                8 => (ulong)_decimalIndex,
                 _ => throw new ArgumentException("Invalid selector given to SelectState.", nameof(selection))
             };
         }
@@ -619,6 +621,7 @@ namespace ShaiRandom.Generators
                 case 4: _byteIndex = (int)value; break;
                 case 5: _floatIndex = (int)value; break;
                 case 6: _longIndex = (int)value; break;
+                case 8: _decimalIndex = (int)value; break;
                 default: _ulongIndex = (int)value; break;
             }
         }
@@ -630,7 +633,7 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// Sets the current indices in sequences as follows:
-        ///     - intSeries, doubleSeries, byteSeries, longSeries : stateA
+        ///     - intSeries, doubleSeries, byteSeries, longSeries, decimalSeries : stateA
         ///     - uintSeries, boolSeries, floatSeries, ulongSeries: stateB
         /// </summary>
         /// <param name="stateA">Index value to set for intSeries, doubleSeries, byteSeries, and longSeries.</param>
@@ -639,9 +642,9 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// Sets the current indices in sequences as follows:
-        ///     - intSeries, boolSeries, longSeries  : stateA
-        ///     - uintSeries, byteSeries, ulongSeries: stateB
-        ///     - doubleSeries, floatSeries          : stateC
+        ///     - intSeries, boolSeries, longSeries       : stateA
+        ///     - uintSeries, byteSeries, ulongSeries     : stateB
+        ///     - doubleSeries, floatSeries, decimalSeries: stateC
         /// </summary>
         /// <param name="stateA">Index value to set for intSeries, boolSeries, and longSeries.</param>
         /// <param name="stateB">Index value to set for uintSeries, byteSeries, ulongSeries.</param>
@@ -650,12 +653,12 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// Sets the current indices in sequences as follows:
-        ///     - intSeries, byteSeries   : stateA
-        ///     - uintSeries, floatSeries : stateB
-        ///     - doubleSeries, longSeries: stateC
-        ///     - boolSeries, ulongSeries : stateC
+        ///     - intSeries, byteSeries, decimalSeries: stateA
+        ///     - uintSeries, floatSeries             : stateB
+        ///     - doubleSeries, longSeries            : stateC
+        ///     - boolSeries, ulongSeries             : stateC
         /// </summary>
-        /// <param name="stateA">Index value to set for intSeries and byteSeries.</param>
+        /// <param name="stateA">Index value to set for intSeries, byteSeries, and decimalSeries.</param>
         /// <param name="stateB">Index value to set for uintSeries and floatSeries.</param>
         /// <param name="stateC">Index value to set for doubleSeries and longSeries.</param>
         /// <param name="stateD">Index value to set for boolSeries and ulongSeries.</param>
