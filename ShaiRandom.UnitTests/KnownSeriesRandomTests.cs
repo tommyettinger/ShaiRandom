@@ -45,17 +45,19 @@ namespace ShaiRandom.UnitTests
             floatSeries: new []{0.0f, s_floatCloseTo1, -float.Epsilon, 1.0f},
             longSeries: new []{long.MinValue, long.MaxValue},
             ulongSeries: new []{ulong.MinValue, ulong.MaxValue},
-            decimalSeries: new[] {decimal.Zero, s_decimalCloseTo1, -0.0000000000000000000000000001M, 1M }
+            decimalSeries: new[] {decimal.Zero, s_decimalCloseTo1, -0.0000000000000000000000000001M, decimal.One }
         );
 
         private readonly KnownSeriesRandom _unboundedInclusiveRNG = new KnownSeriesRandom(
             doubleSeries: new []{0.0, 1.0, -double.Epsilon, 1.1},
-            floatSeries: new []{0.0f, 1.0f, -float.Epsilon, 1.1f}
+            floatSeries: new []{0.0f, 1.0f, -float.Epsilon, 1.1f},
+            decimalSeries: new[]{decimal.Zero, decimal.One, -0.0000000000000000000000000001M, 1.1M }
         );
 
         private readonly KnownSeriesRandom _unboundedExclusiveRNG = new KnownSeriesRandom(
             doubleSeries: new []{double.Epsilon, s_doubleCloseTo1, 0.0, 1.0},
-            floatSeries: new []{float.Epsilon, s_floatCloseTo1, 0.0f, 1.0f}
+            floatSeries: new []{float.Epsilon, s_floatCloseTo1, 0.0f, 1.0f},
+            decimalSeries: new[] { 0.0000000000000000000000000001M, s_decimalCloseTo1, decimal.Zero, decimal.One }
         );
         #region Template Tests
 
@@ -333,9 +335,9 @@ namespace ShaiRandom.UnitTests
         public void NextDecimalBounds()
             => TestFloatingFunctionBounds(nameof(KnownSeriesRandom.NextDecimal), s_decimalCloseTo1);
 
-        // [Fact]
-        // public void NextDecimalInclusiveBounds()
-        //     => TestFloatingFunctionInclusiveBounds(nameof(KnownSeriesRandom.NextInclusiveDecimal));
+        [Fact]
+        public void NextDecimalInclusiveBounds()
+            => TestFloatingFunctionInclusiveBounds<decimal>(nameof(KnownSeriesRandom.NextInclusiveDecimal));
 
         // [Fact]
         // public void NextDecimalExclusiveBounds()
