@@ -356,6 +356,54 @@ namespace ShaiRandom.Wrappers
         }
 
         /// <inheritdoc/>
+        public decimal NextDecimal()
+        {
+            decimal v = Wrapped.NextDecimal();
+            _decimalSeries.Add(v);
+            return v;
+        }
+
+        /// <inheritdoc/>
+        public decimal NextDecimal(decimal outerBound)
+        {
+            decimal v = Wrapped.NextDecimal(outerBound);
+            _decimalSeries.Add(v);
+            return v;
+        }
+
+        /// <inheritdoc/>
+        public decimal NextDecimal(decimal innerBound, decimal outerBound)
+        {
+            decimal v = Wrapped.NextDecimal(innerBound, outerBound);
+            _decimalSeries.Add(v);
+            return v;
+        }
+
+        /// <inheritdoc/>
+        public decimal NextInclusiveDecimal()
+        {
+            decimal v = Wrapped.NextInclusiveDecimal();
+            _decimalSeries.Add(v);
+            return v;
+        }
+
+        /// <inheritdoc/>
+        public decimal NextInclusiveDecimal(decimal outerBound)
+        {
+            decimal v = Wrapped.NextInclusiveDecimal(outerBound);
+            _decimalSeries.Add(v);
+            return v;
+        }
+
+        /// <inheritdoc/>
+        public decimal NextInclusiveDecimal(decimal innerBound, decimal outerBound)
+        {
+            decimal v = Wrapped.NextInclusiveDecimal(innerBound, outerBound);
+            _decimalSeries.Add(v);
+            return v;
+        }
+
+        /// <inheritdoc/>
         public long NextLong()
         {
             long v = Wrapped.NextLong();
@@ -412,32 +460,6 @@ namespace ShaiRandom.Wrappers
                 _byteSeries.Add(bytes[i]);
             }
         }
-
-        /// <inheritdoc/>
-        public decimal NextDecimal()
-        {
-            decimal v = Wrapped.NextDecimal();
-            _decimalSeries.Add(v);
-            return v;
-        }
-
-        /// <inheritdoc/>
-        public decimal NextDecimal(decimal outerBound)
-        {
-            decimal v = Wrapped.NextDecimal(outerBound);
-            _decimalSeries.Add(v);
-            return v;
-        }
-
-
-        /// <inheritdoc/>
-        public decimal NextDecimal(decimal innerBound, decimal outerBound)
-        {
-            decimal v = Wrapped.NextDecimal(innerBound, outerBound);
-            _decimalSeries.Add(v);
-            return v;
-        }
-
 
         /// <inheritdoc/>
         public ulong PreviousULong()
