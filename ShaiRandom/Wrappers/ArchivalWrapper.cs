@@ -404,6 +404,30 @@ namespace ShaiRandom.Wrappers
         }
 
         /// <inheritdoc/>
+        public decimal NextExclusiveDecimal()
+        {
+            decimal v = Wrapped.NextExclusiveDecimal();
+            _decimalSeries.Add(v);
+            return v;
+        }
+
+        /// <inheritdoc/>
+        public decimal NextExclusiveDecimal(decimal outerBound)
+        {
+            decimal v = Wrapped.NextExclusiveDecimal(outerBound);
+            _decimalSeries.Add(v);
+            return v;
+        }
+
+        /// <inheritdoc/>
+        public decimal NextExclusiveDecimal(decimal innerBound, decimal outerBound)
+        {
+            decimal v = Wrapped.NextExclusiveDecimal(innerBound, outerBound);
+            _decimalSeries.Add(v);
+            return v;
+        }
+
+        /// <inheritdoc/>
         public long NextLong()
         {
             long v = Wrapped.NextLong();

@@ -119,6 +119,7 @@ namespace ShaiRandom.Generators
         /// <param name="floatSeries">Series of values to return via <see cref="NextFloat()"/>.</param>
         /// <param name="longSeries">Series of values to return via <see cref="NextLong()"/>.</param>
         /// <param name="ulongSeries">Series of values to return via <see cref="NextULong()"/>.</param>
+        /// <param name="decimalSeries">Series of values to return via <see cref="NextDecimal()"/>.</param>
         public KnownSeriesRandom(IEnumerable<int>? intSeries = null, IEnumerable<uint>? uintSeries = null,
                                  IEnumerable<double>? doubleSeries = null, IEnumerable<bool>? boolSeries = null,
                                  IEnumerable<byte>? byteSeries = null, IEnumerable<float>? floatSeries = null,
@@ -563,6 +564,30 @@ namespace ShaiRandom.Generators
         /// <param name="outerBound">The outer bound (usually the maximum) for the returned number, exclusive.</param>
         /// <returns>The next decimal in the underlying series.</returns>
         public decimal NextDecimal(decimal innerBound, decimal outerBound) => ReturnIfBetweenBounds(innerBound, outerBound, _decimalSeries, ref _decimalIndex);
+
+        /// <summary>
+        /// Returns the next decimal in the underlying series.  If it is outside of the bound (0, 1), throws
+        /// an exception.
+        /// </summary>
+        /// <returns>The next decimal in the underlying series, if it is within the bound.</returns>
+        public decimal NextExclusiveDecimal() => NextExclusiveDecimal(decimal.Zero, decimal.One);
+
+        /// <summary>
+        /// Returns the next decimal in the underlying series.  If it is outside of the bound ([)0, <paramref name="outerBound"/>), throws
+        /// an exception.
+        /// </summary>
+        /// <param name="outerBound">The maximum value of the returned number, exclusive.</param>
+        /// <returns>The next decimal in the underlying series, if it is within the bound.</returns>
+        public decimal NextExclusiveDecimal(decimal outerBound) => NextExclusiveDecimal(decimal.Zero, outerBound);
+
+        /// <summary>
+        /// Returns the next decimal in the underlying series.  If it is outside of the bound (<paramref name="minBound"/>, <paramref name="maxBound"/>), throws
+        /// an exception.
+        /// </summary>
+        /// <param name="minBound">The minimum value of the returned number, exclusive.</param>
+        /// <param name="maxBound">The maximum value of the returned number, exclusive.</param>
+        /// <returns>The next decimal in the underlying series, if it is within the bounds.</returns>
+        public decimal NextExclusiveDecimal(decimal minBound, decimal maxBound) => ReturnIfBetweenBoundsExclusive(minBound, maxBound, _decimalSeries, ref _decimalIndex);
 
         /// <summary>
         /// Not supported by this generator.
