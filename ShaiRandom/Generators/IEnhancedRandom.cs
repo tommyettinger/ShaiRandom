@@ -675,7 +675,7 @@ namespace ShaiRandom.Generators
         /// (near to 0) than other methods.
         /// </summary>
         /// <remarks>
-        /// This can be implemented in various ways; the simplest is to generate a number in the range between 1 (inclusive) and 2<sup>24</sup> (exclusive), then divide the result by 2<sup>24</sup>.
+        /// This can be implemented in various ways; the simplest is to generate a number in the range between 1 (inclusive) and 2<sup>53</sup> (exclusive), then divide the result by 2<sup>53</sup>.
         /// The technique used in AbstractRandom is very different; it is related to <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>.
         /// Because the ability to get the number of leading or trailing zeros is in a method not present in .NET Standard, we get close to that by using
         /// <see cref="BitConverter.DoubleToInt64Bits(double)"/> on a negative long and using its exponent bits directly. The smallest double AbstractRandom can return is 1.0842021724855044E-19 ; the largest it
@@ -709,11 +709,15 @@ namespace ShaiRandom.Generators
         double NextExclusiveDouble(double innerBound, double outerBound);
 
         /// <summary>
-        /// Gets a random float between 0.0 and 1.0, exclusive at both ends. This can return float values between 1.0842022E-19 and 0.99999994; it cannot return 0 or 1.
+        /// Gets a random float between 0.0 and 1.0, exclusive at both ends. This cannot return 0 or 1.
         /// </summary>
         /// <remarks>
-        /// Like <see cref="NextExclusiveDouble()"/>, this is absolute voodoo code. Its implementation generates one long and then does conversions both from int to float
-        /// (to get the result), and from double to long (to get an approximation of log base 2). The code here is bat country, and should not be edited carelessly.</remarks>
+        /// This can be implemented in various ways; the simplest is to generate a number in the range between 1 (inclusive) and 2<sup>24</sup> (exclusive), then divide the result by 2<sup>24</sup>.
+        /// The technique used in AbstractRandom is very different; it is related to <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>.
+        /// Because the ability to get the number of leading or trailing zeros is in a method not present in .NET Standard, we get close to that by using
+        /// <see cref="BitConverter.SingleToInt32Bits(float)"/> on a negative long and using its exponent bits directly. The smallest float AbstractRandom can return is 1.0842022E-19; the largest it
+        /// can return is 0.99999994 . The smallest result is significantly closer to 0 than <see cref="NextFloat()"/> can produce without actually returning 0, and also much closer than the first method.
+        /// </remarks>
         /// <returns>A random uniform float between 0 and 1 (both exclusive).</returns>
         float NextExclusiveFloat();
 
@@ -739,6 +743,27 @@ namespace ShaiRandom.Generators
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <returns>a float between innerBound, exclusive, and outerBound, exclusive</returns>
         float NextExclusiveFloat(float innerBound, float outerBound);
+
+        /// <summary>
+        /// Gets a random decimal between 0.0 and 1.0, exclusive at both ends. This can return decimal values between 1E-28 and 1 - 1E-28; it cannot return 0 or 1.
+        /// </summary>
+        /// <returns>A random uniform decimal between 0 and 1 (both exclusive).</returns>
+        decimal NextExclusiveDecimal();
+
+        /// <summary>
+        /// Just like <see cref="NextDecimal(decimal)"/>, but this is exclusive on both 0.0 and outerBound.
+        /// </summary>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <returns>a decimal between 0.0, exclusive, and outerBound, exclusive</returns>
+        decimal NextExclusiveDecimal(decimal outerBound);
+
+        /// <summary>
+        /// Just like <see cref="NextDecimal(decimal, decimal)"/>, but this is exclusive on both innerBound and outerBound.
+        /// </summary>
+        /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
+        /// <returns>a decimal between innerBound, exclusive, and outerBound, exclusive</returns>
+        decimal NextExclusiveDecimal(decimal innerBound, decimal outerBound);
 
         /// <summary>
         /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextULong()

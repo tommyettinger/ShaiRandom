@@ -458,6 +458,29 @@ namespace ShaiRandom.Generators
         {
             return innerBound + NextExclusiveFloat() * (outerBound - innerBound);
         }
+
+        /// <inheritdoc />
+        public decimal NextExclusiveDecimal()
+        {
+            unchecked
+            {
+                ulong bits = NextULong(0x204fce5e3e250262UL);
+                return new decimal(NextInt(0xFFFFFFF) + 1, (int)(bits & 0xFFFFFFFFUL), (int)(bits >> 32), false, 28);
+            }
+        }
+
+        /// <inheritdoc />
+        public decimal NextExclusiveDecimal(decimal outerBound)
+        {
+            return NextExclusiveDecimal() * outerBound;
+        }
+
+        /// <inheritdoc />
+        public decimal NextExclusiveDecimal(decimal innerBound, decimal outerBound)
+        {
+            return innerBound + NextExclusiveDecimal() * (outerBound - innerBound);
+        }
+
         /// <inheritdoc />
         public decimal NextDecimal()
         {
