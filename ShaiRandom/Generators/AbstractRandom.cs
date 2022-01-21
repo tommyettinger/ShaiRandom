@@ -369,6 +369,28 @@ namespace ShaiRandom.Generators
             return innerBound + NextInclusiveFloat() * (outerBound - innerBound);
         }
 
+        /// <inheritdoc />
+        public decimal NextInclusiveDecimal()
+        {
+            unchecked
+            {
+                ulong bits = NextULong(0x204fce5e3e250262UL);
+                return new decimal(NextInt(0x10000001), (int)(bits & 0xFFFFFFFFUL), (int)(bits >> 32), false, 28);
+            }
+        }
+
+        /// <inheritdoc />
+        public decimal NextInclusiveDecimal(decimal outerBound)
+        {
+            return NextInclusiveDecimal() * outerBound;
+        }
+
+        /// <inheritdoc />
+        public decimal NextInclusiveDecimal(decimal innerBound, decimal outerBound)
+        {
+            return innerBound + NextInclusiveDecimal() * (outerBound - innerBound);
+        }
+
         //Commented out because it was replaced by the bitwise technique below, but we may want to switch back later or on some platforms.
 
         // ///Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double

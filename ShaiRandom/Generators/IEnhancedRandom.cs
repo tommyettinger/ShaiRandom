@@ -553,6 +553,36 @@ namespace ShaiRandom.Generators
         double NextDouble(double innerBound, double outerBound);
 
         /// <summary>
+        /// Returns the next pseudorandom, rather-uniformly distributed
+        /// decimal value between 0.0M (inclusive) and 1.0M
+        /// (exclusive) from this random number generator's sequence.
+        /// </summary>
+        /// <returns>A rather-uniform random decimal between 0.0M inclusive and 1.0M exclusive.</returns>
+        decimal NextDecimal();
+
+        /// <summary>
+        /// Gets a pseudo-random float between 0M (inclusive) and outerBound (exclusive).
+        /// The outerBound may be positive or negative.
+        /// </summary>
+        /// <remarks>
+        /// Exactly the same as: <code>NextDecimal() * outerBound</code>
+        /// </remarks>
+        /// <param name="outerBound">the exclusive outer bound</param>
+        /// <returns>a decimal between 0 (inclusive) and outerBound (exclusive)</returns>
+        decimal NextDecimal(decimal outerBound);
+
+        /// <summary>
+        /// Gets a pseudo-random decimal between innerBound (inclusive) and outerBound (exclusive).
+        /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
+        /// inclusive and which is exclusive.
+        /// </summary>
+        /// <param name="innerBound">the inclusive inner bound; may be negative</param>
+        /// <param name="outerBound">the exclusive outer bound; may be negative</param>
+        /// <returns>a decimal between innerBound (inclusive) and outerBound (exclusive)</returns>
+        decimal NextDecimal(decimal innerBound, decimal outerBound);
+
+
+        /// <summary>
         /// This is just like <see cref="NextDouble()"/>, returning a double between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
         /// </summary>
         /// <remarks>
@@ -618,6 +648,27 @@ namespace ShaiRandom.Generators
         /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
         /// <returns>a float between innerBound, inclusive, and outerBound, inclusive</returns>
         float NextInclusiveFloat(float innerBound, float outerBound);
+
+        /// <summary>
+        /// This is just like <see cref="NextDecimal()"/>, returning a float between 0 and 1, except that it is inclusive on both 0.0 and 1.0.
+        /// </summary>
+        /// <returns>a decimal between 0.0, inclusive, and 1.0, inclusive</returns>
+        decimal NextInclusiveDecimal();
+
+        /// <summary>
+        /// Just like <see cref="NextDecimal(decimal)"/>, but this is inclusive on both 0.0 and outerBound.
+        /// </summary>
+        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
+        /// <returns>a decimal between 0.0, inclusive, and outerBound, inclusive</returns>
+        decimal NextInclusiveDecimal(decimal outerBound);
+
+        /// <summary>
+        /// Just like <see cref="NextDecimal(decimal, decimal)"/>, but this is inclusive on both innerBound and outerBound.
+        /// </summary>
+        /// <param name="innerBound">the inner inclusive bound; may be positive or negative</param>
+        /// <param name="outerBound">the outer inclusive bound; may be positive or negative</param>
+        /// <returns>a decimal between innerBound, inclusive, and outerBound, inclusive</returns>
+        decimal NextInclusiveDecimal(decimal innerBound, decimal outerBound);
 
         /// <summary>
         /// Gets a random double between 0.0 and 1.0, exclusive at both ends, using a technique that can produce more of the valid values for a double
@@ -688,35 +739,6 @@ namespace ShaiRandom.Generators
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <returns>a float between innerBound, exclusive, and outerBound, exclusive</returns>
         float NextExclusiveFloat(float innerBound, float outerBound);
-
-        /// <summary>
-        /// Returns the next pseudorandom, rather-uniformly distributed
-        /// decimal value between 0.0M (inclusive) and 1.0M
-        /// (exclusive) from this random number generator's sequence.
-        /// </summary>
-        /// <returns>A rather-uniform random decimal between 0.0M inclusive and 1.0M exclusive.</returns>
-        decimal NextDecimal();
-
-        /// <summary>
-        /// Gets a pseudo-random float between 0M (inclusive) and outerBound (exclusive).
-        /// The outerBound may be positive or negative.
-        /// </summary>
-        /// <remarks>
-        /// Exactly the same as: <code>NextDecimal() * outerBound</code>
-        /// </remarks>
-        /// <param name="outerBound">the exclusive outer bound</param>
-        /// <returns>a decimal between 0 (inclusive) and outerBound (exclusive)</returns>
-        decimal NextDecimal(decimal outerBound);
-
-        /// <summary>
-        /// Gets a pseudo-random decimal between innerBound (inclusive) and outerBound (exclusive).
-        /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
-        /// inclusive and which is exclusive.
-        /// </summary>
-        /// <param name="innerBound">the inclusive inner bound; may be negative</param>
-        /// <param name="outerBound">the exclusive outer bound; may be negative</param>
-        /// <returns>a decimal between innerBound (inclusive) and outerBound (exclusive)</returns>
-        decimal NextDecimal(decimal innerBound, decimal outerBound);
 
         /// <summary>
         /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextULong()
