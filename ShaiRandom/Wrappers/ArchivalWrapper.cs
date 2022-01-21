@@ -23,6 +23,7 @@ namespace ShaiRandom.Wrappers
         private readonly List<uint> _uintSeries;
         private readonly List<long> _longSeries;
         private readonly List<ulong> _ulongSeries;
+        private readonly List<decimal> _decimalSeries;
 
         /// <summary>
         /// The identifying tag here is "A" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
@@ -43,7 +44,7 @@ namespace ShaiRandom.Wrappers
         /// </remarks>
         public KnownSeriesRandom MakeArchivedSeries()
         {
-            return new KnownSeriesRandom(_intSeries, _uintSeries, _doubleSeries, _boolSeries, _byteSeries, _floatSeries, _longSeries, _ulongSeries);
+            return new KnownSeriesRandom(_intSeries, _uintSeries, _doubleSeries, _boolSeries, _byteSeries, _floatSeries, _longSeries, _ulongSeries, _decimalSeries);
         }
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace ShaiRandom.Wrappers
         /// </summary>
         /// <param name="other">Generator to copy state from.</param>
         public ArchivalWrapper(ArchivalWrapper other)
-            : this(other.Wrapped.Copy(), other._intSeries, other._uintSeries, other._doubleSeries, other._boolSeries, other._byteSeries, other._floatSeries, other._longSeries, other._ulongSeries)
+            : this(other.Wrapped.Copy(), other._intSeries, other._uintSeries, other._doubleSeries, other._boolSeries, other._byteSeries, other._floatSeries, other._longSeries, other._ulongSeries, other._decimalSeries)
         {
         }
 
@@ -84,16 +85,19 @@ namespace ShaiRandom.Wrappers
         /// <param name="floatSeries">Series of values to return via <see cref="NextFloat()"/>.</param>
         /// <param name="longSeries">Series of values to return via <see cref="NextLong()"/>.</param>
         /// <param name="ulongSeries">Series of values to return via <see cref="NextULong()"/>.</param>
+        /// <param name="decimalSeries">Series of values to return via <see cref="NextDecimal()"/>.</param>
         public ArchivalWrapper(IEnhancedRandom random, IEnumerable<int>? intSeries = null, IEnumerable<uint>? uintSeries = null,
                                  IEnumerable<double>? doubleSeries = null, IEnumerable<bool>? boolSeries = null,
                                  IEnumerable<byte>? byteSeries = null, IEnumerable<float>? floatSeries = null,
-                                 IEnumerable<long>? longSeries = null,IEnumerable<ulong>? ulongSeries = null)
+                                 IEnumerable<long>? longSeries = null,IEnumerable<ulong>? ulongSeries = null,
+                                 IEnumerable<decimal>? decimalSeries = null)
         {
             Wrapped = random;
             _intSeries = intSeries == null ? new List<int>() : intSeries.ToList();
             _uintSeries = uintSeries == null ? new List<uint>() : uintSeries.ToList();
             _longSeries = longSeries == null ? new List<long>() : longSeries.ToList();
             _ulongSeries = ulongSeries == null ? new List<ulong>() : ulongSeries.ToList();
+            _decimalSeries = decimalSeries == null ? new List<decimal>() : decimalSeries.ToList();
             _doubleSeries = doubleSeries == null ? new List<double>() : doubleSeries.ToList();
             _floatSeries = floatSeries == null ? new List<float>() : floatSeries.ToList();
             _boolSeries = boolSeries == null ? new List<bool>() : boolSeries.ToList();
@@ -132,7 +136,7 @@ namespace ShaiRandom.Wrappers
         }
 
         /// <inheritdoc />
-        public IEnhancedRandom Copy() => new ArchivalWrapper(Wrapped.Copy(), _intSeries, _uintSeries, _doubleSeries, _boolSeries, _byteSeries, _floatSeries, _longSeries, _ulongSeries);
+        public IEnhancedRandom Copy() => new ArchivalWrapper(Wrapped.Copy(), _intSeries, _uintSeries, _doubleSeries, _boolSeries, _byteSeries, _floatSeries, _longSeries, _ulongSeries, _decimalSeries);
 
         /// <inheritdoc/>
         public bool NextBool() {
@@ -413,7 +417,7 @@ namespace ShaiRandom.Wrappers
         public decimal NextDecimal()
         {
             decimal v = Wrapped.NextDecimal();
-            _doubleSeries.Add((double)v);
+            _decimalSeries.Add(v);
             return v;
         }
 
@@ -421,7 +425,7 @@ namespace ShaiRandom.Wrappers
         public decimal NextDecimal(decimal outerBound)
         {
             decimal v = Wrapped.NextDecimal(outerBound);
-            _doubleSeries.Add((double)v);
+            _decimalSeries.Add(v);
             return v;
         }
 
@@ -430,7 +434,7 @@ namespace ShaiRandom.Wrappers
         public decimal NextDecimal(decimal innerBound, decimal outerBound)
         {
             decimal v = Wrapped.NextDecimal(innerBound, outerBound);
-            _doubleSeries.Add((double)v);
+            _decimalSeries.Add(v);
             return v;
         }
 
@@ -497,6 +501,7 @@ namespace ShaiRandom.Wrappers
             _uintSeries.Clear();
             _longSeries.Clear();
             _ulongSeries.Clear();
+            _decimalSeries.Clear();
 
             _boolSeries.AddRange(ksr._boolSeries);
             _byteSeries.AddRange(ksr._byteSeries);
@@ -506,6 +511,7 @@ namespace ShaiRandom.Wrappers
             _uintSeries.AddRange(ksr._uintSeries);
             _longSeries.AddRange(ksr._longSeries);
             _ulongSeries.AddRange(ksr._ulongSeries);
+            _decimalSeries.AddRange(ksr._decimalSeries);
             return this;
         }
     }
