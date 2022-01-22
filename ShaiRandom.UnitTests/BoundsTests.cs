@@ -19,11 +19,11 @@ namespace ShaiRandom.UnitTests
         private static readonly (int inner, int outer)[] s_signedBounds = { (1, 3), (2, 2), (-3, -1), (-2, 1), (1, -2) };
         private static readonly (int inner, int outer)[] s_unsignedBounds = { (1, 3), (2, 2), (3, 1) };
 
-        public static IEnumerable<(IEnhancedRandom rng, (int inner, int outer) bounds)> SignedTestData =
-            s_generators.Combinate(s_signedBounds);
+        public static IEnumerable<(int inner, int outer, IEnhancedRandom rng)> SignedTestData =
+            s_signedBounds.Combinate(s_generators);
 
-        public static IEnumerable<(IEnhancedRandom rng, (int inner, int outer) bounds)> UnsignedTestData =
-            s_generators.Combinate(s_unsignedBounds);
+        public static IEnumerable<(int inner, int outer, IEnhancedRandom rng)> UnsignedTestData =
+            s_unsignedBounds.Combinate(s_generators);
 
         #region Template Tests
         private (Func<T, T> outerBound, Func<T, T, T> dualBound) GetGenerationFunctions<T>(IEnhancedRandom rng, string name)
@@ -117,13 +117,13 @@ namespace ShaiRandom.UnitTests
         #region Integer Function Tests
         [Theory]
         [MemberDataTuple(nameof(UnsignedTestData))]
-        void NextULong(IEnhancedRandom rng, (int inner, int outer) bounds)
-            => TestIntegerFunc<ulong>(rng, "NextULong", bounds);
+        void NextULong(int inner, int outer, IEnhancedRandom rng)
+            => TestIntegerFunc<ulong>(rng, "NextULong", (inner, outer));
 
         [Theory]
         [MemberDataTuple(nameof(SignedTestData))]
-        void NextLong(IEnhancedRandom rng, (int inner, int outer) bounds)
-            => TestIntegerFunc<long>(rng, "NextLong", bounds);
+        void NextLong(int inner, int outer, IEnhancedRandom rng)
+            => TestIntegerFunc<long>(rng, "NextLong", (inner, outer));
         #endregion
     }
 }
