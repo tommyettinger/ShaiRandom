@@ -525,6 +525,12 @@ namespace ShaiRandom.PerformanceTests
         public double Mizuchi() => _mizuchiRandom.NextExclusiveDouble();
     }
 
+    /// <summary>
+    ///|  Method |     Mean |     Error |    StdDev |
+    ///|-------- |---------:|----------:|----------:|
+    ///| Strange | 2.693 ns | 0.0807 ns | 0.1049 ns |
+    ///|   Bitsy | 2.019 ns | 0.0540 ns | 0.0479 ns |
+    /// </summary>
     public class ExclusiveDoubleComparison
     {
         private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
@@ -534,7 +540,6 @@ namespace ShaiRandom.PerformanceTests
             long bits = random.NextLong();
             return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
         }
-
         private static double BitsyDouble(MizuchiRandom random)
         {
             ulong bits = random.NextULong();
