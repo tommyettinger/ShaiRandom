@@ -19,6 +19,8 @@ namespace ShaiRandom.UnitTests
         private static readonly (int inner, int outer)[] s_signedBounds = { (1, 3), (2, 2), (-3, -1), (-2, 1), (1, -2) };
         private static readonly (int inner, int outer)[] s_unsignedBounds = { (1, 3), (2, 2), (3, 1) };
 
+        private const int NumValuesToGenerate = 100;
+
         // MUST be different than values used in other sets.
         private const float EqualTestValue = 1.2f;
         private static readonly (float inner, float outer)[] s_floatingBounds =
@@ -36,17 +38,33 @@ namespace ShaiRandom.UnitTests
         public static IEnumerable<(float inner, float outer, IEnhancedRandom rng)> FloatingTestData =
             s_floatingBounds.Combinate(s_generators);
 
+        public static IEnumerable<IEnhancedRandom> Generators = s_generators;
+
         #region Template Tests
-        private (Func<T, T> outerBound, Func<T, T, T> dualBound) GetGenerationFunctions<T>(IEnhancedRandom rng, string name)
+        private (Func<T> unbounded, Func<T, T> outerBound, Func<T, T, T> dualBound) GetGenerationFunctions<T>(IEnhancedRandom rng, string name)
             where T : notnull
         {
             // Find info for the functions
+            var unboundedInfo = typeof(IEnhancedRandom).GetMethod(name, Array.Empty<Type>())
+                                        ?? throw new Exception("Couldn't find unbounded generation method with the name given.");
             var outerBoundInfo = typeof(IEnhancedRandom).GetMethod(name, new []{typeof(T)})
                                  ?? throw new Exception("Couldn't generation method with the name given that takes a single (outer) bound.");
             var dualBoundInfo = typeof(IEnhancedRandom).GetMethod(name, new []{typeof(T), typeof(T)})
                                 ?? throw new Exception("Couldn't find generation method with the name given which takes both an inner and outer bound.");
 
             // Create convenient Func wrappers from which we can call them.
+            T Unbounded()
+            {
+                try
+                {
+                    return (T)unboundedInfo.Invoke(rng, null)!;
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException!;
+                }
+            }
+
             T OuterBound(T outer)
             {
                 try
@@ -72,7 +90,7 @@ namespace ShaiRandom.UnitTests
             }
 
             // Return functions
-            return (OuterBound, DualBound);
+            return (Unbounded, OuterBound, DualBound);
         }
 
         private void TestIntFunctionBounds<T>(IEnhancedRandom rng, string funcName, (int inner, int outer) bounds)
@@ -84,8 +102,8 @@ namespace ShaiRandom.UnitTests
 
             // Generate a bunch of integers, and record them in a known-series random.
             var wrapper = new ArchivalWrapper(rng);
-            var (outerBound, dualBound) = GetGenerationFunctions<T>(wrapper, funcName);
-            for (int i = 0; i < 100; i++)
+            var (_, outerBound, dualBound) = GetGenerationFunctions<T>(wrapper, funcName);
+            for (int i = 0; i < NumValuesToGenerate; i++)
             {
                 outerBound(outer);
                 dualBound(inner, outer);
@@ -98,18 +116,18 @@ namespace ShaiRandom.UnitTests
             var frequencyDual = new Dictionary<T, int>();
             var frequencyOuter = new Dictionary<T, int>();
             var ksr = wrapper.MakeArchivedSeries();
-            (outerBound, dualBound) = GetGenerationFunctions<T>(ksr, funcName);
-            for (int i = 0; i < 100; i++)
+            (_, outerBound, dualBound) = GetGenerationFunctions<T>(ksr, funcName);
+            for (int i = 0; i < NumValuesToGenerate; i++)
             {
                 T value = outerBound(outer);
                 if (!frequencyOuter.ContainsKey(value))
                     frequencyOuter[value] = 0;
-                frequencyOuter[value] += 1;
+                frequencyOuter[value]++;
 
                 value = dualBound(inner, outer);
                 if (!frequencyDual.ContainsKey(value))
                     frequencyDual[value] = 0;
-                frequencyDual[value] += 1;
+                frequencyDual[value]++;
             }
 
             // KSR validates that the numbers don't _exceed_ the bound, but not that all numbers within the bounds
@@ -144,11 +162,10 @@ namespace ShaiRandom.UnitTests
             if (!isEqualCase)
                 Assert.True(inner != outer);
 
-            // TODO: Also test unbounded 0, 1
-            // Generate a bunch of integers, and record them in a known-series random.
+            // Generate a bunch of values, and record them in a known-series random.
             var wrapper = new ArchivalWrapper(rng);
-            var (outerBound, dualBound) = GetGenerationFunctions<T>(wrapper, funcName);
-            for (int i = 0; i < 100; i++)
+            var (_, outerBound, dualBound) = GetGenerationFunctions<T>(wrapper, funcName);
+            for (int i = 0; i < NumValuesToGenerate; i++)
             {
                 outerBound(outer);
                 dualBound(inner, outer);
@@ -161,18 +178,18 @@ namespace ShaiRandom.UnitTests
             var frequencyDual = new Dictionary<T, int>();
             var frequencyOuter = new Dictionary<T, int>();
             var ksr = wrapper.MakeArchivedSeries();
-            (outerBound, dualBound) = GetGenerationFunctions<T>(ksr, funcName);
-            for (int i = 0; i < 100; i++)
+            (_, outerBound, dualBound) = GetGenerationFunctions<T>(ksr, funcName);
+            for (int i = 0; i < NumValuesToGenerate; i++)
             {
                 T value = outerBound(outer);
                 if (!frequencyOuter.ContainsKey(value))
                     frequencyOuter[value] = 0;
-                frequencyOuter[value] += 1;
+                frequencyOuter[value]++;
 
                 value = dualBound(inner, outer);
                 if (!frequencyDual.ContainsKey(value))
                     frequencyDual[value] = 0;
-                frequencyDual[value] += 1;
+                frequencyDual[value]++;
             }
 
             // KSR validates that the numbers don't _exceed_ the bound, but not that all numbers within the bounds
@@ -199,6 +216,44 @@ namespace ShaiRandom.UnitTests
                 Assert.True(frequencyDual.Count > 1);
                 Assert.True(frequencyOuter.Count > 1);
             }
+        }
+
+        // NOTE: This function works for the regular floating-point functions, as well as both the inclusive and exclusive
+        // functions (at least for now).  We can't really do any sanity checking to ensure the bounds are precise;
+        // we can only check to ensure there is more than 1 unique value if the range values weren't equal, and also
+        // that all values returned were at least within the bounds; and all that applies to our test data regardless
+        // of the exclusivity or inclusivity of its bounds.
+        private void TestFloatingFunctionUnbounded<T>(IEnhancedRandom rng, string funcName)
+            where T : IComparable<T>
+        {
+            // Generate a bunch of values, and record them in a known-series random.
+            var wrapper = new ArchivalWrapper(rng);
+            var (unbounded, _, _) = GetGenerationFunctions<T>(wrapper, funcName);
+            for (int i = 0; i < NumValuesToGenerate; i++)
+                unbounded();
+
+            // Generate each of those numbers from a KSR recording what the actual generator just generated.
+            // Since KSR throws exception if any value is outside the allowable bounds, this validates that the bounds
+            // stay within inner (inclusive) and outer (exclusive).  In the process, we'll also build a frequency
+            // dictionary for the next step.
+            var frequency = new Dictionary<T, int>();
+            var ksr = wrapper.MakeArchivedSeries();
+            (unbounded, _, _) = GetGenerationFunctions<T>(ksr, funcName);
+            for (int i = 0; i < NumValuesToGenerate; i++)
+            {
+                T value = unbounded();
+                if (!frequency.ContainsKey(value))
+                    frequency[value] = 0;
+                frequency[value]++;
+            }
+
+            // KSR validates that the numbers don't _exceed_ the bound, but not that all numbers within the bounds
+            // are generated.  But, especially since some implementations of floating point RNG won't be able to
+            // generate all values, there's no easy way to check this.  We'll at least sanity check that there are
+            // multiple values returned though if we're not checking specifically for equality, to ensure bound-crossing
+            // behavior is consistent.  Since the ranges we use are small, there should definitely be at least 2 unique
+            // values out of 100 generated (if not, the generator probably has severe distribution problems).
+            Assert.True(frequency.Count > 1);
         }
         #endregion
 
@@ -233,9 +288,19 @@ namespace ShaiRandom.UnitTests
             => TestFloatingFunctionBounds<float>(rng, "NextFloat", (inner, outer));
 
         [Theory]
+        [MemberDataEnumerable(nameof(Generators))]
+        void NextFloatUnbounded(IEnhancedRandom rng)
+            => TestFloatingFunctionUnbounded<float>(rng, "NextFloat");
+
+        [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
         void NextFloatInclusiveBounds(float inner, float outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<float>(rng, "NextInclusiveFloat", (inner, outer));
+
+        [Theory]
+        [MemberDataEnumerable(nameof(Generators))]
+        void NextFloatInclusiveUnbounded(IEnhancedRandom rng)
+            => TestFloatingFunctionUnbounded<float>(rng, "NextInclusiveFloat");
 
         [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
@@ -243,9 +308,19 @@ namespace ShaiRandom.UnitTests
             => TestFloatingFunctionBounds<float>(rng, "NextExclusiveFloat", (inner, outer));
 
         [Theory]
+        [MemberDataEnumerable(nameof(Generators))]
+        void NextFloatExclusiveUnbounded(IEnhancedRandom rng)
+            => TestFloatingFunctionUnbounded<float>(rng, "NextExclusiveFloat");
+
+        [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
         void NextDouble(float inner, float outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<double>(rng, "NextDouble", (inner, outer));
+
+        [Theory]
+        [MemberDataEnumerable(nameof(Generators))]
+        void NextDoubleUnbounded(IEnhancedRandom rng)
+            => TestFloatingFunctionUnbounded<double>(rng, "NextDouble");
 
         [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
@@ -253,9 +328,19 @@ namespace ShaiRandom.UnitTests
             => TestFloatingFunctionBounds<double>(rng, "NextInclusiveDouble", (inner, outer));
 
         [Theory]
+        [MemberDataEnumerable(nameof(Generators))]
+        void NextDoubleInclusiveUnbounded(IEnhancedRandom rng)
+            => TestFloatingFunctionUnbounded<double>(rng, "NextInclusiveDouble");
+
+        [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
         void NextDoubleExclusiveBounds(float inner, float outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<double>(rng, "NextExclusiveDouble", (inner, outer));
+
+        [Theory]
+        [MemberDataEnumerable(nameof(Generators))]
+        void NextDoubleExclusiveUnbounded(IEnhancedRandom rng)
+            => TestFloatingFunctionUnbounded<double>(rng, "NextExclusiveDouble");
 
         [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
@@ -263,14 +348,29 @@ namespace ShaiRandom.UnitTests
             => TestFloatingFunctionBounds<decimal>(rng, "NextDecimal", (inner, outer));
 
         [Theory]
+        [MemberDataEnumerable(nameof(Generators))]
+        void NextDecimalUnbounded(IEnhancedRandom rng)
+            => TestFloatingFunctionUnbounded<decimal>(rng, "NextDecimal");
+
+        [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
         void NextDecimalInclusiveBounds(float inner, float outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<decimal>(rng, "NextInclusiveDecimal", (inner, outer));
 
         [Theory]
+        [MemberDataEnumerable(nameof(Generators))]
+        void NextDecimalInclusiveUnbounded(IEnhancedRandom rng)
+            => TestFloatingFunctionUnbounded<decimal>(rng, "NextInclusiveDecimal");
+
+        [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
         void NextDecimalExclusiveBounds(float inner, float outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<decimal>(rng, "NextExclusiveDecimal", (inner, outer));
+
+        [Theory]
+        [MemberDataEnumerable(nameof(Generators))]
+        void NextDecimalExclusiveUnbounded(IEnhancedRandom rng)
+            => TestFloatingFunctionUnbounded<decimal>(rng, "NextExclusiveDecimal");
         #endregion
     }
 }
