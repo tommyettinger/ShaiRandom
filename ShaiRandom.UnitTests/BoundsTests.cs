@@ -23,7 +23,7 @@ namespace ShaiRandom.UnitTests
         private const float EqualTestValue = 1.2f;
         private static readonly (float inner, float outer)[] s_floatingBounds =
         {
-            (0.000000001f, 0.000000003f), (EqualTestValue, EqualTestValue), (-0.000000003f, -0.000000001f),
+            (0.000000001f, 0.000000003f), (EqualTestValue, EqualTestValue), (0, 0), (-0.000000003f, -0.000000001f),
             (-0.000000001f, 0.000000001f), (0.000000001f, -0.000000001f)
         };
 
@@ -137,7 +137,7 @@ namespace ShaiRandom.UnitTests
 
             // Check if we're explicitly comparing for equality, so we can avoid our sanity check for more than
             // one unique returned value in that case
-            bool isEqualCase =  Math.Abs(bounds.inner - 1.2f) < 0.00000000001;
+            bool isEqualCase =  Math.Abs(bounds.inner - 1.2f) < 0.00000000001 || bounds.inner == 0 && bounds.outer == 0;
 
             // Sanity check to make sure we haven't made the test case data so precise that floating-point imprecision
             // bit us and considered the bounds equal
@@ -184,8 +184,15 @@ namespace ShaiRandom.UnitTests
             if (isEqualCase)
             {
                 Assert.Single(frequencyDual);
-                Assert.Single(frequencyOuter);
-                Assert.Equal(outer, frequencyDual.Values.First());
+                Assert.Equal(outer, frequencyDual.Keys.First());
+
+                if (bounds.inner == 0 && bounds.outer == 0)
+                {
+                    Assert.Single(frequencyOuter);
+                    Assert.Equal(outer, frequencyOuter.Keys.First());
+                }
+                else
+                    Assert.True(frequencyOuter.Count > 1);
             }
             else
             {
