@@ -550,12 +550,19 @@ namespace ShaiRandom.PerformanceTests
     ///|      Strange | 2.913 ns | 0.0864 ns | 0.1684 ns | 2.983 ns |
     ///|        Bitsy | 2.499 ns | 0.0595 ns | 0.0497 ns | 2.490 ns |
     ///| NotExclusive | 2.477 ns | 0.0791 ns | 0.1466 ns | 2.380 ns |
+    /// .NET Core 3.1, but without using BitOperations
+    ///|       Method |     Mean |     Error |    StdDev |
+    ///|------------- |---------:|----------:|----------:|
+    ///|      Strange | 2.671 ns | 0.0491 ns | 0.0566 ns |
+    ///|        Bitsy | 9.064 ns | 0.2100 ns | 0.3787 ns |
+    ///| NotExclusive | 2.226 ns | 0.0750 ns | 0.1253 ns |
     /// </summary>
     /// <remarks>
     /// Just like on the JVM, the bitwise method of getting exclusive doubles is not just fast, it's faster than the "normal" way.
     /// It also gets closer to 0.0 (without reaching it) than that "normal" way. I have so far only verified that Bitsy performs this well on .NET 6.
     /// On .NET 5, the "normal" way is a fair bit faster than the Bitsy way. But, on .NET 3.1, Bitsy and the "normal" way are very close, with Bitsy
-    /// just barely faster. There's no clearly-better performance on .NET Core 3.0, other than Strange just not being very fast.
+    /// just barely faster. There's no clearly-better performance on .NET Core 3.0, other than Strange just not being very fast. If the BitOperations
+    /// class isn't available, which should only be true for .NET Standard 2.1 at this point, Bitsy gets incredibly slow relative to its normal state.
     /// There is likely quite a bit of imprecision in the measurements at the sub-nanosecond level.
     /// </remarks>
     public class ExclusiveDoubleComparison
