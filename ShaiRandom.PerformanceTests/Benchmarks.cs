@@ -526,15 +526,23 @@ namespace ShaiRandom.PerformanceTests
     }
 
     /// <summary>
+    /// .NET 6
     ///|       Method |     Mean |     Error |    StdDev |   Median |
     ///|------------- |---------:|----------:|----------:|---------:|
     ///|      Strange | 2.691 ns | 0.0816 ns | 0.1341 ns | 2.690 ns |
     ///|        Bitsy | 2.124 ns | 0.0662 ns | 0.0680 ns | 2.140 ns |
     ///| NotExclusive | 2.337 ns | 0.0750 ns | 0.1372 ns | 2.409 ns |
+    /// .NET 5
+    /// |       Method |     Mean |     Error |    StdDev |
+    /// |------------- |---------:|----------:|----------:|
+    /// |      Strange | 2.591 ns | 0.0767 ns | 0.0717 ns |
+    /// |        Bitsy | 2.381 ns | 0.0755 ns | 0.1262 ns |
+    /// | NotExclusive | 2.101 ns | 0.0610 ns | 0.0571 ns |
     /// </summary>
     /// <remarks>
     /// Just like on the JVM, the bitwise method of getting exclusive doubles is not just fast, it's faster than the "normal" way.
     /// It also gets closer to 0.0 (without reaching it) than that "normal" way. I have so far only verified that Bitsy performs this well on .NET 6.
+    /// On .NET 5, the "normal" way is a fair bit faster than the Bitsy way.
     /// </remarks>
     public class ExclusiveDoubleComparison
     {
