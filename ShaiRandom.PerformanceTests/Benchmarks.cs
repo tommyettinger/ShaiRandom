@@ -533,16 +533,23 @@ namespace ShaiRandom.PerformanceTests
     ///|        Bitsy | 2.124 ns | 0.0662 ns | 0.0680 ns | 2.140 ns |
     ///| NotExclusive | 2.337 ns | 0.0750 ns | 0.1372 ns | 2.409 ns |
     /// .NET 5
-    /// |       Method |     Mean |     Error |    StdDev |
-    /// |------------- |---------:|----------:|----------:|
-    /// |      Strange | 2.591 ns | 0.0767 ns | 0.0717 ns |
-    /// |        Bitsy | 2.381 ns | 0.0755 ns | 0.1262 ns |
-    /// | NotExclusive | 2.101 ns | 0.0610 ns | 0.0571 ns |
+    ///|       Method |     Mean |     Error |    StdDev |
+    ///|------------- |---------:|----------:|----------:|
+    ///|      Strange | 2.591 ns | 0.0767 ns | 0.0717 ns |
+    ///|        Bitsy | 2.381 ns | 0.0755 ns | 0.1262 ns |
+    ///| NotExclusive | 2.101 ns | 0.0610 ns | 0.0571 ns |
+    /// .NET Core 3.1
+    ///|       Method |     Mean |     Error |    StdDev |   Median |
+    ///|------------- |---------:|----------:|----------:|---------:|
+    ///|      Strange | 2.791 ns | 0.0832 ns | 0.1500 ns | 2.862 ns |
+    ///|        Bitsy | 2.480 ns | 0.0779 ns | 0.1425 ns | 2.428 ns |
+    ///| NotExclusive | 2.569 ns | 0.0786 ns | 0.1438 ns | 2.666 ns |
     /// </summary>
     /// <remarks>
     /// Just like on the JVM, the bitwise method of getting exclusive doubles is not just fast, it's faster than the "normal" way.
     /// It also gets closer to 0.0 (without reaching it) than that "normal" way. I have so far only verified that Bitsy performs this well on .NET 6.
-    /// On .NET 5, the "normal" way is a fair bit faster than the Bitsy way.
+    /// On .NET 5, the "normal" way is a fair bit faster than the Bitsy way. But, on .NET 3.1, Bitsy and the "normal" way are very close, with Bitsy
+    /// just barely faster. There is likely quite a bit of imprecision in the measurements at the sub-nanosecond level.
     /// </remarks>
     public class ExclusiveDoubleComparison
     {
