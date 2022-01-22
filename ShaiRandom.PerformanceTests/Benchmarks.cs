@@ -1,7 +1,12 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using ShaiRandom.Generators;
 using Troschuetz.Random.Generators;
+#if NETCOREAPP3_0_OR_GREATER
+using System.Numerics;
+#endif
+
 namespace ShaiRandom.PerformanceTests
 {
     /// <summary>
@@ -520,70 +525,106 @@ namespace ShaiRandom.PerformanceTests
         public double Mizuchi() => _mizuchiRandom.NextExclusiveDouble();
     }
 
-//    /// <summary>
-//    ///|   Method |     Mean |     Error |    StdDev |
-//    ///|--------- |---------:|----------:|----------:|
-//    ///| Distinct | 2.566 ns | 0.0786 ns | 0.1152 ns |
-//    ///|    Laser | 2.224 ns | 0.0755 ns | 0.0982 ns |
-//    ///|  Mizuchi | 2.515 ns | 0.0792 ns | 0.1526 ns |
-//    /// </summary>
-//    public class RandomExclusiveDoubleBitwiseComparison
-//    {
-//        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
-//        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
-//        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
-//        //private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
-//        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
-//
-//        [Benchmark]
-//        public double Distinct() => _distinctRandom.NextExclusiveDoubleBitwise();
-//
-//        [Benchmark]
-//        public double Laser() => _laserRandom.NextExclusiveDoubleBitwise();
-//
-//        //[Benchmark]
-//        //public double Tricycle() => _tricycleRandom.NextExclusiveDoubleBitwise();
-//
-//        //[Benchmark]
-//        //public double FourWheel() => _fourWheelRandom.NextExclusiveDoubleBitwise();
-//
-//        [Benchmark]
-//        public double Mizuchi() => _mizuchiRandom.NextExclusiveDoubleBitwise();
-//    }
-//    /// <summary>
-//    ///|   Method |     Mean |     Error |    StdDev |   Median |
-//    ///|--------- |---------:|----------:|----------:|---------:|
-//    ///| Distinct | 2.736 ns | 0.0845 ns | 0.1959 ns | 2.764 ns |
-//    ///|    Laser | 2.550 ns | 0.0818 ns | 0.0804 ns | 2.573 ns |
-//    ///|  Mizuchi | 3.536 ns | 0.0997 ns | 0.2332 ns | 3.667 ns |
-//    /// </summary>
-//    public class RandomExclusiveDoublUnsafeComparison
-//    {
-//        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
-//        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
-//        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
-//        //private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
-//        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
-//
-//        [Benchmark]
-//        public double Distinct() => _distinctRandom.NextExclusiveDoubleUnsafe();
-//
-//        [Benchmark]
-//        public double Laser() => _laserRandom.NextExclusiveDoubleUnsafe();
-//
-//        //[Benchmark]
-//        //public double Tricycle() => _tricycleRandom.NextExclusiveDoubleBitwise();
-//
-//        //[Benchmark]
-//        //public double FourWheel() => _fourWheelRandom.NextExclusiveDoubleUnsafe();
-//
-//        [Benchmark]
-//        public double Mizuchi() => _mizuchiRandom.NextExclusiveDoubleUnsafe();
-//    }
+    public class ExclusiveDoubleComparison
+    {
+        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
 
-    internal static class Program
+        private static double StrangeDouble(MizuchiRandom random)
+        {
+            long bits = random.NextLong();
+            return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
+        }
+
+        private static double BitsyDouble(MizuchiRandom random)
+        {
+            ulong bits = random.NextULong();
+#if NETCOREAPP3_0_OR_GREATER
+            return BitConverter.Int64BitsToDouble(1022L - BitOperations.TrailingZeroCount(bits) << 52 | (long)(bits >> 12));
+#else
+            ulong v = bits;
+            long c = 64L;
+            v &= 0UL - v;
+            if (v != 0UL) c--;
+            if ((v & 0x00000000FFFFFFFFUL) != 0UL) c -= 32;
+            if ((v & 0x0000FFFF0000FFFFUL) != 0UL) c -= 16;
+            if ((v & 0x00FF00FF00FF00FFUL) != 0UL) c -= 8;
+            if ((v & 0x0F0F0F0F0F0F0F0FUL) != 0UL) c -= 4;
+            if ((v & 0x3333333333333333UL) != 0UL) c -= 2;
+            if ((v & 0x5555555555555555UL) != 0UL) c -= 1;
+            return BitConverter.Int64BitsToDouble(1022L - c << 52 | (long)(bits >> 12));
+#endif
+        }
+        [Benchmark]
+        public double Strange() => StrangeDouble(_mizuchiRandom);
+        [Benchmark]
+        public double Bitsy() => BitsyDouble(_mizuchiRandom);
+
+    }
+
+    //    /// <summary>
+    //    ///|   Method |     Mean |     Error |    StdDev |
+    //    ///|--------- |---------:|----------:|----------:|
+    //    ///| Distinct | 2.566 ns | 0.0786 ns | 0.1152 ns |
+    //    ///|    Laser | 2.224 ns | 0.0755 ns | 0.0982 ns |
+    //    ///|  Mizuchi | 2.515 ns | 0.0792 ns | 0.1526 ns |
+    //    /// </summary>
+    //    public class RandomExclusiveDoubleBitwiseComparison
+    //    {
+    //        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
+    //        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
+    //        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
+    //        //private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
+    //        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+    //
+    //        [Benchmark]
+    //        public double Distinct() => _distinctRandom.NextExclusiveDoubleBitwise();
+    //
+    //        [Benchmark]
+    //        public double Laser() => _laserRandom.NextExclusiveDoubleBitwise();
+    //
+    //        //[Benchmark]
+    //        //public double Tricycle() => _tricycleRandom.NextExclusiveDoubleBitwise();
+    //
+    //        //[Benchmark]
+    //        //public double FourWheel() => _fourWheelRandom.NextExclusiveDoubleBitwise();
+    //
+    //        [Benchmark]
+    //        public double Mizuchi() => _mizuchiRandom.NextExclusiveDoubleBitwise();
+    //    }
+    //    /// <summary>
+    //    ///|   Method |     Mean |     Error |    StdDev |   Median |
+    //    ///|--------- |---------:|----------:|----------:|---------:|
+    //    ///| Distinct | 2.736 ns | 0.0845 ns | 0.1959 ns | 2.764 ns |
+    //    ///|    Laser | 2.550 ns | 0.0818 ns | 0.0804 ns | 2.573 ns |
+    //    ///|  Mizuchi | 3.536 ns | 0.0997 ns | 0.2332 ns | 3.667 ns |
+    //    /// </summary>
+    //    public class RandomExclusiveDoublUnsafeComparison
+    //    {
+    //        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
+    //        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
+    //        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
+    //        //private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
+    //        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+    //
+    //        [Benchmark]
+    //        public double Distinct() => _distinctRandom.NextExclusiveDoubleUnsafe();
+    //
+    //        [Benchmark]
+    //        public double Laser() => _laserRandom.NextExclusiveDoubleUnsafe();
+    //
+    //        //[Benchmark]
+    //        //public double Tricycle() => _tricycleRandom.NextExclusiveDoubleBitwise();
+    //
+    //        //[Benchmark]
+    //        //public double FourWheel() => _fourWheelRandom.NextExclusiveDoubleUnsafe();
+    //
+    //        [Benchmark]
+    //        public double Mizuchi() => _mizuchiRandom.NextExclusiveDoubleUnsafe();
+    //    }
+
+    internal static class Benchmarks
     {
         private static void Main(string[] args)
-            => BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
+            => BenchmarkSwitcher.FromAssembly(typeof(Benchmarks).Assembly).Run(args);
     }
 }
