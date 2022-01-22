@@ -90,8 +90,11 @@ namespace ShaiRandom.UnitTests
             FourWheelRandom fwr = new FourWheelRandom(1);
             for (int i = 0; i < 100; i++)
             {
-                Assert.Equal(100U, fwr.NextUInt(100U, 3U));
-                Assert.Equal(100UL, fwr.NextULong(100UL, 3UL));
+                Assert.InRange(fwr.NextUInt(10U, 3U), 4U, 10U);
+                Assert.InRange(fwr.NextULong(10UL, 3UL), 4UL, 10UL);
+                Assert.NotInRange(fwr.NextUInt(10U, 3U), 0U, 3U);
+                Assert.NotInRange(fwr.NextULong(10UL, 3UL), 0UL, 3UL);
+
             }
         }
 

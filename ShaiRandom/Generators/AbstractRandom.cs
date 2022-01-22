@@ -186,7 +186,12 @@ namespace ShaiRandom.Generators
         public ulong NextULong(ulong inner, ulong outer)
         {
             ulong rand = NextULong();
-            if (inner >= outer) return inner;
+            if (outer < inner)
+            {
+                ulong t = outer;
+                outer = inner + 1UL;
+                inner = t + 1UL;
+            }
             ulong bound = outer - inner;
             ulong randLow = rand & 0xFFFFFFFFUL;
             ulong boundLow = bound & 0xFFFFFFFFUL;
