@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using ShaiRandom.Generators;
 using ShaiRandom.Wrappers;
@@ -8,11 +9,23 @@ using XUnit.ValueTuples;
 
 namespace ShaiRandom.UnitTests
 {
+    /// <summary>
+    /// Tests which check to make sure each generator implementation's bounded generation functions return values
+    /// consistent with IEnhancedRandom's definition of bounds.
+    /// </summary>
     public class BoundsTests
     {
-        public static IEnumerable<(int inner, int outer)> SignedBounds = new[] { (1, 3), (2, 2), (-3, -1), (-2, 1), (1, -2) };
-        public static IEnumerable<(int inner, int outer)> UnsignedBounds = new[] { (1, 3), (2, 2), (3, 1) };
+        private static readonly IEnhancedRandom[] s_generators = DataGenerators.CreateGenerators(true).ToArray();
+        private static readonly (int inner, int outer)[] s_signedBounds = { (1, 3), (2, 2), (-3, -1), (-2, 1), (1, -2) };
+        private static readonly (int inner, int outer)[] s_unsignedBounds = { (1, 3), (2, 2), (3, 1) };
 
+        public static IEnumerable<(IEnhancedRandom rng, (int inner, int outer) bounds)> SignedTestData =
+            s_generators.Combinate(s_signedBounds);
+
+        public static IEnumerable<(IEnhancedRandom rng, (int inner, int outer) bounds)> UnsignedTestData =
+            s_generators.Combinate(s_unsignedBounds);
+
+        #region Template Tests
         private (Func<T, T> outerBound, Func<T, T, T> dualBound) GetGenerationFunctions<T>(IEnhancedRandom rng, string name)
             where T : notnull
         {
@@ -98,13 +111,19 @@ namespace ShaiRandom.UnitTests
             Assert.True(frequencyOuter.ContainsKey((T)Convert.ChangeType(0, typeof(T))));
             Assert.True(frequencyDual.ContainsKey(outerInclusive));
         }
+        #endregion
+
+
+        #region Integer Function Tests
+        [Theory]
+        [MemberDataTuple(nameof(UnsignedTestData))]
+        void NextULong(IEnhancedRandom rng, (int inner, int outer) bounds)
+            => TestIntegerFunc<ulong>(rng, "NextULong", bounds);
 
         [Theory]
-        [MemberDataTuple(nameof(UnsignedBounds))]
-        void NextULong(int inner, int outer) => TestIntegerFunc<ulong>(new MizuchiRandom(), "NextULong", (inner, outer));
-
-        [Theory]
-        [MemberDataTuple(nameof(SignedBounds))]
-        void NextLong(int inner, int outer) => TestIntegerFunc<long>(new MizuchiRandom(), "NextLong", (inner, outer));
+        [MemberDataTuple(nameof(SignedTestData))]
+        void NextLong(IEnhancedRandom rng, (int inner, int outer) bounds)
+            => TestIntegerFunc<long>(rng, "NextLong", bounds);
+        #endregion
     }
 }
