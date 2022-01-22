@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ShaiRandom.Generators;
 using ShaiRandom.Wrappers;
 
