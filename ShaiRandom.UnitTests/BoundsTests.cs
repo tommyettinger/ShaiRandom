@@ -124,6 +124,16 @@ namespace ShaiRandom.UnitTests
         [MemberDataTuple(nameof(SignedTestData))]
         void NextLong(int inner, int outer, IEnhancedRandom rng)
             => TestIntegerFunc<long>(rng, "NextLong", (inner, outer));
+
+        [Theory]
+        [MemberDataTuple(nameof(UnsignedTestData))]
+        void NextUInt(int inner, int outer, IEnhancedRandom rng)
+            => TestIntegerFunc<uint>(rng, "NextUInt", (inner, outer));
+
+        [Theory]
+        [MemberDataTuple(nameof(SignedTestData))]
+        void NextInt(int inner, int outer, IEnhancedRandom rng)
+            => TestIntegerFunc<int>(rng, "NextInt", (inner, outer));
         #endregion
     }
 }
