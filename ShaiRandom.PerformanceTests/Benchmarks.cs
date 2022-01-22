@@ -526,11 +526,16 @@ namespace ShaiRandom.PerformanceTests
     }
 
     /// <summary>
-    ///|  Method |     Mean |     Error |    StdDev |
-    ///|-------- |---------:|----------:|----------:|
-    ///| Strange | 2.693 ns | 0.0807 ns | 0.1049 ns |
-    ///|   Bitsy | 2.019 ns | 0.0540 ns | 0.0479 ns |
+    ///|       Method |     Mean |     Error |    StdDev |   Median |
+    ///|------------- |---------:|----------:|----------:|---------:|
+    ///|      Strange | 2.691 ns | 0.0816 ns | 0.1341 ns | 2.690 ns |
+    ///|        Bitsy | 2.124 ns | 0.0662 ns | 0.0680 ns | 2.140 ns |
+    ///| NotExclusive | 2.337 ns | 0.0750 ns | 0.1372 ns | 2.409 ns |
     /// </summary>
+    /// <remarks>
+    /// Just like on the JVM, the bitwise method of getting exclusive doubles is not just fast, it's faster than the "normal" way.
+    /// It also gets closer to 0.0 (without reaching it) than that "normal" way. I have so far only verified that Bitsy performs this well on .NET 6.
+    /// </remarks>
     public class ExclusiveDoubleComparison
     {
         private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
@@ -563,6 +568,8 @@ namespace ShaiRandom.PerformanceTests
         public double Strange() => StrangeDouble(_mizuchiRandom);
         [Benchmark]
         public double Bitsy() => BitsyDouble(_mizuchiRandom);
+        [Benchmark]
+        public double NotExclusive() => _mizuchiRandom.NextDouble();
 
     }
 
