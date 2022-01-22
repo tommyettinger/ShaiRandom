@@ -10,8 +10,8 @@ namespace ShaiRandom.UnitTests
 {
     public class BoundsTests
     {
-        public static IEnumerable<(int inner, int outer)> SignedBounds = new[] { (1, 3), (2, 2), (1, -2) };
-        public static IEnumerable<(int inner, int outer)> UnsignedBounds = new[] { (1, 3), (2, 2) };
+        public static IEnumerable<(int inner, int outer)> SignedBounds = new[] { (1, 3), (2, 2), (-3, -1), (-2, 1), (1, -2) };
+        public static IEnumerable<(int inner, int outer)> UnsignedBounds = new[] { (1, 3), (2, 2), (3, 1) };
 
         private (Func<T, T> outerBound, Func<T, T, T> dualBound) GetGenerationFunctions<T>(IEnhancedRandom rng, string name)
             where T : notnull
@@ -91,10 +91,12 @@ namespace ShaiRandom.UnitTests
             // KSR validates that the numbers don't _exceed_ the bound, but not that all numbers within the bounds
             // are generated.  Therefore, we'll check to ensure the inclusive bounds themselves were both returned
             // (which should happen w/ 100 iterations over a small range).
+            dynamic outerInclusive = bounds.inner < bounds.outer ? outer - 1 :
+                bounds.inner == bounds.outer ? outer : outer + 1;
             Assert.True(frequencyDual.ContainsKey(inner));
-            Assert.True(frequencyDual.ContainsKey(bounds.inner < bounds.outer ? outer - 1 : outer + 1));
+            Assert.True(frequencyDual.ContainsKey(outerInclusive));
             Assert.True(frequencyOuter.ContainsKey((T)Convert.ChangeType(0, typeof(T))));
-            Assert.True(frequencyDual.ContainsKey(bounds.inner < bounds.outer ? outer - 1 : outer + 1));
+            Assert.True(frequencyDual.ContainsKey(outerInclusive));
         }
 
         [Theory]
