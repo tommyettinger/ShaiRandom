@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
 using System.Reflection;
 using ShaiRandom.Generators;
 using ShaiRandom.Wrappers;
 using Xunit;
+using XUnit.ValueTuples;
 
 namespace ShaiRandom.UnitTests
 {
     public class BoundsTests
     {
-        private (int inner, int outer) _signedBounds = (1, -2);
-        private (int inner, int outer) _unsignedBounds = (3, 1);
+        public static IEnumerable<(int inner, int outer)> SignedBounds = new[] { (1, 3), (2, 2), (1, -2) };
+        public static IEnumerable<(int inner, int outer)> UnsignedBounds = new[] { (1, 3), (2, 2) };
 
         private (Func<T, T> outerBound, Func<T, T, T> dualBound) GetGenerationFunctions<T>(IEnhancedRandom rng, string name)
             where T : notnull
@@ -52,47 +51,58 @@ namespace ShaiRandom.UnitTests
             return (OuterBound, DualBound);
         }
 
-        private void TestIntegerFunc<T>(IEnhancedRandom rng, string funcName, (T inner, T outer) bounds)
+        private void TestIntegerFunc<T>(IEnhancedRandom rng, string funcName, (int inner, int outer) bounds)
             where T : IComparable<T>
         {
             // Create dynamic variable for outer so we can add/subtract when checking the bound extents
-            dynamic outerDynamic = bounds.outer;
+            dynamic inner = (T)Convert.ChangeType(bounds.inner, typeof(T));
+            dynamic outer = (T)Convert.ChangeType(bounds.outer, typeof(T));
 
             // Generate a bunch of integers, and record them in a known-series random.
             var wrapper = new ArchivalWrapper(rng);
-            var (_, dualBound) = GetGenerationFunctions<T>(wrapper, funcName);
+            var (outerBound, dualBound) = GetGenerationFunctions<T>(wrapper, funcName);
             for (int i = 0; i < 100; i++)
-                dualBound(bounds.inner, bounds.outer);
+            {
+                outerBound(outer);
+                dualBound(inner, outer);
+            }
 
             // Generate each of those numbers from a KSR recording what the actual generator just generated.
             // Since KSR throws exception if any value is outside the allowable bounds, this validates that the bounds
             // stay within inner (inclusive) and outer (exclusive).  In the process, we'll also build a frequency
             // dictionary for the next step.
-            var frequencyDict = new Dictionary<T, int>();
+            var frequencyDual = new Dictionary<T, int>();
+            var frequencyOuter = new Dictionary<T, int>();
             var ksr = wrapper.MakeArchivedSeries();
-            (_, dualBound) = GetGenerationFunctions<T>(ksr, funcName);
+            (outerBound, dualBound) = GetGenerationFunctions<T>(ksr, funcName);
             for (int i = 0; i < 100; i++)
             {
-                T value = dualBound(bounds.inner, bounds.outer);
-                if (!frequencyDict.ContainsKey(value))
-                    frequencyDict[value] = 0;
-                frequencyDict[value] += 1;
+                T value = outerBound(outer);
+                if (!frequencyOuter.ContainsKey(value))
+                    frequencyOuter[value] = 0;
+                frequencyOuter[value] += 1;
+
+                value = dualBound(inner, outer);
+                if (!frequencyDual.ContainsKey(value))
+                    frequencyDual[value] = 0;
+                frequencyDual[value] += 1;
             }
 
             // KSR validates that the numbers don't _exceed_ the bound, but not that all numbers within the bounds
             // are generated.  Therefore, we'll check to ensure the inclusive bounds themselves were both returned
             // (which should happen w/ 100 iterations over a small range).
-            Assert.True(frequencyDict.ContainsKey(bounds.inner));
-            Assert.True(frequencyDict.ContainsKey(bounds.inner.CompareTo(bounds.outer) < 0 ? outerDynamic - 1 : outerDynamic + 1));
-
+            Assert.True(frequencyDual.ContainsKey(inner));
+            Assert.True(frequencyDual.ContainsKey(bounds.inner < bounds.outer ? outer - 1 : outer + 1));
+            Assert.True(frequencyOuter.ContainsKey((T)Convert.ChangeType(0, typeof(T))));
+            Assert.True(frequencyDual.ContainsKey(bounds.inner < bounds.outer ? outer - 1 : outer + 1));
         }
 
-        // TODO: Bounds
+        [Theory]
+        [MemberDataTuple(nameof(UnsignedBounds))]
+        void NextULong(int inner, int outer) => TestIntegerFunc<ulong>(new MizuchiRandom(), "NextULong", (inner, outer));
 
-        [Fact]
-        void NextULong() => TestIntegerFunc<ulong>(new MizuchiRandom(), "NextULong", (3, 1));
-
-        [Fact]
-        void NextLong() => TestIntegerFunc<long>(new MizuchiRandom(), "NextLong", (1, -2));
+        [Theory]
+        [MemberDataTuple(nameof(SignedBounds))]
+        void NextLong(int inner, int outer) => TestIntegerFunc<long>(new MizuchiRandom(), "NextLong", (inner, outer));
     }
 }
