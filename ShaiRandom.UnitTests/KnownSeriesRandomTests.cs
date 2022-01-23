@@ -59,6 +59,7 @@ namespace ShaiRandom.UnitTests
             floatSeries: new []{float.Epsilon, s_floatCloseTo1, 0.0f, 1.0f},
             decimalSeries: new[] { 0.0000000000000000000000000001M, s_decimalCloseTo1, decimal.Zero, decimal.One }
         );
+
         #region Template Tests
 
         private (Func<T> unbounded, Func<T, T> outerBound, Func<T, T> zeroOuterBound, Func<T, T, T> dualBound) GetGenerationFunctions<T>(string name, KnownSeriesRandom unboundedRNG)
@@ -272,7 +273,11 @@ namespace ShaiRandom.UnitTests
             dynamic zero = (T)Convert.ChangeType(0.0, typeof(T));
             T pointOne = (T)Convert.ChangeType(0.1, typeof(T));
             T pointTwo = (T)Convert.ChangeType(0.2, typeof(T));
-            T epsilon = (T)typeof(T).GetField("Epsilon")!.GetValue(null)!;
+            T epsilon = pointOne switch
+            {
+                decimal _ => (T)Convert.ChangeType(0.0000000000000000000000000001M, typeof(T)),
+                _ => (T)typeof(T).GetField("Epsilon")!.GetValue(null)!
+            };
 
             // Get proxies to call the functions we are testing
             var (unbounded, outerBound, zeroOuterBound, dualBound) = GetGenerationFunctions<T>(nameOfFunctionToTest, _unboundedExclusiveRNG);
@@ -301,55 +306,6 @@ namespace ShaiRandom.UnitTests
             // outer == inner is a special case which always returns inner.
             Assert.Equal(value, dualBound(value - pointOne, value + pointOne)); // Allowed range: (value - 0.1, value + 0.1)
             Assert.Equal(value, dualBound(value, value));                       // Allowed range: value
-
-
-            Assert.Throws<ArgumentException>(() => dualBound(value, value + pointOne));            // Allowed range: (value, value + 0.1)
-            Assert.Throws<ArgumentException>(() => dualBound(value, value - pointOne));            // Allowed range: (value - 0.1, value)
-            Assert.Throws<ArgumentException>(() => dualBound(value + pointOne, value + pointTwo)); // Allowed Range: (value + 0.1, value + 0.2)
-            Assert.Throws<ArgumentException>(() => dualBound(value - pointOne, value - pointTwo)); // Allowed Range: (value - 0.2, value - 0.1)
-            Assert.Throws<ArgumentException>(() => dualBound(value + pointOne, value));            // Allowed Range: (value, value + 0.1)
-            Assert.Throws<ArgumentException>(() => dualBound(value - pointOne, value));            // Allowed Range: (value - 0.1, value)
-        }
-        // This is a horrible waste of code, but because Decimal doesn't have an Epsilon field, the existing Floating generator won't work.
-        private void TestDecimalFunctionExclusiveBounds(string nameOfFunctionToTest, decimal maxValueLessThanOne)
-        {
-            // Duck-type the generic type so that we can add/subtract from it using the type's correct operators.
-            decimal value = (decimal)Convert.ChangeType(ReturnedValue, typeof(decimal));
-
-            // Get the correct value types for type T for various constants we use
-            decimal zero = decimal.Zero;
-            decimal pointOne = 0.1M;
-            decimal pointTwo = 0.2M;
-            decimal epsilon = 0.0000000000000000000000000001M;
-
-            // Get proxies to call the functions we are testing
-            var (unbounded, outerBound, zeroOuterBound, dualBound) = GetGenerationFunctions<decimal>(nameOfFunctionToTest, _unboundedExclusiveRNG);
-
-            // Check that the unbounded functions accepts only values within range (0.0, 1.0)
-            Assert.Equal(epsilon, unbounded());
-            Assert.Equal(maxValueLessThanOne, unbounded());
-
-            // NOTE: These two tests assume the state of the generator is still advances even on failure; that is the
-            // case when these were written, but there is no way to validate that in the unit test since the state
-            // is private.
-            Assert.Throws<ArgumentException>(() => unbounded());
-            Assert.Throws<ArgumentException>(() => unbounded());
-
-            // Check that single bound function accepts only range (0.0, outer).
-            // outer == 0.0 is a special case which always returns 0.0.
-            Assert.Equal(value, outerBound(value + pointOne));   // Allowed range: (0.0, value + 0.1)
-            Assert.Equal(zero, zeroOuterBound(zero));            // Allowed range: 0
-
-            Assert.Throws<ArgumentException>(() => zeroOuterBound(value));            // Allowed range: (0.0, value)
-            Assert.Throws<ArgumentException>(() => outerBound(zero - pointOne));      // Allowed range: (-0.1, 0.0]
-            Assert.Throws<ArgumentException>(() => outerBound(value));                // Allowed range: [0.0, value)
-            Assert.Throws<ArgumentException>(() => zeroOuterBound(zero - pointOne)); // Allowed range: (-0.1, 0.0)
-
-            // Check that double bound function accepts only range (inner, outer), even if outer < inner.
-            // outer == inner is a special case which always returns inner.
-            Assert.Equal(value, dualBound(value - pointOne, value + pointOne)); // Allowed range: (value - 0.1, value + 0.1)
-            Assert.Equal(value, dualBound(value, value));                       // Allowed range: value
-
 
             Assert.Throws<ArgumentException>(() => dualBound(value, value + pointOne));            // Allowed range: (value, value + 0.1)
             Assert.Throws<ArgumentException>(() => dualBound(value, value - pointOne));            // Allowed range: (value - 0.1, value)
@@ -389,7 +345,7 @@ namespace ShaiRandom.UnitTests
 
         [Fact]
         public void NextDecimalExclusiveBounds()
-            => TestDecimalFunctionExclusiveBounds(nameof(KnownSeriesRandom.NextExclusiveDecimal), s_decimalCloseTo1);
+            => TestFloatingFunctionExclusiveBounds(nameof(KnownSeriesRandom.NextExclusiveDecimal), s_decimalCloseTo1);
 
         [Fact]
         public void NextDoubleBounds()

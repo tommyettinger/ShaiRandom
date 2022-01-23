@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ShaiRandom.Generators;
-using ShaiRandom.Wrappers;
 using Xunit;
 using XUnit.ValueTuples;
 
@@ -117,14 +117,8 @@ namespace ShaiRandom.UnitTests
 
     public class SerializationTests
     {
-        private static IEnhancedRandom[] _generators =
-        {
-            new DistinctRandom(), new FourWheelRandom(), new LaserRandom(), new MizuchiRandom(),
-            new RomuTrioRandom(), new StrangerRandom(), new TricycleRandom(), new Xoshiro256StarStarRandom(),
-            new ArchivalWrapper(), new ReversingWrapper(), new TRGeneratorWrapper()
-        };
-
-        public static IEnumerable<IEnhancedRandom> Generators => _generators;
+        private static readonly IEnhancedRandom[] s_generators = DataGenerators.CreateGenerators(true).ToArray();
+        public static IEnumerable<IEnhancedRandom> Generators => s_generators;
 
         [Theory]
         [MemberDataEnumerable(nameof(Generators))]
