@@ -86,7 +86,7 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <param name="other">Generator to copy state from.</param>
         public KnownSeriesRandom(KnownSeriesRandom other)
-            : this(other._intSeries, other._uintSeries, other._doubleSeries, other._boolSeries, other._byteSeries, other._floatSeries, other._longSeries, other._ulongSeries)
+            : this(other._intSeries, other._uintSeries, other._doubleSeries, other._boolSeries, other._byteSeries, other._floatSeries, other._longSeries, other._ulongSeries, other._decimalSeries)
         {
             _intIndex = other._intIndex;
             _uintIndex = other._uintIndex;
@@ -126,17 +126,17 @@ namespace ShaiRandom.Generators
                                  IEnumerable<long>? longSeries = null, IEnumerable<ulong>? ulongSeries = null,
                                  IEnumerable<decimal>? decimalSeries = null)
         {
-            Seed(0L);
+            _intSeries = intSeries?.ToList() ?? new List<int>();
+            _uintSeries = uintSeries?.ToList() ?? new List<uint>();
+            _longSeries = longSeries?.ToList() ?? new List<long>();
+            _ulongSeries = ulongSeries?.ToList() ?? new List<ulong>();
+            _decimalSeries = decimalSeries?.ToList() ?? new List<decimal>();
+            _doubleSeries = doubleSeries?.ToList() ?? new List<double>();
+            _floatSeries = floatSeries?.ToList() ?? new List<float>();
+            _boolSeries = boolSeries?.ToList() ?? new List<bool>();
+            _byteSeries = byteSeries?.ToList() ?? new List<byte>();
 
-            _intSeries = intSeries == null ? new List<int>() : intSeries.ToList();
-            _uintSeries = uintSeries == null ? new List<uint>() : uintSeries.ToList();
-            _longSeries = longSeries == null ? new List<long>() : longSeries.ToList();
-            _ulongSeries = ulongSeries == null ? new List<ulong>() : ulongSeries.ToList();
-            _decimalSeries = decimalSeries == null ? new List<decimal>() : decimalSeries.ToList();
-            _doubleSeries = doubleSeries == null ? new List<double>() : doubleSeries.ToList();
-            _floatSeries = floatSeries == null ? new List<float>() : floatSeries.ToList();
-            _boolSeries = boolSeries == null ? new List<bool>() : boolSeries.ToList();
-            _byteSeries = byteSeries == null ? new List<byte>() : byteSeries.ToList();
+            Seed(0L);
         }
 
         /// <summary>
@@ -600,16 +600,8 @@ namespace ShaiRandom.Generators
         /// <param name="seed">Index for the sequences.</param>
         public void Seed(ulong seed)
         {
-            int idx = (int)seed;
-            _intIndex = idx;
-            _uintIndex = idx;
-            _doubleIndex = idx;
-            _boolIndex = idx;
-            _byteIndex = idx;
-            _floatIndex = idx;
-            _longIndex = idx;
-            _ulongIndex = idx;
-            _decimalIndex = idx;
+            for (int i = 0; i < StateCount; i++)
+                SetSelectedState(i, 0);
         }
 
         /// <summary>
@@ -639,7 +631,7 @@ namespace ShaiRandom.Generators
                 6 => (ulong)_longIndex,
                 7 => (ulong)_ulongIndex,
                 8 => (ulong)_decimalIndex,
-                _ => throw new ArgumentException("Invalid selector given to SelectState.", nameof(selection))
+                _ => throw new ArgumentException($"Invalid selector given to {nameof(SelectState)}.", nameof(selection))
             };
         }
 
@@ -661,18 +653,38 @@ namespace ShaiRandom.Generators
         /// <param name="value">Value to set the index to.</param>
         public void SetSelectedState(int selection, ulong value)
         {
+            int state = (int)value;
             switch (selection)
             {
-                case 0: _intIndex = (int)value; break;
-                case 1: _uintIndex = (int)value; break;
-                case 2: _doubleIndex = (int)value; break;
-                case 3: _boolIndex = (int)value; break;
-                case 4: _byteIndex = (int)value; break;
-                case 5: _floatIndex = (int)value; break;
-                case 6: _longIndex = (int)value; break;
-                case 7: _ulongIndex = (int)value; break;
-                case 8: _decimalIndex = (int)value; break;
-                default: throw new ArgumentException("Invalid selector given to SetSelectedState.", nameof(selection));
+                case 0:
+                    _intIndex = _intSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _intSeries.Count);
+                    break;
+                case 1:
+                    _uintIndex = _uintSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _uintSeries.Count);
+                    break;
+                case 2:
+                    _doubleIndex = _doubleSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _doubleSeries.Count);
+                    break;
+                case 3:
+                    _boolIndex = _boolSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _boolSeries.Count);
+                    break;
+                case 4:
+                    _byteIndex = _byteSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _byteSeries.Count);
+                    break;
+                case 5:
+                    _floatIndex = _floatSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _floatSeries.Count);
+                    break;
+                case 6:
+                    _longIndex = _longSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _longSeries.Count);
+                    break;
+                case 7:
+                    _ulongIndex = _ulongSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _ulongSeries.Count);
+                    break;
+                case 8:
+                    _decimalIndex = _decimalSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _decimalSeries.Count);
+                    break;
+                default:
+                    throw new ArgumentException("Invalid selector given to SetSelectedState.", nameof(selection));
             }
         }
         /// <summary>
