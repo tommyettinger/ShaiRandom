@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using Microsoft.Toolkit.HighPerformance;
 using System.Linq;
 using ShaiRandom.Generators;
 
@@ -174,6 +174,23 @@ namespace ShaiRandom.UnitTests
                 Console.WriteLine(biggest);
                 Console.WriteLine((biggest - smallest) / (biggest + 0.001));
             }
+            Console.WriteLine();
+            // Create a KSR with unique series per type
+            var ksr = new KnownSeriesRandom(
+                new[] { 1, 2 }, new[] { 2U, 3U }, new[] { 3.3, 4.4 },
+                new[] { true, false }, new[] { (byte)4, (byte)5 },
+                new[] { 5.5f, 6.6f }, new[] { 6L, 7L }, null, new[] { 8.8M, 9.9M }); //new[] { 7UL, 8UL }
+
+            // Advance all states (so the indices are not their starting value)
+            ksr.SetState(1);
+
+            // Serialize generator
+            string ser = ksr.StringSerialize();
+            Console.WriteLine(ser);
+            Console.WriteLine("Round-Trip:");
+            ksr.StringDeserialize(ser);
+            Console.WriteLine(ksr.StringSerialize());
+            
         }
     }
 }

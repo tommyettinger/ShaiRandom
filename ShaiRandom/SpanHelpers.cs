@@ -21,7 +21,7 @@ namespace ShaiRandom
         public static int IndexOf<T>(this ReadOnlySpan<T> span, T value, int start)
             where T : IEquatable<T>
         {
-            for (int i = start + 1; i < span.Length; i++)
+            for (int i = start; i < span.Length; i++)
                 if (span[i].Equals(value))
                     return i;
 

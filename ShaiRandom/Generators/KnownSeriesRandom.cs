@@ -730,75 +730,100 @@ namespace ShaiRandom.Generators
             _intIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _intSeries.Clear();
             var seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            foreach (var numData in seriesData.Tokenize('|'))
-                _intSeries.Add(int.Parse(numData));
-
+            if (!seriesData.IsEmpty)
+            {
+                foreach (var numData in seriesData.Tokenize('|'))
+                    _intSeries.Add(int.Parse(numData));
+            }
             // UInt
             _uintIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _uintSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            foreach (var numData in seriesData.Tokenize('|'))
-                _uintSeries.Add(uint.Parse(numData));
-
+            if (!seriesData.IsEmpty)
+            {
+                foreach (var numData in seriesData.Tokenize('|'))
+                    _uintSeries.Add(uint.Parse(numData));
+            }
             // Double
             _doubleIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _doubleSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            foreach (var numData in seriesData.Tokenize('|'))
-                _doubleSeries.Add(double.Parse(numData));
-
+            if (!seriesData.IsEmpty)
+            {
+                foreach (var numData in seriesData.Tokenize('|'))
+                    _doubleSeries.Add(double.Parse(numData));
+            }
             // Bool
             _boolIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _boolSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            foreach (var numData in seriesData.Tokenize('|'))
-                _boolSeries.Add(bool.Parse(numData));
-
+            if (!seriesData.IsEmpty)
+            {
+                foreach (var numData in seriesData.Tokenize('|'))
+                    _boolSeries.Add(bool.Parse(numData));
+            }
             // Byte
             _byteIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _byteSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            foreach (var numData in seriesData.Tokenize('|'))
-                _byteSeries.Add(byte.Parse(numData));
+            if (!seriesData.IsEmpty)
+            {
+                foreach (var numData in seriesData.Tokenize('|'))
+                    _byteSeries.Add(byte.Parse(numData));
+            }
 
             // Float
             _floatIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _floatSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            foreach (var numData in seriesData.Tokenize('|'))
-                _floatSeries.Add(float.Parse(numData));
+            if (!seriesData.IsEmpty)
+            {
+                foreach (var numData in seriesData.Tokenize('|'))
+                    _floatSeries.Add(float.Parse(numData));
+            }
 
             // Long
             _longIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _longSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            foreach (var numData in seriesData.Tokenize('|'))
-                _longSeries.Add(long.Parse(numData));
-
+            if (!seriesData.IsEmpty)
+            {
+                foreach (var numData in seriesData.Tokenize('|'))
+                    _longSeries.Add(long.Parse(numData));
+            }
+            
             // ULong
             _ulongIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _ulongSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            foreach (var numData in seriesData.Tokenize('|'))
-                _ulongSeries.Add(ulong.Parse(numData));
-
+            if (!seriesData.IsEmpty)
+            {
+                foreach (var numData in seriesData.Tokenize('|'))
+                    _ulongSeries.Add(ulong.Parse(numData));
+            }
             // Decimal
             _decimalIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _decimalSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + data.IndexOf('`', idx + 1));
-            foreach (var numData in seriesData.Tokenize('|'))
-                _decimalSeries.Add(decimal.Parse(numData));
+            if (!seriesData.IsEmpty)
+            {
+                foreach (var numData in seriesData.Tokenize('|'))
+                    _decimalSeries.Add(decimal.Parse(numData));
+            }
             return this;
 
         }
 
         private void SerializeList<T>(StringBuilder ser, IReadOnlyList<T> series, char lastChar = '~')
         {
-            foreach (var item in series)
+            if (series.Count > 0)
             {
-                ser.Append(item); ser.Append('|');
+                foreach (var item in series)
+                {
+                    ser.Append(item); ser.Append('|');
+                }
+                ser.Remove(ser.Length - 1, 1);
             }
-            ser.Remove(ser.Length - 1, 1);
             ser.Append(lastChar);
         }
 

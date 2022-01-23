@@ -149,7 +149,7 @@ namespace ShaiRandom.UnitTests
             var ksr = new KnownSeriesRandom(
                 new[] { 1, 2 }, new[] { 2U, 3U }, new[] { 3.3, 4.4 },
                 new[] { true, false }, new[] { (byte)4, (byte)5 },
-                new[] { 5.5f, 6.6f }, new[] { 6L, 7L }, new[] { 7UL, 8UL }, new[] {8.8M, 9.9M});
+                new[] { 5.5f, 6.6f }, new[] { 6L, 7L }, null, new[] {8.8M, 9.9M}); //new[] { 7UL, 8UL }
 
             // Advance all states (so the indices are not their starting value)
             ksr.SetState(1);
@@ -158,7 +158,6 @@ namespace ShaiRandom.UnitTests
             string ser = ksr.StringSerialize();
             Assert.StartsWith($"#{ksr.Tag}", ser);
             Assert.EndsWith("`", ser);
-
             // Deserialize generator
             var ksr2 = (KnownSeriesRandom)AbstractRandom.Deserialize(ser);
             // Check that its state (indices) are equivalent to the original
