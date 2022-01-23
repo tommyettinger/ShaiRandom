@@ -404,7 +404,7 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// Returns the next float in the underlying series. The inner bound is always 0. If it is outside of the bound specified, throws an exception.
         /// </summary>
-        /// <param name="outerBound">The louter bound for the returned float, exclusive.</param>
+        /// <param name="outerBound">The outer bound for the returned float, exclusive.</param>
         /// <returns>The next float in the underlying series, if it is within the bound.</returns>
         public float NextFloat(float outerBound) => NextFloat(0f, outerBound);
 
@@ -615,6 +615,7 @@ namespace ShaiRandom.Generators
         ///     - 5: floatSeries
         ///     - 6: longSeries
         ///     - 7: ulongSeries
+        ///     - 8: decimalSeries
         /// </summary>
         /// <param name="selection">Selection value.</param>
         /// <returns>The index of the selected series that will be returned next time that series is used.</returns>
@@ -648,6 +649,7 @@ namespace ShaiRandom.Generators
         ///     - 5: floatSeries
         ///     - 6: longSeries
         ///     - 7: ulongSeries
+        ///     - 8: decimalSeries
         /// </remarks>
         /// <param name="selection">Selection value of index to set.</param>
         /// <param name="value">Value to set the index to.</param>
@@ -822,15 +824,9 @@ namespace ShaiRandom.Generators
                 {
                     ser.Append(item); ser.Append('|');
                 }
-<<<<<<< HEAD
-                ser.Remove(ser.Length - 1, 1);
-            }
-=======
-
                 ser.Remove(ser.Length - 1, 1);
             }
 
->>>>>>> ae6bf48 (Cleanup of serialization code. Added unit test cases for KnownSeriesRandom w/ empty series.)
             ser.Append(lastChar);
         }
 
