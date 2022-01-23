@@ -86,7 +86,7 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <param name="other">Generator to copy state from.</param>
         public KnownSeriesRandom(KnownSeriesRandom other)
-            : this(other._intSeries, other._uintSeries, other._doubleSeries, other._boolSeries, other._byteSeries, other._floatSeries, other._longSeries, other._ulongSeries)
+            : this(other._intSeries, other._uintSeries, other._doubleSeries, other._boolSeries, other._byteSeries, other._floatSeries, other._longSeries, other._ulongSeries, other._decimalSeries)
         {
             _intIndex = other._intIndex;
             _uintIndex = other._uintIndex;
@@ -126,17 +126,17 @@ namespace ShaiRandom.Generators
                                  IEnumerable<long>? longSeries = null, IEnumerable<ulong>? ulongSeries = null,
                                  IEnumerable<decimal>? decimalSeries = null)
         {
-            Seed(0L);
+            _intSeries = intSeries?.ToList() ?? new List<int>();
+            _uintSeries = uintSeries?.ToList() ?? new List<uint>();
+            _longSeries = longSeries?.ToList() ?? new List<long>();
+            _ulongSeries = ulongSeries?.ToList() ?? new List<ulong>();
+            _decimalSeries = decimalSeries?.ToList() ?? new List<decimal>();
+            _doubleSeries = doubleSeries?.ToList() ?? new List<double>();
+            _floatSeries = floatSeries?.ToList() ?? new List<float>();
+            _boolSeries = boolSeries?.ToList() ?? new List<bool>();
+            _byteSeries = byteSeries?.ToList() ?? new List<byte>();
 
-            _intSeries = intSeries == null ? new List<int>() : intSeries.ToList();
-            _uintSeries = uintSeries == null ? new List<uint>() : uintSeries.ToList();
-            _longSeries = longSeries == null ? new List<long>() : longSeries.ToList();
-            _ulongSeries = ulongSeries == null ? new List<ulong>() : ulongSeries.ToList();
-            _decimalSeries = decimalSeries == null ? new List<decimal>() : decimalSeries.ToList();
-            _doubleSeries = doubleSeries == null ? new List<double>() : doubleSeries.ToList();
-            _floatSeries = floatSeries == null ? new List<float>() : floatSeries.ToList();
-            _boolSeries = boolSeries == null ? new List<bool>() : boolSeries.ToList();
-            _byteSeries = byteSeries == null ? new List<byte>() : byteSeries.ToList();
+            Seed(0L);
         }
 
         /// <summary>
@@ -404,7 +404,7 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// Returns the next float in the underlying series. The inner bound is always 0. If it is outside of the bound specified, throws an exception.
         /// </summary>
-        /// <param name="outerBound">The louter bound for the returned float, exclusive.</param>
+        /// <param name="outerBound">The outer bound for the returned float, exclusive.</param>
         /// <returns>The next float in the underlying series, if it is within the bound.</returns>
         public float NextFloat(float outerBound) => NextFloat(0f, outerBound);
 
@@ -600,16 +600,8 @@ namespace ShaiRandom.Generators
         /// <param name="seed">Index for the sequences.</param>
         public void Seed(ulong seed)
         {
-            int idx = (int)seed;
-            _intIndex = idx;
-            _uintIndex = idx;
-            _doubleIndex = idx;
-            _boolIndex = idx;
-            _byteIndex = idx;
-            _floatIndex = idx;
-            _longIndex = idx;
-            _ulongIndex = idx;
-            _decimalIndex = idx;
+            for (int i = 0; i < StateCount; i++)
+                SetSelectedState(i, 0);
         }
 
         /// <summary>
@@ -623,6 +615,7 @@ namespace ShaiRandom.Generators
         ///     - 5: floatSeries
         ///     - 6: longSeries
         ///     - 7: ulongSeries
+        ///     - 8: decimalSeries
         /// </summary>
         /// <param name="selection">Selection value.</param>
         /// <returns>The index of the selected series that will be returned next time that series is used.</returns>
@@ -639,7 +632,7 @@ namespace ShaiRandom.Generators
                 6 => (ulong)_longIndex,
                 7 => (ulong)_ulongIndex,
                 8 => (ulong)_decimalIndex,
-                _ => throw new ArgumentException("Invalid selector given to SelectState.", nameof(selection))
+                _ => throw new ArgumentException($"Invalid selector given to {nameof(SelectState)}.", nameof(selection))
             };
         }
 
@@ -656,22 +649,44 @@ namespace ShaiRandom.Generators
         ///     - 5: floatSeries
         ///     - 6: longSeries
         ///     - 7: ulongSeries
+        ///     - 8: decimalSeries
         /// </remarks>
         /// <param name="selection">Selection value of index to set.</param>
         /// <param name="value">Value to set the index to.</param>
         public void SetSelectedState(int selection, ulong value)
         {
+            int state = (int)value;
             switch (selection)
             {
-                case 0: _intIndex = (int)value; break;
-                case 1: _uintIndex = (int)value; break;
-                case 2: _doubleIndex = (int)value; break;
-                case 3: _boolIndex = (int)value; break;
-                case 4: _byteIndex = (int)value; break;
-                case 5: _floatIndex = (int)value; break;
-                case 6: _longIndex = (int)value; break;
-                case 8: _decimalIndex = (int)value; break;
-                default: _ulongIndex = (int)value; break;
+                case 0:
+                    _intIndex = _intSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _intSeries.Count);
+                    break;
+                case 1:
+                    _uintIndex = _uintSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _uintSeries.Count);
+                    break;
+                case 2:
+                    _doubleIndex = _doubleSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _doubleSeries.Count);
+                    break;
+                case 3:
+                    _boolIndex = _boolSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _boolSeries.Count);
+                    break;
+                case 4:
+                    _byteIndex = _byteSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _byteSeries.Count);
+                    break;
+                case 5:
+                    _floatIndex = _floatSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _floatSeries.Count);
+                    break;
+                case 6:
+                    _longIndex = _longSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _longSeries.Count);
+                    break;
+                case 7:
+                    _ulongIndex = _ulongSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _ulongSeries.Count);
+                    break;
+                case 8:
+                    _decimalIndex = _decimalSeries.Count == 0 ? 0 : MathUtils.WrapAround(state, _decimalSeries.Count);
+                    break;
+                default:
+                    throw new ArgumentException("Invalid selector given to SetSelectedState.", nameof(selection));
             }
         }
         /// <summary>
@@ -730,88 +745,75 @@ namespace ShaiRandom.Generators
             _intIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _intSeries.Clear();
             var seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            if (!seriesData.IsEmpty)
-            {
-                foreach (var numData in seriesData.Tokenize('|'))
+            foreach (var numData in seriesData.Tokenize('|'))
+                if (!numData.IsEmpty)
                     _intSeries.Add(int.Parse(numData));
-            }
+
             // UInt
             _uintIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _uintSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            if (!seriesData.IsEmpty)
-            {
-                foreach (var numData in seriesData.Tokenize('|'))
+            foreach (var numData in seriesData.Tokenize('|'))
+                if (!numData.IsEmpty)
                     _uintSeries.Add(uint.Parse(numData));
-            }
+
             // Double
             _doubleIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _doubleSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            if (!seriesData.IsEmpty)
-            {
-                foreach (var numData in seriesData.Tokenize('|'))
+            foreach (var numData in seriesData.Tokenize('|'))
+                if (!numData.IsEmpty)
                     _doubleSeries.Add(double.Parse(numData));
-            }
+
             // Bool
             _boolIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _boolSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            if (!seriesData.IsEmpty)
-            {
-                foreach (var numData in seriesData.Tokenize('|'))
+            foreach (var numData in seriesData.Tokenize('|'))
+                if (!numData.IsEmpty)
                     _boolSeries.Add(bool.Parse(numData));
-            }
+
             // Byte
             _byteIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _byteSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            if (!seriesData.IsEmpty)
-            {
-                foreach (var numData in seriesData.Tokenize('|'))
+            foreach (var numData in seriesData.Tokenize('|'))
+                if (!numData.IsEmpty)
                     _byteSeries.Add(byte.Parse(numData));
-            }
 
             // Float
             _floatIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _floatSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            if (!seriesData.IsEmpty)
-            {
-                foreach (var numData in seriesData.Tokenize('|'))
+            foreach (var numData in seriesData.Tokenize('|'))
+                if (!numData.IsEmpty)
                     _floatSeries.Add(float.Parse(numData));
-            }
 
             // Long
             _longIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _longSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            if (!seriesData.IsEmpty)
-            {
-                foreach (var numData in seriesData.Tokenize('|'))
+            foreach (var numData in seriesData.Tokenize('|'))
+                if (!numData.IsEmpty)
                     _longSeries.Add(long.Parse(numData));
-            }
-            
+
             // ULong
             _ulongIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _ulongSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1)));
-            if (!seriesData.IsEmpty)
-            {
-                foreach (var numData in seriesData.Tokenize('|'))
+            foreach (var numData in seriesData.Tokenize('|'))
+                if (!numData.IsEmpty)
                     _ulongSeries.Add(ulong.Parse(numData));
-            }
+
             // Decimal
             _decimalIndex = int.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))));
             _decimalSeries.Clear();
             seriesData = data.Slice(idx + 1, -1 - idx + data.IndexOf('`', idx + 1));
-            if (!seriesData.IsEmpty)
-            {
-                foreach (var numData in seriesData.Tokenize('|'))
+            foreach (var numData in seriesData.Tokenize('|'))
+                if (!numData.IsEmpty)
                     _decimalSeries.Add(decimal.Parse(numData));
-            }
-            return this;
 
+            return this;
         }
 
         private void SerializeList<T>(StringBuilder ser, IReadOnlyList<T> series, char lastChar = '~')
@@ -824,6 +826,7 @@ namespace ShaiRandom.Generators
                 }
                 ser.Remove(ser.Length - 1, 1);
             }
+
             ser.Append(lastChar);
         }
 

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using ShaiRandom.Generators;
 using Xunit;
 
 namespace ShaiRandom.UnitTests
 {
-    [SuppressMessage("ReSharper", "UselessBinaryOperation")]
     public class KnownSeriesRandomTests
     {
         private const int ReturnedValue = 10;
