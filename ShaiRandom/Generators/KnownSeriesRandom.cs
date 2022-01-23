@@ -670,8 +670,9 @@ namespace ShaiRandom.Generators
                 case 4: _byteIndex = (int)value; break;
                 case 5: _floatIndex = (int)value; break;
                 case 6: _longIndex = (int)value; break;
+                case 7: _ulongIndex = (int)value; break;
                 case 8: _decimalIndex = (int)value; break;
-                default: _ulongIndex = (int)value; break;
+                default: throw new ArgumentException("Invalid selector given to SetSelectedState.", nameof(selection));
             }
         }
         /// <summary>
