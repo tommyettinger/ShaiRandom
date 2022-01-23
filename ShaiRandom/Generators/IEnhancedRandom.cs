@@ -263,7 +263,7 @@ namespace ShaiRandom.Generators
         /// implementation and the bound. To generate a ulong that is inclusive on <see cref="ulong.MaxValue"/>,
         /// use <see cref="NextULong()"/>.
         /// </remarks>
-        /// <param name="bound">the upper bound (exclusive). If negative or 0, this always returns 0.</param>
+        /// <param name="bound">the outer bound (exclusive). If 0, this always returns 0.</param>
         /// <returns>the next pseudorandom, uniformly distributed long
         /// value between zero (inclusive) and bound (exclusive)
         /// from this random number generator's sequence</returns>
@@ -276,26 +276,28 @@ namespace ShaiRandom.Generators
         /// <remarks>
         /// To generate a long that is inclusive on <see cref="long.MaxValue"/>,
         /// use: <code>(NextLong() &amp; long.MaxValue)</code></remarks>
-        /// <param name="outerBound">the outer exclusive bound; may be any long value, allowing negative</param>
+        /// <param name="outerBound">the outer bound (exclusive). If 0, this always returns 0. If negative, returns a non-positive result.</param>
         /// <returns>a pseudorandom long between 0 (inclusive) and outerBound (exclusive)</returns>
         long NextLong(long outerBound);
 
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed long value between the
-        /// specified innerBound (inclusive) and the specified outerBound
-        /// (exclusive). If outerBound is less than or equal to innerBound,
-        /// this always returns innerBound.
+        /// specified inner bound (inclusive) and the specified outer bound
+        /// (exclusive). If outer is less than or equal to inner,
+        /// this still returns a value between the two, and inner is still inclusive,
+        /// while outer is still exclusive.
         /// </summary>
-        /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
-        /// <param name="outer">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
+        /// <param name="inner">the inclusive inner bound; may be any ulong</param>
+        /// <param name="outer">the exclusive outer bound; may be any ulong, including less than inner</param>
         /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
         ulong NextULong(ulong inner, ulong outer);
 
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed long value between the
-        /// specified innerBound (inclusive) and the specified outerBound
-        /// (exclusive). If outerBound is less than or equal to innerBound,
-        /// this always returns innerBound.
+        /// specified inner bound (inclusive) and the specified outer bound
+        /// (exclusive). If outer is less than or equal to inner,
+        /// this still returns a value between the two, and inner is still inclusive,
+        /// while outer is still exclusive.
         /// </summary>
         /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
         /// <param name="outer">the exclusive outer bound; may be any long, allowing negative</param>
