@@ -106,7 +106,7 @@
         }
 
         /// <summary>
-        /// Sets one of the states, determined by {@code selection}, to {@code value}, as-is.
+        /// Sets one of the states, determined by selection, to value, as-is.
         /// </summary>
         /// <remarks>
         /// Selections 0 and 1 refer to states A and B, and if the selection is anything else, this treats it as 0 and sets stateA.

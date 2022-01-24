@@ -726,7 +726,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <summary>
-        /// Returns a triangularly distributed random number between {@code -max} (exclusive) and max (exclusive), where values
+        /// Returns a triangularly distributed random number between <code>-max</code> (exclusive) and <code>max</code> (exclusive), where values
         /// around zero are more likely. Advances the state twice.
         /// </summary>
         /// <remarks>

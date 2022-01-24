@@ -248,7 +248,7 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// Can return any long, positive or negative.
-        /// If you specifically want a non-negative long, you can use <code>(long)(NextULong() >> 1)</code>,
+        /// If you specifically want a non-negative long, you can use <code>(NextLong() &amp; long.MaxValue)</code>,
         /// which can return any long that is not negative.
         /// </summary>
         /// <returns>A random long, which may be positive or negative, and can have any long value.</returns>
@@ -288,25 +288,25 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed long value between the
         /// specified inner bound (inclusive) and the specified outer bound
-        /// (exclusive). If outer is less than or equal to inner,
+        /// (exclusive). If outer is less than inner,
         /// this still returns a value between the two, and inner is still inclusive,
-        /// while outer is still exclusive.
+        /// while outer is still exclusive. If outer and inner are equal, this returns inner.
         /// </summary>
         /// <param name="inner">the inclusive inner bound; may be any ulong</param>
         /// <param name="outer">the exclusive outer bound; may be any ulong, including less than inner</param>
-        /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
+        /// <returns>a pseudorandom ulong between inner (inclusive) and outer (exclusive)</returns>
         ulong NextULong(ulong inner, ulong outer);
 
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed long value between the
         /// specified inner bound (inclusive) and the specified outer bound
-        /// (exclusive). If outer is less than or equal to inner,
+        /// (exclusive). If outer is less than inner,
         /// this still returns a value between the two, and inner is still inclusive,
-        /// while outer is still exclusive.
+        /// while outer is still exclusive. If outer and inner are equal, this returns inner.
         /// </summary>
         /// <param name="inner">the inclusive inner bound; may be any long, allowing negative</param>
         /// <param name="outer">the exclusive outer bound; may be any long, allowing negative</param>
-        /// <returns>a pseudorandom long between innerBound (inclusive) and outerBound (exclusive)</returns>
+        /// <returns>a pseudorandom long between inner (inclusive) and outer (exclusive)</returns>
         long NextLong(long inner, long outer);
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace ShaiRandom.Generators
         /// likely to be 0 or 1.
         /// <br/>
         /// Note that you can give this values for bits that are outside its expected range of 1 to 32,
-        /// but the value used, as long as bits is positive, will effectively be {@code bits % 32}. As stated
+        /// but the value used, as long as bits is positive, will effectively be <code>bits % 32</code>. As stated
         /// before, a value of 0 for bits is the same as a value of 32.
         /// </remarks>
         /// <param name="bits">the amount of random bits to request, from 1 to 32</param>
@@ -380,6 +380,9 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// Gets a random uint by using the low 32 bits of NextULong(); this can return any uint.
         /// </summary>
+        /// <remarks>
+        /// All 2<sup>32</sup> possible
+        /// uint values are produced with (approximately) equal probability.</remarks>
         /// <returns>Any random uint.</returns>
         uint NextUInt();
 
@@ -416,7 +419,7 @@ namespace ShaiRandom.Generators
         /// <remarks>
         /// If outerBound is less than or equal to 0,
         /// this always returns 0. To generate an int that is inclusive on <see cref="int.MaxValue"/>,
-        /// use <see cref="NextBits(int)"/> (giving it a parameter of 31 to generate any positive int), and cast the result to int.
+        /// use <code>(NextInt() &amp; int.MaxValue)</code>
         /// To generate any int, including negative ones, use <see cref="NextInt()">NextInt()</see>.
         /// </remarks>
         /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
@@ -430,8 +433,9 @@ namespace ShaiRandom.Generators
         /// (exclusive).
         /// </summary>
         /// <remarks>
-        /// If outerBound is less than or equal to innerBound,
-        /// this always returns innerBound.
+        /// If outer is less than inner,
+        /// this still returns a value between the two, and inner is still inclusive,
+        /// while outer is still exclusive. If outer and inner are equal, this returns inner.
         /// </remarks>
         /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
@@ -443,8 +447,9 @@ namespace ShaiRandom.Generators
         /// specified innerBound (inclusive) and the specified outerBound
         /// (exclusive).</summary>
         /// <remarks>
-        /// If outerBound is less than or equal to innerBound,
-        /// this always returns innerBound.
+        /// If outer is less than inner,
+        /// this still returns a value between the two, and inner is still inclusive,
+        /// while outer is still exclusive. If outer and inner are equal, this returns inner.
         /// </remarks>
         /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
@@ -687,6 +692,10 @@ namespace ShaiRandom.Generators
         /// Because the ability to get the number of leading or trailing zeros is in a method not present in .NET Standard, we get close to that by using
         /// <see cref="BitConverter.DoubleToInt64Bits(double)"/> on a negative long and using its exponent bits directly. The smallest double AbstractRandom can return is 1.0842021724855044E-19 ; the largest it
         /// can return is 0.9999999999999999 . The smallest result is significantly closer to 0 than <see cref="NextDouble()"/> can produce without actually returning 0, and also much closer than the first method.
+        /// <br/>
+        /// The method used by AbstractRandom has several possible variations; the one it uses now is about 25% slower or less than NextDouble(). If .NET 6 becomes the default framework, another implementation
+        /// for this method becomes possible that outperforms NextDouble() and actually has an even better range as it approaches 0.0. This second method is not the default because it is over 300% slower on earlier,
+        /// pre-.NET Core versions.
         /// </remarks>
         /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
 
@@ -705,10 +714,11 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// Just like <see cref="NextDouble(double, double)"/>, but this is exclusive on both innerBound and outerBound.
+        /// This also allows outerBound to be greater than or less than innerBound. If they are equal, this returns innerBound.
         /// </summary>
         /// <remarks>
         /// Like <see cref="NextExclusiveDouble()"/>, which this uses,, this may have better bit-distribution of double values,
-        /// and it may also be better able to produce doubles close to innerBound when {@code outerBound - innerBound} is large.
+        /// and it may also be better able to produce doubles close to innerBound when <code>outerBound - innerBound</code> is large.
         /// </remarks>
         /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
@@ -724,12 +734,17 @@ namespace ShaiRandom.Generators
         /// Because the ability to get the number of leading or trailing zeros is in a method not present in .NET Standard, we get close to that by using
         /// <see cref="BitConverter.SingleToInt32Bits(float)"/> on a negative long and using its exponent bits directly. The smallest float AbstractRandom can return is 1.0842022E-19; the largest it
         /// can return is 0.99999994 . The smallest result is significantly closer to 0 than <see cref="NextFloat()"/> can produce without actually returning 0, and also much closer than the first method.
+        /// <br/>
+        /// The method used by AbstractRandom has several possible variations; the one it uses now is about 25% slower or less than NextFloat(). If .NET 6 becomes the default framework, another implementation
+        /// for this method becomes possible that outperforms NextFloat() and actually has an even better range as it approaches 0.0. This second method is not the default because it is over 300% slower on earlier,
+        /// pre-.NET Core versions.
         /// </remarks>
         /// <returns>A random uniform float between 0 and 1 (both exclusive).</returns>
         float NextExclusiveFloat();
 
         /// <summary>
         /// Just like <see cref="NextFloat(float)"/>, but this is exclusive on both 0.0 and outerBound.
+        /// If outerBound is 0, this returns 0.
         /// </summary>
         /// <remarks>
         /// Like <see cref="NextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
@@ -741,10 +756,11 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// Just like <see cref="NextFloat(float, float)"/>, but this is exclusive on both innerBound and outerBound.
+        /// This also allows outerBound to be greater than or less than innerBound. If they are equal, this returns innerBound.
         /// </summary>
         /// <remarks>
         /// Like <see cref="NextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
-        /// it may also be better able to produce floats close to innerBound when {@code outerBound - innerBound} is large.
+        /// it may also be better able to produce floats close to innerBound when <code>outerBound - innerBound</code> is large.
         /// </remarks>
         /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
@@ -759,6 +775,7 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// Just like <see cref="NextDecimal(decimal)"/>, but this is exclusive on both 0.0 and outerBound.
+        /// If outerBound is 0, this returns 0.
         /// </summary>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <returns>a decimal between 0.0, exclusive, and outerBound, exclusive</returns>
@@ -766,6 +783,7 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// Just like <see cref="NextDecimal(decimal, decimal)"/>, but this is exclusive on both innerBound and outerBound.
+        /// This also allows outerBound to be greater than or less than innerBound. If they are equal, this returns innerBound.
         /// </summary>
         /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>

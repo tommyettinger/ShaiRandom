@@ -12,7 +12,7 @@ namespace ShaiRandom
         /// inputs correspond to high outputs, and similarly for the low range.
         /// </summary>
         /// <remarks>This is centered on 0.0 and its standard
-        /// deviation seems to be 1.0 (the same as {@link java.util.Random#nextGaussian()}). If this is given an input of 0.0
+        /// deviation seems to be 1.0 . If this is given an input of 0.0
         /// or less, it returns -38.5, which is slightly less than the result when given <see cref="double.MinValue"/>. If it is
         /// given an input of 1.0 or more, it returns 38.5, which is significantly larger than the result when given the
         /// largest double less than 1.0 (this value is further from 1.0 than <see cref="double.MinValue"/> is from 0.0). If
@@ -27,11 +27,8 @@ namespace ShaiRandom
         /// Gaussian-distributed numbers using either the Box-Muller Transform or Marsaglia's Polar Method, though it isn't
         /// as precise and can't produce as extreme min and max results in the extreme cases they should appear. If given
         /// a typical uniform random double that's exclusive on 1.0, it won't produce a result higher than
-        /// {@code 8.209536145151493}, and will only produce results of at least {@code -8.209536145151493} if 0.0 is
-        /// excluded from the inputs (if 0.0 is an input, the result is {@code -38.5}). A chief advantage of using this with
-        /// a random number generator is that it only requires one random double to obtain one Gaussian value;
-        /// {@link java.util.Random#nextGaussian()} generates at least two random doubles for each two Gaussian values, but
-        /// may rarely require much more random generation.
+        /// 8.209536145151493, and will only produce results of at least -8.209536145151493 if 0.0 is
+        /// excluded from the inputs (if 0.0 is an input, the result is -38.5).
         /// <br/>
         /// This can be used both as an optimization for generating Gaussian random values, and as a way of generating
         /// Gaussian values that match a pattern present in the inputs (which you could have by using a sub-random sequence
