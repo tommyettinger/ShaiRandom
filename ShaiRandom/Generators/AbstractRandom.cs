@@ -26,7 +26,7 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// Used by zero-argument constructors, typically, as a "don't care" option for seeding that creates a random ulong state.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A random ulong from an unseeded random number generator, typically to be used as a random seed.</returns>
         protected static ulong MakeSeed()
         {
             unchecked {
@@ -106,12 +106,15 @@ namespace ShaiRandom.Generators
         }
 
         /// <summary>
-        /// Given data from a string produced by <see cref="StringSerialize()"/> on any valid subclass of AbstractRandom,
+        /// Given data from a string produced by <see cref="StringSerialize()"/> on any valid IEnhancedRandom,
         /// this returns a new IEnhancedRandom with the same implementation and state it had when it was serialized.
-        /// This handles all AbstractRandom implementations in this library, including <see cref="TRGeneratorWrapper"/>,
-        /// <see cref="ReversingWrapper"/>, and <see cref="ArchivalWrapper"/> (all of which it currently handles with a special case).
         /// </summary>
-        /// <param name="data">Data from a string produced by an AbstractRandom's StringSerialize() method.</param>
+        /// <remarks>
+        /// This handles all IEnhancedRandom implementations in this library, including <see cref="TRGeneratorWrapper"/>,
+        /// <see cref="ReversingWrapper"/>, and <see cref="ArchivalWrapper"/> (all of which it currently handles with a special case).
+        /// This takes a ReadOnlySpan of char, which allows data to be any string or some more specialized types.
+        /// </remarks>
+        /// <param name="data">A string or ReadOnlySpan of char produced by an IEnhancedRandom's StringSerialize() method.</param>
         /// <returns>A newly-allocated IEnhancedRandom matching the implementation and state of the serialized AbstractRandom.</returns>
         public static IEnhancedRandom Deserialize(ReadOnlySpan<char> data)
         {
@@ -430,7 +433,6 @@ namespace ShaiRandom.Generators
             return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
         }
 
-
         /// <inheritdoc />
         public double NextExclusiveDouble(double outerBound)
         {
@@ -442,8 +444,6 @@ namespace ShaiRandom.Generators
         {
             return innerBound + NextExclusiveDouble() * (outerBound - innerBound);
         }
-
-        // return ((NextUInt() >> 9) + 1u) * 5.960464E-8f;
 
         /// <inheritdoc />
         public float NextExclusiveFloat()

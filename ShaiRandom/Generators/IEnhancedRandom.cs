@@ -52,6 +52,8 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <remarks>
         /// If this is not four characters in length, it will be ignored, and this IEnhancedRandom will not be serializable by the mechanisms here.
+        /// Wrapper classes that contain an IEnhancedRandom and alter some properties of it will often use a one-character tag, which is intentionally invalid
+        /// because they cannot be serialized without the IEnhancedRandom they contain.
         /// </remarks>
         string Tag { get; }
 
@@ -63,7 +65,7 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// Produces a string that encodes the type and full state of this generator.
-        /// This is an optional operation for classes that only implement IEnhancedRandom; AbstractRandom requires an implementation.
+        /// This is an optional operation for classes that only implement IEnhancedRandom; AbstractRandom strongly encourages but does not require an implementation.
         /// </summary>
         /// <returns>An encoded string that stores the type and full state of this generator.</returns>
         string StringSerialize();
@@ -71,8 +73,11 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// Given data from a string produced by <see cref="StringSerialize"/>, if the specified type is compatible,
         /// then this method sets the state of this IEnhancedRandom to the specified stored state.
-        /// This is an optional operation for classes that only implement IEnhancedRandom; AbstractRandom requires an implementation.
+        /// This is an optional operation for classes that only implement IEnhancedRandom; AbstractRandom strongly encourages but does not require an implementation.
         /// </summary>
+        /// <remarks>
+        /// It is more common to call <see cref="AbstractRandom.Deserialize(ReadOnlySpan{char})"/> when the exact variety of IEnhancedRandom is not known.
+        /// </remarks>
         /// <param name="data">Data from a string produced by StringSerialize.</param>
         /// <returns>This IEnhancedRandom, after modifications.</returns>
         IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data);
@@ -96,7 +101,7 @@ namespace ShaiRandom.Generators
         /// <remarks>
         /// The number of possible selections is up to the implementing class, but selection should be at least 0 and less than <see cref="StateCount"/>.
         /// Implementors are permitted to change value if it is not valid, but they should not alter it if it is valid.
-        /// The public implementation calls <see cref="Seed(ulong)"/> with value, which doesn't need changing if the generator has one state that is set verbatim by Seed().
+        /// The basic implementation in AbstractRandom calls <see cref="Seed(ulong)"/> with value, which doesn't need changing if the generator has one state that is set verbatim by Seed().
         /// Otherwise, this method should be implemented when <see cref="SelectState(int)"/> is and the state is allowed to be set by users.
         /// Having accurate ways to get and set the full state of a random number generator makes it much easier to serialize and deserialize that class.
         /// </remarks>
