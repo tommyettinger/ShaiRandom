@@ -714,7 +714,7 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// Returns a triangularly distributed random number between -1.0 (exclusive) and 1.0 (exclusive), where values around zero are
-        /// more likely. Typically advances the state twice.
+        /// more likely. Advances the state twice.
         /// </summary>
         /// <remarks>
         /// This can be an optimized version of <see cref="NextTriangular(IEnhancedRandom, float, float, float)"/>, or: <code> NextTriangular(-1, 1, 0)</code>
@@ -756,7 +756,7 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// Returns a triangularly distributed random number between min (inclusive) and max (exclusive), where values
-        /// around mode are more likely.
+        /// around mode are more likely. Advances the state once.
         /// </summary>
         /// <param name="rng" />
         /// <param name="min"> the lower limit</param>
@@ -774,7 +774,7 @@ namespace ShaiRandom.Generators
         /// Sets each state in this IEnhancedRandom to the corresponding state in the other IEnhancedRandom.
         /// This generally only works correctly if both objects have the same class.
         /// </summary>
-        /// <param name="rng" />
+        /// <param name="rng">Any IEnhancedRandom that supports <see cref="IEnhancedRandom.SetSelectedState(int, ulong)"/>.</param>
         /// <param name="other">Another IEnhancedRandom that almost always should have the same class as this one.</param>
         public static void SetWith(this IEnhancedRandom rng, IEnhancedRandom other)
         {

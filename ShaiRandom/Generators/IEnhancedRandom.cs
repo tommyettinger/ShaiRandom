@@ -255,21 +255,21 @@ namespace ShaiRandom.Generators
         long NextLong();
 
         /// <summary>
-        /// Returns a pseudorandom, uniformly distributed long value
+        /// Returns a pseudorandom, uniformly distributed ulong value
         /// between 0 (inclusive) and the specified value (exclusive), drawn from
         /// this random number generator's sequence.
         /// </summary>
         /// <remarks>
         /// The general contract of
-        /// nextLong is that one long value in the specified range
+        /// nextULong is that one ulong value in the specified range
         /// is pseudorandomly generated and returned.  All bound possible
-        /// long values are produced with (approximately) equal
+        /// ulong values are produced with (approximately) equal
         /// probability, though there may be a small amount of bias depending on the
-        /// implementation and the bound. To generate a ulong that is inclusive on <see cref="ulong.MaxValue"/>,
+        /// implementation and the bound. To generate an ulong that is inclusive on <see cref="ulong.MaxValue"/>,
         /// use <see cref="NextULong()"/>.
         /// </remarks>
         /// <param name="bound">the outer bound (exclusive). If 0, this always returns 0.</param>
-        /// <returns>the next pseudorandom, uniformly distributed long
+        /// <returns>the next pseudorandom, uniformly distributed ulong
         /// value between zero (inclusive) and bound (exclusive)
         /// from this random number generator's sequence</returns>
         ulong NextULong(ulong bound);
@@ -286,7 +286,7 @@ namespace ShaiRandom.Generators
         long NextLong(long outerBound);
 
         /// <summary>
-        /// Returns a pseudorandom, uniformly distributed long value between the
+        /// Returns a pseudorandom, uniformly distributed ulong value between the
         /// specified inner bound (inclusive) and the specified outer bound
         /// (exclusive). If outer is less than inner,
         /// this still returns a value between the two, and inner is still inclusive,
@@ -310,7 +310,7 @@ namespace ShaiRandom.Generators
         long NextLong(long inner, long outer);
 
         /// <summary>
-        /// Generates the next pseudorandom number with a specific maximum size in bits (not a max number).
+        /// Generates the next pseudorandom uint with a specific maximum size in bits (not a max number).
         /// </summary>
         /// <remarks>
         /// If you want to get a random number in a range, you should usually use <see cref="NextInt(int)"/> instead.
@@ -319,7 +319,9 @@ namespace ShaiRandom.Generators
         /// 1 and 32 (inclusive), then that many low-order
         /// bits of the returned value will be (approximately) independently
         /// chosen bit values, each of which is (approximately) equally
-        /// likely to be 0 or 1.
+        /// likely to be 0 or 1. Implementations typically draw the returned bits
+        /// from the high-order (or low-order) bits of a generated uint or ulong.
+        /// AbstractRandom draws from the high-order bits of an ulong.
         /// <br/>
         /// Note that you can give this values for bits that are outside its expected range of 1 to 32,
         /// but the value used, as long as bits is positive, will effectively be <code>bits % 32</code>. As stated
@@ -394,7 +396,7 @@ namespace ShaiRandom.Generators
         /// nextUInt is that one uint value in the specified range
         /// is pseudorandomly generated and returned.  All possible uint
         /// values less than bound are produced with (approximately) equal
-        /// probability. To generate a uint that is inclusive on <see cref="uint.MaxValue"/>,
+        /// probability. To generate an uint that is inclusive on <see cref="uint.MaxValue"/>,
         /// use <see cref="NextUInt()"/>.
         /// <br/>
         /// It should be mentioned that the technique this uses has some bias, depending
@@ -490,7 +492,8 @@ namespace ShaiRandom.Generators
         /// float values of the form <i>m x </i>2<sup>-24</sup>,
         /// where <i>m</i> is a positive integer less than 2<sup>24</sup>, are
         /// produced with (approximately) equal probability.
-        /// <br/>The public implementation uses the upper 24 bits of <see cref="NextULong()"/>,
+        /// <br/>
+        /// AbstractRandom's implementation uses the upper 24 bits of <see cref="NextULong()"/>,
         /// with a right shift and a multiply by a very small float
         /// (5.9604645E-8f). It tends to be fast if
         /// NextULong() is fast, but alternative implementations could use 24 bits of
@@ -535,7 +538,7 @@ namespace ShaiRandom.Generators
         /// <br/>The default implementation uses the upper 53 bits of <see cref="NextULong()"/>,
         /// with a right shift and a multiply by a very small double
         /// (1.1102230246251565E-16). It should perform well
-        /// if nextLong() performs well, and is expected to perform less well if the
+        /// if nextULong() performs well, and is expected to perform less well if the
         /// generator naturally produces 32 or fewer bits at a time.\
         /// </remarks>
         /// <returns>the next pseudorandom, uniformly distributed double
@@ -695,7 +698,7 @@ namespace ShaiRandom.Generators
         /// <br/>
         /// The method used by AbstractRandom has several possible variations; the one it uses now is about 25% slower or less than NextDouble(). If .NET 6 becomes the default framework, another implementation
         /// for this method becomes possible that outperforms NextDouble() and actually has an even better range as it approaches 0.0. This second method is not the default because it is over 300% slower on earlier,
-        /// pre-.NET Core versions.
+        /// pre-.NET Core versions, and switching between the two would change results between platforms.
         /// </remarks>
         /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
 
@@ -737,7 +740,7 @@ namespace ShaiRandom.Generators
         /// <br/>
         /// The method used by AbstractRandom has several possible variations; the one it uses now is about 25% slower or less than NextFloat(). If .NET 6 becomes the default framework, another implementation
         /// for this method becomes possible that outperforms NextFloat() and actually has an even better range as it approaches 0.0. This second method is not the default because it is over 300% slower on earlier,
-        /// pre-.NET Core versions.
+        /// pre-.NET Core versions, and switching between the two would change results between platforms.
         /// </remarks>
         /// <returns>A random uniform float between 0 and 1 (both exclusive).</returns>
         float NextExclusiveFloat();
@@ -792,7 +795,8 @@ namespace ShaiRandom.Generators
 
         /// <summary>
         /// (Optional) If implemented, this should jump the generator forward by the given number of steps as distance and return the result of NextULong()
-        /// as if called at that step. The distance can be negative if a long is cast to a ulong, which jumps backwards if the period of the generator is 2 to the 64.
+        /// as if called at that step. The distance can be negative if a long is cast to an ulong, which jumps backwards if the period of the generator is 2 to the 64.
+        /// Another way to jump backward <code>n</code> steps, where n is an ulong, is <code>Skip(0UL - n)</code>.
         /// </summary>
         /// <param name="distance">How many steps to jump forward</param>
         /// <returns>The result of what NextULong() would return at the now-current jumped state.</returns>
