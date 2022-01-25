@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.Toolkit.HighPerformance;
+using System.Collections.Generic;
 using System.Linq;
 using ShaiRandom.Generators;
 
@@ -190,7 +190,27 @@ namespace ShaiRandom.UnitTests
             Console.WriteLine("Round-Trip:");
             ksr.StringDeserialize(ser);
             Console.WriteLine(ksr.StringSerialize());
-            
+
+
+            IEnhancedRandom[] generators = DataGenerators.CreateGenerators(false).Where(g => g.SupportsPrevious).ToArray();
+            foreach (var gen in generators)
+            {
+                List<ulong> forward = new List<ulong>(100);
+                for (int i = 0; i < 100; i++)
+                {
+                    forward.Add(gen.NextULong());
+                }
+                gen.NextULong();
+                forward.Reverse();
+                for (int i = 0; i < 100; i++)
+                {
+                    if(forward[i] != gen.PreviousULong())
+                    {
+                        Console.WriteLine(gen.Tag + " on " + i);
+                    }
+                }
+            }
+
         }
     }
 }
