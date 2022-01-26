@@ -409,7 +409,7 @@ namespace ShaiRandom.Generators
         /// blog about random numbers</a> for discussion of alternative, unbiased methods.
         /// </remarks>
         /// <param name="bound">the upper bound (exclusive). If 0 or 1, this always returns 0.</param>
-        /// <returns>the next pseudorandom, uniformly distributed int
+        /// <returns>the next pseudorandom, uniformly distributed uint
         /// value between zero (inclusive) and bound (exclusive)
         /// from this random number generator's sequence</returns>
         uint NextUInt(uint bound);
@@ -430,7 +430,7 @@ namespace ShaiRandom.Generators
         int NextInt(int outerBound);
 
         /// <summary>
-        /// Returns a pseudorandom, uniformly distributed int value between the
+        /// Returns a pseudorandom, uniformly distributed uint value between the
         /// specified innerBound (inclusive) and the specified outerBound
         /// (exclusive).
         /// </summary>
@@ -442,7 +442,7 @@ namespace ShaiRandom.Generators
         /// <seealso cref="NextUInt(uint)"> Here's a note about the bias present in the bounded generation.</seealso>
         /// <param name="innerBound">the inclusive inner bound; may be any int, allowing negative</param>
         /// <param name="outerBound">the exclusive outer bound; must be greater than innerBound (otherwise this returns innerBound)</param>
-        /// <returns>a pseudorandom int between innerBound (inclusive) and outerBound (exclusive)</returns>
+        /// <returns>a pseudorandom uint between innerBound (inclusive) and outerBound (exclusive)</returns>
         uint NextUInt(uint innerBound, uint outerBound);
         /// <summary>
         /// Returns a pseudorandom, uniformly distributed int value between the

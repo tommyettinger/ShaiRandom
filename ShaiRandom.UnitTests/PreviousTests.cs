@@ -21,6 +21,7 @@ namespace ShaiRandom.UnitTests
                 {
                     forward.Add(gen.NextULong());
                 }
+                // Advancing one extra step is needed so when we go back, it gives us the last element added to forward.
                 gen.NextULong();
                 forward.Reverse();
                 for (int i = 0; i < 100; i++)
