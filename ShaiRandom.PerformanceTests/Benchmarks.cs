@@ -663,6 +663,58 @@ namespace ShaiRandom.PerformanceTests
     //        public double Mizuchi() => _mizuchiRandom.NextExclusiveDoubleUnsafe();
     //    }
 
+    /// <summary>
+    /// With NextUInt() virtual:
+    /// |          Method |     Mean |     Error |    StdDev |   Median |
+    /// |---------------- |---------:|----------:|----------:|---------:|
+    /// |        Distinct | 2.686 ns | 0.0664 ns | 0.0621 ns | 2.714 ns |
+    /// |           Laser | 2.584 ns | 0.0788 ns | 0.1379 ns | 2.627 ns |
+    /// |       FourWheel | 2.564 ns | 0.0790 ns | 0.1750 ns | 2.500 ns |
+    /// | XoshiroStarStar | 2.724 ns | 0.0825 ns | 0.1828 ns | 2.650 ns |
+    /// |        RomuTrio | 2.719 ns | 0.0817 ns | 0.1172 ns | 2.764 ns |
+    /// |         Mizuchi | 2.644 ns | 0.0824 ns | 0.1548 ns | 2.610 ns |
+    ///
+    /// 
+    /// </summary>
+    public class VirtualOverheadComparison
+    {
+        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
+        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
+        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
+        private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
+        //private readonly StrangerRandom _strangerRandom = new StrangerRandom(1UL);
+        private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
+        private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
+        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+
+        private uint RunUInt(IEnhancedRandom random) => random.NextUInt();
+
+        [Benchmark]
+        public uint Distinct() => RunUInt(_distinctRandom);
+
+        [Benchmark]
+        public uint Laser() => RunUInt(_laserRandom);
+
+//        [Benchmark]
+//        public uint Tricycle() => RunUInt(_tricycleRandom);
+
+        [Benchmark]
+        public uint FourWheel() => RunUInt(_fourWheelRandom);
+
+//        [Benchmark]
+//        public uint Stranger() => RunUInt(_strangerRandom);
+
+        [Benchmark]
+        public uint XoshiroStarStar() => RunUInt(_xoshiro256StarStarRandom);
+
+        [Benchmark]
+        public uint RomuTrio() => RunUInt(_romuTrioRandom);
+
+        [Benchmark]
+        public uint Mizuchi() => RunUInt(_mizuchiRandom);
+    }
+
+
     internal static class Benchmarks
     {
         private static void Main(string[] args)
