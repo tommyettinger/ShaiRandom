@@ -674,7 +674,15 @@ namespace ShaiRandom.PerformanceTests
     /// |        RomuTrio | 2.719 ns | 0.0817 ns | 0.1172 ns | 2.764 ns |
     /// |         Mizuchi | 2.644 ns | 0.0824 ns | 0.1548 ns | 2.610 ns |
     ///
-    /// 
+    /// With NextUInt() not virtual:
+    /// |          Method |     Mean |     Error |    StdDev |   Median |
+    /// |---------------- |---------:|----------:|----------:|---------:|
+    /// |        Distinct | 2.731 ns | 0.0821 ns | 0.1541 ns | 2.826 ns |
+    /// |           Laser | 2.641 ns | 0.0798 ns | 0.1683 ns | 2.733 ns |
+    /// |       FourWheel | 2.516 ns | 0.0783 ns | 0.1097 ns | 2.443 ns |
+    /// | XoshiroStarStar | 2.746 ns | 0.0817 ns | 0.1650 ns | 2.799 ns |
+    /// |        RomuTrio | 2.981 ns | 0.1057 ns | 0.3116 ns | 2.972 ns |
+    /// |         Mizuchi | 2.736 ns | 0.0819 ns | 0.1815 ns | 2.775 ns |
     /// </summary>
     public class VirtualOverheadComparison
     {
