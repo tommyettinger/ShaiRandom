@@ -8,7 +8,7 @@
     /// It's based on a permutation of an LCG, like PCG-Random by way of SplitMix64. A mizuchi is a mythological river dragon,
     /// and since this supports multiple streams (by changing StateB), the waterway theme seemed fitting.
     /// </remarks>
-    public class MizuchiRandom : AbstractRandom
+    public sealed class MizuchiRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "MizR" .

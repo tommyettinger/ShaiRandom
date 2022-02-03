@@ -703,14 +703,63 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public uint Laser() => RunUInt(_laserRandom);
 
-//        [Benchmark]
-//        public uint Tricycle() => RunUInt(_tricycleRandom);
+        //        [Benchmark]
+        //        public uint Tricycle() => RunUInt(_tricycleRandom);
 
         [Benchmark]
         public uint FourWheel() => RunUInt(_fourWheelRandom);
 
-//        [Benchmark]
-//        public uint Stranger() => RunUInt(_strangerRandom);
+        //        [Benchmark]
+        //        public uint Stranger() => RunUInt(_strangerRandom);
+
+        [Benchmark]
+        public uint XoshiroStarStar() => RunUInt(_xoshiro256StarStarRandom);
+
+        [Benchmark]
+        public uint RomuTrio() => RunUInt(_romuTrioRandom);
+
+        [Benchmark]
+        public uint Mizuchi() => RunUInt(_mizuchiRandom);
+    }
+
+    /// <summary>
+    /// With each implementing class sealed:
+    /// |          Method |     Mean |     Error |    StdDev |
+    /// |---------------- |---------:|----------:|----------:|
+    /// |        Distinct | 1.430 ns | 0.0558 ns | 0.0665 ns |
+    /// |           Laser | 1.250 ns | 0.0082 ns | 0.0068 ns |
+    /// |       FourWheel | 1.695 ns | 0.0140 ns | 0.0110 ns |
+    /// | XoshiroStarStar | 1.981 ns | 0.0662 ns | 0.1453 ns |
+    /// |        RomuTrio | 2.039 ns | 0.0682 ns | 0.1809 ns |
+    /// |         Mizuchi | 1.609 ns | 0.0604 ns | 0.1163 ns |
+    /// </summary>
+    public class SealedOverheadComparison
+    {
+        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
+        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
+        //private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
+        private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
+        //private readonly StrangerRandom _strangerRandom = new StrangerRandom(1UL);
+        private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
+        private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
+        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+
+        private uint RunUInt(IEnhancedRandom random) => random.NextUInt();
+
+        [Benchmark]
+        public uint Distinct() => RunUInt(_distinctRandom);
+
+        [Benchmark]
+        public uint Laser() => RunUInt(_laserRandom);
+
+        //        [Benchmark]
+        //        public uint Tricycle() => RunUInt(_tricycleRandom);
+
+        [Benchmark]
+        public uint FourWheel() => RunUInt(_fourWheelRandom);
+
+        //        [Benchmark]
+        //        public uint Stranger() => RunUInt(_strangerRandom);
 
         [Benchmark]
         public uint XoshiroStarStar() => RunUInt(_xoshiro256StarStarRandom);
