@@ -3,7 +3,7 @@
     /// <summary>
     /// It's an AbstractRandom with 2 states, more here later. This one supports <see cref="Skip(ulong)"/>.
     /// </summary>
-    public sealed class LaserRandom : AbstractRandom
+    public /*sealed*/ class LaserRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "LasR" .

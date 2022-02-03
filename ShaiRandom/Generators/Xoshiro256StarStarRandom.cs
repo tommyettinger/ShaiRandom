@@ -9,7 +9,7 @@
     /// on .NET, and there's a known problem if all results are multiplied by a constant with a specific last byte in its 64 bits),
     /// but it's very hard to get this level of equidistribution and keep up competitive speed.
     /// </remarks>
-    public sealed class Xoshiro256StarStarRandom : AbstractRandom
+    public /*sealed*/ class Xoshiro256StarStarRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "XSSR" .

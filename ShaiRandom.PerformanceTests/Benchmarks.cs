@@ -732,6 +732,15 @@ namespace ShaiRandom.PerformanceTests
     /// | XoshiroStarStar | 1.981 ns | 0.0662 ns | 0.1453 ns |
     /// |        RomuTrio | 2.039 ns | 0.0682 ns | 0.1809 ns |
     /// |         Mizuchi | 1.609 ns | 0.0604 ns | 0.1163 ns |
+    /// With no implementing classes sealed:
+    /// |          Method |     Mean |     Error |    StdDev |   Median |
+    /// |---------------- |---------:|----------:|----------:|---------:|
+    /// |        Distinct | 2.704 ns | 0.0818 ns | 0.1688 ns | 2.711 ns |
+    /// |           Laser | 2.727 ns | 0.0063 ns | 0.0059 ns | 2.725 ns |
+    /// |       FourWheel | 2.677 ns | 0.0818 ns | 0.1496 ns | 2.704 ns |
+    /// | XoshiroStarStar | 2.756 ns | 0.0820 ns | 0.0767 ns | 2.779 ns |
+    /// |        RomuTrio | 2.910 ns | 0.0845 ns | 0.1725 ns | 3.001 ns |
+    /// |         Mizuchi | 2.770 ns | 0.0139 ns | 0.0123 ns | 2.768 ns |
     /// </summary>
     public class SealedOverheadComparison
     {

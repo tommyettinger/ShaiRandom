@@ -7,7 +7,7 @@
     /// This is very fast... on the JVM. It isn't nearly as fast on .NET (any version), because smaller state sizes do better here. It's still fairly high-quality,
     /// with only one known failing test, and it only failed after 2 exabytes of data were processed (an extinction-saturation test).
     /// </remarks>
-    public sealed class FourWheelRandom : AbstractRandom
+    public /*sealed*/ class FourWheelRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "FoWR" .

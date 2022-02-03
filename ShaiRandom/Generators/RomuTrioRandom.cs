@@ -23,7 +23,7 @@ namespace ShaiRandom.Generators
     /// It's an AbstractRandom with 3 states, more here later. Implements the RomuTrio algorithm for fast ulongs.
     /// TricycleRandom or FourWheelRandom may be about the same speed or faster.
     /// </summary>
-    public sealed class RomuTrioRandom : AbstractRandom
+    public /*sealed*/ class RomuTrioRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "RTrR" .

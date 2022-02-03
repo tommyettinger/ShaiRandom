@@ -10,7 +10,7 @@
     /// unary hash (SplittableRandom uses something close to murmurhash3's finalizer; this uses a similar function that is better
     /// in some measurable ways) and return the hash' result.
     /// </remarks>
-    public sealed class DistinctRandom : AbstractRandom
+    public /*sealed*/ class DistinctRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "DisR" .
