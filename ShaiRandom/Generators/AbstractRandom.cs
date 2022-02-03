@@ -165,7 +165,7 @@ namespace ShaiRandom.Generators
         public abstract ulong NextULong();
 
         /// <inheritdoc />
-        public long NextLong()
+        public virtual long NextLong()
         {
             unchecked
             {
@@ -242,7 +242,7 @@ namespace ShaiRandom.Generators
         /// <param name="bits">The amount of random bits to request, from 1 to 32.</param>
         /// <returns>The next pseudorandom value from this random number generator's sequence.</returns>
         ///
-        public uint NextBits(int bits)
+        public virtual uint NextBits(int bits)
         {
             return (uint)(NextULong() >> 64 - bits);
         }
@@ -262,13 +262,13 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public int NextInt()
+        public virtual int NextInt()
         {
             return (int)NextULong();
         }
 
         /// <inheritdoc />
-        public uint NextUInt()
+        public virtual uint NextUInt()
         {
             return (uint)NextULong();
         }
@@ -487,7 +487,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public decimal NextDecimal()
+        public virtual decimal NextDecimal()
         {
             unchecked
             {
