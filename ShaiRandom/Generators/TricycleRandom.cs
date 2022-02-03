@@ -3,7 +3,7 @@
     /// <summary>
     /// It's an AbstractRandom with 3 states, more here later.
     /// </summary>
-    public class TricycleRandom : AbstractRandom
+    public sealed class TricycleRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "TriR" .

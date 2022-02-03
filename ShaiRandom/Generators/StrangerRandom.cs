@@ -3,7 +3,7 @@
     /// <summary>
     /// It's an AbstractRandom with 4 states, more here later. This one has a good guaranteed minimum period, (2 to the 65) - 2.
     /// </summary>
-    public class StrangerRandom : AbstractRandom
+    public sealed class StrangerRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "StrR" .

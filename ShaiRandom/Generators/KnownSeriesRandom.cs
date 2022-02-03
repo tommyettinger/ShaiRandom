@@ -13,8 +13,8 @@ namespace ShaiRandom.Generators
     /// <remarks>
     /// This class may be useful for testing, when you want to specify the numbers returned by an RNG
     /// without drastically modifying any code using the RNG.
-    ///
-    /// This class is mostly from GoRogue, with some modifications for ShaiRandom's API.
+    /// <br />
+    /// This class is mostly from GoRogue, with significant modifications for ShaiRandom's API.
     /// </remarks>
     public class KnownSeriesRandom : IEnhancedRandom
     {
