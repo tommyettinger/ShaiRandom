@@ -110,22 +110,22 @@ namespace ShaiRandom.PerformanceTests
     /// <summary>
     /// On .NET 5.0:
     /// <code>
-    ///|          Method |      Mean |     Error |    StdDev |
-    ///|---------------- |----------:|----------:|----------:|
-    ///|        Distinct |  3.328 ns | 0.0918 ns | 0.1456 ns |
-    ///|           Laser |  3.362 ns | 0.0583 ns | 0.0573 ns |
-    ///|        Tricycle |  3.369 ns | 0.0944 ns | 0.1414 ns |
-    ///|       FourWheel |  3.900 ns | 0.0830 ns | 0.0693 ns |
-    ///|        Stranger |  3.442 ns | 0.0691 ns | 0.0899 ns |
-    ///| XoshiroStarStar |  3.617 ns | 0.0916 ns | 0.0812 ns |
-    ///|        RomuTrio |  3.281 ns | 0.0922 ns | 0.1025 ns |
-    ///|         Mizuchi |  3.314 ns | 0.0934 ns | 0.1660 ns |
-    ///|             ALF |  7.710 ns | 0.1823 ns | 0.3556 ns |
-    ///|         MT19937 | 11.261 ns | 0.2534 ns | 0.4760 ns |
-    ///|             NR3 |  5.796 ns | 0.0287 ns | 0.0269 ns |
-    ///|           NR3Q1 |  4.938 ns | 0.0217 ns | 0.0192 ns |
-    ///|           NR3Q2 |  4.251 ns | 0.0262 ns | 0.0245 ns |
-    ///|     XorShift128 |  3.960 ns | 0.0151 ns | 0.0141 ns |
+    ///|          Method |      Mean |     Error |    StdDev |    Median |
+    ///|---------------- |----------:|----------:|----------:|----------:|
+    ///|        Distinct |  2.064 ns | 0.0676 ns | 0.0724 ns |  2.107 ns |
+    ///|           Laser |  1.894 ns | 0.0299 ns | 0.0234 ns |  1.899 ns |
+    ///|        Tricycle |  2.351 ns | 0.0731 ns | 0.0782 ns |  2.376 ns |
+    ///|       FourWheel |  2.984 ns | 0.0088 ns | 0.0069 ns |  2.987 ns |
+    ///|        Stranger |  2.461 ns | 0.0730 ns | 0.1115 ns |  2.406 ns |
+    ///| XoshiroStarStar |  2.752 ns | 0.0821 ns | 0.1416 ns |  2.747 ns |
+    ///|        RomuTrio |  2.505 ns | 0.0782 ns | 0.1507 ns |  2.445 ns |
+    ///|         Mizuchi |  2.120 ns | 0.0726 ns | 0.1064 ns |  2.108 ns |
+    ///|             ALF |  7.158 ns | 0.1447 ns | 0.1353 ns |  7.123 ns |
+    ///|         MT19937 | 10.896 ns | 0.0986 ns | 0.0874 ns | 10.877 ns |
+    ///|             NR3 |  4.722 ns | 0.0429 ns | 0.0401 ns |  4.717 ns |
+    ///|           NR3Q1 |  3.002 ns | 0.0336 ns | 0.0298 ns |  3.004 ns |
+    ///|           NR3Q2 |  3.317 ns | 0.0914 ns | 0.0855 ns |  3.291 ns |
+    ///|     XorShift128 |  2.944 ns | 0.0504 ns | 0.0472 ns |  2.945 ns |
     ///</code>
     ///On .NET 6.0:
     ///<code>
@@ -181,46 +181,46 @@ namespace ShaiRandom.PerformanceTests
 #endif
 
         [Benchmark]
-        public uint Distinct() => _distinctRandom.NextUInt(1u, 1000u);
+        public uint Distinct() => _distinctRandom.NextUInt(999u);
 
         [Benchmark]
-        public uint Laser() => _laserRandom.NextUInt(1u, 1000u);
+        public uint Laser() => _laserRandom.NextUInt(999u);
 
         [Benchmark]
-        public uint Tricycle() => _tricycleRandom.NextUInt(1u, 1000u);
+        public uint Tricycle() => _tricycleRandom.NextUInt(999u);
 
         [Benchmark]
-        public uint FourWheel() => _fourWheelRandom.NextUInt(1u, 1000u);
+        public uint FourWheel() => _fourWheelRandom.NextUInt(999u);
 
         [Benchmark]
-        public uint Stranger() => _strangerRandom.NextUInt(1u, 1000u);
+        public uint Stranger() => _strangerRandom.NextUInt(999u);
 
         [Benchmark]
-        public uint XoshiroStarStar() => _xoshiro256StarStarRandom.NextUInt(1u, 1000u);
+        public uint XoshiroStarStar() => _xoshiro256StarStarRandom.NextUInt(999u);
 
         [Benchmark]
-        public uint RomuTrio() => _romuTrioRandom.NextUInt(1u, 1000u);
+        public uint RomuTrio() => _romuTrioRandom.NextUInt(999u);
 
         [Benchmark]
-        public uint Mizuchi() => _mizuchiRandom.NextUInt(1u, 1000u);
+        public uint Mizuchi() => _mizuchiRandom.NextUInt(999u);
 
         [Benchmark]
-        public uint ALF() => _aLFGenerator.NextUInt(1u, 1000u);
+        public uint ALF() => _aLFGenerator.NextUInt(999u);
 
         [Benchmark]
-        public uint MT19937() => _mT19937Generator.NextUInt(1u, 1000u);
+        public uint MT19937() => _mT19937Generator.NextUInt(999u);
 
         [Benchmark]
-        public uint NR3() => _nR3Generator.NextUInt(1u, 1000u);
+        public uint NR3() => _nR3Generator.NextUInt(999u);
 
         [Benchmark]
-        public uint NR3Q1() => _nR3Q1Generator.NextUInt(1u, 1000u);
+        public uint NR3Q1() => _nR3Q1Generator.NextUInt(999u);
 
         [Benchmark]
-        public uint NR3Q2() => _nR3Q2Generator.NextUInt(1u, 1000u);
+        public uint NR3Q2() => _nR3Q2Generator.NextUInt(999u);
 
         [Benchmark]
-        public uint XorShift128() => _xorShift128Generator.NextUInt(1u, 1000u);
+        public uint XorShift128() => _xorShift128Generator.NextUInt(999u);
     }
     /// <summary>
 	/// .NET 5.0:
