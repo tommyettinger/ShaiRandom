@@ -1,4 +1,6 @@
-﻿namespace ShaiRandom.Generators
+﻿using System.Runtime.CompilerServices;
+
+namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 3 states, more here later.
@@ -183,6 +185,7 @@
         }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override ulong NextULong()
         {
             ulong fa = StateA;

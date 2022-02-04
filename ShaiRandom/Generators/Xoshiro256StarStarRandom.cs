@@ -1,4 +1,6 @@
-﻿namespace ShaiRandom.Generators
+﻿using System.Runtime.CompilerServices;
+
+namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 4 states, implementing a known-rather-good algorithm that is 4-dimensionally equidistributed.
@@ -223,6 +225,7 @@
         }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override ulong NextULong()
         {
             unchecked

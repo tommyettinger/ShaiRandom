@@ -1,4 +1,6 @@
-﻿namespace ShaiRandom.Generators
+﻿using System.Runtime.CompilerServices;
+
+namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 2 states, more here later. This one supports <see cref="Skip(ulong)"/>.
@@ -171,6 +173,7 @@
         }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override ulong NextULong()
         {
             unchecked
@@ -180,6 +183,21 @@
                 return z ^ z >> 26 ^ z >> 6;
             }
         }
+
+        ///// <inheritdoc/>
+        //public override uint NextUInt()
+        //{
+        //    unchecked
+        //    {
+        //        //ulong z = (StateA += 0xC6BC279692B5C323UL);
+        //        //z ^= z >> 31;
+        //        //z *= (_b += 0x9E3779B97F4A7C16UL);
+        //        ulong s = (StateA += 0xC6BC279692B5C323UL);
+        //        ulong z = (s ^ s >> 31) * (_b += 0x9E3779B97F4A7C16UL);
+        //        return (uint)(z ^ z >> 26 ^ z >> 6);
+        //    }
+
+        //}
 
         /// <inheritdoc />
         public override ulong Skip(ulong distance)

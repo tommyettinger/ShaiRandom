@@ -17,6 +17,8 @@
 // Derived from https://github.com/bgrainger/RomuRandom , which is an
 // implementation of https://romu-random.org/ .
 
+using System.Runtime.CompilerServices;
+
 namespace ShaiRandom.Generators
 {
     /// <summary>
@@ -218,6 +220,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override ulong NextULong()
         {
             unchecked

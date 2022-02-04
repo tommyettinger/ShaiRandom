@@ -1,4 +1,6 @@
-﻿namespace ShaiRandom.Generators
+﻿using System.Runtime.CompilerServices;
+
+namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 4 states, more here later. This one has a good guaranteed minimum period, (2 to the 65) - 2.
@@ -241,6 +243,7 @@
         }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override ulong NextULong()
         {
             ulong fa = _a;
