@@ -228,9 +228,8 @@ namespace ShaiRandom.Generators
                 ulong fa = StateA;
                 StateA = 15241094284759029579UL * _c;
                 _c -= _b;
-                _b -= fa;
-                _b.RotateLeftInPlace(12);
-                _c.RotateLeftInPlace(44);
+                _b = (_b - fa).RotateLeft(12);
+                _c = _c.RotateLeft(44);
                 return fa;
             }
         }

@@ -30,20 +30,20 @@ namespace ShaiRandom.PerformanceTests
     ///.NET 6.0:
     ///|          Method |      Mean |     Error |    StdDev |    Median |
     ///|---------------- |----------:|----------:|----------:|----------:|
-    ///|        Distinct | 0.6076 ns | 0.0388 ns | 0.0835 ns | 0.6068 ns |
-    ///|           Laser | 0.5822 ns | 0.0391 ns | 0.0654 ns | 0.5556 ns |
-    ///|        Tricycle | 0.6005 ns | 0.0413 ns | 0.0834 ns | 0.5851 ns |
-    ///|       FourWheel | 0.8580 ns | 0.0446 ns | 0.0848 ns | 0.8471 ns |
-    ///|        Stranger | 0.9212 ns | 0.0461 ns | 0.1237 ns | 0.8840 ns |
-    ///| XoshiroStarStar | 1.6667 ns | 0.0606 ns | 0.1153 ns | 1.6521 ns |
-    ///|        RomuTrio | 1.6865 ns | 0.0465 ns | 0.0435 ns | 1.6907 ns |
-    ///|         Mizuchi | 0.6721 ns | 0.0103 ns | 0.0086 ns | 0.6750 ns |
-    ///|             ALF | 2.3712 ns | 0.0198 ns | 0.0185 ns | 2.3723 ns |
-    ///|         MT19937 | 3.4359 ns | 0.0743 ns | 0.0658 ns | 3.4371 ns |
-    ///|             NR3 | 1.4737 ns | 0.0172 ns | 0.0161 ns | 1.4776 ns |
-    ///|           NR3Q1 | 1.0654 ns | 0.0432 ns | 0.0404 ns | 1.0704 ns |
-    ///|           NR3Q2 | 0.9684 ns | 0.0233 ns | 0.0195 ns | 0.9693 ns |
-    ///|     XorShift128 | 0.7735 ns | 0.0149 ns | 0.0124 ns | 0.7746 ns |
+    ///|        Distinct | 0.5506 ns | 0.0386 ns | 0.0726 ns | 0.5839 ns |
+    ///|           Laser | 0.5842 ns | 0.0388 ns | 0.0680 ns | 0.5661 ns |
+    ///|        Tricycle | 0.6619 ns | 0.0402 ns | 0.0736 ns | 0.6556 ns |
+    ///|       FourWheel | 0.8330 ns | 0.0450 ns | 0.0987 ns | 0.8488 ns |
+    ///|        Stranger | 0.8706 ns | 0.0074 ns | 0.0058 ns | 0.8700 ns |
+    ///| XoshiroStarStar | 1.3646 ns | 0.0535 ns | 0.0733 ns | 1.3581 ns |
+    ///|        RomuTrio | 0.3362 ns | 0.0434 ns | 0.0446 ns | 0.3497 ns |
+    ///|         Mizuchi | 0.6428 ns | 0.0415 ns | 0.0568 ns | 0.6458 ns |
+    ///|             ALF | 2.3453 ns | 0.0670 ns | 0.0626 ns | 2.3330 ns |
+    ///|         MT19937 | 3.3950 ns | 0.0800 ns | 0.0748 ns | 3.4054 ns |
+    ///|             NR3 | 1.4914 ns | 0.0563 ns | 0.0526 ns | 1.4864 ns |
+    ///|           NR3Q1 | 1.0456 ns | 0.0470 ns | 0.0560 ns | 1.0385 ns |
+    ///|           NR3Q2 | 0.9520 ns | 0.0185 ns | 0.0164 ns | 0.9470 ns |
+    ///|     XorShift128 | 0.7554 ns | 0.0434 ns | 0.0953 ns | 0.7727 ns |
     /// </summary>
     public class RandomUIntComparison
     {

@@ -237,7 +237,7 @@ namespace ShaiRandom.Generators
                 StateB ^= StateC;
                 StateA ^= _d;
                 StateC ^= t;
-                _d.RotateLeftInPlace(45);
+                _d = _d.RotateLeft(45);
                 return result;
             }
         }

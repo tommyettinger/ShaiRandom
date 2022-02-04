@@ -1,4 +1,6 @@
-﻿namespace ShaiRandom
+﻿using System.Runtime.CompilerServices;
+
+namespace ShaiRandom
 {
     /// <summary>
     /// Specific implementations of bitwise rotations that .NET can optimize well in some cases.
@@ -11,6 +13,7 @@
         /// <param name="ul">The ulong to rotate left.</param>
         /// <param name="amt">How many bits to rotate.</param>
         /// <returns>The rotated ul.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong RotateLeft(this ulong ul, int amt) => (ul << amt) | (ul >> 64 - amt);
         /// <summary>
         /// Bitwise left-rotation of a ulong by amt, in bits; assigns to ul in-place.
@@ -25,6 +28,7 @@
         /// <param name="ul">The ulong to rotate right.</param>
         /// <param name="amt">How many bits to rotate.</param>
         /// <returns>The rotated ul.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong RotateRight(this ulong ul, int amt) => (ul >> amt) | (ul << 64 - amt);
         /// <summary>
         /// Bitwise right-rotation of a ulong by amt, in bits; assigns to ul in-place.
