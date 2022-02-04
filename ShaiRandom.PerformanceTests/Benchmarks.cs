@@ -110,22 +110,22 @@ namespace ShaiRandom.PerformanceTests
     /// <summary>
     /// On .NET 5.0:
     /// <code>
-    ///|          Method |      Mean |     Error |    StdDev |    Median |
-    ///|---------------- |----------:|----------:|----------:|----------:|
-    ///|        Distinct |  4.105 ns | 0.1214 ns | 0.3580 ns |  4.035 ns |
-    ///|           Laser |  3.676 ns | 0.1023 ns | 0.2066 ns |  3.673 ns |
-    ///|        Tricycle |  5.013 ns | 0.1299 ns | 0.2878 ns |  4.958 ns |
-    ///|       FourWheel |  5.349 ns | 0.1343 ns | 0.2833 ns |  5.371 ns |
-    ///|        Stranger |  5.211 ns | 0.1354 ns | 0.2736 ns |  5.204 ns |
-    ///| XoshiroStarStar |  6.789 ns | 0.1638 ns | 0.3194 ns |  6.776 ns |
-    ///|        RomuTrio |  6.603 ns | 0.1620 ns | 0.1436 ns |  6.573 ns |
-    ///|         Mizuchi |  3.319 ns | 0.0963 ns | 0.1900 ns |  3.309 ns |
-    ///|             ALF |  7.838 ns | 0.1858 ns | 0.3754 ns |  7.746 ns |
-    ///|         MT19937 | 11.694 ns | 0.2585 ns | 0.5222 ns | 11.683 ns |
-    ///|             NR3 |  6.512 ns | 0.1584 ns | 0.3126 ns |  6.396 ns |
-    ///|           NR3Q1 |  4.158 ns | 0.1099 ns | 0.1576 ns |  4.180 ns |
-    ///|           NR3Q2 |  4.255 ns | 0.1132 ns | 0.1922 ns |  4.357 ns |
-    ///|     XorShift128 |  3.953 ns | 0.1059 ns | 0.1177 ns |  4.004 ns |
+    ///|          Method |      Mean |     Error |    StdDev |
+    ///|---------------- |----------:|----------:|----------:|
+    ///|        Distinct |  3.328 ns | 0.0918 ns | 0.1456 ns |
+    ///|           Laser |  3.362 ns | 0.0583 ns | 0.0573 ns |
+    ///|        Tricycle |  3.369 ns | 0.0944 ns | 0.1414 ns |
+    ///|       FourWheel |  3.900 ns | 0.0830 ns | 0.0693 ns |
+    ///|        Stranger |  3.442 ns | 0.0691 ns | 0.0899 ns |
+    ///| XoshiroStarStar |  3.617 ns | 0.0916 ns | 0.0812 ns |
+    ///|        RomuTrio |  3.281 ns | 0.0922 ns | 0.1025 ns |
+    ///|         Mizuchi |  3.314 ns | 0.0934 ns | 0.1660 ns |
+    ///|             ALF |  7.710 ns | 0.1823 ns | 0.3556 ns |
+    ///|         MT19937 | 11.261 ns | 0.2534 ns | 0.4760 ns |
+    ///|             NR3 |  5.796 ns | 0.0287 ns | 0.0269 ns |
+    ///|           NR3Q1 |  4.938 ns | 0.0217 ns | 0.0192 ns |
+    ///|           NR3Q2 |  4.251 ns | 0.0262 ns | 0.0245 ns |
+    ///|     XorShift128 |  3.960 ns | 0.0151 ns | 0.0141 ns |
     ///</code>
     ///On .NET 6.0:
     ///<code>
