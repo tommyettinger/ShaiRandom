@@ -312,16 +312,16 @@ namespace ShaiRandom.PerformanceTests
     /// <summary>
     /// On .NET 5.0:
     /// <code>
-    ///|          Method |     Mean |     Error |    StdDev |   Median |
-    ///|---------------- |---------:|----------:|----------:|---------:|
-    ///|        Distinct | 2.904 ns | 0.0174 ns | 0.0154 ns | 2.904 ns |
-    ///|           Laser | 2.994 ns | 0.0887 ns | 0.1772 ns | 3.044 ns |
-    ///|        Tricycle | 4.134 ns | 0.1125 ns | 0.2607 ns | 4.227 ns |
-    ///|       FourWheel | 4.473 ns | 0.1186 ns | 0.2422 ns | 4.301 ns |
-    ///|        Stranger | 4.797 ns | 0.1233 ns | 0.2434 ns | 4.826 ns |
-    ///| XoshiroStarStar | 5.723 ns | 0.1446 ns | 0.2494 ns | 5.759 ns |
-    ///|        RomuTrio | 6.675 ns | 0.1606 ns | 0.3690 ns | 6.628 ns |
-    ///|         Mizuchi | 3.018 ns | 0.0902 ns | 0.1672 ns | 3.053 ns |
+    ///|          Method |     Mean |     Error |    StdDev |
+    ///|---------------- |---------:|----------:|----------:|
+    ///|        Distinct | 3.040 ns | 0.0838 ns | 0.1030 ns |
+    ///|           Laser | 3.714 ns | 0.1008 ns | 0.1445 ns |
+    ///|        Tricycle | 2.821 ns | 0.0193 ns | 0.0171 ns |
+    ///|       FourWheel | 3.295 ns | 0.0938 ns | 0.1488 ns |
+    ///|        Stranger | 3.221 ns | 0.0896 ns | 0.1421 ns |
+    ///| XoshiroStarStar | 3.316 ns | 0.0785 ns | 0.0655 ns |
+    ///|        RomuTrio | 2.778 ns | 0.0345 ns | 0.0270 ns |
+    ///|         Mizuchi | 2.839 ns | 0.0718 ns | 0.0636 ns |
     /// </code>
     /// On .NET 6.0:
     /// <code>
