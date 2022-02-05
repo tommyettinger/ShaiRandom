@@ -108,7 +108,7 @@ namespace ShaiRandom.PerformanceTests
         public uint XorShift128() => _xorShift128Generator.NextUIntInclusiveMaxValue();
     }
     /// <summary>
-    /// On .NET 5.0:
+    /// On .NET 5.0 (without GlobalSetup):
     /// <code>
     ///|          Method |      Mean |     Error |    StdDev |    Median |
     ///|---------------- |----------:|----------:|----------:|----------:|
@@ -127,57 +127,86 @@ namespace ShaiRandom.PerformanceTests
     ///|           NR3Q2 |  3.317 ns | 0.0914 ns | 0.0855 ns |  3.291 ns |
     ///|     XorShift128 |  2.944 ns | 0.0504 ns | 0.0472 ns |  2.945 ns |
     ///</code>
-    ///On .NET 6.0:
+    ///On .NET 6.0 (using GlobalSetup):
     ///<code>
-    ///|          Method |       Mean |     Error |    StdDev |     Median |
-    ///|---------------- |-----------:|----------:|----------:|-----------:|
-    ///|          Seeded | 10.1766 ns | 0.2173 ns | 0.2325 ns | 10.0652 ns |
-    ///|        Unseeded |  3.6061 ns | 0.0987 ns | 0.1594 ns |  3.6884 ns |
-    ///|        Distinct |  0.8045 ns | 0.0438 ns | 0.0599 ns |  0.7844 ns |
-    ///|           Laser |  0.8705 ns | 0.0336 ns | 0.0281 ns |  0.8779 ns |
-    ///|        Tricycle |  0.8606 ns | 0.0443 ns | 0.0703 ns |  0.8555 ns |
-    ///|       FourWheel |  0.9099 ns | 0.0470 ns | 0.0560 ns |  0.8858 ns |
-    ///|        Stranger |  1.0197 ns | 0.0473 ns | 0.0751 ns |  0.9994 ns |
-    ///| XoshiroStarStar |  1.5772 ns | 0.0598 ns | 0.1063 ns |  1.5619 ns |
-    ///|        RomuTrio |  0.8571 ns | 0.0462 ns | 0.0734 ns |  0.8079 ns |
-    ///|         Mizuchi |  0.8387 ns | 0.0460 ns | 0.0702 ns |  0.8337 ns |
-    ///|             ALF |  6.6784 ns | 0.1591 ns | 0.2429 ns |  6.6205 ns |
-    ///|         MT19937 |  9.5434 ns | 0.2191 ns | 0.3721 ns |  9.5439 ns |
-    ///|             NR3 |  4.2769 ns | 0.1121 ns | 0.1496 ns |  4.2891 ns |
-    ///|           NR3Q1 |  2.8751 ns | 0.0862 ns | 0.1317 ns |  2.8527 ns |
-    ///|           NR3Q2 |  2.9473 ns | 0.0849 ns | 0.0872 ns |  2.8932 ns |
-    ///|     XorShift128 |  2.5768 ns | 0.0814 ns | 0.1467 ns |  2.5830 ns |
+    ///|          Method |      Mean |     Error |    StdDev |    Median |
+    ///|---------------- |----------:|----------:|----------:|----------:|
+    ///|          Seeded | 9.9412 ns | 0.0342 ns | 0.0285 ns | 9.9384 ns |
+    ///|        Unseeded | 3.6330 ns | 0.0991 ns | 0.1710 ns | 3.7056 ns |
+    ///|        Distinct | 1.0242 ns | 0.0477 ns | 0.0770 ns | 1.0721 ns |
+    ///|           Laser | 0.8008 ns | 0.0436 ns | 0.0652 ns | 0.7673 ns |
+    ///|        Tricycle | 0.7610 ns | 0.0427 ns | 0.0822 ns | 0.8020 ns |
+    ///|       FourWheel | 0.8735 ns | 0.0146 ns | 0.0114 ns | 0.8779 ns |
+    ///|        Stranger | 0.9106 ns | 0.0107 ns | 0.0089 ns | 0.9125 ns |
+    ///| XoshiroStarStar | 1.4380 ns | 0.0588 ns | 0.1188 ns | 1.4370 ns |
+    ///|        RomuTrio | 0.8621 ns | 0.0457 ns | 0.0670 ns | 0.8912 ns |
+    ///|         Mizuchi | 0.9261 ns | 0.0458 ns | 0.0791 ns | 0.8731 ns |
+    ///|             ALF | 6.7523 ns | 0.1446 ns | 0.1352 ns | 6.7941 ns |
+    ///|         MT19937 | 9.5423 ns | 0.2136 ns | 0.3388 ns | 9.6623 ns |
+    ///|             NR3 | 4.2629 ns | 0.1033 ns | 0.0966 ns | 4.2384 ns |
+    ///|           NR3Q1 | 2.6040 ns | 0.0808 ns | 0.0898 ns | 2.6066 ns |
+    ///|           NR3Q2 | 2.8465 ns | 0.0649 ns | 0.0542 ns | 2.8663 ns |
+    ///|     XorShift128 | 2.5099 ns | 0.0740 ns | 0.0656 ns | 2.5272 ns |
     ///</code>
     /// </summary>
     public class RandomUIntBoundedComparison
     {
-        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
-        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
-        private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
-        private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
-        private readonly StrangerRandom _strangerRandom = new StrangerRandom(1UL);
-        private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
-        private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
-        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+        private DistinctRandom _distinctRandom;
+        private LaserRandom _laserRandom;
+        private TricycleRandom _tricycleRandom;
+        private FourWheelRandom _fourWheelRandom;
+        private StrangerRandom _strangerRandom;
+        private Xoshiro256StarStarRandom _xoshiro256StarStarRandom;
+        private RomuTrioRandom _romuTrioRandom;
+        private MizuchiRandom _mizuchiRandom;
 
         //Troschuetz.Random
 
-        private readonly XorShift128Generator _xorShift128Generator = new XorShift128Generator(1u);
-        private readonly ALFGenerator _aLFGenerator = new ALFGenerator(1u);
-        private readonly NR3Generator _nR3Generator = new NR3Generator(1u);
-        private readonly NR3Q1Generator _nR3Q1Generator = new NR3Q1Generator(1u);
-        private readonly NR3Q2Generator _nR3Q2Generator = new NR3Q2Generator(1u);
-        private readonly MT19937Generator _mT19937Generator = new MT19937Generator(1u);
+        private XorShift128Generator _xorShift128Generator;
+        private ALFGenerator _aLFGenerator;
+        private NR3Generator _nR3Generator;
+        private NR3Q1Generator _nR3Q1Generator;
+        private NR3Q2Generator _nR3Q2Generator;
+        private MT19937Generator _mT19937Generator;
 
-#if NET6_0
-        private readonly System.Random _seededRandom = new System.Random(1);
-        private readonly System.Random _unseededRandom = new System.Random();
+#if NET6_0_OR_GREATER
+        private System.Random _seededRandom;
+        private System.Random _unseededRandom;
+#endif
+
+        [GlobalSetup]
+        public void GlobalSetup()
+        {
+        _distinctRandom = new DistinctRandom(1UL);
+        _laserRandom = new LaserRandom(1UL);
+        _tricycleRandom = new TricycleRandom(1UL);
+        _fourWheelRandom = new FourWheelRandom(1UL);
+        _strangerRandom = new StrangerRandom(1UL);
+        _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
+        _romuTrioRandom = new RomuTrioRandom(1UL);
+        _mizuchiRandom = new MizuchiRandom(1UL);
+
+        //Troschuetz.Random
+
+        _xorShift128Generator = new XorShift128Generator(1u);
+        _aLFGenerator = new ALFGenerator(1u);
+        _nR3Generator = new NR3Generator(1u);
+        _nR3Q1Generator = new NR3Q1Generator(1u);
+        _nR3Q2Generator = new NR3Q2Generator(1u);
+        _mT19937Generator = new MT19937Generator(1u);
+
+#if NET6_0_OR_GREATER
+        _seededRandom = new System.Random(1);
+        _unseededRandom = new System.Random();
+#endif
+
+    }
+#if NET6_0_OR_GREATER
+    [Benchmark]
+        public int Seeded() => _seededRandom.Next(999);
 
         [Benchmark]
-        public int Seeded() => _seededRandom.Next(1, 1000);
-
-        [Benchmark]
-        public int Unseeded() => _unseededRandom.Next(1, 1000);
+        public int Unseeded() => _unseededRandom.Next(999);
 #endif
 
         [Benchmark]
