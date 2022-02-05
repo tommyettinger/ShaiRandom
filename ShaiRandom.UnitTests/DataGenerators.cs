@@ -28,6 +28,7 @@ namespace ShaiRandom.UnitTests
             yield return new StrangerRandom();
             yield return new TricycleRandom();
             yield return new Xoshiro256StarStarRandom();
+            yield return new TrimRandom();
 
             if (includeWrappers)
             {
