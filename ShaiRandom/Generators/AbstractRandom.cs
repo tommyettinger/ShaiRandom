@@ -262,13 +262,13 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public virtual int NextInt()
+        public int NextInt()
         {
             return (int)NextULong();
         }
 
         /// <inheritdoc />
-        public virtual uint NextUInt()
+        public uint NextUInt()
         {
             return (uint)NextULong();
         }
