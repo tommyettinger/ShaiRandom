@@ -16,8 +16,16 @@ namespace ShaiRandom.Generators
     /// </remarks>
     public abstract class AbstractRandom : IEnhancedRandom
     {
-        private static readonly float s_floatAdjust = MathF.Pow(2f, -24f);
-        private static readonly double s_doubleAdjust = Math.Pow(2.0, -53.0);
+        /// <summary>
+        /// 2^-24; used in the process of creating a single-precision floating point value in range [0, 1) based on a ulong.
+        /// </summary>
+        public static readonly float FloatAdjust = MathF.Pow(2f, -24f);
+
+        /// <summary>
+        /// 2^-53; used in the process of creating a double-precision floating point value in range [0, 1) based on a ulong.
+        /// </summary>
+        public static readonly double DoubleAdjust = Math.Pow(2.0, -53.0);
+
         /// <summary>
         /// Used by <see cref="MakeSeed"/> to produce mid-low quality random numbers as a starting seed, as a "don't care" option for seeding.
         /// </summary>
@@ -309,7 +317,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public virtual float NextFloat()
         {
-            return (NextULong() >> 40) * s_floatAdjust;
+            return (NextULong() >> 40) * FloatAdjust;
         }
 
         /// <inheritdoc />
@@ -328,7 +336,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public virtual double NextDouble()
         {
-            return (NextULong() >> 11) * s_doubleAdjust;
+            return (NextULong() >> 11) * DoubleAdjust;
         }
 
         /// <inheritdoc />
@@ -346,7 +354,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public virtual double NextInclusiveDouble()
         {
-            return NextULong(0x20000000000001L) * s_doubleAdjust;
+            return NextULong(0x20000000000001L) * DoubleAdjust;
         }
 
         /// <inheritdoc />
@@ -364,7 +372,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public virtual float NextInclusiveFloat()
         {
-            return NextInt(0x1000001) * s_floatAdjust;
+            return NextInt(0x1000001) * FloatAdjust;
         }
 
         /// <inheritdoc />
