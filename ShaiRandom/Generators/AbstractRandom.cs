@@ -186,7 +186,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public ulong NextULong(ulong inner, ulong outer)
+        public virtual ulong NextULong(ulong inner, ulong outer)
         {
             ulong rand = NextULong();
             if (outer < inner)
@@ -204,7 +204,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public long NextLong(long inner, long outer)
+        public virtual long NextLong(long inner, long outer)
         {
             ulong rand = NextULong();
             ulong i2, o2;
@@ -262,25 +262,25 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public int NextInt()
+        public virtual int NextInt()
         {
             return (int)NextULong();
         }
 
         /// <inheritdoc />
-        public uint NextUInt()
+        public virtual uint NextUInt()
         {
             return (uint)NextULong();
         }
 
         /// <inheritdoc />
-        public uint NextUInt(uint bound)
+        public virtual uint NextUInt(uint bound)
         {
             return (uint)(bound * (NextULong() & 0xFFFFFFFFUL) >> 32);
         }
 
         /// <inheritdoc />
-        public int NextInt(int outerBound)
+        public virtual int NextInt(int outerBound)
         {
             outerBound = (int)(outerBound * ((long)NextULong() & 0xFFFFFFFFL) >> 32);
             return outerBound - (outerBound >> 31);
@@ -342,7 +342,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public double NextInclusiveDouble()
+        public virtual double NextInclusiveDouble()
         {
             return NextULong(0x20000000000001L) * s_doubleAdjust;
         }
@@ -360,7 +360,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public float NextInclusiveFloat()
+        public virtual float NextInclusiveFloat()
         {
             return NextInt(0x1000001) * s_floatAdjust;
         }
@@ -378,7 +378,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public decimal NextInclusiveDecimal()
+        public virtual decimal NextInclusiveDecimal()
         {
             unchecked
             {
@@ -427,7 +427,7 @@ namespace ShaiRandom.Generators
         /// <br/>If you decide to edit this, be advised: here be dragons.
         /// </remarks>
         /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
-        public double NextExclusiveDouble()
+        public virtual double NextExclusiveDouble()
         {
             long bits = NextLong();
             return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
@@ -446,7 +446,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public float NextExclusiveFloat()
+        public virtual float NextExclusiveFloat()
         {
             long bits = NextLong();
             return BitConverter.Int32BitsToSingle((1089 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF));
@@ -465,7 +465,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public decimal NextExclusiveDecimal()
+        public virtual decimal NextExclusiveDecimal()
         {
             unchecked
             {
