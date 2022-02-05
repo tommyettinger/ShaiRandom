@@ -19,6 +19,9 @@ namespace ShaiRandom.UnitTests
         private static readonly (int inner, int outer)[] s_signedBounds = { (1, 3), (2, 2), (-3, -1), (-2, 1), (1, -2) };
         private static readonly (int inner, int outer)[] s_unsignedBounds = { (1, 3), (2, 2), (3, 1) };
 
+        // Dictionary which includes all types which should be excluded from distribution checks in the below tests
+        private readonly HashSet<Type> _distributionCheckExclusions = new HashSet<Type>{ typeof(MinRandom) };
+
         private const int NumValuesToGenerate = 100;
 
         // MUST be different than values used in other sets.
@@ -130,6 +133,8 @@ namespace ShaiRandom.UnitTests
                 frequencyDual[value]++;
             }
 
+            if (_distributionCheckExclusions.Contains(rng.GetType())) return;
+
             // KSR validates that the numbers don't _exceed_ the bound, but not that all numbers within the bounds
             // are generated.  Therefore, we'll check to ensure the inclusive bounds themselves were both returned
             // (which should happen w/ 100 iterations over a small range).
@@ -192,6 +197,8 @@ namespace ShaiRandom.UnitTests
                 frequencyDual[value]++;
             }
 
+            if (_distributionCheckExclusions.Contains(rng.GetType())) return;
+
             // KSR validates that the numbers don't _exceed_ the bound, but not that all numbers within the bounds
             // are generated.  But, especially since some implementations of floating point RNG won't be able to
             // generate all values, there's no easy way to check this.  We'll at least sanity check that there are
@@ -246,6 +253,8 @@ namespace ShaiRandom.UnitTests
                     frequency[value] = 0;
                 frequency[value]++;
             }
+
+            if (_distributionCheckExclusions.Contains(rng.GetType())) return;
 
             // KSR validates that the numbers don't _exceed_ the bound, but not that all numbers within the bounds
             // are generated.  But, especially since some implementations of floating point RNG won't be able to

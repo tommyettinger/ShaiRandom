@@ -124,7 +124,7 @@ namespace ShaiRandom.Generators
             if (inner == outer) return inner;
 
             // Exclusive bound; round outer toward inner and take the minimum inclusive bound
-            return Math.Min(inner, outer - 1);
+            return Math.Min(inner, outer > inner ? outer - 1 : outer + 1);
         }
 
         /// <summary>
