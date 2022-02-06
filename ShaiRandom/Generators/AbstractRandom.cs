@@ -399,22 +399,6 @@ namespace ShaiRandom.Generators
             return innerBound + NextInclusiveDecimal() * (outerBound - innerBound);
         }
 
-        //Commented out because it was replaced by the bitwise technique below, but we may want to switch back later or on some platforms.
-
-        // ///Gets a random double between 0.0 and 1.0, exclusive at both ends. This can return double
-        // ///values between 1.1102230246251564E-16 and 0.9999999999999999, or 0x1.fffffffffffffp-54 and 0x1.fffffffffffffp-1 in hex
-        // ///notation. It cannot return 0 or 1.
-        // ///<br/>
-        // ///The default implementation simply uses <see cref="NextLong()"/> to get a uniform long, shifts it to remove 11 bits, adds 1, and
-        // ///multiplies by a value just slightly less than what nextDouble() usually uses.
-        // ///@return a random uniform double between 0 and 1 (both exclusive)
-        // ///
-        //public double NextExclusiveDouble()
-        //{
-        //    return ((NextULong() >> 11) + 1UL) * 1.1102230246251564E-16;
-        //}
-
-
         /// <summary>
         /// Gets a random double between 0.0 and 1.0, exclusive at both ends, using a technique that can produce more of the valid values for a double
         /// (near to 0) than other methods.
@@ -436,13 +420,13 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public double NextExclusiveDouble(double outerBound)
         {
-            return NextExclusiveDouble() * outerBound;
+            return ((NextULong() >> 12) + 1L) * 2.2204460492503126E-16 * outerBound;
         }
 
         /// <inheritdoc />
         public double NextExclusiveDouble(double innerBound, double outerBound)
         {
-            return innerBound + NextExclusiveDouble() * (outerBound - innerBound);
+            return innerBound + ((NextULong() >> 12) + 1L) * 2.2204460492503126E-16 * (outerBound - innerBound);
         }
 
         /// <inheritdoc />
@@ -455,13 +439,13 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public float NextExclusiveFloat(float outerBound)
         {
-            return NextExclusiveFloat() * outerBound;
+            return ((NextULong() >> 10) + 1) * 2.3841852E-07f * outerBound;
         }
 
         /// <inheritdoc />
         public float NextExclusiveFloat(float innerBound, float outerBound)
         {
-            return innerBound + NextExclusiveFloat() * (outerBound - innerBound);
+            return innerBound + ((NextULong() >> 10) + 1) * 2.3841852E-07f * (outerBound - innerBound);
         }
 
         /// <inheritdoc />
