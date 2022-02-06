@@ -400,40 +400,40 @@ namespace ShaiRandom.Generators
         public decimal NextInclusiveDecimal(decimal innerBound, decimal outerBound) => Math.Min(innerBound, outerBound);
 
         /// <summary>
-        /// Always returns 1.0842021724855044E-19.
+        /// Always returns 1.0842021724855044E-19 (the minimum value of <see cref="AbstractRandom.NextExclusiveDouble()"/>.
         /// </summary>
         /// <returns>1.0842021724855044E-19</returns>
         public double NextExclusiveDouble() => 1.0842021724855044E-19;
 
         /// <summary>
-        /// Returns the minimum of 1.0842021724855044E-19 and the defined bound (considering <paramref name="outerBound"/> to be exclusive).
+        /// Returns the minimum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive).
         /// </summary>
         /// <remarks>
         /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextExclusiveDouble(double)"/>
-        /// in terms of how close it can get to given bounds, etc.  Currently, it also shares issues with the AbstractRandom
-        /// implementation which can cause it to return <paramref name="outerBound"/> inclusive with some values.
+        /// in terms of how close it can get to given bounds, etc.
         /// </remarks>
         /// <param name="outerBound"/>
-        /// <returns>The minimum of 1.0842021724855044E-19 and the defined bound (considering <paramref name="outerBound"/> to be exclusive)</returns>
-        public double NextExclusiveDouble(double outerBound) => NextExclusiveDouble(0.0, outerBound);
+        /// <returns>The minimum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive)</returns>
+        public double NextExclusiveDouble(double outerBound)
+        {
+            ulong value = outerBound < 0 ? ulong.MaxValue : 0;
+            return ((value >> 12) + 1L) * 2.2204460492503126E-16 * outerBound;
+        }
 
         /// <summary>
         /// Returns the minimum of the defined bounds (considering both bounds to be exclusive).
         /// </summary>
         /// <remarks>
         /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextExclusiveDouble(double, double)"/>
-        /// in terms of how close it can get to given bounds, etc.  Currently, it also shares issues with the AbstractRandom
-        /// implementation which can cause it to return <paramref name="outerBound"/> or <paramref name="innerBound"/> inclusive with some values.
+        /// in terms of how close it can get to given bounds, etc.
         /// </remarks>
         /// <param name="innerBound"/>
         /// <param name="outerBound"/>
         /// <returns>The minimum of the defined bounds (considering both bounds to be exclusive)</returns>
         public double NextExclusiveDouble(double innerBound, double outerBound)
         {
-            // Note: this breaks exclusivity with, for example innerBound=1.9 and outerBound=1.8 (it returns 1.8), same
-            // for innerBound=1.8 and outerBound=1.9; but the AbstractRandom implementation can as well
-            var startingVal = innerBound > outerBound ? 1.0 - AbstractRandom.DoubleAdjust : NextExclusiveDouble();
-            return innerBound + startingVal * (outerBound - innerBound);
+            ulong value = outerBound < innerBound ? ulong.MaxValue : 0;
+            return innerBound + ((value >> 12) + 1L) * 2.2204460492503126E-16 * (outerBound - innerBound);
         }
 
         /// <summary>
