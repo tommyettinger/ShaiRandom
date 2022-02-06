@@ -708,8 +708,10 @@ namespace ShaiRandom.Generators
         /// Just like <see cref="NextDouble(double)"/>, but this is exclusive on both 0.0 and outerBound.
         /// </summary>
         /// <remarks>
-        /// Like <see cref="NextExclusiveDouble()"/>, which this uses, this may have better bit-distribution of
-        /// double values, and it may also be better able to produce very small doubles when outerBound is large.
+        /// Unlike <see cref="NextExclusiveDouble()"/>, this does not get especially close to zero in most implementations
+        /// simply because when the range is unknown, the very small gap between a valid result and a result this must exclude
+        /// may become so small that results get rounded into the must-exclude values. This has to keep slightly more distance
+        /// between its minimum and maximum valid results and the bounds it must exclude.
         /// </remarks>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <returns>a double between 0.0, exclusive, and outerBound, exclusive</returns>
@@ -720,8 +722,10 @@ namespace ShaiRandom.Generators
         /// This also allows outerBound to be greater than or less than innerBound. If they are equal, this returns innerBound.
         /// </summary>
         /// <remarks>
-        /// Like <see cref="NextExclusiveDouble()"/>, which this uses,, this may have better bit-distribution of double values,
-        /// and it may also be better able to produce doubles close to innerBound when <code>outerBound - innerBound</code> is large.
+        /// Unlike <see cref="NextExclusiveDouble()"/>, this does not get especially close to innerBound in most implementations
+        /// simply because when the range is unknown, the very small gap between a valid result and a result this must exclude
+        /// may become so small that results get rounded into the must-exclude values. This has to keep slightly more distance
+        /// between its minimum and maximum valid results and the bounds it must exclude.
         /// </remarks>
         /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
@@ -750,8 +754,10 @@ namespace ShaiRandom.Generators
         /// If outerBound is 0, this returns 0.
         /// </summary>
         /// <remarks>
-        /// Like <see cref="NextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
-        /// it may also be better able to produce very small floats when outerBound is large.
+        /// Unlike <see cref="NextExclusiveFloat()"/>, this does not get especially close to zero in most implementations
+        /// simply because when the range is unknown, the very small gap between a valid result and a result this must exclude
+        /// may become so small that results get rounded into the must-exclude values. This has to keep slightly more distance
+        /// between its minimum and maximum valid results, and the bounds it must exclude.
         /// </remarks>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
         /// <returns>a float between 0.0, exclusive, and outerBound, exclusive</returns>
@@ -762,8 +768,10 @@ namespace ShaiRandom.Generators
         /// This also allows outerBound to be greater than or less than innerBound. If they are equal, this returns innerBound.
         /// </summary>
         /// <remarks>
-        /// Like <see cref="NextExclusiveFloat()"/>, this may have better bit-distribution of float values, and
-        /// it may also be better able to produce floats close to innerBound when <code>outerBound - innerBound</code> is large.
+        /// Unlike <see cref="NextExclusiveFloat()"/>, this does not get especially close to innerBound in most implementations
+        /// simply because when the range is unknown, the very small gap between a valid result and a result this must exclude
+        /// may become so small that results get rounded into the must-exclude values. This has to keep slightly more distance
+        /// between its minimum and maximum valid results, and the bounds it must exclude.
         /// </remarks>
         /// <param name="innerBound">the inner exclusive bound; may be positive or negative</param>
         /// <param name="outerBound">the outer exclusive bound; may be positive or negative</param>
