@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ShaiRandom.Generators
 {
@@ -414,11 +415,7 @@ namespace ShaiRandom.Generators
         /// </remarks>
         /// <param name="outerBound"/>
         /// <returns>The minimum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive)</returns>
-        public double NextExclusiveDouble(double outerBound)
-        {
-            ulong value = outerBound < 0 ? ulong.MaxValue : 0;
-            return ((value >> 12) + 1L) * 2.2204460492503126E-16 * outerBound;
-        }
+        public double NextExclusiveDouble(double outerBound) => NextExclusiveDouble(0.0, outerBound);
 
         /// <summary>
         /// Returns the minimum of the defined bounds (considering both bounds to be exclusive).
@@ -430,10 +427,14 @@ namespace ShaiRandom.Generators
         /// <param name="innerBound"/>
         /// <param name="outerBound"/>
         /// <returns>The minimum of the defined bounds (considering both bounds to be exclusive)</returns>
+        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
         public double NextExclusiveDouble(double innerBound, double outerBound)
         {
-            ulong value = outerBound < innerBound ? ulong.MaxValue : 0;
-            return innerBound + ((value >> 12) + 1L) * 2.2204460492503126E-16 * (outerBound - innerBound);
+            double nextDouble = innerBound < outerBound ? 0 : 1.0 - AbstractRandom.DoubleAdjust;
+            double v = innerBound + nextDouble * (outerBound - innerBound);
+            if (v >= Math.Max(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int64BitsToDouble(BitConverter.DoubleToInt64Bits(Math.Max(innerBound, outerBound)) - 1L);
+            if (v <= Math.Min(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int64BitsToDouble(BitConverter.DoubleToInt64Bits(Math.Min(innerBound, outerBound)) + 1L);
+            return v;
         }
 
         /// <summary>
@@ -452,7 +453,7 @@ namespace ShaiRandom.Generators
         /// </remarks>
         /// <param name="outerBound"/>
         /// <returns>The minimum of 1.0842022E-19f and the defined bound (considering <paramref name="outerBound"/> to be exclusive)</returns>
-        public float NextExclusiveFloat(float outerBound) => NextExclusiveFloat(0, outerBound);
+        public float NextExclusiveFloat(float outerBound) => NextExclusiveFloat(0f, outerBound);
 
         /// <summary>
         /// Returns the minimum of the defined bounds (considering both bounds to be exclusive).
@@ -465,12 +466,14 @@ namespace ShaiRandom.Generators
         /// <param name="innerBound"/>
         /// <param name="outerBound"/>
         /// <returns>The minimum of the defined bounds (considering both bounds to be exclusive)</returns>
+        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
         public float NextExclusiveFloat(float innerBound, float outerBound)
         {
-            // Note: this breaks exclusivity with, for example innerBound=1.9f and outerBound=1.8f (it returns 1.8f), same
-            // for innerBound=1.8f and outerBound=1.9f; but the AbstractRandom implementation can as well
-            var startingVal = innerBound > outerBound ? 1.0f - AbstractRandom.FloatAdjust : NextExclusiveFloat();
-            return innerBound + startingVal * (outerBound - innerBound);
+            float nextFloat = innerBound < outerBound ? 0f : 1.0f - AbstractRandom.FloatAdjust;
+            float v = innerBound + nextFloat * (outerBound - innerBound);
+            if (v >= Math.Max(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int32BitsToSingle(BitConverter.SingleToInt32Bits(Math.Max(innerBound, outerBound)) - 1);
+            if (v <= Math.Min(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int32BitsToSingle(BitConverter.SingleToInt32Bits(Math.Min(innerBound, outerBound)) + 1);
+            return v;
         }
 
         /// <summary>
