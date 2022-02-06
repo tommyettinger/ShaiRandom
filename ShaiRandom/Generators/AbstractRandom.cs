@@ -442,13 +442,16 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public float NextExclusiveFloat(float outerBound)
         {
-            return ((NextULong() >> 42) + 1) * 2.3841852E-07f * outerBound;
+            return NextExclusiveFloat(0f, outerBound);
         }
 
         /// <inheritdoc />
         public float NextExclusiveFloat(float innerBound, float outerBound)
         {
-            return innerBound + ((NextULong() >> 42) + 1) * 2.3841852E-07f * (outerBound - innerBound);
+            float v = innerBound + NextFloat() * (outerBound - innerBound);
+            if (v >= Math.Max(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int32BitsToSingle(BitConverter.SingleToInt32Bits(Math.Max(innerBound, outerBound)) - 1);
+            if (v <= Math.Min(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int32BitsToSingle(BitConverter.SingleToInt32Bits(Math.Min(innerBound, outerBound)) + 1);
+            return v;
         }
 
         /// <inheritdoc />
