@@ -239,35 +239,11 @@ namespace ShaiRandom.Generators
         /// <returns>1.0f - <see cref="AbstractRandom.FloatAdjust"/></returns>
         public float NextFloat() => 1.0f - AbstractRandom.FloatAdjust;
 
-        /// <summary>
-        /// Returns the maximum of 0.0f and the defined bound (considering <paramref name="outerBound"/> to be exclusive).
-        /// </summary>
-        /// <remarks>
-        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextFloat(float)"/>
-        /// in terms of how close it can get to given bounds, etc.  Currently, it also shares issues with the AbstractRandom
-        /// implementation which can cause it to return <paramref name="outerBound"/> inclusive with some values.
-        /// </remarks>
-        /// <param name="outerBound"/>
-        /// <returns>The maximum of 0.0f and the defined bound (considering <paramref name="outerBound"/> to be exclusive)</returns>
         public float NextFloat(float outerBound) => NextFloat(0, outerBound);
 
-        /// <summary>
-        /// Returns the maximum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive).
-        /// </summary>
-        /// <remarks>
-        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextFloat(float, float)"/>
-        /// in terms of how close it can get to given bounds, etc.  Currently, it also shares issues with the AbstractRandom
-        /// implementation which can cause it to return <paramref name="outerBound"/> inclusive with some values.
-        /// </remarks>
-        /// <param name="innerBound"/>
-        /// <param name="outerBound"/>
-        /// <returns>The maximum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive)</returns>
         public float NextFloat(float innerBound, float outerBound)
         {
-            // Note: this breaks exclusivity with, for example innerBound=1.8f and outerBound=1.9f (it returns 1.9f);
-            // but the AbstractRandom implementation can as well
-            var startingVal = innerBound <= outerBound ? NextFloat() : 0f;
-            return innerBound + startingVal * (outerBound - innerBound);
+            throw new NotImplementedException();
         }
 
         public double NextDouble() => throw new NotImplementedException();
