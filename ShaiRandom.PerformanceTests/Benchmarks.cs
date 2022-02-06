@@ -31,20 +31,21 @@ namespace ShaiRandom.PerformanceTests
     ///.NET 6.0:
     ///|             Method |     Mean |     Error |    StdDev |   Median |
     ///|------------------- |---------:|----------:|----------:|---------:|
-    ///|           Distinct | 2.354 ns | 0.0542 ns | 0.0507 ns | 2.366 ns |
-    ///|              Laser | 2.479 ns | 0.0758 ns | 0.0903 ns | 2.422 ns |
-    ///|           Tricycle | 2.217 ns | 0.0049 ns | 0.0046 ns | 2.216 ns |
-    ///|          FourWheel | 2.489 ns | 0.0586 ns | 0.0489 ns | 2.482 ns |
-    ///|           Stranger | 2.470 ns | 0.0777 ns | 0.1090 ns | 2.510 ns |
-    ///| Xoshiro256StarStar | 2.610 ns | 0.0563 ns | 0.0527 ns | 2.621 ns |
-    ///|           RomuTrio | 2.423 ns | 0.0766 ns | 0.0882 ns | 2.406 ns |
-    ///|            Mizuchi | 2.242 ns | 0.0242 ns | 0.0189 ns | 2.240 ns |
-    ///|        XorShift128 | 2.447 ns | 0.0775 ns | 0.0980 ns | 2.448 ns |
-    ///|                ALF | 3.696 ns | 0.0894 ns | 0.0837 ns | 3.716 ns |
-    ///|                NR3 | 3.010 ns | 0.0858 ns | 0.1022 ns | 3.024 ns |
-    ///|              NR3Q1 | 2.609 ns | 0.0763 ns | 0.0878 ns | 2.632 ns |
-    ///|              NR3Q2 | 2.746 ns | 0.0819 ns | 0.0842 ns | 2.769 ns |
-    ///|            MT19937 | 4.646 ns | 0.0516 ns | 0.0403 ns | 4.659 ns |
+    ///|           Distinct | 2.273 ns | 0.0732 ns | 0.0872 ns | 2.226 ns |
+    ///|              Laser | 2.245 ns | 0.0276 ns | 0.0215 ns | 2.239 ns |
+    ///|           Tricycle | 2.313 ns | 0.0750 ns | 0.0921 ns | 2.386 ns |
+    ///|          FourWheel | 2.579 ns | 0.0628 ns | 0.0588 ns | 2.601 ns |
+    ///|           Stranger | 2.416 ns | 0.0726 ns | 0.0679 ns | 2.440 ns |
+    ///| Xoshiro256StarStar | 2.669 ns | 0.0704 ns | 0.0659 ns | 2.700 ns |
+    ///|           RomuTrio | 2.003 ns | 0.0116 ns | 0.0097 ns | 2.005 ns |
+    ///|            Mizuchi | 2.710 ns | 0.0812 ns | 0.0797 ns | 2.741 ns |
+    ///|               Trim | 2.558 ns | 0.0766 ns | 0.0941 ns | 2.534 ns |
+    ///|        XorShift128 | 2.654 ns | 0.0794 ns | 0.0945 ns | 2.600 ns |
+    ///|                ALF | 3.727 ns | 0.0992 ns | 0.1103 ns | 3.689 ns |
+    ///|                NR3 | 3.882 ns | 0.0570 ns | 0.0445 ns | 3.890 ns |
+    ///|              NR3Q1 | 2.726 ns | 0.0152 ns | 0.0135 ns | 2.726 ns |
+    ///|              NR3Q2 | 2.628 ns | 0.0098 ns | 0.0087 ns | 2.629 ns |
+    ///|            MT19937 | 4.643 ns | 0.0144 ns | 0.0135 ns | 4.642 ns |
     /// </summary>
     public class RandomUIntComparison
     {
@@ -90,6 +91,11 @@ namespace ShaiRandom.PerformanceTests
         public void MizuchiSetup() => _rng = new MizuchiRandom(1UL);
         [Benchmark]
         public uint Mizuchi() => _rng.NextUInt();
+
+        [GlobalSetup(Target = nameof(Trim))]
+        public void TrimSetup() => _rng = new TrimRandom(1UL);
+        [Benchmark]
+        public uint Trim() => _rng.NextUInt();
 
         [GlobalSetup(Target = nameof(XorShift128))]
         public void XorShift128Setup() => _gen = new XorShift128Generator(1);
@@ -223,6 +229,11 @@ namespace ShaiRandom.PerformanceTests
         public void MizuchiSetup() => _rng = new MizuchiRandom(1UL);
         [Benchmark]
         public uint Mizuchi() => _rng.NextUInt(999u);
+
+        [GlobalSetup(Target = nameof(Trim))]
+        public void TrimSetup() => _rng = new TrimRandom(1UL);
+        [Benchmark]
+        public uint Trim() => _rng.NextUInt(999u);
 
         [GlobalSetup(Target = nameof(XorShift128))]
         public void XorShift128Setup() => _gen = new XorShift128Generator(1);
