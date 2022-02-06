@@ -439,13 +439,13 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public float NextExclusiveFloat(float outerBound)
         {
-            return ((NextULong() >> 10) + 1) * 2.3841852E-07f * outerBound;
+            return ((NextULong() >> 42) + 1) * 2.3841852E-07f * outerBound;
         }
 
         /// <inheritdoc />
         public float NextExclusiveFloat(float innerBound, float outerBound)
         {
-            return innerBound + ((NextULong() >> 10) + 1) * 2.3841852E-07f * (outerBound - innerBound);
+            return innerBound + ((NextULong() >> 42) + 1) * 2.3841852E-07f * (outerBound - innerBound);
         }
 
         /// <inheritdoc />
