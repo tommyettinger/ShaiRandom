@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using ShaiRandom.Wrappers;
@@ -434,6 +435,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
+        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
         public double NextExclusiveDouble(double innerBound, double outerBound)
         {
             double v = innerBound + NextDouble() * (outerBound - innerBound);
@@ -456,6 +458,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
+        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
         public float NextExclusiveFloat(float innerBound, float outerBound)
         {
             float v = innerBound + NextFloat() * (outerBound - innerBound);
