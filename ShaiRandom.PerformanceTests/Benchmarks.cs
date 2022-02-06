@@ -148,26 +148,27 @@ namespace ShaiRandom.PerformanceTests
     ///|           NR3Q2 |  3.317 ns | 0.0914 ns | 0.0855 ns |  3.291 ns |
     ///|     XorShift128 |  2.944 ns | 0.0504 ns | 0.0472 ns |  2.945 ns |
     ///</code>
-    ///On .NET 6.0 (using GlobalSetup):
+    ///On .NET 6.0 (using individual GlobalSetup methods):
     ///<code>
-    ///|             Method |      Mean |     Error |    StdDev |    Median |
-    ///|------------------- |----------:|----------:|----------:|----------:|
-    ///|             Seeded |  9.733 ns | 0.2167 ns | 0.2740 ns |  9.784 ns |
-    ///|           Unseeded |  3.527 ns | 0.0902 ns | 0.0886 ns |  3.488 ns |
-    ///|           Distinct |  2.609 ns | 0.0251 ns | 0.0196 ns |  2.613 ns |
-    ///|              Laser |  2.566 ns | 0.0785 ns | 0.1048 ns |  2.499 ns |
-    ///|           Tricycle |  2.553 ns | 0.0304 ns | 0.0237 ns |  2.556 ns |
-    ///|          FourWheel |  2.494 ns | 0.0765 ns | 0.0968 ns |  2.451 ns |
-    ///|           Stranger |  3.095 ns | 0.0811 ns | 0.0759 ns |  3.123 ns |
-    ///| Xoshiro256StarStar |  3.185 ns | 0.0908 ns | 0.2591 ns |  3.100 ns |
-    ///|           RomuTrio |  2.524 ns | 0.0777 ns | 0.0895 ns |  2.480 ns |
-    ///|            Mizuchi |  2.509 ns | 0.0755 ns | 0.0807 ns |  2.544 ns |
-    ///|        XorShift128 |  3.681 ns | 0.0995 ns | 0.1146 ns |  3.636 ns |
-    ///|                ALF |  7.713 ns | 0.1464 ns | 0.1298 ns |  7.769 ns |
-    ///|                NR3 |  5.484 ns | 0.1367 ns | 0.1627 ns |  5.372 ns |
-    ///|              NR3Q1 |  3.685 ns | 0.0684 ns | 0.0640 ns |  3.658 ns |
-    ///|              NR3Q2 |  4.235 ns | 0.1124 ns | 0.1202 ns |  4.269 ns |
-    ///|            MT19937 | 10.820 ns | 0.0860 ns | 0.0763 ns | 10.802 ns |
+    ///|             Method |      Mean |     Error |    StdDev |
+    ///|------------------- |----------:|----------:|----------:|
+    ///|             Seeded |  9.115 ns | 0.0271 ns | 0.0240 ns |
+    ///|           Unseeded |  3.474 ns | 0.0831 ns | 0.0777 ns |
+    ///|           Distinct |  2.760 ns | 0.0148 ns | 0.0131 ns |
+    ///|              Laser |  2.604 ns | 0.0789 ns | 0.1027 ns |
+    ///|           Tricycle |  2.346 ns | 0.0293 ns | 0.0229 ns |
+    ///|          FourWheel |  2.988 ns | 0.0867 ns | 0.1032 ns |
+    ///|           Stranger |  2.691 ns | 0.0537 ns | 0.0502 ns |
+    ///| Xoshiro256StarStar |  3.719 ns | 0.0955 ns | 0.0938 ns |
+    ///|           RomuTrio |  2.788 ns | 0.0795 ns | 0.0976 ns |
+    ///|            Mizuchi |  2.499 ns | 0.0812 ns | 0.0869 ns |
+    ///|               Trim |  2.919 ns | 0.0198 ns | 0.0175 ns |
+    ///|        XorShift128 |  3.853 ns | 0.0986 ns | 0.1055 ns |
+    ///|                ALF |  7.750 ns | 0.1831 ns | 0.1959 ns |
+    ///|                NR3 |  5.532 ns | 0.1383 ns | 0.1593 ns |
+    ///|              NR3Q1 |  4.066 ns | 0.1096 ns | 0.2238 ns |
+    ///|              NR3Q2 |  4.257 ns | 0.0225 ns | 0.0211 ns |
+    ///|            MT19937 | 11.314 ns | 0.0286 ns | 0.0223 ns |
     ///</code>
     /// </summary>
     public class RandomUIntBoundedComparison
