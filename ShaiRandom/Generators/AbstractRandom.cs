@@ -420,13 +420,16 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public double NextExclusiveDouble(double outerBound)
         {
-            return ((NextULong() >> 12) + 1L) * 2.2204460492503126E-16 * outerBound;
+            return NextExclusiveDouble(0.0, outerBound);
         }
 
         /// <inheritdoc />
         public double NextExclusiveDouble(double innerBound, double outerBound)
         {
-            return innerBound + ((NextULong() >> 12) + 1L) * 2.2204460492503126E-16 * (outerBound - innerBound);
+            double v = innerBound + NextDouble() * (outerBound - innerBound);
+            if (v >= Math.Max(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int64BitsToDouble(BitConverter.DoubleToInt64Bits(Math.Max(innerBound, outerBound)) - 1L);
+            if (v <= Math.Min(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int64BitsToDouble(BitConverter.DoubleToInt64Bits(Math.Min(innerBound, outerBound)) + 1L);
+            return v;
         }
 
         /// <inheritdoc />
