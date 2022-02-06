@@ -6,7 +6,7 @@ namespace ShaiRandom.Generators
     /// A "random" number generator which implements all generation functions such that they return the minimum possible
     /// value that could be returned by an actual generator implementing the <see cref="IEnhancedRandom"/> contract.
     /// For example, MinRandom.NextULong() always returns <see cref="ulong.MinValue"/>,
-    /// MinRandom.NextULong(1, 3) always returns 2, and so on.
+    /// MinRandom.NextULong(1, 3) always returns 1, and so on.
     /// </summary>
     /// <remarks>
     /// This generator can be useful for unit testing or debugging algorithms that use random number generators, since
@@ -94,7 +94,7 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <param name="distance"/>
         /// <returns><see cref="ulong.MinValue"/>.</returns>
-        public ulong Skip(ulong distance) => ulong.MinValue;
+        public ulong Skip(ulong distance) => NextULong();
 
         /// <summary>
         /// Does nothing, since this generator has no state.  Always returns <see cref="ulong.MinValue"/>.
