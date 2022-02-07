@@ -444,7 +444,7 @@ namespace ShaiRandom.Generators
         public float NextExclusiveFloat() => 1.0842022E-19f;
 
         /// <summary>
-        /// Returns the minimum of 1.0842022E-19f and the defined bound (considering <paramref name="outerBound"/> to be exclusive).
+        /// Returns the minimum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive).
         /// </summary>
         /// <remarks>
         /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextExclusiveFloat(float)"/>
@@ -452,7 +452,7 @@ namespace ShaiRandom.Generators
         /// implementation which can cause it to return <paramref name="outerBound"/> inclusive with some values.
         /// </remarks>
         /// <param name="outerBound"/>
-        /// <returns>The minimum of 1.0842022E-19f and the defined bound (considering <paramref name="outerBound"/> to be exclusive)</returns>
+        /// <returns>The minimum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive)</returns>
         public float NextExclusiveFloat(float outerBound) => NextExclusiveFloat(0f, outerBound);
 
         /// <summary>
@@ -483,14 +483,14 @@ namespace ShaiRandom.Generators
         public decimal NextExclusiveDecimal() => new decimal(1, 0, 0, false, 28);
 
         /// <summary>
-        /// Returns the minimum of 0.0000000000000000000000000001M and the defined bound (considering <paramref name="outerBound"/> to be exclusive).
+        /// Returns the minimum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive).
         /// </summary>
         /// <remarks>
         /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextExclusiveDecimal(decimal)"/>
         /// in terms of how close it can get to given bounds, etc.
         /// </remarks>
         /// <param name="outerBound"/>
-        /// <returns>The minimum of 0.0000000000000000000000000001M and the defined bound (considering <paramref name="outerBound"/> to be exclusive)</returns>
+        /// <returns>The minimum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive)</returns>
         public decimal NextExclusiveDecimal(decimal outerBound) => NextExclusiveDecimal(0.0M, outerBound);
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ShaiRandom.Generators
 {
@@ -224,74 +225,295 @@ namespace ShaiRandom.Generators
         /// <returns>True</returns>
         public bool NextBool() => true;
 
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// Always returns 1.0f - <see cref="AbstractRandom.FloatAdjust"/>.
         /// </summary>
         /// <returns>1.0f - <see cref="AbstractRandom.FloatAdjust"/></returns>
         public float NextFloat() => 1.0f - AbstractRandom.FloatAdjust;
 
+        /// <summary>
+        /// Returns the maximum of 0.0f and the defined bound (considering <paramref name="outerBound"/> to be exclusive).
+        /// </summary>
+        /// <remarks>
+        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextFloat(float)"/>
+        /// in terms of how close it can get to given bounds, etc.  Currently, it also shares issues with the AbstractRandom
+        /// implementation which can cause it to return <paramref name="outerBound"/> inclusive with some values.
+        /// </remarks>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of 0.0f and the defined bound (considering <paramref name="outerBound"/> to be exclusive)</returns>
         public float NextFloat(float outerBound) => NextFloat(0, outerBound);
 
+        /// <summary>
+        /// Returns the maximum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive).
+        /// </summary>
+        /// <remarks>
+        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextFloat(float, float)"/>
+        /// in terms of how close it can get to given bounds, etc.  Currently, it also shares issues with the AbstractRandom
+        /// implementation which can cause it to return <paramref name="outerBound"/> inclusive with some values.
+        /// </remarks>
+        /// <param name="innerBound"/>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive)</returns>
         public float NextFloat(float innerBound, float outerBound)
         {
-            throw new NotImplementedException();
+            // Note: this breaks exclusivity with, for example innerBound=1.8f and outerBound=1.9f (it returns 1.9f);
+            // but the AbstractRandom implementation can as well
+            var startingVal = innerBound <= outerBound ? NextFloat() : 0f;
+            return innerBound + startingVal * (outerBound - innerBound);
         }
 
-        public double NextDouble() => throw new NotImplementedException();
+        /// <summary>
+        /// Always returns 1.0 - AbstractRandom.DoubleAdjust.
+        /// </summary>
+        /// <returns>1.0 - AbstractRandom.DoubleAdjust</returns>
+        public double NextDouble() => 1.0 - AbstractRandom.DoubleAdjust;
 
-        public double NextDouble(double outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of 0.0 and the defined bound (considering <paramref name="outerBound"/> to be exclusive).
+        /// </summary>
+        /// <remarks>
+        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextDouble(double)"/>
+        /// in terms of how close it can get to given bounds, etc.  Currently, it also shares issues with the AbstractRandom
+        /// implementation which can cause it to return <paramref name="outerBound"/> inclusive with some values.
+        /// </remarks>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of 0.0 and the defined bound (considering <paramref name="outerBound"/> to be exclusive)</returns>
+        public double NextDouble(double outerBound) => NextDouble(0, outerBound);
 
-        public double NextDouble(double innerBound, double outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive).
+        /// </summary>
+        /// <remarks>
+        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextDouble(double, double)"/>
+        /// in terms of how close it can get to given bounds, etc.  Currently, it also shares issues with the AbstractRandom
+        /// implementation which can cause it to return <paramref name="outerBound"/> inclusive with some values.
+        /// </remarks>
+        /// <param name="innerBound"/>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive)</returns>
+        public double NextDouble(double innerBound, double outerBound)
+        {
+            // Note: this breaks exclusivity with, for example innerBound=1.8 and outerBound=1.9 (it returns 1.9);
+            // but the AbstractRandom implementation can as well
+            var startingVal = innerBound <= outerBound ? NextDouble() : 0.0;
+            return innerBound + startingVal * (outerBound - innerBound);
+        }
 
-        public decimal NextDecimal() => throw new NotImplementedException();
+        /// <summary>
+        /// Always returns 0.9999999999999999999999999999M.
+        /// </summary>
+        /// <returns>0.9999999999999999999999999999M</returns>
+        public decimal NextDecimal() => 0.9999999999999999999999999999M;
 
-        public decimal NextDecimal(decimal outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of 0.0M and the defined bound (considering <paramref name="outerBound"/> to be exclusive).
+        /// </summary>
+        /// <remarks>
+        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextDecimal(decimal)"/>
+        /// in terms of how close it can get to given bounds, etc.
+        /// </remarks>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of 0.0M and the defined bound (considering <paramref name="outerBound"/> to be exclusive)</returns>
+        public decimal NextDecimal(decimal outerBound) => NextDecimal(0, outerBound);
 
-        public decimal NextDecimal(decimal innerBound, decimal outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive).
+        /// </summary>
+        /// <remarks>
+        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextDecimal(decimal, decimal)"/>
+        /// in terms of how close it can get to given bounds, etc.
+        /// </remarks>
+        /// <param name="innerBound"/>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive)</returns>
+        public decimal NextDecimal(decimal innerBound, decimal outerBound)
+        {
+            {
+                unchecked
+                {
+                    ulong bits = innerBound <= outerBound ? 0x204fce5e3e250261UL : 0;
+                    var decimalValue = new decimal((int)NextBits(28), (int)(bits & 0xFFFFFFFFUL), (int)(bits >> 32), false, 28);
 
-        public double NextInclusiveDouble() => throw new NotImplementedException();
+                    return innerBound + decimalValue * (outerBound - innerBound);
+                }
+            }
+        }
 
-        public double NextInclusiveDouble(double outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Always returns 1.0.
+        /// </summary>
+        /// <returns>1.0</returns>
+        public double NextInclusiveDouble() => 1.0;
 
-        public double NextInclusiveDouble(double innerBound, double outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of 0.0 and the defined bound.
+        /// </summary>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of 0.0 and the defined bound</returns>
+        public double NextInclusiveDouble(double outerBound) => NextInclusiveDouble(0, outerBound);
 
-        public float NextInclusiveFloat() => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of the defined bounds.
+        /// </summary>
+        /// <param name="innerBound"/>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of the defined bounds</returns>
+        public double NextInclusiveDouble(double innerBound, double outerBound) => Math.Max(innerBound, outerBound);
 
-        public float NextInclusiveFloat(float outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Always returns 1.0f.
+        /// </summary>
+        /// <returns>1.0f</returns>
+        public float NextInclusiveFloat() => 1.0f;
 
-        public float NextInclusiveFloat(float innerBound, float outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of 0.0f and the defined bound.
+        /// </summary>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of 0.0f and the defined bound</returns>
+        public float NextInclusiveFloat(float outerBound) => NextInclusiveFloat(0f, outerBound);
 
-        public decimal NextInclusiveDecimal() => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of the defined bounds.
+        /// </summary>
+        /// <param name="innerBound"/>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of the defined bounds</returns>
+        public float NextInclusiveFloat(float innerBound, float outerBound) => MathF.Max(innerBound, outerBound);
 
-        public decimal NextInclusiveDecimal(decimal outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Always returns 1.0M.
+        /// </summary>
+        /// <returns>1.0M</returns>
+        public decimal NextInclusiveDecimal() => 1.0M;
 
-        public decimal NextInclusiveDecimal(decimal innerBound, decimal outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of 0.0M and the defined bound.
+        /// </summary>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of 0.0M and the defined bound</returns>
+        public decimal NextInclusiveDecimal(decimal outerBound) => NextInclusiveDecimal(0M, outerBound);
 
-        public double NextExclusiveDouble() => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of the defined bounds.
+        /// </summary>
+        /// <param name="innerBound"/>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of the defined bounds</returns>
+        public decimal NextInclusiveDecimal(decimal innerBound, decimal outerBound) => Math.Max(innerBound, outerBound);
 
-        public double NextExclusiveDouble(double outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Always returns 1.0 - AbstractRandom.DoubleAdjust.
+        /// </summary>
+        /// <returns>1.0 - AbstractRandom.DoubleAdjust</returns>
+        public double NextExclusiveDouble() => NextDouble();
 
-        public double NextExclusiveDouble(double innerBound, double outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive).
+        /// </summary>
+        /// <remarks>
+        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextExclusiveDouble(double)"/>
+        /// in terms of how close it can get to given bounds, etc.
+        /// </remarks>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive)</returns>
+        public double NextExclusiveDouble(double outerBound) => NextExclusiveDouble(0.0, outerBound);
 
-        public float NextExclusiveFloat() => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of the defined bounds (considering both bounds to be exclusive).
+        /// </summary>
+        /// <remarks>
+        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextExclusiveDouble(double, double)"/>
+        /// in terms of how close it can get to given bounds, etc.
+        /// </remarks>
+        /// <param name="innerBound"/>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of the defined bounds (considering both bounds to be exclusive)</returns>
+        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
+        public double NextExclusiveDouble(double innerBound, double outerBound)
+        {
+            double nextDouble = innerBound >= outerBound ? 0 : NextDouble();
+            double v = innerBound + nextDouble * (outerBound - innerBound);
+            if (v >= Math.Max(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int64BitsToDouble(BitConverter.DoubleToInt64Bits(Math.Max(innerBound, outerBound)) - 1L);
+            if (v <= Math.Min(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int64BitsToDouble(BitConverter.DoubleToInt64Bits(Math.Min(innerBound, outerBound)) + 1L);
+            return v;
+        }
 
-        public float NextExclusiveFloat(float outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Always returns 1.0f - AbstractRandom.FloatAdjust.
+        /// </summary>
+        /// <returns>1.0 - AbstractRandom.FloatAdjust</returns>
+        public float NextExclusiveFloat() => NextFloat();
 
-        public float NextExclusiveFloat(float innerBound, float outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive).
+        /// </summary>
+        /// <remarks>
+        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextExclusiveFloat(float)"/>
+        /// in terms of how close it can get to given bounds, etc.  Currently, it also shares issues with the AbstractRandom
+        /// implementation which can cause it to return <paramref name="outerBound"/> inclusive with some values.
+        /// </remarks>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive)</returns>
+        public float NextExclusiveFloat(float outerBound) => NextExclusiveFloat(0f, outerBound);
 
-        public decimal NextExclusiveDecimal() => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the minimum of the defined bounds (considering both bounds to be exclusive).
+        /// </summary>
+        /// <remarks>
+        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextExclusiveFloat(float, float)"/>
+        /// in terms of how close it can get to given bounds, etc.  Currently, it also shares issues with the AbstractRandom
+        /// implementation which can cause it to return <paramref name="outerBound"/> or <paramref name="innerBound"/> inclusive with some values.
+        /// </remarks>
+        /// <param name="innerBound"/>
+        /// <param name="outerBound"/>
+        /// <returns>The minimum of the defined bounds (considering both bounds to be exclusive)</returns>
+        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
+        public float NextExclusiveFloat(float innerBound, float outerBound)
+        {
+            float nextFloat = innerBound >= outerBound ? 0f : 1.0f - AbstractRandom.FloatAdjust;
+            float v = innerBound + nextFloat * (outerBound - innerBound);
+            if (v >= Math.Max(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int32BitsToSingle(BitConverter.SingleToInt32Bits(Math.Max(innerBound, outerBound)) - 1);
+            if (v <= Math.Min(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int32BitsToSingle(BitConverter.SingleToInt32Bits(Math.Min(innerBound, outerBound)) + 1);
+            return v;
+        }
 
-        public decimal NextExclusiveDecimal(decimal outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Always returns 0.9999999999999999999999999999M.
+        /// </summary>
+        /// <returns>0.9999999999999999999999999999M</returns>
+        public decimal NextExclusiveDecimal() => NextDecimal();
 
-        public decimal NextExclusiveDecimal(decimal innerBound, decimal outerBound) => throw new NotImplementedException();
+        /// <summary>
+        /// Returns the maximum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive).
+        /// </summary>
+        /// <remarks>
+        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextExclusiveDecimal(decimal)"/>
+        /// in terms of how close it can get to given bounds, etc.
+        /// </remarks>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of 0 and the defined bound (considering both 0 and <paramref name="outerBound"/> to be exclusive)</returns>
+        public decimal NextExclusiveDecimal(decimal outerBound) => NextExclusiveDecimal(0M, outerBound);
+
+        /// <summary>
+        /// Returns the minimum of the defined bounds (considering both bounds to be exclusive).
+        /// </summary>
+        /// <remarks>
+        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextExclusiveDecimal(decimal, decimal)"/>
+        /// in terms of how close it can get to given bounds, etc.
+        /// </remarks>
+        /// <param name="innerBound"/>
+        /// <param name="outerBound"/>
+        /// <returns>The minimum of the defined bounds (considering both bounds to be exclusive)</returns>
+        public decimal NextExclusiveDecimal(decimal innerBound, decimal outerBound)
+        {
+            unchecked
+            {
+                ulong bits = innerBound <= outerBound ? 0x204fce5e3e250261UL : 0;
+                var decimalValue = new decimal(0xFFFFFFF, (int)(bits & 0xFFFFFFFFUL), (int)(bits >> 32), false, 28);
+
+                return innerBound + decimalValue * (outerBound - innerBound);
+            }
+        }
     }
 }
