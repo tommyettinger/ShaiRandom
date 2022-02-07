@@ -20,7 +20,7 @@ namespace ShaiRandom.UnitTests
         private static readonly (int inner, int outer)[] s_unsignedBounds = { (1, 3), (2, 2), (3, 1) };
 
         // Dictionary which includes all types which should be excluded from distribution checks in the below tests
-        private readonly HashSet<Type> _distributionCheckExclusions = new HashSet<Type>{ typeof(MinRandom) };
+        private readonly HashSet<Type> _distributionCheckExclusions = new HashSet<Type>{ typeof(MinRandom), typeof(MaxRandom) };
 
         private const int NumValuesToGenerate = 100;
 
