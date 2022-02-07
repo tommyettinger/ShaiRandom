@@ -536,7 +536,7 @@ namespace ShaiRandom.Wrappers
         public IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
             int breakPoint = data.IndexOf('`', 6) + 1;
-            Wrapped.StringDeserialize(data[..breakPoint]);
+            Wrapped = AbstractRandom.Deserialize("#" + data[1..breakPoint].ToString());
             KnownSeriesRandom ksr = new KnownSeriesRandom();
             ksr.StringDeserialize(data[breakPoint..]);
             _boolSeries.Clear();

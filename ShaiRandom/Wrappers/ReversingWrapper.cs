@@ -101,7 +101,7 @@ namespace ShaiRandom.Wrappers
         /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
-            Wrapped.StringDeserialize(data);
+            Wrapped = Deserialize("#" + data[1..].ToString());
             return this;
         }
 
