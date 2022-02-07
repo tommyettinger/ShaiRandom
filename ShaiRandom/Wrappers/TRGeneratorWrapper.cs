@@ -17,9 +17,13 @@ namespace ShaiRandom.Wrappers
     public class TRGeneratorWrapper : AbstractRandom, IGenerator
     {
         /// <summary>
-        /// The identifying tag here is "T" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
+        /// The identifying tag here is "TRW", which is a different length to indicate the tag is a wrapper.
         /// </summary>
-        public override string Tag => "T";
+        public override string Tag => "TRW";
+        static TRGeneratorWrapper()
+        {
+            RegisterTag(new TRGeneratorWrapper(new DistinctRandom(1UL)));
+        }
 
         /// <summary>
         /// The wrapped RNG, which must never be null.
@@ -82,14 +86,17 @@ namespace ShaiRandom.Wrappers
         public override string StringSerialize()
         {
             var ser = new StringBuilder(Tag);
-            ser.Append(Wrapped.StringSerialize().AsSpan(1));
+            ser.Append('`');
+            ser.Append(Wrapped.StringSerialize());
+            ser.Append('`');
 
             return ser.ToString();
         }
+
         /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
-            Wrapped = Deserialize("#" + data[1..].ToString());
+            Wrapped = Deserialize(data[1..]);
             return this;
         }
 

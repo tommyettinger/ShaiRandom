@@ -26,7 +26,7 @@ namespace ShaiRandom.Wrappers
         private readonly List<decimal> _decimalSeries;
 
         /// <summary>
-        /// The identifying tag here is "ArW" , which is a different length to indicate the tag is a wrapper.
+        /// The identifying tag here is "ArW", which is a different length to indicate the tag is a wrapper.
         /// </summary>
         public string Tag => "ArW";
         static ArchivalWrapper()

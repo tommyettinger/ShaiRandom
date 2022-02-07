@@ -18,7 +18,7 @@ namespace ShaiRandom.Wrappers
     public class ReversingWrapper : AbstractRandom
     {
         /// <summary>
-        /// The identifying tag here is "RvW" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
+        /// The identifying tag here is "RvW", which is a different length to indicate the tag is a wrapper.
         /// </summary>
         public override string Tag => "RvW";
         static ReversingWrapper()
