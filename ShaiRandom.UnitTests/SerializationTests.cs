@@ -40,9 +40,9 @@ namespace ShaiRandom.UnitTests
             // Advance state, just to make sure we have a valid generator
             gen.NextULong();
 
-            // Serialize generator; wrappers have a special-case starting sequence
+            // Serialize generator
             string ser = gen.StringSerialize();
-            Assert.StartsWith(gen.Tag.Length == 1 ? $"{gen.Tag}" : $"#{gen.Tag}`", ser);
+            Assert.StartsWith(gen.Tag, ser);
             Assert.EndsWith("`", ser);
 
             // Deserialize generator
@@ -64,7 +64,7 @@ namespace ShaiRandom.UnitTests
 
             // Serialize generator
             string ser = ksr.StringSerialize();
-            Assert.StartsWith($"#{ksr.Tag}", ser);
+            Assert.StartsWith(ksr.Tag, ser);
             Assert.EndsWith("`", ser);
 
             // Deserialize generator

@@ -74,19 +74,23 @@ namespace ShaiRandom.Generators
             return false;
         }
 
+
         /// <inheritdoc />
         public virtual string StringSerialize()
         {
-            var ser = new StringBuilder("#");
-            ser.Append(Tag);
+            var ser = new StringBuilder(Tag);
             ser.Append('`');
-            for (int i = 0; i < StateCount - 1; i++)
+            if (StateCount > 0)
             {
-                ser.Append($"{SelectState(i):X}");
-                ser.Append('~');
+                for (int i = 0; i < StateCount - 1; i++)
+                {
+                    ser.Append($"{SelectState(i):X}");
+                    ser.Append('~');
+                }
+
+                ser.Append($"{SelectState(StateCount - 1):X}");
             }
 
-            ser.Append($"{SelectState(StateCount - 1):X}");
             ser.Append('`');
 
             return ser.ToString();
@@ -95,12 +99,15 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public virtual IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
-            int idx = data.IndexOf('`');
+            if (StateCount > 0)
+            {
+                int idx = data.IndexOf('`');
 
-            for (int i = 0; i < StateCount - 1; i++)
-                SetSelectedState(i, ulong.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), NumberStyles.HexNumber));
+                for (int i = 0; i < StateCount - 1; i++)
+                    SetSelectedState(i, ulong.Parse(data.Slice(idx + 1, -1 - idx + (idx = data.IndexOf('~', idx + 1))), NumberStyles.HexNumber));
 
-            SetSelectedState(StateCount - 1, ulong.Parse(data.Slice(idx + 1, -1 - idx + data.IndexOf('`', idx + 1)), NumberStyles.HexNumber));
+                SetSelectedState(StateCount - 1, ulong.Parse(data.Slice(idx + 1, -1 - idx + data.IndexOf('`', idx + 1)), NumberStyles.HexNumber));
+            }
 
             return this;
         }
@@ -118,20 +125,15 @@ namespace ShaiRandom.Generators
         /// <returns>A newly-allocated IEnhancedRandom matching the implementation and state of the serialized AbstractRandom.</returns>
         public static IEnhancedRandom Deserialize(ReadOnlySpan<char> data)
         {
-            if (data.Length <= 4)
+            if (data.Length <= 3)
                 throw new ArgumentException("String given cannot represent a valid generator.");
 
             // Can't use Span as the key in a dictionary, so we have to allocate a string to perform the lookup.
             // When the feature linked here is implemented, we could get around this:
             // https://github.com/dotnet/runtime/issues/27229
-            string tagData = new string(data.Slice(1, 4));
-            return data[0] switch
-            {
-				'A' => new ArchivalWrapper(TAGS[tagData].Copy().StringDeserialize(data)),
-                'T' => new TRGeneratorWrapper(TAGS[tagData].Copy().StringDeserialize(data)),
-                'R' => new ReversingWrapper(TAGS[tagData].Copy().StringDeserialize(data)),
-                _ => TAGS[tagData].Copy().StringDeserialize(data)
-            };
+            int idx = data.IndexOf('`');
+            string tagData = new string(data.Slice(0, idx));
+            return TAGS[tagData].Copy().StringDeserialize(data[idx..]);
         }
 
         /// <inheritdoc />

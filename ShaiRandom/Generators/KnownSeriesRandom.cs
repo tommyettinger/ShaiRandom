@@ -833,7 +833,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public string StringSerialize()
         {
-            StringBuilder ser = new StringBuilder("#KnSR`");
+            StringBuilder ser = new StringBuilder("KnSR`");
             ser.Append(_intIndex); ser.Append('~');
             SerializeList(ser, _intSeries);
             ser.Append(_uintIndex); ser.Append('~');
