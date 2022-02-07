@@ -18,7 +18,7 @@ namespace ShaiRandom.Generators
 
         static FourWheelRandom()
         {
-            RegisterTag(new FourWheelRandom(1UL, 1UL, 1UL, 1UL));
+            Serializer.RegisterTag(new FourWheelRandom(1UL, 1UL, 1UL, 1UL));
         }
         /// <summary>
         /// The first state; can be any ulong.

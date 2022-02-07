@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
-using ShaiRandom.Wrappers;
 
 namespace ShaiRandom.Generators
 {
@@ -64,25 +62,6 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public abstract string Tag { get; }
 
-        private static Dictionary<string, IEnhancedRandom> TAGS = new Dictionary<string, IEnhancedRandom>();
-
-        /// <summary>
-        /// Registers an instance of an IEnhancedRandom implementation by its four-character string <see cref="Tag"/>.
-        /// </summary>
-        /// <param name="instance">An instance of an IEnhancedRandom implementation, which will be copied as needed; its state does not matter,
-        /// as long as it is non-null and has a four-character <see cref="Tag"/>.</param>
-        /// <returns>Returns true if the tag was successfully registered for the first time, or false if the tags are unchanged.</returns>
-        public static bool RegisterTag(IEnhancedRandom instance)
-        {
-            if (TAGS.ContainsKey(instance.Tag)) return false;
-            if (instance.Tag.Length != 0)
-            {
-                TAGS.Add(instance.Tag, instance);
-                return true;
-            }
-            return false;
-        }
-
 
         /// <inheritdoc />
         public virtual string StringSerialize()
@@ -119,30 +98,6 @@ namespace ShaiRandom.Generators
             }
 
             return this;
-        }
-
-        /// <summary>
-        /// Given data from a string produced by <see cref="StringSerialize()"/> on any valid IEnhancedRandom,
-        /// this returns a new IEnhancedRandom with the same implementation and state it had when it was serialized.
-        /// </summary>
-        /// <remarks>
-        /// This handles all IEnhancedRandom implementations in this library, including <see cref="TRGeneratorWrapper"/>,
-        /// <see cref="ReversingWrapper"/>, and <see cref="ArchivalWrapper"/> (all of which it currently handles with a special case).
-        /// This takes a ReadOnlySpan of char, which allows data to be any string or some more specialized types.
-        /// </remarks>
-        /// <param name="data">A string or ReadOnlySpan of char produced by an IEnhancedRandom's StringSerialize() method.</param>
-        /// <returns>A newly-allocated IEnhancedRandom matching the implementation and state of the serialized AbstractRandom.</returns>
-        public static IEnhancedRandom Deserialize(ReadOnlySpan<char> data)
-        {
-            int idx = data.IndexOf('`');
-            if (idx == -1)
-                throw new ArgumentException("String given cannot represent a valid generator.");
-
-            // Can't use Span as the key in a dictionary, so we have to allocate a string to perform the lookup.
-            // When the feature linked here is implemented, we could get around this:
-            // https://github.com/dotnet/runtime/issues/27229
-            string tagData = new string(data[..idx]);
-            return TAGS[tagData].Copy().StringDeserialize(data[idx..]);
         }
 
         /// <inheritdoc />

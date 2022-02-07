@@ -20,7 +20,7 @@ namespace ShaiRandom.Generators
         public override string Tag => "DisR";
         static DistinctRandom()
         {
-            RegisterTag(new DistinctRandom(1UL));
+            Serializer.RegisterTag(new DistinctRandom(1UL));
         }
 
         /// <summary>

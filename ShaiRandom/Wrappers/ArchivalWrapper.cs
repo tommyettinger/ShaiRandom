@@ -31,7 +31,7 @@ namespace ShaiRandom.Wrappers
         public string Tag => "ArW";
         static ArchivalWrapper()
         {
-            AbstractRandom.RegisterTag(new ArchivalWrapper(new DistinctRandom(1UL)));
+            Serializer.RegisterTag(new ArchivalWrapper(new DistinctRandom(1UL)));
         }
 
         /// <summary>
@@ -539,7 +539,7 @@ namespace ShaiRandom.Wrappers
             int breakPoint = data.IndexOf("`~") + 2;
             KnownSeriesRandom ksr = new KnownSeriesRandom();
             ksr.StringDeserialize(data[(Tag.Length+1)..]);
-            Wrapped = AbstractRandom.Deserialize(data[breakPoint..]);
+            Wrapped = Serializer.Deserialize(data[breakPoint..]);
             _boolSeries.Clear();
             _byteSeries.Clear();
             _doubleSeries.Clear();

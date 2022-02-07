@@ -14,7 +14,7 @@ namespace ShaiRandom.Generators
 
         static StrangerRandom()
         {
-            RegisterTag(new StrangerRandom(1UL, 1UL, 1UL, 1UL));
+            Serializer.RegisterTag(new StrangerRandom(1UL, 1UL, 1UL, 1UL));
         }
         private ulong _a, _b;
         /// <summary>

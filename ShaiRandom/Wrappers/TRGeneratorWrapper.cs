@@ -22,7 +22,7 @@ namespace ShaiRandom.Wrappers
         public override string Tag => "TRW";
         static TRGeneratorWrapper()
         {
-            RegisterTag(new TRGeneratorWrapper(new DistinctRandom(1UL)));
+            Serializer.RegisterTag(new TRGeneratorWrapper(new DistinctRandom(1UL)));
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace ShaiRandom.Wrappers
         /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
-            Wrapped = Deserialize(data[1..]);
+            Wrapped = Serializer.Deserialize(data[1..]);
             return this;
         }
 

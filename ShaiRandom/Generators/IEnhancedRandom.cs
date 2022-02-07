@@ -76,7 +76,7 @@ namespace ShaiRandom.Generators
         /// This is an optional operation for classes that only implement IEnhancedRandom; AbstractRandom strongly encourages but does not require an implementation.
         /// </summary>
         /// <remarks>
-        /// It is more common to call <see cref="AbstractRandom.Deserialize(ReadOnlySpan{char})"/> when the exact variety of IEnhancedRandom is not known.
+        /// It is more common to call <see cref="Serializer.Deserialize(ReadOnlySpan{char})"/> when the exact variety of IEnhancedRandom is not known.
         /// </remarks>
         /// <param name="data">Data from a string produced by StringSerialize.</param>
         /// <returns>This IEnhancedRandom, after modifications.</returns>

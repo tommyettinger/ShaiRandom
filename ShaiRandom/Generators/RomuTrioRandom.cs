@@ -34,7 +34,7 @@ namespace ShaiRandom.Generators
 
         static RomuTrioRandom()
         {
-            RegisterTag(new RomuTrioRandom(1UL, 1UL, 1UL));
+            Serializer.RegisterTag(new RomuTrioRandom(1UL, 1UL, 1UL));
         }
         /// <summary>
         /// The first state; can be any ulong except that the whole state must not all be 0.

@@ -55,7 +55,7 @@ namespace ShaiRandom.Generators
 
         static MaxRandom()
         {
-            AbstractRandom.RegisterTag(new MaxRandom());
+            Serializer.RegisterTag(new MaxRandom());
         }
 
         /// <summary>

@@ -170,7 +170,7 @@ namespace ShaiRandom.Generators
         public string Tag => "KnSR";
         static KnownSeriesRandom()
         {
-            AbstractRandom.RegisterTag(new KnownSeriesRandom());
+            Serializer.RegisterTag(new KnownSeriesRandom());
         }
 
         private static T ReturnIfBetweenBounds<T>(T innerValue, T outerValue, List<T> series, ref int seriesIndex)

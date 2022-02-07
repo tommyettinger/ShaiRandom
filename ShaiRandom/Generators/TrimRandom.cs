@@ -21,7 +21,7 @@ namespace ShaiRandom.Generators
 
         static TrimRandom()
         {
-            RegisterTag(new TrimRandom(1UL, 1UL, 1UL, 1UL));
+            Serializer.RegisterTag(new TrimRandom(1UL, 1UL, 1UL, 1UL));
         }
         /// <summary>
         /// The first state; can be any ulong.

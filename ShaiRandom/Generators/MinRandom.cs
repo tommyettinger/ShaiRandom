@@ -55,7 +55,7 @@ namespace ShaiRandom.Generators
 
         static MinRandom()
         {
-            AbstractRandom.RegisterTag(new MinRandom());
+            Serializer.RegisterTag(new MinRandom());
         }
 
         /// <summary>

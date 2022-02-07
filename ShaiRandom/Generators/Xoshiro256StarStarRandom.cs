@@ -20,7 +20,7 @@ namespace ShaiRandom.Generators
 
         static Xoshiro256StarStarRandom()
         {
-            RegisterTag(new Xoshiro256StarStarRandom(1UL, 1UL, 1UL, 1UL));
+            Serializer.RegisterTag(new Xoshiro256StarStarRandom(1UL, 1UL, 1UL, 1UL));
         }
         /// <summary>
         /// The first state; can be any ulong except that the whole state must not all be 0.

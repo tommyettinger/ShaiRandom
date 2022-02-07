@@ -23,7 +23,7 @@ namespace ShaiRandom.Wrappers
         public override string Tag => "RvW";
         static ReversingWrapper()
         {
-            RegisterTag(new ReversingWrapper(new DistinctRandom(1UL)));
+            Serializer.RegisterTag(new ReversingWrapper(new DistinctRandom(1UL)));
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace ShaiRandom.Wrappers
         /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
-            Wrapped = Deserialize(data[1..]);
+            Wrapped = Serializer.Deserialize(data[1..]);
             return this;
         }
 

@@ -19,7 +19,7 @@ namespace ShaiRandom.Generators
 
         static MizuchiRandom()
         {
-            RegisterTag(new MizuchiRandom(1UL, 1UL));
+            Serializer.RegisterTag(new MizuchiRandom(1UL, 1UL));
         }
         /// <summary>
         /// The first state; can be any ulong.
