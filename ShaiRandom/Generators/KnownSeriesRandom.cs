@@ -183,25 +183,25 @@ namespace ShaiRandom.Generators
             if (compareResult > 0)
             {
                 if (value.CompareTo(innerValue) < 0)
-                    throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+                    throw new ArgumentException($"Value {value} was returned, but that is below the bounds of the generator function call.");
 
                 if (value.CompareTo(outerValue) >= 0)
-                    throw new ArgumentException("Value returned is above the bounds of the generator function call.");
+                    throw new ArgumentException($"Value {value} was returned, but that is above the bounds of the generator function call.");
             }
             // inner == outer; there is only one valid value
             else if (compareResult == 0)
             {
                 if (value.CompareTo(innerValue) != 0)
-                    throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+                    throw new ArgumentException($"Value {value} was returned, but that is below the bounds of the generator function call.");
             }
             // outer < inner; but outer is still _exclusive_, inner is _inclusive_
             else
             {
                 if (value.CompareTo(outerValue) <= 0)
-                    throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+                    throw new ArgumentException($"Value {value} was returned, but that is below the bounds of the generator function call.");
 
                 if (value.CompareTo(innerValue) > 0)
-                    throw new ArgumentException("Value returned is above the bounds of the generator function call.");
+                    throw new ArgumentException($"Value {value} was returned, but that is above the bounds of the generator function call.");
             }
 
             return value;
@@ -216,16 +216,16 @@ namespace ShaiRandom.Generators
             if (min.CompareTo(max) == 0)
             {
                 if (value.CompareTo(min) != 0)
-                    throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+                    throw new ArgumentException($"Value {value} was returned, but that is below the bounds of the generator function call.");
 
                 return value; // If bounds are the same, the bound is returned.
             }
 
             if (value.CompareTo(min) <= 0)
-                throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+                throw new ArgumentException($"Value {value} was returned, but that is below the bounds of the generator function call.");
 
             if (value.CompareTo(max) >= 0)
-                throw new ArgumentException("Value returned is above the bounds of the generator function call.");
+                throw new ArgumentException($"Value {value} was returned, but that is above the bounds of the generator function call.");
 
             return value;
         }
@@ -237,13 +237,13 @@ namespace ShaiRandom.Generators
             var (min, max) = GetMinAndMax(innerValue, outerValue);
 
             if (min.CompareTo(max) == 0 && value.CompareTo(min) != 0)
-                throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+                throw new ArgumentException($"Value {value} was returned, but that is below the bounds of the generator function call.");
 
             if (value.CompareTo(min) < 0)
-                throw new ArgumentException("Value returned is below the bounds of the generator function call.");
+                throw new ArgumentException($"Value {value} was returned, but that is below the bounds of the generator function call.");
 
             if (value.CompareTo(max) > 0)
-                throw new ArgumentException("Value returned is above the bounds of the generator function call.");
+                throw new ArgumentException($"Value {value} was returned, but that is above the bounds of the generator function call.");
 
             return value;
         }

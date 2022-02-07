@@ -1,5 +1,4 @@
-﻿using System;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using ShaiRandom.Generators;
 using Troschuetz.Random.Generators;
@@ -49,8 +48,8 @@ namespace ShaiRandom.PerformanceTests
     /// </summary>
     public class RandomUIntComparison
     {
-        private IEnhancedRandom _rng;
-        private IGenerator _gen;
+        private IEnhancedRandom _rng = null!;
+        private IGenerator _gen = null!;
 
         [GlobalSetup(Target = nameof(Distinct))]
         public void DistinctSetup() => _rng = new DistinctRandom(1UL);
@@ -173,20 +172,20 @@ namespace ShaiRandom.PerformanceTests
     /// </summary>
     public class RandomUIntBoundedComparison
     {
-        private IEnhancedRandom _rng;
-        private IGenerator _gen;
+        private IEnhancedRandom _rng = null!;
+        private IGenerator _gen = null!;
 
 #if NET6_0_OR_GREATER
-        private System.Random _seededRandom;
-        private System.Random _unseededRandom;
+        private System.Random _seededRandom = null!;
+        private System.Random _unseededRandom = null!;
 
         [GlobalSetup(Target = nameof(Seeded))]
-        public void SeededSetup() => _seededRandom = new Random(1);
+        public void SeededSetup() => _seededRandom = new System.Random(1);
         [Benchmark]
         public int Seeded() => _seededRandom.Next(999);
 
         [GlobalSetup(Target = nameof(Unseeded))]
-        public void UnseededSetup() => _unseededRandom = new Random();
+        public void UnseededSetup() => _unseededRandom = new System.Random();
         [Benchmark]
         public int Unseeded() => _unseededRandom.Next(999);
 #endif
@@ -311,11 +310,11 @@ namespace ShaiRandom.PerformanceTests
     ///|            Mizuchi | 1.329 ns | 0.0542 ns | 0.0603 ns | 1.291 ns |
     ///|               Trim | 1.381 ns | 0.0584 ns | 0.1294 ns | 1.347 ns |
     ///
-    /// 
+    ///
     /// </summary>
     public class RandomULongComparison
     {
-        private IEnhancedRandom _rng;
+        private IEnhancedRandom _rng = null!;
 
         [GlobalSetup(Target = nameof(Distinct))]
         public void DistinctSetup() => _rng = new DistinctRandom(1UL);
@@ -626,13 +625,13 @@ namespace ShaiRandom.PerformanceTests
         private static double StrangeDouble(MizuchiRandom random)
         {
             long bits = random.NextLong();
-            return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
+            return System.BitConverter.Int64BitsToDouble((0x7C10000000000000L + (System.BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
         }
         private static double BitsyDouble(MizuchiRandom random)
         {
             ulong bits = random.NextULong();
 #if NETCOREAPP3_0_OR_GREATER
-            return BitConverter.Int64BitsToDouble(1022L - BitOperations.TrailingZeroCount(bits) << 52 | (long)(bits >> 12));
+            return System.BitConverter.Int64BitsToDouble(1022L - BitOperations.TrailingZeroCount(bits) << 52 | (long)(bits >> 12));
 #else
             ulong v = bits;
             long c = 64L;
