@@ -310,11 +310,11 @@ namespace ShaiRandom.PerformanceTests
     ///|            Mizuchi | 1.329 ns | 0.0542 ns | 0.0603 ns | 1.291 ns |
     ///|               Trim | 1.381 ns | 0.0584 ns | 0.1294 ns | 1.347 ns |
     ///
-    /// 
+    ///
     /// </summary>
     public class RandomULongComparison
     {
-        private IEnhancedRandom _rng;
+        private IEnhancedRandom _rng = null!;
 
         [GlobalSetup(Target = nameof(Distinct))]
         public void DistinctSetup() => _rng = new DistinctRandom(1UL);
