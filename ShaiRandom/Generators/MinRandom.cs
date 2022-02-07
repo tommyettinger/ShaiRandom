@@ -65,7 +65,7 @@ namespace ShaiRandom.Generators
         public IEnhancedRandom Copy() => new MinRandom();
 
         /// <inheritdoc />
-        public string StringSerialize() => $"#{Tag}``";
+        public string StringSerialize() => $"{Tag}``";
 
         /// <inheritdoc />
         public IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data) => Instance;
