@@ -66,7 +66,7 @@ namespace ShaiRandom.Generators
         public static bool RegisterTag(IEnhancedRandom instance)
         {
             if (TAGS.ContainsKey(instance.Tag)) return false;
-            if (instance.Tag.Length == 4)
+            if (instance.Tag.Length != 0)
             {
                 TAGS.Add(instance.Tag, instance);
                 return true;

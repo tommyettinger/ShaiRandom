@@ -26,9 +26,13 @@ namespace ShaiRandom.Wrappers
         private readonly List<decimal> _decimalSeries;
 
         /// <summary>
-        /// The identifying tag here is "A" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
+        /// The identifying tag here is "ArW" , which is a different length to indicate the tag is a wrapper.
         /// </summary>
-        public string Tag => "A";
+        public string Tag => "ArW";
+        static ArchivalWrapper()
+        {
+            AbstractRandom.RegisterTag(new ArchivalWrapper(new DistinctRandom(1UL)));
+        }
 
         /// <summary>
         /// The ShaiRandom IEnhancedRandom being wrapped, which must never be null.
@@ -129,11 +133,6 @@ namespace ShaiRandom.Wrappers
         /// This supports <see cref="PreviousULong()"/> if the wrapped generator does.
         /// </summary>
         public bool SupportsPrevious => false;
-
-        static ArchivalWrapper()
-        {
-            AbstractRandom.RegisterTag(new ArchivalWrapper());
-        }
 
         /// <inheritdoc />
         public IEnhancedRandom Copy() => new ArchivalWrapper(Wrapped.Copy(), _intSeries, _uintSeries, _doubleSeries, _boolSeries, _byteSeries, _floatSeries, _longSeries, _ulongSeries, _decimalSeries);
@@ -526,19 +525,21 @@ namespace ShaiRandom.Wrappers
         public string StringSerialize()
         {
             var ser = new StringBuilder(Tag);
-            ser.Append(Wrapped.StringSerialize().AsSpan(1));
+            ser.Append('`');
             ser.Append(MakeArchivedSeries().StringSerialize());
-
+            ser.Append('~');
+            ser.Append(Wrapped.StringSerialize());
+            ser.Append('`');
             return ser.ToString();
         }
 
         /// <inheritdoc />
         public IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
-            int breakPoint = data.IndexOf('`', 6) + 1;
-            Wrapped = AbstractRandom.Deserialize("#" + data[1..breakPoint].ToString());
+            int breakPoint = data.IndexOf("`~") + 2;
             KnownSeriesRandom ksr = new KnownSeriesRandom();
-            ksr.StringDeserialize(data[breakPoint..]);
+            ksr.StringDeserialize(data[(Tag.Length+1)..]);
+            Wrapped = AbstractRandom.Deserialize(data[breakPoint..]);
             _boolSeries.Clear();
             _byteSeries.Clear();
             _doubleSeries.Clear();
