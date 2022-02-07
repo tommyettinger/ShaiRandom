@@ -18,9 +18,13 @@ namespace ShaiRandom.Wrappers
     public class ReversingWrapper : AbstractRandom
     {
         /// <summary>
-        /// The identifying tag here is "R" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
+        /// The identifying tag here is "RvW" , which is an invalid length to indicate the tag is not meant to be registered or used on its own.
         /// </summary>
-        public override string Tag => "R";
+        public override string Tag => "RvW";
+        static ReversingWrapper()
+        {
+            RegisterTag(new ReversingWrapper(new DistinctRandom(1UL)));
+        }
 
         /// <summary>
         /// The ShaiRandom generator being wrapped, which must never be null.
@@ -51,7 +55,7 @@ namespace ShaiRandom.Wrappers
         public ReversingWrapper(IEnhancedRandom wrapping)
         {
             if (!wrapping.SupportsPrevious)
-                throw new ArgumentException($"The AbstractRandom to wrap must support PreviousULong().", nameof(wrapping));
+                throw new ArgumentException($"The IEnhancedRandom to wrap must support PreviousULong().", nameof(wrapping));
             Wrapped = wrapping;
         }
 
@@ -93,7 +97,9 @@ namespace ShaiRandom.Wrappers
         public override string StringSerialize()
         {
             var ser = new StringBuilder(Tag);
-            ser.Append(Wrapped.StringSerialize().AsSpan(1));
+            ser.Append('`');
+            ser.Append(Wrapped.StringSerialize());
+            ser.Append('`');
 
             return ser.ToString();
         }
@@ -101,7 +107,7 @@ namespace ShaiRandom.Wrappers
         /// <inheritdoc />
         public override IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)
         {
-            Wrapped = Deserialize("#" + data[1..].ToString());
+            Wrapped = Deserialize(data[1..]);
             return this;
         }
 
