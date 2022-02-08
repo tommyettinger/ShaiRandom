@@ -48,6 +48,7 @@ namespace ShaiRandom.UnitTests
 
         public static void Main(string[] args)
         {
+            Serializer.RegisterShaiRandomDefaultTags();
             float fsum = 0f;
             for (int i = 0; i < 100; i++)
             {
@@ -210,6 +211,12 @@ namespace ShaiRandom.UnitTests
                     }
                 }
             }
+            //            Console.WriteLine(mr.NextExclusiveDouble());
+            //            Console.WriteLine(mr.NextExclusiveDouble(-1e-9));
+
+            MaxRandom mr = new MaxRandom();
+            double d = mr.NextExclusiveDouble(-3e-9, -1e-9);
+            Console.WriteLine(d);
 
         }
     }
