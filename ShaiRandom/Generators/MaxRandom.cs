@@ -51,12 +51,7 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// Tag for this case is "MinR".
         /// </summary>
-        public string Tag => "MaxR";
-
-        static MaxRandom()
-        {
-            Serializer.RegisterTag(new MaxRandom());
-        }
+        public string DefaultTag => "MaxR";
 
         /// <summary>
         /// Returns a new MinRandom generator; this must be equivalent to the current one, since there is no state.
@@ -65,7 +60,7 @@ namespace ShaiRandom.Generators
         public IEnhancedRandom Copy() => new MaxRandom();
 
         /// <inheritdoc />
-        public string StringSerialize() => $"{Tag}``";
+        public string StringSerialize() => $"{Serializer.GetTag(this)}``";
 
         /// <inheritdoc />
         public IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data) => Instance;

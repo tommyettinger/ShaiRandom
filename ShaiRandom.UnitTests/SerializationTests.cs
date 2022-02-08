@@ -42,7 +42,7 @@ namespace ShaiRandom.UnitTests
 
             // Serialize generator
             string ser = Serializer.Serialize(gen);
-            Assert.StartsWith(gen.Tag, ser);
+            Assert.StartsWith(Serializer.GetTag(gen), ser);
             Assert.EndsWith("`", ser);
 
             // Deserialize generator
@@ -64,7 +64,7 @@ namespace ShaiRandom.UnitTests
 
             // Serialize generator
             string ser = ksr.StringSerialize();
-            Assert.StartsWith(ksr.Tag, ser);
+            Assert.StartsWith(Serializer.GetTag(ksr), ser);
             Assert.EndsWith("`", ser);
 
             // Deserialize generator

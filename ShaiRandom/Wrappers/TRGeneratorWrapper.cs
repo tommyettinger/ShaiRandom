@@ -19,11 +19,7 @@ namespace ShaiRandom.Wrappers
         /// <summary>
         /// The identifying tag here is "TRW", which is a different length to indicate the tag is a wrapper.
         /// </summary>
-        public override string Tag => "TRW";
-        static TRGeneratorWrapper()
-        {
-            Serializer.RegisterTag(new TRGeneratorWrapper(new DistinctRandom(1UL)));
-        }
+        public override string DefaultTag => "TRW";
 
         /// <summary>
         /// The wrapped RNG, which must never be null.
@@ -85,7 +81,7 @@ namespace ShaiRandom.Wrappers
         /// <inheritdoc />
         public override string StringSerialize()
         {
-            var ser = new StringBuilder(Tag);
+            var ser = new StringBuilder(Serializer.GetTag(this));
             ser.Append('`');
             ser.Append(Wrapped.StringSerialize());
             ser.Append('`');

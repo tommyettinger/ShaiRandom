@@ -16,12 +16,8 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// The identifying tag here is "XSSR" .
         /// </summary>
-        public override string Tag => "XSSR";
+        public override string DefaultTag => "XSSR";
 
-        static Xoshiro256StarStarRandom()
-        {
-            Serializer.RegisterTag(new Xoshiro256StarStarRandom(1UL, 1UL, 1UL, 1UL));
-        }
         /// <summary>
         /// The first state; can be any ulong except that the whole state must not all be 0.
         /// </summary>

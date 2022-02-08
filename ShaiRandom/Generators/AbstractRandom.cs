@@ -60,13 +60,13 @@ namespace ShaiRandom.Generators
         public abstract bool SupportsPrevious { get; }
 
         /// <inheritdoc />
-        public abstract string Tag { get; }
+        public abstract string DefaultTag { get; }
 
 
         /// <inheritdoc />
         public virtual string StringSerialize()
         {
-            var ser = new StringBuilder(Tag);
+            var ser = new StringBuilder(Serializer.GetTag(this));
             ser.Append('`');
             if (StateCount > 0)
             {

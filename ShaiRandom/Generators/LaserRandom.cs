@@ -10,12 +10,8 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// The identifying tag here is "LasR" .
         /// </summary>
-        public override string Tag => "LasR";
-
-        static LaserRandom()
-        {
-            Serializer.RegisterTag(new LaserRandom(1UL, 1UL));
-        }
+        public override string DefaultTag => "LasR";
+        
         /// <summary>
         /// The first state; can be any ulong.
         /// </summary>

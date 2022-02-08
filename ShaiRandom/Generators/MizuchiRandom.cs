@@ -15,12 +15,8 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// The identifying tag here is "MizR" .
         /// </summary>
-        public override string Tag => "MizR";
-
-        static MizuchiRandom()
-        {
-            Serializer.RegisterTag(new MizuchiRandom(1UL, 1UL));
-        }
+        public override string DefaultTag => "MizR";
+        
         /// <summary>
         /// The first state; can be any ulong.
         /// </summary>

@@ -167,11 +167,7 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// The identifying tag here is "KnSR" .
         /// </summary>
-        public string Tag => "KnSR";
-        static KnownSeriesRandom()
-        {
-            Serializer.RegisterTag(new KnownSeriesRandom());
-        }
+        public string DefaultTag => "KnSR";
 
         private static T ReturnIfBetweenBounds<T>(T innerValue, T outerValue, List<T> series, ref int seriesIndex)
             where T : IComparable<T>
@@ -833,7 +829,9 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public string StringSerialize()
         {
-            StringBuilder ser = new StringBuilder("KnSR`");
+
+            StringBuilder ser = new StringBuilder(Serializer.GetTag(this));
+            ser.Append('`');
             ser.Append(_intIndex); ser.Append('~');
             SerializeList(ser, _intSeries);
             ser.Append(_uintIndex); ser.Append('~');
