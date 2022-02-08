@@ -1,8 +1,9 @@
 ﻿using ShaiRandom.Distributions;
 using ShaiRandom.Generators;
+using ShaiRandom.TroschuetzCompat.Generators;
 using Troschuetz.Random;
 
-namespace ShaiRandom.Wrappers
+namespace ShaiRandom.TroschuetzCompat.Distributions
 {
     /// <summary>
     /// Wraps a ShaiRandom IEnhancedDistribution object so it can also be used as a Troschuetz.Random IDistribution.

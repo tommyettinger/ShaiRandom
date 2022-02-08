@@ -1,7 +1,7 @@
 ﻿using ShaiRandom.Distributions;
 using Troschuetz.Random;
 
-namespace ShaiRandom.Wrappers
+namespace ShaiRandom.TroschuetzCompat.Distributions
 {
     /// <summary>
     /// Wraps a ShaiRandom IEnhancedContinuousDistribution object so it can also be used as a Troschuetz.Random IContinuousDistribution.

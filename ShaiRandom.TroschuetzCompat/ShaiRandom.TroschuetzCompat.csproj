@@ -1,36 +1,36 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- Basic package info -->
     <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
-	<RootNamespace>ShaiRandom</RootNamespace>
-	<Authors>tommyettinger</Authors>
-	<Copyright>Copyright © 2021-2022 Tommy Ettinger (tommyettinger)</Copyright>
-	<Description>Random Number Generator Library.</Description>
+    <RootNamespace>ShaiRandom.TroschuetzCompat</RootNamespace>
+    <Authors>tommyettinger</Authors>
+    <Copyright>Copyright © 2021-2022 Tommy Ettinger (tommyettinger)</Copyright>
+    <Description>Random Number Generator Library.</Description>
 
     <!--
     Configure versioning information, making sure to append "debug" to Debug version to allow publishing
     to NuGet seperately from Release version.
     -->
-    <Version>0.0.1-alpha05</Version>
+    <Version>0.0.1-alpha01</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
 
-	<!-- More nuget package settings-->
-    <PackageId>ShaiRandom</PackageId>
-	<PackageReleaseNotes>Prerelease Version</PackageReleaseNotes>
-	<PackageProjectUrl>https://github.com/tommyettinger/ShaiRandom</PackageProjectUrl>
-	<RepositoryUrl>https://github.com/tommyettinger/ShaiRandom</RepositoryUrl>
-	<RepositoryType>git</RepositoryType>
-	<PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- More nuget package settings-->
+    <PackageId>ShaiRandom.TroschuetzCompat</PackageId>
+    <PackageReleaseNotes>Prerelease Version</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/tommyettinger/ShaiRandom</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/tommyettinger/ShaiRandom</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>random;rng;generator;library;shai;shairandom</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
-	<!-- Enable C# 8.0 and its nullable reference feature -->
+    <!-- Enable C# 8.0 and its nullable reference feature -->
     <LangVersion>8.0</LangVersion>
-	<Nullable>enable</Nullable>
+    <Nullable>enable</Nullable>
 
     <!--
     Warnings disabled project-wide:
@@ -85,14 +85,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <!-- Pack a read-me with the nuget package, so it displays when installed -->
-  <ItemGroup>
-    <Content Include="readme.txt">
-      <Pack>true</Pack>
-      <PackagePath>.</PackagePath>
-    </Content>
-  </ItemGroup>
-
   <!-- Dependencies -->
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
@@ -100,7 +92,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
+    <PackageReference Include="Troschuetz.Random" Version="5.0.1" />
+    <PackageReference Include="ShaiRandom" Version="0.0.1-alpha05" />
   </ItemGroup>
 
   <!-- When packing, copy the nuget files to the nuget output directory -->
