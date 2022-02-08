@@ -41,12 +41,12 @@ namespace ShaiRandom.UnitTests
             gen.NextULong();
 
             // Serialize generator
-            string ser = gen.StringSerialize();
-            Assert.StartsWith(gen.Tag, ser);
+            string ser = Serializer.Serialize(gen);
+            Assert.StartsWith(Serializer.GetTag(gen), ser);
             Assert.EndsWith("`", ser);
 
             // Deserialize generator
-            var gen2 = AbstractRandom.Deserialize(ser);
+            var gen2 = Serializer.Deserialize(ser);
 
             // Check that its state is equivalent and it generates identical numbers
             Assert.True(gen.Matches(gen2));
@@ -64,11 +64,11 @@ namespace ShaiRandom.UnitTests
 
             // Serialize generator
             string ser = ksr.StringSerialize();
-            Assert.StartsWith(ksr.Tag, ser);
+            Assert.StartsWith(Serializer.GetTag(ksr), ser);
             Assert.EndsWith("`", ser);
 
             // Deserialize generator
-            var ksr2 = (KnownSeriesRandom)AbstractRandom.Deserialize(ser);
+            var ksr2 = (KnownSeriesRandom)Serializer.Deserialize(ser);
             // Check that its state (indices) are equivalent to the original
             Assert.True(ksr.Matches(ksr2));
             // Check that each list is identical

@@ -10,12 +10,8 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// The identifying tag here is "TriR" .
         /// </summary>
-        public override string Tag => "TriR";
+        public override string DefaultTag => "TriR";
 
-        static TricycleRandom()
-        {
-            RegisterTag(new TricycleRandom(1UL, 1UL, 1UL));
-        }
         /// <summary>
         /// The first state; can be any ulong.
         /// </summary>

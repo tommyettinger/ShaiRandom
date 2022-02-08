@@ -17,12 +17,8 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// The identifying tag here is "TrmR" .
         /// </summary>
-        public override string Tag => "TrmR";
+        public override string DefaultTag => "TrmR";
 
-        static TrimRandom()
-        {
-            RegisterTag(new TrimRandom(1UL, 1UL, 1UL, 1UL));
-        }
         /// <summary>
         /// The first state; can be any ulong.
         /// </summary>

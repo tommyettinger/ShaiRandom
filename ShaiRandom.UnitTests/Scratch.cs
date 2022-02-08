@@ -206,7 +206,7 @@ namespace ShaiRandom.UnitTests
                 {
                     if(forward[i] != gen.PreviousULong())
                     {
-                        Console.WriteLine(gen.Tag + " on " + i);
+                        Console.WriteLine(gen.DefaultTag + " on " + i);
                     }
                 }
             }

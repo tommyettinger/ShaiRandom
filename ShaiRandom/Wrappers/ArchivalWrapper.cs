@@ -28,11 +28,7 @@ namespace ShaiRandom.Wrappers
         /// <summary>
         /// The identifying tag here is "ArW", which is a different length to indicate the tag is a wrapper.
         /// </summary>
-        public string Tag => "ArW";
-        static ArchivalWrapper()
-        {
-            AbstractRandom.RegisterTag(new ArchivalWrapper(new DistinctRandom(1UL)));
-        }
+        public string DefaultTag => "ArW";
 
         /// <summary>
         /// The ShaiRandom IEnhancedRandom being wrapped, which must never be null.
@@ -524,7 +520,7 @@ namespace ShaiRandom.Wrappers
         /// <inheritdoc />
         public string StringSerialize()
         {
-            var ser = new StringBuilder(Tag);
+            var ser = new StringBuilder(Serializer.GetTag(this));
             ser.Append('`');
             ser.Append(MakeArchivedSeries().StringSerialize());
             ser.Append('~');
@@ -538,8 +534,8 @@ namespace ShaiRandom.Wrappers
         {
             int breakPoint = data.IndexOf("`~") + 2;
             KnownSeriesRandom ksr = new KnownSeriesRandom();
-            ksr.StringDeserialize(data[(Tag.Length+1)..]);
-            Wrapped = AbstractRandom.Deserialize(data[breakPoint..]);
+            ksr.StringDeserialize(data[1..]);
+            Wrapped = Serializer.Deserialize(data[breakPoint..]);
             _boolSeries.Clear();
             _byteSeries.Clear();
             _doubleSeries.Clear();

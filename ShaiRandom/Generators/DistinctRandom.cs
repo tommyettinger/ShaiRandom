@@ -17,11 +17,7 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// The identifying tag here is "DisR" .
         /// </summary>
-        public override string Tag => "DisR";
-        static DistinctRandom()
-        {
-            RegisterTag(new DistinctRandom(1UL));
-        }
+        public override string DefaultTag => "DisR";
 
         /// <summary>
         /// The first state; can be any ulong.

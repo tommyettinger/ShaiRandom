@@ -30,12 +30,8 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// The identifying tag here is "RTrR" .
         /// </summary>
-        public override string Tag => "RTrR";
+        public override string DefaultTag => "RTrR";
 
-        static RomuTrioRandom()
-        {
-            RegisterTag(new RomuTrioRandom(1UL, 1UL, 1UL));
-        }
         /// <summary>
         /// The first state; can be any ulong except that the whole state must not all be 0.
         /// </summary>

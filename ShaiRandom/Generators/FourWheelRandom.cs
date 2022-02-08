@@ -14,12 +14,8 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// The identifying tag here is "FoWR" .
         /// </summary>
-        public override string Tag => "FoWR";
-
-        static FourWheelRandom()
-        {
-            RegisterTag(new FourWheelRandom(1UL, 1UL, 1UL, 1UL));
-        }
+        public override string DefaultTag => "FoWR";
+        
         /// <summary>
         /// The first state; can be any ulong.
         /// </summary>

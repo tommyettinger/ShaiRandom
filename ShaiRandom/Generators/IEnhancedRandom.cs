@@ -48,14 +48,10 @@ namespace ShaiRandom.Generators
         bool SupportsPrevious { get; }
 
         /// <summary>
-        /// The exactly-four-character string that may identify this IEnhancedRandom for serialization purposes.
+        /// The string that may identify this IEnhancedRandom for serialization purposes, if no specific string is specified
+        /// when the generator is registered with the serializer.
         /// </summary>
-        /// <remarks>
-        /// If this is not four characters in length, it will be ignored, and this IEnhancedRandom will not be serializable by the mechanisms here.
-        /// Wrapper classes that contain an IEnhancedRandom and alter some properties of it will often use a one-character tag, which is intentionally invalid
-        /// because they cannot be serialized without the IEnhancedRandom they contain.
-        /// </remarks>
-        string Tag { get; }
+        string DefaultTag { get; }
 
         /// <summary>
         /// Returns a full copy (deep, if necessary) of this IEnhancedRandom.
@@ -76,7 +72,7 @@ namespace ShaiRandom.Generators
         /// This is an optional operation for classes that only implement IEnhancedRandom; AbstractRandom strongly encourages but does not require an implementation.
         /// </summary>
         /// <remarks>
-        /// It is more common to call <see cref="AbstractRandom.Deserialize(ReadOnlySpan{char})"/> when the exact variety of IEnhancedRandom is not known.
+        /// It is more common to call <see cref="Serializer.Deserialize(ReadOnlySpan{char})"/> when the exact variety of IEnhancedRandom is not known.
         /// </remarks>
         /// <param name="data">Data from a string produced by StringSerialize.</param>
         /// <returns>This IEnhancedRandom, after modifications.</returns>

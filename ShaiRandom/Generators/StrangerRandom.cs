@@ -10,12 +10,8 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// The identifying tag here is "StrR" .
         /// </summary>
-        public override string Tag => "StrR";
+        public override string DefaultTag => "StrR";
 
-        static StrangerRandom()
-        {
-            RegisterTag(new StrangerRandom(1UL, 1UL, 1UL, 1UL));
-        }
         private ulong _a, _b;
         /// <summary>
         /// The first state; can be any ulong except 0.
