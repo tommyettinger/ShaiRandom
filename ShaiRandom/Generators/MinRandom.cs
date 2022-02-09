@@ -427,8 +427,12 @@ namespace ShaiRandom.Generators
         {
             double nextDouble = innerBound < outerBound ? 0 : 1.0 - AbstractRandom.DoubleAdjust;
             double v = innerBound + nextDouble * (outerBound - innerBound);
-            if (v >= Math.Max(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int64BitsToDouble(BitConverter.DoubleToInt64Bits(Math.Max(innerBound, outerBound)) - 1L);
-            if (v <= Math.Min(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int64BitsToDouble(BitConverter.DoubleToInt64Bits(Math.Min(innerBound, outerBound)) + 1L);
+            double low = Math.Min(innerBound, outerBound);
+            if (v <= low && innerBound != outerBound) {
+                if (low == 0.0) return 1.0842021724855044E-19;
+                long bits = BitConverter.DoubleToInt64Bits(low);
+                return BitConverter.Int64BitsToDouble(bits + (bits >> 63 | 1L));
+            }
             return v;
         }
 

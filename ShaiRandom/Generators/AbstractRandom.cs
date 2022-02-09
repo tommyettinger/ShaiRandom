@@ -394,8 +394,20 @@ namespace ShaiRandom.Generators
         public double NextExclusiveDouble(double innerBound, double outerBound)
         {
             double v = innerBound + NextDouble() * (outerBound - innerBound);
-            if (v >= Math.Max(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int64BitsToDouble(BitConverter.DoubleToInt64Bits(Math.Max(innerBound, outerBound)) - 1L);
-            if (v <= Math.Min(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int64BitsToDouble(BitConverter.DoubleToInt64Bits(Math.Min(innerBound, outerBound)) + 1L);
+            double high = Math.Max(innerBound, outerBound);
+            if (v >= high && innerBound != outerBound)
+            {
+                if (high == 0.0) return -1.0842021724855044E-19;
+                long bits = BitConverter.DoubleToInt64Bits(high);
+                return BitConverter.Int64BitsToDouble(bits - (bits >> 63 | 1L));
+            }
+            double low = Math.Min(innerBound, outerBound);
+            if (v <= low && innerBound != outerBound)
+            {
+                if (low == 0.0) return 1.0842021724855044E-19;
+                long bits = BitConverter.DoubleToInt64Bits(low);
+                return BitConverter.Int64BitsToDouble(bits + (bits >> 63 | 1L));
+            }
             return v;
         }
 

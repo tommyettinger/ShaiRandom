@@ -215,7 +215,13 @@ namespace ShaiRandom.UnitTests
             //            Console.WriteLine(mr.NextExclusiveDouble(-1e-9));
 
             MaxRandom mr = new MaxRandom();
-            double d = mr.NextExclusiveDouble(-3e-9, -1e-9);
+            double d = mr.NextExclusiveDouble(-1e-9);
+            Console.WriteLine(d);
+
+            d = mr.NextExclusiveDouble((double)-1E-9f);
+            Console.WriteLine(d);
+
+            d = mr.NextExclusiveDouble((double)1E-9f, (double)-1E-9f);
             Console.WriteLine(d);
 
         }
