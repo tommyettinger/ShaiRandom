@@ -429,8 +429,20 @@ namespace ShaiRandom.Generators
         public float NextExclusiveFloat(float innerBound, float outerBound)
         {
             float v = innerBound + NextFloat() * (outerBound - innerBound);
-            if (v >= Math.Max(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int32BitsToSingle(BitConverter.SingleToInt32Bits(Math.Max(innerBound, outerBound)) - 1);
-            if (v <= Math.Min(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int32BitsToSingle(BitConverter.SingleToInt32Bits(Math.Min(innerBound, outerBound)) + 1);
+            float high = Math.Max(innerBound, outerBound);
+            if (v >= high && innerBound != outerBound)
+            {
+                if (high == 0f) return -1.0842022E-19f;
+                int bits = BitConverter.SingleToInt32Bits(high);
+                return BitConverter.Int32BitsToSingle(bits - (bits >> 31 | 1));
+            }
+            float low = Math.Min(innerBound, outerBound);
+            if (v <= low && innerBound != outerBound)
+            {
+                if (low == 0f) return 1.0842022E-19f;
+                int bits = BitConverter.SingleToInt32Bits(low);
+                return BitConverter.Int32BitsToSingle(bits + (bits >> 31 | 1));
+            }
             return v;
         }
 

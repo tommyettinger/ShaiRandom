@@ -160,7 +160,7 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <param name="bits"/>
         /// <returns>A number with no bits set (eg. 0)</returns>
-        public uint NextBits(int bits) => 0;
+        public uint NextBits(int bits) => 0u;
 
         /// <summary>
         /// Fills the buffer with <see cref="byte.MinValue"/>.
@@ -327,7 +327,6 @@ namespace ShaiRandom.Generators
             {
                 ulong bits = innerBound > outerBound ? 0x204fce5e3e250261UL : 0;
                 var decimalValue = new decimal((int)NextBits(28), (int)(bits & 0xFFFFFFFFUL), (int)(bits >> 32), false, 28);
-
                 return innerBound + decimalValue * (outerBound - innerBound);
             }
         }
@@ -470,8 +469,13 @@ namespace ShaiRandom.Generators
         {
             float nextFloat = innerBound < outerBound ? 0f : 1.0f - AbstractRandom.FloatAdjust;
             float v = innerBound + nextFloat * (outerBound - innerBound);
-            if (v >= Math.Max(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int32BitsToSingle(BitConverter.SingleToInt32Bits(Math.Max(innerBound, outerBound)) - 1);
-            if (v <= Math.Min(innerBound, outerBound) && innerBound != outerBound) return BitConverter.Int32BitsToSingle(BitConverter.SingleToInt32Bits(Math.Min(innerBound, outerBound)) + 1);
+            float low = Math.Min(innerBound, outerBound);
+            if (v <= low && innerBound != outerBound)
+            {
+                if (low == 0f) return 1.0842022E-19f;
+                int bits = BitConverter.SingleToInt32Bits(low);
+                return BitConverter.Int32BitsToSingle(bits + (bits >> 31 | 1));
+            }
             return v;
         }
 
