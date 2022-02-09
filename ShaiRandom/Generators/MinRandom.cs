@@ -323,14 +323,11 @@ namespace ShaiRandom.Generators
         /// <returns>The minimum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive)</returns>
         public decimal NextDecimal(decimal innerBound, decimal outerBound)
         {
-            unchecked
-            {
-                ulong bits = innerBound > outerBound ? 0x204fce5e3e250261UL : 0;
-                var decimalValue = new decimal((int)NextBits(28), (int)(bits & 0xFFFFFFFFUL), (int)(bits >> 32), false, 28);
-                return innerBound + decimalValue * (outerBound - innerBound);
-            }
+            if (innerBound > outerBound)
+                return innerBound + new decimal(0xFFFFFFF, 0x3e250260, 0x204fce5e, false, 28) * (outerBound - innerBound);
+            else
+                return innerBound;
         }
-
         /// <summary>
         /// Always returns 0.0.
         /// </summary>

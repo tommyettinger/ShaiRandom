@@ -214,14 +214,14 @@ namespace ShaiRandom.UnitTests
             //            Console.WriteLine(mr.NextExclusiveDouble());
             //            Console.WriteLine(mr.NextExclusiveDouble(-1e-9));
 
-            MaxRandom mr = new MaxRandom();
-            double d = mr.NextExclusiveDouble(-1e-9);
+            MinRandom mr = new MinRandom();
+            decimal d = mr.NextDecimal(-1e-9M);
             Console.WriteLine(d);
 
-            d = mr.NextExclusiveDouble((double)-1E-9f);
+            d = mr.NextDecimal((decimal)-1E-9f);
             Console.WriteLine(d);
 
-            d = mr.NextExclusiveDouble((double)1E-9f, (double)-1E-9f);
+            d = mr.NextDecimal((decimal)1E-9f, (decimal)-1E-9f); ;
             Console.WriteLine(d);
 
         }
