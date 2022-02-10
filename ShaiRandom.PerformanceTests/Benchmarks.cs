@@ -545,7 +545,15 @@ namespace ShaiRandom.PerformanceTests
     ///|     Laser | 2.461 ns | 0.0346 ns | 0.0324 ns | 2.466 ns |
     ///| FourWheel | 3.949 ns | 0.0143 ns | 0.0127 ns | 3.952 ns |
     ///|   Mizuchi | 2.477 ns | 0.0376 ns | 0.0352 ns | 2.476 ns |
-	/// .NET 6.0:
+    /// .NET 6.0 (current NextExclusiveDouble() method)
+    ///|    Method |     Mean |     Error |    StdDev |   Median |
+	///|---------- |---------:|----------:|----------:|---------:|
+	///|  Distinct | 2.941 ns | 0.0878 ns | 0.1963 ns | 2.888 ns |
+	///|     Laser | 3.106 ns | 0.0653 ns | 0.0610 ns | 3.104 ns |
+	///|  Tricycle | 2.853 ns | 0.0857 ns | 0.1969 ns | 2.886 ns |
+	///| FourWheel | 2.733 ns | 0.0848 ns | 0.1896 ns | 2.606 ns |
+	///|   Mizuchi | 2.820 ns | 0.0846 ns | 0.1784 ns | 2.895 ns |
+	/// .NET 6.0 (old NextExclusiveDouble() method):
     ///|    Method |     Mean |     Error |    StdDev |   Median |
     ///|---------- |---------:|----------:|----------:|---------:|
     ///|  Distinct | 2.765 ns | 0.0822 ns | 0.1304 ns | 2.771 ns |
