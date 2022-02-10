@@ -326,7 +326,8 @@ namespace ShaiRandom.Generators
             if (innerBound < outerBound)
                 return innerBound + new decimal(0xFFFFFFF, 0x3e250260, 0x204fce5e, false, 28) * (outerBound - innerBound);
             else
-                return outerBound + new decimal(0xFFFFFFF, 0x3e250260, 0x204fce5e, false, 28) * (innerBound - outerBound);
+                return innerBound;
+//                return outerBound + new decimal(0xFFFFFFF, 0x3e250260, 0x204fce5e, false, 28) * (innerBound - outerBound);
 
         }
 
@@ -508,13 +509,10 @@ namespace ShaiRandom.Generators
         /// <returns>The minimum of the defined bounds (considering both bounds to be exclusive)</returns>
         public decimal NextExclusiveDecimal(decimal innerBound, decimal outerBound)
         {
-            unchecked
-            {
-                ulong bits = innerBound <= outerBound ? 0x204fce5e3e250261UL : 0;
-                var decimalValue = new decimal(0xFFFFFFF, (int)(bits & 0xFFFFFFFFUL), (int)(bits >> 32), false, 28);
-
-                return innerBound + decimalValue * (outerBound - innerBound);
-            }
+            if (innerBound < outerBound)
+                return innerBound + new decimal(0xFFFFFFF, 0x3e250260, 0x204fce5e, false, 28) * (outerBound - innerBound);
+            else
+                return outerBound + new decimal(0xFFFFFFF, 0x3e250260, 0x204fce5e, false, 28) * (innerBound - outerBound);
         }
     }
 }
