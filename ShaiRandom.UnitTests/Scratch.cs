@@ -224,6 +224,20 @@ namespace ShaiRandom.UnitTests
             d = mr.NextDecimal((decimal)1E-9f, (decimal)-1E-9f); ;
             Console.WriteLine(d);
 
+            var rng = Serializer.Deserialize("MizR`D074DB392EB22805~3F5A0DEBCD6DDBD7`");
+            int idx = 0;
+            while (idx < 10000000)
+            {
+                float val = rng.NextFloat(1.9f, 1.8f);
+                if (val == 1.8f)
+                {
+                    rng.PreviousULong();
+                    Console.WriteLine(rng.StringSerialize());
+                    throw new Exception($"Mission failed!  We'll get 'em next time! " + idx);
+                }
+                idx++;
+            }
+            Console.WriteLine("Mission Complete.");
         }
     }
 }
