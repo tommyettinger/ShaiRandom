@@ -25,11 +25,11 @@ namespace ShaiRandom.UnitTests
         private const int NumValuesToGenerate = 100;
 
         // MUST be different than values used in other sets.
-        private const float EqualTestValue = 1.2f;
-        private static readonly (float inner, float outer)[] s_floatingBounds =
+        private const decimal EqualTestValue = 1.2M;
+        private static readonly (decimal inner, decimal outer)[] s_floatingBounds =
         {
-            (0.000000001f, 0.000000003f), (EqualTestValue, EqualTestValue), (0, 0), (-0.000000003f, -0.000000001f),
-            (-0.000000001f, 0.000000001f), (0.000000001f, -0.000000001f)
+            (0.000000001M, 0.000000003M), (EqualTestValue, EqualTestValue), (0M, 0M), (-0.000000003M, -0.000000001M),
+            (-0.000000001M, 0.000000001M), (0.000000001M, -0.000000001M), (1.8M, 1.9M), (1.9M, 1.8M)
         };
 
         public static IEnumerable<(int inner, int outer, IEnhancedRandom rng)> SignedTestData =
@@ -38,7 +38,7 @@ namespace ShaiRandom.UnitTests
         public static IEnumerable<(int inner, int outer, IEnhancedRandom rng)> UnsignedTestData =
             s_unsignedBounds.Combinate(s_generators);
 
-        public static IEnumerable<(float inner, float outer, IEnhancedRandom rng)> FloatingTestData =
+        public static IEnumerable<(decimal inner, decimal outer, IEnhancedRandom rng)> FloatingTestData =
             s_floatingBounds.Combinate(s_generators);
 
         public static IEnumerable<IEnhancedRandom> Generators = s_generators;
@@ -151,21 +151,21 @@ namespace ShaiRandom.UnitTests
         // we can only check to ensure there is more than 1 unique value if the range values weren't equal, and also
         // that all values returned were at least within the bounds; and all that applies to our test data regardless
         // of the exclusivity or inclusivity of its bounds.
-        private void TestFloatingFunctionBounds<T>(IEnhancedRandom rng, string funcName, (float inner, float outer) bounds)
-            where T : IComparable<T>
+        private void TestFloatingFunctionBounds<T>(IEnhancedRandom rng, string funcName, (decimal inner, decimal outer) bounds)
+            where T : IComparable<T>, IEquatable<T>
         {
             // Create dynamic variable for outer so we can add/subtract when checking the bound extents
-            dynamic inner = (T)Convert.ChangeType(bounds.inner, typeof(T));
-            dynamic outer = (T)Convert.ChangeType(bounds.outer, typeof(T));
+            T inner = (T)Convert.ChangeType(bounds.inner, typeof(T));
+            T outer = (T)Convert.ChangeType(bounds.outer, typeof(T));
 
             // Check if we're explicitly comparing for equality, so we can avoid our sanity check for more than
             // one unique returned value in that case
-            bool isEqualCase =  Math.Abs(bounds.inner - 1.2f) < 0.00000000001 || bounds.inner == 0 && bounds.outer == 0;
+            bool isEqualCase =  Math.Abs(bounds.inner - 1.2M) < 0.00000000001M || bounds.inner == 0 && bounds.outer == 0;
 
             // Sanity check to make sure we haven't made the test case data so precise that floating-point imprecision
             // bit us and considered the bounds equal
             if (!isEqualCase)
-                Assert.True(inner != outer);
+                Assert.False(inner.Equals(outer));
 
             // Generate a bunch of values, and record them in a known-series random.
             var wrapper = new ArchivalWrapper(rng);
@@ -293,7 +293,7 @@ namespace ShaiRandom.UnitTests
         #region Floating-Point Function Tests
         [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
-        void NextFloat(float inner, float outer, IEnhancedRandom rng)
+        void NextFloat(decimal inner, decimal outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<float>(rng, "NextFloat", (inner, outer));
 
         [Theory]
@@ -303,7 +303,7 @@ namespace ShaiRandom.UnitTests
 
         [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
-        void NextFloatInclusiveBounds(float inner, float outer, IEnhancedRandom rng)
+        void NextFloatInclusiveBounds(decimal inner, decimal outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<float>(rng, "NextInclusiveFloat", (inner, outer));
 
         [Theory]
@@ -313,7 +313,7 @@ namespace ShaiRandom.UnitTests
 
         [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
-        void NextFloatExclusiveBounds(float inner, float outer, IEnhancedRandom rng)
+        void NextFloatExclusiveBounds(decimal inner, decimal outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<float>(rng, "NextExclusiveFloat", (inner, outer));
 
         [Theory]
@@ -323,7 +323,7 @@ namespace ShaiRandom.UnitTests
 
         [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
-        void NextDouble(float inner, float outer, IEnhancedRandom rng)
+        void NextDouble(decimal inner, decimal outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<double>(rng, "NextDouble", (inner, outer));
 
         [Theory]
@@ -333,7 +333,7 @@ namespace ShaiRandom.UnitTests
 
         [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
-        void NextDoubleInclusiveBounds(float inner, float outer, IEnhancedRandom rng)
+        void NextDoubleInclusiveBounds(decimal inner, decimal outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<double>(rng, "NextInclusiveDouble", (inner, outer));
 
         [Theory]
@@ -343,7 +343,7 @@ namespace ShaiRandom.UnitTests
 
         [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
-        void NextDoubleExclusiveBounds(float inner, float outer, IEnhancedRandom rng)
+        void NextDoubleExclusiveBounds(decimal inner, decimal outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<double>(rng, "NextExclusiveDouble", (inner, outer));
 
         [Theory]
@@ -353,7 +353,7 @@ namespace ShaiRandom.UnitTests
 
         [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
-        void NextDecimal(float inner, float outer, IEnhancedRandom rng)
+        void NextDecimal(decimal inner, decimal outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<decimal>(rng, "NextDecimal", (inner, outer));
 
         [Theory]
@@ -363,7 +363,7 @@ namespace ShaiRandom.UnitTests
 
         [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
-        void NextDecimalInclusiveBounds(float inner, float outer, IEnhancedRandom rng)
+        void NextDecimalInclusiveBounds(decimal inner, decimal outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<decimal>(rng, "NextInclusiveDecimal", (inner, outer));
 
         [Theory]
@@ -373,7 +373,7 @@ namespace ShaiRandom.UnitTests
 
         [Theory]
         [MemberDataTuple(nameof(FloatingTestData))]
-        void NextDecimalExclusiveBounds(float inner, float outer, IEnhancedRandom rng)
+        void NextDecimalExclusiveBounds(decimal inner, decimal outer, IEnhancedRandom rng)
             => TestFloatingFunctionBounds<decimal>(rng, "NextExclusiveDecimal", (inner, outer));
 
         [Theory]
