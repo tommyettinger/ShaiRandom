@@ -279,13 +279,20 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public float NextFloat(float outerBound)
         {
-            return NextFloat() * outerBound;
+            float f = NextFloat() * outerBound;
+            if (f >= outerBound && outerBound > 0f) return BitExtensions.BitDecrement(outerBound);
+            if (f <= outerBound && outerBound < 0f) return BitExtensions.BitIncrement(outerBound);
+            return f;
+
         }
 
         /// <inheritdoc />
         public float NextFloat(float innerBound, float outerBound)
         {
-            return innerBound + NextFloat() * (outerBound - innerBound);
+            float f = innerBound + NextFloat() * (outerBound - innerBound);
+            if (f >= outerBound && outerBound > innerBound) return BitExtensions.BitDecrement(outerBound);
+            if (f <= outerBound && outerBound < innerBound) return BitExtensions.BitIncrement(outerBound);
+            return f;
         }
 
 
