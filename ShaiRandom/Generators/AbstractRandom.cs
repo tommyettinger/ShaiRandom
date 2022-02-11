@@ -298,13 +298,19 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public double NextDouble(double outerBound)
         {
-            return NextDouble() * outerBound;
+            double d = NextDouble() * outerBound;
+            if (d >= outerBound && outerBound > 0.0) return BitExtensions.BitDecrement(outerBound);
+            if (d <= outerBound && outerBound < 0.0) return BitExtensions.BitIncrement(outerBound);
+            return d;
         }
 
         /// <inheritdoc />
         public double NextDouble(double innerBound, double outerBound)
         {
-            return innerBound + NextDouble() * (outerBound - innerBound);
+            double d = innerBound + NextDouble() * (outerBound - innerBound);
+            if (d >= outerBound && outerBound > innerBound) return BitExtensions.BitDecrement(outerBound);
+            if (d <= outerBound && outerBound < innerBound) return BitExtensions.BitIncrement(outerBound);
+            return d;
         }
 
         /// <inheritdoc />
