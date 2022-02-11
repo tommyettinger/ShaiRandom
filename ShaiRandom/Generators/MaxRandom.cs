@@ -242,19 +242,16 @@ namespace ShaiRandom.Generators
         /// Returns the maximum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive).
         /// </summary>
         /// <remarks>
-        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextFloat(float, float)"/>
-        /// in terms of how close it can get to given bounds, etc.  Currently, it also shares issues with the AbstractRandom
-        /// implementation which can cause it to return <paramref name="outerBound"/> inclusive with some values.
+        /// This is often able to get closer to outerBound than <see cref="AbstractRandom.NextFloat(float, float)"/> can.
         /// </remarks>
         /// <param name="innerBound"/>
         /// <param name="outerBound"/>
         /// <returns>The maximum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive)</returns>
         public float NextFloat(float innerBound, float outerBound)
         {
-            // Note: this breaks exclusivity with, for example innerBound=1.8f and outerBound=1.9f (it returns 1.9f);
-            // but the AbstractRandom implementation can as well
-            var startingVal = innerBound <= outerBound ? NextFloat() : 0f;
-            return innerBound + startingVal * (outerBound - innerBound);
+            if (innerBound >= outerBound)
+                return innerBound;
+            else return BitExtensions.BitDecrement(outerBound);
         }
 
         /// <summary>
@@ -279,19 +276,16 @@ namespace ShaiRandom.Generators
         /// Returns the maximum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive).
         /// </summary>
         /// <remarks>
-        /// In general, this function has the same characteristics of <see cref="AbstractRandom.NextDouble(double, double)"/>
-        /// in terms of how close it can get to given bounds, etc.  Currently, it also shares issues with the AbstractRandom
-        /// implementation which can cause it to return <paramref name="outerBound"/> inclusive with some values.
+        /// This is often able to get closer to outerBound than <see cref="AbstractRandom.NextDouble(double, double)"/> can.
         /// </remarks>
         /// <param name="innerBound"/>
         /// <param name="outerBound"/>
         /// <returns>The maximum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive)</returns>
         public double NextDouble(double innerBound, double outerBound)
         {
-            // Note: this breaks exclusivity with, for example innerBound=1.8 and outerBound=1.9 (it returns 1.9);
-            // but the AbstractRandom implementation can as well
-            var startingVal = innerBound <= outerBound ? NextDouble() : 0.0;
-            return innerBound + startingVal * (outerBound - innerBound);
+            if (innerBound >= outerBound)
+                return innerBound;
+            else return BitExtensions.BitDecrement(outerBound);
         }
 
         /// <summary>

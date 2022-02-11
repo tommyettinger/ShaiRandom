@@ -85,7 +85,7 @@ namespace ShaiRandom
 
             // Negative values need to be decremented
             // Positive values need to be incremented
-            return BitConverter.Int64BitsToDouble(bits - (bits >> 63 | 1L));
+            return BitConverter.Int64BitsToDouble(bits + (bits >> 63 | 1L));
         }
 
         /// <summary>

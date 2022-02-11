@@ -251,10 +251,9 @@ namespace ShaiRandom.Generators
         /// <returns>The minimum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive)</returns>
         public float NextFloat(float innerBound, float outerBound)
         {
-            // Note: this breaks exclusivity with, for example innerBound=1.9f and outerBound=1.8f (it returns 1.8f);
-            // but the AbstractRandom implementation can as well
-            var startingVal = innerBound > outerBound ? 1.0f - AbstractRandom.FloatAdjust : 0f;
-            return innerBound + startingVal * (outerBound - innerBound);
+            if (innerBound > outerBound)
+                return BitExtensions.BitIncrement(outerBound);
+            else return innerBound;
         }
 
         /// <summary>
@@ -288,10 +287,9 @@ namespace ShaiRandom.Generators
         /// <returns>The minimum of the defined bounds (considering <paramref name="outerBound"/> to be exclusive)</returns>
         public double NextDouble(double innerBound, double outerBound)
         {
-            // Note: this breaks exclusivity with, for example innerBound=1.9 and outerBound=1.8 (it returns 1.8);
-            // but the AbstractRandom implementation can as well
-            var startingVal = innerBound > outerBound ? 1.0 - AbstractRandom.DoubleAdjust : 0.0;
-            return innerBound + startingVal * (outerBound - innerBound);
+            if (innerBound > outerBound)
+                return BitExtensions.BitIncrement(outerBound);
+            else return innerBound;
         }
 
         /// <summary>
