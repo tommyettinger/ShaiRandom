@@ -290,7 +290,7 @@ namespace ShaiRandom
         /// </summary>
         /// <remarks>
         /// This function will unregister any conflicting tags, and replace them with the default tags, for all
-        /// ShaiRandom implementations.  For a way of setting tags that is more tolerate to existing registrations,
+        /// ShaiRandom implementations.  For a way of setting tags that is more tolerant to existing registrations,
         /// see <see cref="TryRegisterShaiRandomDefaultTags"/>.
         /// </remarks>
         public static void ForceRegisterShaiRandomDefaultTags()
@@ -318,7 +318,6 @@ namespace ShaiRandom
             // Wrappers
             yield return new ArchivalWrapper(new DistinctRandom(1UL));
             yield return new ReversingWrapper(new DistinctRandom(1UL));
-            yield return new TRGeneratorWrapper(new DistinctRandom(1UL));
         }
         #endregion
 

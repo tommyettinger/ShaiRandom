@@ -1,4 +1,5 @@
-﻿using Xunit.Abstractions;
+﻿//using ShaiRandom.TroschuetzCompat;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 [assembly: Xunit.TestFramework("ShaiRandom.UnitTests.TestFramework", "ShaiRandom.UnitTests")]
@@ -10,6 +11,7 @@ namespace ShaiRandom.UnitTests
             :base(messageSink)
         {
             Serializer.RegisterShaiRandomDefaultTags();
+            //SerializerExtensions.RegisterTroschuetzCompatDefaultTags();
         }
     }
 }
