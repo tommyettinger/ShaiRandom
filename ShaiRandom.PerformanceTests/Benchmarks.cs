@@ -640,6 +640,20 @@ namespace ShaiRandom.PerformanceTests
     }
 
     /// <summary>
+    /// Using IEnhancedRandom, .NET 6.0:
+    ///|             Method |     Mean |     Error |    StdDev |   Median |
+    ///|------------------- |---------:|----------:|----------:|---------:|
+    ///|           Distinct | 5.872 ns | 0.1415 ns | 0.2203 ns | 5.756 ns |
+    ///|              Laser | 5.780 ns | 0.0779 ns | 0.0928 ns | 5.795 ns |
+    ///|           Tricycle | 5.897 ns | 0.1439 ns | 0.2482 ns | 5.818 ns |
+    ///|          FourWheel | 6.301 ns | 0.1539 ns | 0.2571 ns | 6.425 ns |
+    ///|           Stranger | 5.826 ns | 0.1450 ns | 0.2616 ns | 5.711 ns |
+    ///| Xoshiro256StarStar | 5.903 ns | 0.1149 ns | 0.0959 ns | 5.949 ns |
+    ///|           RomuTrio | 6.060 ns | 0.1501 ns | 0.2668 ns | 5.932 ns |
+    ///|            Mizuchi | 6.036 ns | 0.0432 ns | 0.0361 ns | 6.043 ns |
+    ///|               Trim | 6.326 ns | 0.1527 ns | 0.2593 ns | 6.341 ns |
+    ///
+    /// Old, before using IEnhancedRandom as the type, but with corrected bounds; .NET 6.0:
     /// |    Method |     Mean |     Error |    StdDev |   Median |
     /// |---------- |---------:|----------:|----------:|---------:|
     /// |  Distinct | 5.354 ns | 0.1355 ns | 0.3058 ns | 5.430 ns |
@@ -650,26 +664,52 @@ namespace ShaiRandom.PerformanceTests
     /// </summary>
     public class RandomExclusiveDoubleBoundedComparison
     {
-        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
-        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
-        private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
-        private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
-        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+        private IEnhancedRandom _rng = null!;
 
+        [GlobalSetup(Target = nameof(Distinct))]
+        public void DistinctSetup() => _rng = new DistinctRandom(1UL);
         [Benchmark]
-        public double Distinct() => _distinctRandom.NextExclusiveDouble(1.1, -0.1);
+        public double Distinct() => _rng.NextExclusiveDouble(1.1, -0.1);
 
+        [GlobalSetup(Target = nameof(Laser))]
+        public void LaserSetup() => _rng = new LaserRandom(1UL);
         [Benchmark]
-        public double Laser() => _laserRandom.NextExclusiveDouble(1.1, -0.1);
+        public double Laser() => _rng.NextExclusiveDouble(1.1, -0.1);
 
+        [GlobalSetup(Target = nameof(Tricycle))]
+        public void TricycleSetup() => _rng = new TricycleRandom(1UL);
         [Benchmark]
-        public double Tricycle() => _tricycleRandom.NextExclusiveDouble(1.1, -0.1);
+        public double Tricycle() => _rng.NextExclusiveDouble(1.1, -0.1);
 
+        [GlobalSetup(Target = nameof(FourWheel))]
+        public void FourWheelSetup() => _rng = new FourWheelRandom(1UL);
         [Benchmark]
-        public double FourWheel() => _fourWheelRandom.NextExclusiveDouble(1.1, -0.1);
+        public double FourWheel() => _rng.NextExclusiveDouble(1.1, -0.1);
 
+        [GlobalSetup(Target = nameof(Stranger))]
+        public void StrangerSetup() => _rng = new StrangerRandom(1UL);
         [Benchmark]
-        public double Mizuchi() => _mizuchiRandom.NextExclusiveDouble(1.1, -0.1);
+        public double Stranger() => _rng.NextExclusiveDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Xoshiro256StarStar))]
+        public void Xoshiro256StarStarSetup() => _rng = new Xoshiro256StarStarRandom(1UL);
+        [Benchmark]
+        public double Xoshiro256StarStar() => _rng.NextExclusiveDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(RomuTrio))]
+        public void RomuTrioSetup() => _rng = new RomuTrioRandom(1UL);
+        [Benchmark]
+        public double RomuTrio() => _rng.NextExclusiveDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Mizuchi))]
+        public void MizuchiSetup() => _rng = new MizuchiRandom(1UL);
+        [Benchmark]
+        public double Mizuchi() => _rng.NextExclusiveDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Trim))]
+        public void TrimSetup() => _rng = new TrimRandom(1UL);
+        [Benchmark]
+        public double Trim() => _rng.NextExclusiveDouble(1.1, -0.1);
     }
 
     /// <summary>
