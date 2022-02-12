@@ -538,6 +538,21 @@ namespace ShaiRandom.PerformanceTests
     }
 
     /// <summary>
+    /// .NET 6.0, via IEnhancedRandom
+    ///|             Method |     Mean |     Error |    StdDev |   Median |
+    ///|------------------- |---------:|----------:|----------:|---------:|
+    ///|           Distinct | 3.530 ns | 0.0991 ns | 0.1886 ns | 3.579 ns |
+    ///|              Laser | 3.350 ns | 0.0955 ns | 0.1793 ns | 3.378 ns |
+    ///|           Tricycle | 3.326 ns | 0.0161 ns | 0.0126 ns | 3.331 ns |
+    ///|          FourWheel | 3.120 ns | 0.0827 ns | 0.1133 ns | 3.070 ns |
+    ///|           Stranger | 3.473 ns | 0.0986 ns | 0.1992 ns | 3.384 ns |
+    ///| Xoshiro256StarStar | 3.473 ns | 0.0982 ns | 0.1844 ns | 3.410 ns |
+    ///|           RomuTrio | 3.222 ns | 0.0953 ns | 0.1644 ns | 3.131 ns |
+    ///|            Mizuchi | 3.358 ns | 0.0955 ns | 0.1818 ns | 3.395 ns |
+    ///|               Trim | 3.044 ns | 0.0381 ns | 0.0374 ns | 3.039 ns |
+    ///
+    /// The rest are older, and use each generator directly (not via an IEnhancedRandom).
+    ///
 	/// .NET 5.0, maybe?
     ///|    Method |     Mean |     Error |    StdDev |   Median |
     ///|---------- |---------:|----------:|----------:|---------:|
@@ -564,26 +579,52 @@ namespace ShaiRandom.PerformanceTests
     /// </summary>
     public class RandomExclusiveDoubleComparison
     {
-        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
-        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
-        private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
-        private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
-        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+        private IEnhancedRandom _rng = null!;
 
+        [GlobalSetup(Target = nameof(Distinct))]
+        public void DistinctSetup() => _rng = new DistinctRandom(1UL);
         [Benchmark]
-        public double Distinct() => _distinctRandom.NextExclusiveDouble();
+        public double Distinct() => _rng.NextExclusiveDouble();
 
+        [GlobalSetup(Target = nameof(Laser))]
+        public void LaserSetup() => _rng = new LaserRandom(1UL);
         [Benchmark]
-        public double Laser() => _laserRandom.NextExclusiveDouble();
+        public double Laser() => _rng.NextExclusiveDouble();
 
+        [GlobalSetup(Target = nameof(Tricycle))]
+        public void TricycleSetup() => _rng = new TricycleRandom(1UL);
         [Benchmark]
-        public double Tricycle() => _tricycleRandom.NextExclusiveDouble();
+        public double Tricycle() => _rng.NextExclusiveDouble();
 
+        [GlobalSetup(Target = nameof(FourWheel))]
+        public void FourWheelSetup() => _rng = new FourWheelRandom(1UL);
         [Benchmark]
-        public double FourWheel() => _fourWheelRandom.NextExclusiveDouble();
+        public double FourWheel() => _rng.NextExclusiveDouble();
 
+        [GlobalSetup(Target = nameof(Stranger))]
+        public void StrangerSetup() => _rng = new StrangerRandom(1UL);
         [Benchmark]
-        public double Mizuchi() => _mizuchiRandom.NextExclusiveDouble();
+        public double Stranger() => _rng.NextExclusiveDouble();
+
+        [GlobalSetup(Target = nameof(Xoshiro256StarStar))]
+        public void Xoshiro256StarStarSetup() => _rng = new Xoshiro256StarStarRandom(1UL);
+        [Benchmark]
+        public double Xoshiro256StarStar() => _rng.NextExclusiveDouble();
+
+        [GlobalSetup(Target = nameof(RomuTrio))]
+        public void RomuTrioSetup() => _rng = new RomuTrioRandom(1UL);
+        [Benchmark]
+        public double RomuTrio() => _rng.NextExclusiveDouble();
+
+        [GlobalSetup(Target = nameof(Mizuchi))]
+        public void MizuchiSetup() => _rng = new MizuchiRandom(1UL);
+        [Benchmark]
+        public double Mizuchi() => _rng.NextExclusiveDouble();
+
+        [GlobalSetup(Target = nameof(Trim))]
+        public void TrimSetup() => _rng = new TrimRandom(1UL);
+        [Benchmark]
+        public double Trim() => _rng.NextExclusiveDouble();
     }
 
     /// <summary>
