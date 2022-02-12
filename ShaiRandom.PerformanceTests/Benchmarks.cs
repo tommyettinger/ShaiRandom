@@ -538,6 +538,18 @@ namespace ShaiRandom.PerformanceTests
     }
 
     /// <summary>
+    /// .NET 5.0, via IEnhancedRandom
+    ///|             Method |     Mean |     Error |    StdDev |   Median |
+    ///|------------------- |---------:|----------:|----------:|---------:|
+    ///|           Distinct | 3.536 ns | 0.0968 ns | 0.1292 ns | 3.574 ns |
+    ///|              Laser | 3.276 ns | 0.0939 ns | 0.1832 ns | 3.291 ns |
+    ///|           Tricycle | 3.258 ns | 0.0949 ns | 0.2043 ns | 3.285 ns |
+    ///|          FourWheel | 3.232 ns | 0.0365 ns | 0.0285 ns | 3.227 ns |
+    ///|           Stranger | 3.665 ns | 0.0997 ns | 0.1462 ns | 3.614 ns |
+    ///| Xoshiro256StarStar | 3.869 ns | 0.1063 ns | 0.1747 ns | 3.852 ns |
+    ///|           RomuTrio | 3.356 ns | 0.0951 ns | 0.1740 ns | 3.462 ns |
+    ///|            Mizuchi | 3.345 ns | 0.0926 ns | 0.0951 ns | 3.349 ns |
+    ///|               Trim | 3.453 ns | 0.0981 ns | 0.1960 ns | 3.524 ns |
     /// .NET 6.0, via IEnhancedRandom
     ///|             Method |     Mean |     Error |    StdDev |   Median |
     ///|------------------- |---------:|----------:|----------:|---------:|
