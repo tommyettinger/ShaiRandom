@@ -5,7 +5,7 @@
     <RootNamespace>ShaiRandom.TroschuetzCompat</RootNamespace>
     <Authors>tommyettinger</Authors>
     <Copyright>Copyright © 2021-2022 Tommy Ettinger (tommyettinger)</Copyright>
-    <Description>Random Number Generator Library.</Description>
+    <Description>Random Number Generator Library, Troschuetz.Random Compatibility.</Description>
 
     <!--
     Configure versioning information, making sure to append "debug" to Debug version to allow publishing

@@ -1,0 +1,2 @@
+dotnet nuget push ShaiRandom.TroschuetzCompat.%1-debug.nupkg -s https://api.nuget.org/v3/index.json -k %2
+dotnet nuget push ShaiRandom.TroschuetzCompat.%1.nupkg -s https://api.nuget.org/v3/index.json -k %2
