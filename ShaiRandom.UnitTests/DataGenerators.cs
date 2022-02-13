@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ShaiRandom.Generators;
-//using ShaiRandom.TroschuetzCompat.Generators;
+using ShaiRandom.TroschuetzCompat.Generators;
 using ShaiRandom.Wrappers;
 
 namespace ShaiRandom.UnitTests
@@ -40,7 +40,7 @@ namespace ShaiRandom.UnitTests
                 yield return new ReversingWrapper();
 
                 // ShaiRandom.TroschuetzCompat
-                //yield return new TRGeneratorWrapper();
+                yield return new TRGeneratorWrapper();
             }
         }
     }
