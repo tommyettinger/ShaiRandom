@@ -538,6 +538,70 @@ namespace ShaiRandom.PerformanceTests
     }
 
     /// <summary>
+    /// .NET 6.0:
+    ///|             Method |     Mean |     Error |    StdDev |   Median |
+    ///|------------------- |---------:|----------:|----------:|---------:|
+    ///|           Distinct | 4.935 ns | 0.1259 ns | 0.2868 ns | 4.759 ns |
+    ///|              Laser | 4.962 ns | 0.1276 ns | 0.2773 ns | 4.914 ns |
+    ///|           Tricycle | 5.299 ns | 0.1338 ns | 0.2309 ns | 5.352 ns |
+    ///|          FourWheel | 5.089 ns | 0.0272 ns | 0.0254 ns | 5.080 ns |
+    ///|           Stranger | 5.257 ns | 0.1353 ns | 0.1852 ns | 5.189 ns |
+    ///| Xoshiro256StarStar | 5.108 ns | 0.0568 ns | 0.0531 ns | 5.120 ns |
+    ///|           RomuTrio | 5.079 ns | 0.0484 ns | 0.0453 ns | 5.065 ns |
+    ///|            Mizuchi | 5.064 ns | 0.0868 ns | 0.0812 ns | 5.039 ns |
+    ///|               Trim | 5.005 ns | 0.0810 ns | 0.0758 ns | 4.993 ns |
+    /// </summary>
+    public class RandomDoubleBoundedComparison
+    {
+        private IEnhancedRandom _rng = null!;
+
+        [GlobalSetup(Target = nameof(Distinct))]
+        public void DistinctSetup() => _rng = new DistinctRandom(1UL);
+        [Benchmark]
+        public double Distinct() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Laser))]
+        public void LaserSetup() => _rng = new LaserRandom(1UL);
+        [Benchmark]
+        public double Laser() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Tricycle))]
+        public void TricycleSetup() => _rng = new TricycleRandom(1UL);
+        [Benchmark]
+        public double Tricycle() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(FourWheel))]
+        public void FourWheelSetup() => _rng = new FourWheelRandom(1UL);
+        [Benchmark]
+        public double FourWheel() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Stranger))]
+        public void StrangerSetup() => _rng = new StrangerRandom(1UL);
+        [Benchmark]
+        public double Stranger() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Xoshiro256StarStar))]
+        public void Xoshiro256StarStarSetup() => _rng = new Xoshiro256StarStarRandom(1UL);
+        [Benchmark]
+        public double Xoshiro256StarStar() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(RomuTrio))]
+        public void RomuTrioSetup() => _rng = new RomuTrioRandom(1UL);
+        [Benchmark]
+        public double RomuTrio() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Mizuchi))]
+        public void MizuchiSetup() => _rng = new MizuchiRandom(1UL);
+        [Benchmark]
+        public double Mizuchi() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Trim))]
+        public void TrimSetup() => _rng = new TrimRandom(1UL);
+        [Benchmark]
+        public double Trim() => _rng.NextDouble(1.1, -0.1);
+    }
+
+    /// <summary>
     /// .NET 5.0, via IEnhancedRandom
     ///|             Method |     Mean |     Error |    StdDev |   Median |
     ///|------------------- |---------:|----------:|----------:|---------:|
