@@ -322,8 +322,28 @@ namespace ShaiRandom.Generators
             else
                 return innerBound;
 //                return outerBound + new decimal(0xFFFFFFF, 0x3e250260, 0x204fce5e, false, 28) * (innerBound - outerBound);
-
         }
+
+        /// <summary>
+        /// Always returns 1.0 - AbstractRandom.DoubleAdjust.
+        /// </summary>
+        /// <returns>1.0 - AbstractRandom.DoubleAdjust</returns>
+        public double NextSparseDouble() => 1.0 - AbstractRandom.DoubleAdjust;
+
+        /// <summary>
+        /// Returns the maximum of 0.0 and the defined bound.
+        /// </summary>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of 0.0 and the defined bound</returns>
+        public double NextSparseDouble(double outerBound) => NextSparseDouble(0, outerBound);
+
+        /// <summary>
+        /// Returns the maximum of the defined bounds.
+        /// </summary>
+        /// <param name="innerBound"/>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of the defined bounds</returns>
+        public double NextSparseDouble(double innerBound, double outerBound) => Math.Max(innerBound, outerBound);
 
         /// <summary>
         /// Always returns 1.0.

@@ -224,6 +224,33 @@ namespace ShaiRandom.Wrappers
 
 
         /// <inheritdoc/>
+        public double NextSparseDouble()
+        {
+            double v = Wrapped.NextSparseDouble();
+            _doubleSeries.Add(v);
+            return v;
+        }
+
+
+        /// <inheritdoc/>
+        public double NextSparseDouble(double outerBound)
+        {
+            double v = Wrapped.NextSparseDouble(outerBound);
+            _doubleSeries.Add(v);
+            return v;
+        }
+
+
+        /// <inheritdoc/>
+        public double NextSparseDouble(double innerBound, double outerBound)
+        {
+            double v = Wrapped.NextSparseDouble(innerBound, outerBound);
+            _doubleSeries.Add(v);
+            return v;
+        }
+
+
+        /// <inheritdoc/>
         public double NextInclusiveDouble()
         {
             double v = Wrapped.NextInclusiveDouble();

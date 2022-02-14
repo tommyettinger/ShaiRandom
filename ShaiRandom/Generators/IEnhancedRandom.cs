@@ -535,7 +535,7 @@ namespace ShaiRandom.Generators
         /// with a right shift and a multiply by a very small double
         /// (1.1102230246251565E-16). It should perform well
         /// if nextULong() performs well, and is expected to perform less well if the
-        /// generator naturally produces 32 or fewer bits at a time.\
+        /// generator naturally produces 32 or fewer bits at a time.
         /// </remarks>
         /// <returns>the next pseudorandom, uniformly distributed double
         /// value between 0.0 and 1.0 from this
@@ -562,6 +562,58 @@ namespace ShaiRandom.Generators
         /// <param name="outerBound">the exclusive outer bound; may be negative</param>
         /// <returns>a double between innerBound (inclusive) and outerBound (exclusive)</returns>
         double NextDouble(double innerBound, double outerBound);
+        /// <summary>
+        /// Returns the next pseudorandom, uniformly distributed
+        /// double value between 0.0 (inclusive) and 1.0
+        /// (exclusive) from this random number generator's sequence.
+        /// Optimized for speed over quality.
+        /// </summary>
+        /// <remarks>
+        /// The general contract of NextSparseDouble is that one
+        /// double value, chosen (approximately) uniformly from the
+        /// range 0.0 (inclusive) to 1.0 (exclusive), is
+        /// pseudorandomly generated and returned. Unlike other
+        /// double generators, this is not required to be capable of
+        /// returning all possible double values, and most implementations
+        /// will only be capable of returning half of the possible
+        /// range of doubles between 0.0 and 1.0 (every other double,
+        /// separated by a tiny amount, won't be generated ever).
+        /// <br/>The default implementation uses the upper 52 bits of <see cref="NextULong()"/>,
+        /// with a right shift and some bitwise conversions.
+        /// It should be faster than <see cref="NextDouble()"/>
+        /// in many cases, though it sacrifices quality.
+        /// </remarks>
+        /// <returns>the next pseudorandom, uniformly distributed double
+        /// value between 0.0 and 1.0 from this
+        /// random number generator's sequence</returns>
+        double NextSparseDouble();
+
+        /// <summary>
+        /// Gets a pseudo-random double between 0 (inclusive) and outerBound (usually exclusive).
+        /// The outerBound may be positive or negative, and this tries to keep it exclusive but
+        /// can't guarantee that. Optimized for speed over quality.
+        /// </summary>
+        /// <remarks>
+        /// Exactly the same as: <code>NextSparseDouble() * outerBound</code>
+        /// </remarks>
+        /// <param name="outerBound">the exclusive outer bound</param>
+        /// <returns>a double between 0 (inclusive) and outerBound (usually exclusive)</returns>
+        double NextSparseDouble(double outerBound);
+
+        /// <summary>
+        /// Gets a pseudo-random double between innerBound (inclusive) and outerBound (usually exclusive).
+        /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
+        /// inclusive and which is exclusive. Optimized for speed over quality.
+        /// </summary>
+        /// <remarks>
+        /// This tried to respect the exclusivity of outerBound, but isn't always able to. Unlike
+        /// <see cref="NextDouble(double, double)"/>, this won't change the result if it is out of
+        /// bounds, so use this carefully.
+        /// </remarks>
+        /// <param name="innerBound">the inclusive inner bound; may be negative</param>
+        /// <param name="outerBound">the exclusive outer bound; may be negative</param>
+        /// <returns>a double between innerBound (inclusive) and outerBound (exclusive)</returns>
+        double NextSparseDouble(double innerBound, double outerBound);
 
         /// <summary>
         /// Returns the next pseudorandom, rather-uniformly distributed

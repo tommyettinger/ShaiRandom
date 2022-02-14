@@ -343,11 +343,41 @@ namespace ShaiRandom.Generators
         public double NextDouble(double innerBound, double outerBound) => ReturnIfBetweenBounds(innerBound, outerBound, _doubleSeries, ref _doubleIndex);
 
         /// <summary>
+        /// Returns the next double in the underlying series.  If it is outside of the bound [0, 1), throws
+        /// an exception.
+        /// </summary>
+        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
+        public double NextSparseDouble() => NextDouble(0.0, 1.0);
+
+        /// <summary>
+        /// Returns the next double in the underlying series.  If it is outside of the bound [0, <paramref name="outerBound"/>], throws
+        /// an exception.
+        /// </summary>
+        /// <remarks>
+        /// Like AbstractRandom's implementation, this can permit values that equal outerBound, so it acts like NextInclusiveDouble().
+        /// </remarks>
+        /// <param name="outerBound">The maximum value of the returned number, inclusive.</param>
+        /// <returns>The next double in the underlying series, if it is within the bound.</returns>
+        public double NextSparseDouble(double outerBound) => NextSparseDouble(0.0, outerBound);
+
+        /// <summary>
+        /// Returns the next double in the underlying series.  If it is outside of the bound [<paramref name="minBound"/>, <paramref name="maxBound"/>], throws
+        /// an exception.
+        /// </summary>
+        /// <remarks>
+        /// Like AbstractRandom's implementation, this can permit values that equal outerBound, so it acts like NextInclusiveDouble().
+        /// </remarks>
+        /// <param name="minBound">The minimum value of the returned number, inclusive.</param>
+        /// <param name="maxBound">The maximum value of the returned number, inclusive.</param>
+        /// <returns>The next double in the underlying series, if it is within the bounds.</returns>
+        public double NextSparseDouble(double minBound, double maxBound) => ReturnIfBetweenBoundsInclusive(minBound, maxBound, _doubleSeries, ref _doubleIndex);
+
+        /// <summary>
         /// Returns the next double in the underlying series.  If it is outside of the bound [0, 1], throws
         /// an exception.
         /// </summary>
         /// <returns>The next double in the underlying series, if it is within the bound.</returns>
-        public double NextInclusiveDouble() => NextInclusiveDouble(0f, 1f);
+        public double NextInclusiveDouble() => NextInclusiveDouble(0.0, 1.0);
 
         /// <summary>
         /// Returns the next double in the underlying series.  If it is outside of the bound [0, <paramref name="outerBound"/>], throws
@@ -355,7 +385,7 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <param name="outerBound">The maximum value of the returned number, inclusive.</param>
         /// <returns>The next double in the underlying series, if it is within the bound.</returns>
-        public double NextInclusiveDouble(double outerBound) => NextInclusiveDouble(0f, outerBound);
+        public double NextInclusiveDouble(double outerBound) => NextInclusiveDouble(0.0, outerBound);
 
         /// <summary>
         /// Returns the next double in the underlying series.  If it is outside of the bound [<paramref name="minBound"/>, <paramref name="maxBound"/>], throws
@@ -371,7 +401,7 @@ namespace ShaiRandom.Generators
         /// an exception.
         /// </summary>
         /// <returns>The next double in the underlying series, if it is within the bound.</returns>
-        public double NextExclusiveDouble() => NextExclusiveDouble(0f, 1f);
+        public double NextExclusiveDouble() => NextExclusiveDouble(0.0, 1.0);
 
         /// <summary>
         /// Returns the next double in the underlying series.  If it is outside of the bound ([)0, <paramref name="outerBound"/>), throws
@@ -379,7 +409,7 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <param name="outerBound">The maximum value of the returned number, exclusive.</param>
         /// <returns>The next double in the underlying series, if it is within the bound.</returns>
-        public double NextExclusiveDouble(double outerBound) => NextExclusiveDouble(0f, outerBound);
+        public double NextExclusiveDouble(double outerBound) => NextExclusiveDouble(0.0, outerBound);
 
         /// <summary>
         /// Returns the next double in the underlying series.  If it is outside of the bound (<paramref name="minBound"/>, <paramref name="maxBound"/>), throws

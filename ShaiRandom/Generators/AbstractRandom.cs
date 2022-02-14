@@ -320,6 +320,27 @@ namespace ShaiRandom.Generators
             return d;
         }
 
+        //            return BitConverter.Int32BitsToSingle((int)(NextULong() >> 41) | 0x3F800000) - 1f;
+
+
+        /// <inheritdoc />
+        public double NextSparseDouble()
+        {
+            return BitConverter.Int64BitsToDouble((long)(NextULong() >> 12) | 0x3FF0000000000000L) - 1.0;
+        }
+
+        /// <inheritdoc />
+        public double NextSparseDouble(double outerBound)
+        {
+            return NextSparseDouble() * outerBound;
+        }
+
+        /// <inheritdoc />
+        public double NextSparseDouble(double innerBound, double outerBound)
+        {
+            return innerBound + NextDouble() * (outerBound - innerBound);
+        }
+
         /// <inheritdoc />
         public virtual double NextInclusiveDouble()
         {
