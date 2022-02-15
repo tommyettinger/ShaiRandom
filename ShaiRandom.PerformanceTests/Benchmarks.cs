@@ -1102,12 +1102,30 @@ namespace ShaiRandom.PerformanceTests
     ///|         NR3 | 3.674 ns | 0.1031 ns | 0.2035 ns | 3.521 ns |
     ///|       NR3Q1 | 2.339 ns | 0.0689 ns | 0.0919 ns | 2.297 ns |
     ///|       NR3Q2 | 2.413 ns | 0.0779 ns | 0.1364 ns | 2.438 ns |
+    /// With unsafe code...? Also .NET 6.0.
+    ///|      Method |     Mean |     Error |    StdDev |   Median |
+    ///|------------ |---------:|----------:|----------:|---------:|
+    ///|      Seeded | 8.760 ns | 0.1944 ns | 0.2238 ns | 8.700 ns |
+    ///|    Unseeded | 2.635 ns | 0.0810 ns | 0.1521 ns | 2.551 ns |
+    ///|       Laser | 2.874 ns | 0.0868 ns | 0.1401 ns | 2.907 ns |
+    ///|      LaserS | 2.525 ns | 0.0443 ns | 0.0492 ns | 2.513 ns |
+    ///|    Tricycle | 2.895 ns | 0.0859 ns | 0.1023 ns | 2.907 ns |
+    ///|   TricycleS | 2.664 ns | 0.0817 ns | 0.1319 ns | 2.649 ns |
+    ///|    RomuTrio | 2.560 ns | 0.0804 ns | 0.1530 ns | 2.602 ns |
+    ///|   RomuTrioS | 2.627 ns | 0.0808 ns | 0.1687 ns | 2.611 ns |
+    ///|     Mizuchi | 2.951 ns | 0.0864 ns | 0.1513 ns | 2.955 ns |
+    ///|    MizuchiS | 2.409 ns | 0.0769 ns | 0.0601 ns | 2.403 ns |
+    ///| XorShift128 | 1.904 ns | 0.0676 ns | 0.1237 ns | 1.843 ns |
+    ///|         NR3 | 3.807 ns | 0.1042 ns | 0.2222 ns | 3.794 ns |
+    ///|       NR3Q1 | 2.486 ns | 0.0781 ns | 0.1542 ns | 2.580 ns |
+    ///|       NR3Q2 | 2.322 ns | 0.0095 ns | 0.0074 ns | 2.321 ns |
     /// </summary>
     /// <remarks>
     /// The tests followed by "S" use NextSparseDouble(); the others use NextDouble() on
     /// either IEnhancedRandom or IGenerator. The speedup for NextSparseDouble() is not
     /// especially tremendous at this time. It is possible that using the unsafe block that
-    /// Troschuetz.Random uses may improve performance.
+    /// Troschuetz.Random uses may improve performance. The first test I did shows nearly
+    /// no difference, but there may be some issue with that test...
     /// </remarks>
     public class RandomDoubleTechniqueComparison
     {

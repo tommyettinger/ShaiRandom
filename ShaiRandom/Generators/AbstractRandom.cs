@@ -324,9 +324,12 @@ namespace ShaiRandom.Generators
 
 
         /// <inheritdoc />
-        public double NextSparseDouble()
+        public unsafe double NextSparseDouble()
         {
-            return BitConverter.Int64BitsToDouble((long)(NextULong() >> 12) | 0x3FF0000000000000L) - 1.0;
+            ulong value = (NextULong() >> 12) | 0x3FF0000000000000UL;
+            return *((double*)&value) - 1.0;
+
+            //            return BitConverter.Int64BitsToDouble((long)(NextULong() >> 12) | 0x3FF0000000000000L) - 1.0;
         }
 
         /// <inheritdoc />
