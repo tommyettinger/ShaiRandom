@@ -1084,6 +1084,89 @@ namespace ShaiRandom.PerformanceTests
         public uint Mizuchi() => RunUInt(_mizuchiRandom);
     }
 
+    /// <summary>
+    /// .NET 6.0:
+    /// </summary>
+    public class RandomDoubleTechniqueComparison
+    {
+        private IEnhancedRandom _rng = null!;
+        private IGenerator _gen = null!;
+
+#if NET6_0_OR_GREATER
+        private System.Random _seededRandom = null!;
+        private System.Random _unseededRandom = null!;
+
+        [GlobalSetup(Target = nameof(Seeded))]
+        public void SeededSetup() => _seededRandom = new System.Random(1);
+        [Benchmark]
+        public double Seeded() => _seededRandom.NextDouble();
+
+        [GlobalSetup(Target = nameof(Unseeded))]
+        public void UnseededSetup() => _unseededRandom = new System.Random();
+        [Benchmark]
+        public double Unseeded() => _unseededRandom.NextDouble();
+#endif
+
+        [GlobalSetup(Target = nameof(Laser))]
+        public void LaserSetup() => _rng = new LaserRandom(1UL);
+        [Benchmark]
+        public double Laser() => _rng.NextDouble();
+
+        [GlobalSetup(Target = nameof(LaserS))]
+        public void LaserSSetup() => _rng = new LaserRandom(1UL);
+        [Benchmark]
+        public double LaserS() => _rng.NextSparseDouble();
+
+        [GlobalSetup(Target = nameof(Tricycle))]
+        public void TricycleSetup() => _rng = new TricycleRandom(1UL);
+        [Benchmark]
+        public double Tricycle() => _rng.NextDouble();
+
+        [GlobalSetup(Target = nameof(TricycleS))]
+        public void TricycleSSetup() => _rng = new TricycleRandom(1UL);
+        [Benchmark]
+        public double TricycleS() => _rng.NextSparseDouble();
+
+        [GlobalSetup(Target = nameof(RomuTrio))]
+        public void RomuTrioSetup() => _rng = new RomuTrioRandom(1UL);
+        [Benchmark]
+        public double RomuTrio() => _rng.NextDouble();
+
+        [GlobalSetup(Target = nameof(RomuTrioS))]
+        public void RomuTrioSSetup() => _rng = new RomuTrioRandom(1UL);
+        [Benchmark]
+        public double RomuTrioS() => _rng.NextSparseDouble();
+
+        [GlobalSetup(Target = nameof(Mizuchi))]
+        public void MizuchiSetup() => _rng = new MizuchiRandom(1UL);
+        [Benchmark]
+        public double Mizuchi() => _rng.NextDouble();
+
+        [GlobalSetup(Target = nameof(MizuchiS))]
+        public void MizuchiSSetup() => _rng = new MizuchiRandom(1UL);
+        [Benchmark]
+        public double MizuchiS() => _rng.NextSparseDouble();
+
+        [GlobalSetup(Target = nameof(XorShift128))]
+        public void XorShift128Setup() => _gen = new XorShift128Generator(1);
+        [Benchmark]
+        public double XorShift128() => _gen.NextDouble();
+
+        [GlobalSetup(Target = nameof(NR3))]
+        public void NR3Setup() => _gen = new NR3Generator(1);
+        [Benchmark]
+        public double NR3() => _gen.NextDouble();
+
+        [GlobalSetup(Target = nameof(NR3Q1))]
+        public void NR3Q1Setup() => _gen = new NR3Q1Generator(1);
+        [Benchmark]
+        public double NR3Q1() => _gen.NextDouble();
+
+        [GlobalSetup(Target = nameof(NR3Q2))]
+        public void NR3Q2Setup() => _gen = new NR3Q2Generator(1);
+        [Benchmark]
+        public double NR3Q2() => _gen.NextDouble();
+    }
 
     internal static class Benchmarks
     {
