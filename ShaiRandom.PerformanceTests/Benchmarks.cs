@@ -1086,7 +1086,29 @@ namespace ShaiRandom.PerformanceTests
 
     /// <summary>
     /// .NET 6.0:
+    ///|      Method |     Mean |     Error |    StdDev |   Median |
+    ///|------------ |---------:|----------:|----------:|---------:|
+    ///|      Seeded | 8.710 ns | 0.1743 ns | 0.1712 ns | 8.654 ns |
+    ///|    Unseeded | 2.690 ns | 0.0825 ns | 0.1723 ns | 2.693 ns |
+    ///|       Laser | 2.740 ns | 0.0762 ns | 0.0990 ns | 2.695 ns |
+    ///|      LaserS | 2.543 ns | 0.0812 ns | 0.1640 ns | 2.621 ns |
+    ///|    Tricycle | 2.816 ns | 0.0845 ns | 0.1628 ns | 2.725 ns |
+    ///|   TricycleS | 2.589 ns | 0.0810 ns | 0.1481 ns | 2.570 ns |
+    ///|    RomuTrio | 2.722 ns | 0.0837 ns | 0.1633 ns | 2.722 ns |
+    ///|   RomuTrioS | 2.669 ns | 0.0814 ns | 0.0905 ns | 2.697 ns |
+    ///|     Mizuchi | 2.881 ns | 0.0865 ns | 0.1559 ns | 2.926 ns |
+    ///|    MizuchiS | 2.605 ns | 0.0803 ns | 0.1427 ns | 2.662 ns |
+    ///| XorShift128 | 1.770 ns | 0.0448 ns | 0.0374 ns | 1.754 ns |
+    ///|         NR3 | 3.674 ns | 0.1031 ns | 0.2035 ns | 3.521 ns |
+    ///|       NR3Q1 | 2.339 ns | 0.0689 ns | 0.0919 ns | 2.297 ns |
+    ///|       NR3Q2 | 2.413 ns | 0.0779 ns | 0.1364 ns | 2.438 ns |
     /// </summary>
+    /// <remarks>
+    /// The tests followed by "S" use NextSparseDouble(); the others use NextDouble() on
+    /// either IEnhancedRandom or IGenerator. The speedup for NextSparseDouble() is not
+    /// especially tremendous at this time. It is possible that using the unsafe block that
+    /// Troschuetz.Random uses may improve performance.
+    /// </remarks>
     public class RandomDoubleTechniqueComparison
     {
         private IEnhancedRandom _rng = null!;
