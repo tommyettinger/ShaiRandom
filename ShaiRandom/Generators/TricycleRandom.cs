@@ -210,6 +210,18 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
+        public override unsafe double NextSparseDouble()
+        {
+            ulong fa = StateA;
+            ulong fb = StateB;
+            ulong fc = StateC;
+            StateA = 0xD1342543DE82EF95UL * fc;
+            StateB = fa ^ fb ^ fc;
+            StateC = fb.RotateLeft(41) + 0xC6BC279692B5C323UL;
+            return UnsafeFormDouble(fa);
+       }
+
+        /// <inheritdoc />
         public override IEnhancedRandom Copy() => new TricycleRandom(StateA, StateB, StateC);
     }
 }

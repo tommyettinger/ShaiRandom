@@ -216,6 +216,14 @@ namespace ShaiRandom.Generators
                 return z ^ z >> 26 ^ z >> 6;
             }
         }
+        /// <inheritdoc />
+        public override unsafe double NextSparseDouble()
+        {
+            ulong s = (StateA += 0xC6BC279692B5C323UL);
+            ulong z = (s ^ s >> 31) * (_b += 0x9E3779B97F4A7C16UL);
+            return UnsafeFormDouble(z ^ z >> 26 ^ z >> 6);
+
+        }
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new LaserRandom(StateA, StateB);

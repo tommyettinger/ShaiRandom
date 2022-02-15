@@ -1119,13 +1119,31 @@ namespace ShaiRandom.PerformanceTests
     ///|         NR3 | 3.807 ns | 0.1042 ns | 0.2222 ns | 3.794 ns |
     ///|       NR3Q1 | 2.486 ns | 0.0781 ns | 0.1542 ns | 2.580 ns |
     ///|       NR3Q2 | 2.322 ns | 0.0095 ns | 0.0074 ns | 2.321 ns |
+    /// With UnsafeFormDouble() on manually-inlined NextULong() code used by LaserS and TricycleS only, .NET 6.0:
+    ///|      Method |     Mean |     Error |    StdDev |   Median |
+    ///|------------ |---------:|----------:|----------:|---------:|
+    ///|      Seeded | 8.724 ns | 0.1993 ns | 0.2448 ns | 8.768 ns |
+    ///|    Unseeded | 2.609 ns | 0.0806 ns | 0.1391 ns | 2.641 ns |
+    ///|       Laser | 3.025 ns | 0.0893 ns | 0.1309 ns | 3.064 ns |
+    ///|      LaserS | 2.392 ns | 0.0751 ns | 0.1568 ns | 2.275 ns |
+    ///|    Tricycle | 2.925 ns | 0.0862 ns | 0.1837 ns | 2.943 ns |
+    ///|   TricycleS | 2.484 ns | 0.0786 ns | 0.1838 ns | 2.550 ns |
+    ///|    RomuTrio | 2.594 ns | 0.0823 ns | 0.1420 ns | 2.525 ns |
+    ///|   RomuTrioS | 2.704 ns | 0.0603 ns | 0.0564 ns | 2.735 ns |
+    ///|     Mizuchi | 2.761 ns | 0.0841 ns | 0.1405 ns | 2.788 ns |
+    ///|    MizuchiS | 2.650 ns | 0.0764 ns | 0.0751 ns | 2.683 ns |
+    ///| XorShift128 | 1.954 ns | 0.0668 ns | 0.1319 ns | 1.989 ns |
+    ///|         NR3 | 3.762 ns | 0.1032 ns | 0.1938 ns | 3.794 ns |
+    ///|       NR3Q1 | 2.542 ns | 0.0659 ns | 0.0616 ns | 2.499 ns |
+    ///|       NR3Q2 | 2.349 ns | 0.0642 ns | 0.0536 ns | 2.331 ns |
     /// </summary>
     /// <remarks>
     /// The tests followed by "S" use NextSparseDouble(); the others use NextDouble() on
     /// either IEnhancedRandom or IGenerator. The speedup for NextSparseDouble() is not
     /// especially tremendous at this time. It is possible that using the unsafe block that
     /// Troschuetz.Random uses may improve performance. The first test I did shows nearly
-    /// no difference, but there may be some issue with that test...
+    /// no difference, and this continued in other tests. Manually inlining the NextULong()
+    /// code seems to help a little, even if UnsafeFormDouble() is called.
     /// </remarks>
     public class RandomDoubleTechniqueComparison
     {
