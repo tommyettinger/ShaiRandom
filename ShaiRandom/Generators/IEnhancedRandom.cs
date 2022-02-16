@@ -564,6 +564,59 @@ namespace ShaiRandom.Generators
         double NextDouble(double innerBound, double outerBound);
         /// <summary>
         /// Returns the next pseudorandom, uniformly distributed
+        /// float value between 0.0 (inclusive) and 1.0
+        /// (exclusive) from this random number generator's sequence.
+        /// Optimized for speed over quality.
+        /// </summary>
+        /// <remarks>
+        /// The general contract of NextSparseFloat is that one
+        /// float value, chosen (approximately) uniformly from the
+        /// range 0.0 (inclusive) to 1.0 (exclusive), is
+        /// pseudorandomly generated and returned. Unlike other
+        /// float generators, this is not required to be capable of
+        /// returning all possible float values, and most implementations
+        /// will only be capable of returning half of the possible
+        /// range of floats between 0.0 and 1.0 (every other float,
+        /// separated by a tiny amount, won't be generated ever).
+        /// <br/>The default implementation uses the upper 23 bits of <see cref="NextULong()"/>,
+        /// with a right shift and some bitwise conversions.
+        /// It should be faster than <see cref="NextFloat()"/>
+        /// in many cases, though it sacrifices quality.
+        /// </remarks>
+        /// <returns>the next pseudorandom, uniformly distributed float
+        /// value between 0.0 and 1.0 from this
+        /// random number generator's sequence</returns>
+        float NextSparseFloat();
+
+        /// <summary>
+        /// Gets a pseudo-random float between 0 (inclusive) and outerBound (usually exclusive).
+        /// The outerBound may be positive or negative, and this tries to keep it exclusive but
+        /// can't guarantee that. Optimized for speed over quality.
+        /// </summary>
+        /// <remarks>
+        /// Exactly the same as: <code>NextSparseFloat() * outerBound</code>
+        /// </remarks>
+        /// <param name="outerBound">the exclusive outer bound</param>
+        /// <returns>a float between 0 (inclusive) and outerBound (usually exclusive)</returns>
+        float NextSparseFloat(float outerBound);
+
+        /// <summary>
+        /// Gets a pseudo-random float between innerBound (inclusive) and outerBound (usually exclusive).
+        /// Either, neither, or both of innerBound and outerBound may be negative; this does not change which is
+        /// inclusive and which is exclusive. Optimized for speed over quality.
+        /// </summary>
+        /// <remarks>
+        /// This tried to respect the exclusivity of outerBound, but isn't always able to. Unlike
+        /// <see cref="NextFloat(float, float)"/>, this won't change the result if it is out of
+        /// bounds, so use this carefully.
+        /// </remarks>
+        /// <param name="innerBound">the inclusive inner bound; may be negative</param>
+        /// <param name="outerBound">the exclusive outer bound; may be negative</param>
+        /// <returns>a float between innerBound (inclusive) and outerBound (exclusive)</returns>
+        float NextSparseFloat(float innerBound, float outerBound);
+
+        /// <summary>
+        /// Returns the next pseudorandom, uniformly distributed
         /// double value between 0.0 (inclusive) and 1.0
         /// (exclusive) from this random number generator's sequence.
         /// Optimized for speed over quality.

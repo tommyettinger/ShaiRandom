@@ -321,7 +321,23 @@ namespace ShaiRandom.Generators
             return d;
         }
 
-        //            return BitConverter.Int32BitsToSingle((int)(NextULong() >> 41) | 0x3F800000) - 1f;
+        /// <inheritdoc />
+        public virtual float NextSparseFloat()
+        {
+            return BitConverter.Int32BitsToSingle((int)(NextULong() >> 41) | 0x3F800000) - 1f;
+        }
+
+        /// <inheritdoc />
+        public float NextSparseFloat(float outerBound)
+        {
+            return NextSparseFloat() * outerBound;
+        }
+
+        /// <inheritdoc />
+        public float NextSparseFloat(float innerBound, float outerBound)
+        {
+            return innerBound + NextSparseFloat() * (outerBound - innerBound);
+        }
 
         /// <inheritdoc />
         public virtual double NextSparseDouble()
@@ -338,7 +354,7 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public double NextSparseDouble(double innerBound, double outerBound)
         {
-            return innerBound + NextDouble() * (outerBound - innerBound);
+            return innerBound + NextSparseDouble() * (outerBound - innerBound);
         }
 
         /// <inheritdoc />
