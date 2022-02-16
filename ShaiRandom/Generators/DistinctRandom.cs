@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace ShaiRandom.Generators
 {
@@ -122,7 +123,22 @@ namespace ShaiRandom.Generators
                 x ^= x >> 33;
                 x *= 0x1C69B3F74AC4AE35UL;
                 return x ^ x >> 27;
+
             }
+        }
+        /// <inheritdoc />
+        public override double NextSparseDouble()
+        {
+            unchecked
+            {
+                ulong x = (State += 0x9E3779B97F4A7C15UL);
+                x ^= x >> 27;
+                x *= 0x3C79AC492BA7B653UL;
+                x ^= x >> 33;
+                x *= 0x1C69B3F74AC4AE35UL;
+                return BitConverter.Int64BitsToDouble((long)((x ^ x >> 27) >> 12) | 0x3FF0000000000000L) - 1.0;
+            }
+
         }
 
         /// <inheritdoc />

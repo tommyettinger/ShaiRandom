@@ -17,6 +17,7 @@
 // Derived from https://github.com/bgrainger/RomuRandom , which is an
 // implementation of https://romu-random.org/ .
 
+using System;
 using System.Runtime.CompilerServices;
 
 namespace ShaiRandom.Generators
@@ -230,6 +231,20 @@ namespace ShaiRandom.Generators
             }
         }
 
+        /// <inheritdoc />
+        public override double NextSparseDouble()
+        {
+            unchecked
+            {
+                ulong fa = StateA;
+                StateA = 15241094284759029579UL * _c;
+                _c -= _b;
+                _b = (_b - fa).RotateLeft(12);
+                _c = _c.RotateLeft(44);
+                return BitConverter.Int64BitsToDouble((long)(fa >> 12) | 0x3FF0000000000000L) - 1.0;
+            }
+
+        }
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new RomuTrioRandom(StateA, StateB, StateC);
     }

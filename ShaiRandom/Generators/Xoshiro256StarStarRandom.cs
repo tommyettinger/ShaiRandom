@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace ShaiRandom.Generators
 {
@@ -235,6 +236,23 @@ namespace ShaiRandom.Generators
                 StateC ^= t;
                 _d = _d.RotateLeft(45);
                 return result;
+            }
+        }
+
+        /// <inheritdoc />
+        public override double NextSparseDouble()
+        {
+            unchecked
+            {
+                ulong result = (StateB * 5UL).RotateLeft(7) * 9UL;
+                ulong t = StateB << 17;
+                StateC ^= StateA;
+                _d ^= StateB;
+                StateB ^= StateC;
+                StateA ^= _d;
+                StateC ^= t;
+                _d = _d.RotateLeft(45);
+                return BitConverter.Int64BitsToDouble((long)(result >> 12) | 0x3FF0000000000000L) - 1.0;
             }
         }
 
