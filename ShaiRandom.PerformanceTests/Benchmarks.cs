@@ -1087,7 +1087,22 @@ namespace ShaiRandom.PerformanceTests
     }
 
     /// <summary>
-    /// .NET 6.0:
+    ///.NET 6.0, using manually-inlined ulong generation and BitConverter:
+    ///|      Method |     Mean |     Error |    StdDev |   Median |
+    ///|------------ |---------:|----------:|----------:|---------:|
+    ///|       Laser | 2.773 ns | 0.0802 ns | 0.0924 ns | 2.817 ns |
+    ///|      LaserS | 1.672 ns | 0.0595 ns | 0.0662 ns | 1.664 ns |
+    ///|    Tricycle | 2.891 ns | 0.0860 ns | 0.1233 ns | 2.876 ns |
+    ///|   TricycleS | 1.573 ns | 0.0479 ns | 0.0449 ns | 1.558 ns |
+    ///|    RomuTrio | 2.902 ns | 0.0861 ns | 0.0992 ns | 2.953 ns |
+    ///|   RomuTrioS | 1.752 ns | 0.0066 ns | 0.0055 ns | 1.752 ns |
+    ///|     Mizuchi | 2.812 ns | 0.0854 ns | 0.1278 ns | 2.727 ns |
+    ///|    MizuchiS | 1.759 ns | 0.0659 ns | 0.1118 ns | 1.732 ns |
+    ///| XorShift128 | 2.025 ns | 0.0691 ns | 0.0822 ns | 2.023 ns |
+    ///|         NR3 | 3.718 ns | 0.1035 ns | 0.1232 ns | 3.730 ns |
+    ///|       NR3Q1 | 2.290 ns | 0.0466 ns | 0.0436 ns | 2.283 ns |
+    ///|       NR3Q2 | 2.456 ns | 0.0612 ns | 0.0572 ns | 2.471 ns |
+    /// .NET 6.0, using an older way:
     ///|      Method |     Mean |     Error |    StdDev |   Median |
     ///|------------ |---------:|----------:|----------:|---------:|
     ///|      Seeded | 8.710 ns | 0.1743 ns | 0.1712 ns | 8.654 ns |
@@ -1141,11 +1156,9 @@ namespace ShaiRandom.PerformanceTests
     /// </summary>
     /// <remarks>
     /// The tests followed by "S" use NextSparseDouble(); the others use NextDouble() on
-    /// either IEnhancedRandom or IGenerator. The speedup for NextSparseDouble() is not
-    /// especially tremendous at this time. It is possible that using the unsafe block that
-    /// Troschuetz.Random uses may improve performance. The first test I did shows nearly
-    /// no difference, and this continued in other tests. Manually inlining the NextULong()
-    /// code seems to help a little, even if UnsafeFormDouble() is called.
+    /// either IEnhancedRandom or IGenerator. The speedup for NextSparseDouble() is now
+    /// quite significant, in the first block of benchmarks. This uses manually-inlined
+    /// NextULong() code fed into BitConverter to get a double.
     /// </remarks>
     public class RandomDoubleTechniqueComparison
     {
