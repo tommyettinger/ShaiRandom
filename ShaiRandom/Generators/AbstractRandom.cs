@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace ShaiRandom.Generators
@@ -332,6 +333,7 @@ namespace ShaiRandom.Generators
         /// </remarks>
         /// <param name="value">Any ulong, typically a random one.</param>
         /// <returns>A double between 0.0 (inclusive) and 1.0 (exclusive).</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe double UnsafeFormDouble(ulong value)
         {
             value = (value >> 12) | 0x3FF0000000000000UL;
