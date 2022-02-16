@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace ShaiRandom.Generators
 {
@@ -210,7 +211,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public override unsafe double NextSparseDouble()
+        public override double NextSparseDouble()
         {
             ulong fa = StateA;
             ulong fb = StateB;
@@ -218,8 +219,8 @@ namespace ShaiRandom.Generators
             StateA = 0xD1342543DE82EF95UL * fc;
             StateB = fa ^ fb ^ fc;
             StateC = fb.RotateLeft(41) + 0xC6BC279692B5C323UL;
-            return UnsafeFormDouble(fa);
-       }
+            return BitConverter.Int64BitsToDouble((long)(fa >> 12) | 0x3FF0000000000000L) - 1.0;
+        }
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new TricycleRandom(StateA, StateB, StateC);

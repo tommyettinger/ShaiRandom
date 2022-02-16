@@ -1152,20 +1152,20 @@ namespace ShaiRandom.PerformanceTests
         private IEnhancedRandom _rng = null!;
         private IGenerator _gen = null!;
 
-#if NET6_0_OR_GREATER
-        private System.Random _seededRandom = null!;
-        private System.Random _unseededRandom = null!;
+//#if NET6_0_OR_GREATER
+//        private System.Random _seededRandom = null!;
+//        private System.Random _unseededRandom = null!;
 
-        [GlobalSetup(Target = nameof(Seeded))]
-        public void SeededSetup() => _seededRandom = new System.Random(1);
-        [Benchmark]
-        public double Seeded() => _seededRandom.NextDouble();
+//        [GlobalSetup(Target = nameof(Seeded))]
+//        public void SeededSetup() => _seededRandom = new System.Random(1);
+//        [Benchmark]
+//        public double Seeded() => _seededRandom.NextDouble();
 
-        [GlobalSetup(Target = nameof(Unseeded))]
-        public void UnseededSetup() => _unseededRandom = new System.Random();
-        [Benchmark]
-        public double Unseeded() => _unseededRandom.NextDouble();
-#endif
+//        [GlobalSetup(Target = nameof(Unseeded))]
+//        public void UnseededSetup() => _unseededRandom = new System.Random();
+//        [Benchmark]
+//        public double Unseeded() => _unseededRandom.NextDouble();
+//#endif
 
         [GlobalSetup(Target = nameof(Laser))]
         public void LaserSetup() => _rng = new LaserRandom(1UL);
@@ -1230,7 +1230,15 @@ namespace ShaiRandom.PerformanceTests
     /// <summary>
     /// Used in attempts to disassemble these methods and see how they work...
     /// Except the disassembler currently just prints the same 24-byte method for each benchmark.
-    /// .NET 6.0:
+    /// .NET 6.0, using BitConverter for "S" methods:
+    ///|           Method |     Mean |     Error |    StdDev |   Median |
+    ///|----------------- |---------:|----------:|----------:|---------:|
+    ///|            Laser | 2.722 ns | 0.0624 ns | 0.0613 ns | 2.761 ns |
+    ///|           LaserS | 1.832 ns | 0.0646 ns | 0.1114 ns | 1.900 ns |
+    ///|  Xorshift128Plus | 2.704 ns | 0.0813 ns | 0.1241 ns | 2.628 ns |
+    ///| Xorshift128PlusS | 1.807 ns | 0.0631 ns | 0.0925 ns | 1.841 ns |
+    ///|      XorShift128 | 2.090 ns | 0.0692 ns | 0.0769 ns | 2.117 ns |
+    /// Old .NET 6.0:
     ///|           Method |     Mean |     Error |    StdDev |
     ///|----------------- |---------:|----------:|----------:|
     ///|            Laser | 2.615 ns | 0.0185 ns | 0.0173 ns |

@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace ShaiRandom.Generators
 {
@@ -178,7 +179,7 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
-        public override unsafe double NextSparseDouble()
+        public override double NextSparseDouble()
         {
             var tx = StateA;
             var ty = StateB;
@@ -187,8 +188,7 @@ namespace ShaiRandom.Generators
             tx ^= tx >> 17;
             tx ^= ty ^ (ty >> 26);
             StateB = tx;
-            return UnsafeFormDouble(tx + ty);
-
+            return BitConverter.Int64BitsToDouble((long)((tx + ty) >> 12) | 0x3FF0000000000000L) - 1.0;
         }
 
         /// <inheritdoc />

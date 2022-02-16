@@ -323,23 +323,6 @@ namespace ShaiRandom.Generators
 
         //            return BitConverter.Int32BitsToSingle((int)(NextULong() >> 41) | 0x3F800000) - 1f;
 
-        /// <summary>
-        /// Uses the most-significant 52 bits of value to generate a double between 0.0 (inclusive) and 1.0 (exclusive).
-        /// This is not capable of producing many double values in that range; it can produce exactly half of the count
-        /// of values <see cref="NextDouble()"/> can.
-        /// </summary>
-        /// <remarks>
-        /// As "unsafe" methods go, this is very safe. It needs to get the bit representation of a ulong quickly, which works well using unsafe methods.
-        /// </remarks>
-        /// <param name="value">Any ulong, typically a random one.</param>
-        /// <returns>A double between 0.0 (inclusive) and 1.0 (exclusive).</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe double UnsafeFormDouble(ulong value)
-        {
-            value = (value >> 12) | 0x3FF0000000000000UL;
-            return *((double*)&value) - 1.0;
-        }
-
         /// <inheritdoc />
         public virtual double NextSparseDouble()
         {
