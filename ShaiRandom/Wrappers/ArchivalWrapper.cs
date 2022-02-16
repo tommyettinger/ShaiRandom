@@ -222,6 +222,30 @@ namespace ShaiRandom.Wrappers
             return v;
         }
 
+        /// <inheritdoc />
+        public float NextSparseFloat()
+        {
+            float v = Wrapped.NextSparseFloat();
+            _floatSeries.Add(v);
+            return v;
+        }
+
+        /// <inheritdoc />
+        public float NextSparseFloat(float outerBound)
+        {
+            float v = Wrapped.NextSparseFloat(outerBound);
+            _floatSeries.Add(v);
+            return v;
+        }
+
+        /// <inheritdoc />
+        public float NextSparseFloat(float innerBound, float outerBound)
+        {
+            float v = Wrapped.NextSparseFloat(innerBound, outerBound);
+            _floatSeries.Add(v);
+            return v;
+        }
+
 
         /// <inheritdoc/>
         public double NextSparseDouble()

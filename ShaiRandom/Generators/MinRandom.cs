@@ -326,6 +326,26 @@ namespace ShaiRandom.Generators
             else
                 return innerBound;
         }
+        /// <summary>
+        /// Always returns 0.0f.
+        /// </summary>
+        /// <returns>0.0f</returns>
+        public float NextSparseFloat() => 0.0f;
+
+        /// <summary>
+        /// Returns the minimum of 0.0f and the defined bound.
+        /// </summary>
+        /// <param name="outerBound"/>
+        /// <returns>The minimum of 0.0f and the defined bound</returns>
+        public float NextSparseFloat(float outerBound) => NextSparseFloat(0.0f, outerBound);
+
+        /// <summary>
+        /// Returns the minimum of the defined bounds.
+        /// </summary>
+        /// <param name="innerBound"/>
+        /// <param name="outerBound"/>
+        /// <returns>The minimum of the defined bounds</returns>
+        public float NextSparseFloat(float innerBound, float outerBound) => MathF.Min(innerBound, outerBound);
 
         /// <summary>
         /// Always returns 0.0.

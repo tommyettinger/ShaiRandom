@@ -343,6 +343,30 @@ namespace ShaiRandom.Generators
         public double NextDouble(double innerBound, double outerBound) => ReturnIfBetweenBounds(innerBound, outerBound, _doubleSeries, ref _doubleIndex);
 
         /// <summary>
+        /// Returns the next float in the underlying series.  If it is outside of the bound [0, 1], throws
+        /// an exception.
+        /// </summary>
+        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
+        public float NextSparseFloat() => NextSparseFloat(0f, 1f);
+
+        /// <summary>
+        /// Returns the next float in the underlying series.  If it is outside of the bound [0, <paramref name="outerBound"/>], throws
+        /// an exception.
+        /// </summary>
+        /// <param name="outerBound">The maximum value of the returned number, inclusive.</param>
+        /// <returns>The next float in the underlying series, if it is within the bound.</returns>
+        public float NextSparseFloat(float outerBound) => NextSparseFloat(0f, outerBound);
+
+        /// <summary>
+        /// Returns the next float in the underlying series.  If it is outside of the bound [<paramref name="minBound"/>, <paramref name="maxBound"/>], throws
+        /// an exception.
+        /// </summary>
+        /// <param name="minBound">The minimum value of the returned number, inclusive.</param>
+        /// <param name="maxBound">The maximum value of the returned number, inclusive.</param>
+        /// <returns>The next float in the underlying series, if it is within the bounds.</returns>
+        public float NextSparseFloat(float minBound, float maxBound) => ReturnIfBetweenBoundsInclusive(minBound, maxBound, _floatSeries, ref _floatIndex);
+
+        /// <summary>
         /// Returns the next double in the underlying series.  If it is outside of the bound [0, 1), throws
         /// an exception.
         /// </summary>

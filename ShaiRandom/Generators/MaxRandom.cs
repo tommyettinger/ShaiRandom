@@ -323,6 +323,26 @@ namespace ShaiRandom.Generators
                 return innerBound;
 //                return outerBound + new decimal(0xFFFFFFF, 0x3e250260, 0x204fce5e, false, 28) * (innerBound - outerBound);
         }
+        /// <summary>
+        /// Always returns 1.0f - AbstractRandom.FloatAdjust.
+        /// </summary>
+        /// <returns>1.0f - AbstractRandom.FloatAdjust.</returns>
+        public float NextSparseFloat() => 1.0f - AbstractRandom.FloatAdjust;
+
+        /// <summary>
+        /// Returns the maximum of 0.0f and the defined bound.
+        /// </summary>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of 0.0f and the defined bound</returns>
+        public float NextSparseFloat(float outerBound) => NextSparseFloat(0f, outerBound);
+
+        /// <summary>
+        /// Returns the maximum of the defined bounds.
+        /// </summary>
+        /// <param name="innerBound"/>
+        /// <param name="outerBound"/>
+        /// <returns>The maximum of the defined bounds</returns>
+        public float NextSparseFloat(float innerBound, float outerBound) => MathF.Max(innerBound, outerBound);
 
         /// <summary>
         /// Always returns 1.0 - AbstractRandom.DoubleAdjust.
