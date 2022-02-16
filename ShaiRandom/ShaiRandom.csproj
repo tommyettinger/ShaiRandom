@@ -85,6 +85,12 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
   <!-- Pack a read-me with the nuget package, so it displays when installed -->
   <ItemGroup>
     <Content Include="readme.txt">

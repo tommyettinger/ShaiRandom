@@ -1225,6 +1225,48 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double NR3Q2() => _gen.NextDouble();
     }
+    /// <summary>
+    /// Used in attempts to disassemble these methods and see how they work...
+    /// Except the disassembler currently just prints the same 24-byte method for each benchmark.
+    /// .NET 6.0:
+    ///|           Method |     Mean |     Error |    StdDev |
+    ///|----------------- |---------:|----------:|----------:|
+    ///|            Laser | 2.615 ns | 0.0185 ns | 0.0173 ns |
+    ///|           LaserS | 2.390 ns | 0.0376 ns | 0.0352 ns |
+    ///|  Xorshift128Plus | 2.527 ns | 0.0396 ns | 0.0370 ns |
+    ///| Xorshift128PlusS | 1.911 ns | 0.0674 ns | 0.0923 ns |
+    ///|      XorShift128 | 2.029 ns | 0.0709 ns | 0.1205 ns |
+    /// </summary>
+    public class RandomDoubleTechniqueDisassembler
+    {
+        private IEnhancedRandom _rng = null!;
+        private IGenerator _gen = null!;
+
+        [GlobalSetup(Target = nameof(Laser))]
+        public void LaserSetup() => _rng = new LaserRandom(1UL);
+        [Benchmark]
+        public double Laser() => _rng.NextDouble();
+
+        [GlobalSetup(Target = nameof(LaserS))]
+        public void LaserSSetup() => _rng = new LaserRandom(1UL);
+        [Benchmark]
+        public double LaserS() => _rng.NextSparseDouble();
+
+        [GlobalSetup(Target = nameof(Xorshift128Plus))]
+        public void Xorshift128PlusSetup() => _rng = new Xorshift128PlusRandom(1UL);
+        [Benchmark]
+        public double Xorshift128Plus() => _rng.NextDouble();
+
+        [GlobalSetup(Target = nameof(Xorshift128PlusS))]
+        public void Xorshift128PlusSSetup() => _rng = new Xorshift128PlusRandom(1UL);
+        [Benchmark]
+        public double Xorshift128PlusS() => _rng.NextSparseDouble();
+
+        [GlobalSetup(Target = nameof(XorShift128))]
+        public void XorShift128Setup() => _gen = new XorShift128Generator(1);
+        [Benchmark]
+        public double XorShift128() => _gen.NextDouble();
+    }
 
     internal static class Benchmarks
     {
