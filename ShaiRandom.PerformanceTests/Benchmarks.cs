@@ -3,6 +3,8 @@ using BenchmarkDotNet.Running;
 using ShaiRandom.Generators;
 using Troschuetz.Random.Generators;
 using Troschuetz.Random;
+using System.Runtime.CompilerServices;
+using System;
 #if NETCOREAPP3_0_OR_GREATER
 using System.Numerics;
 #endif
@@ -1266,6 +1268,84 @@ namespace ShaiRandom.PerformanceTests
         public void XorShift128Setup() => _gen = new XorShift128Generator(1);
         [Benchmark]
         public double XorShift128() => _gen.NextDouble();
+    }
+    /// <summary>
+    /// .NET 6.0
+    ///|              Method |      Mean |     Error |    StdDev |
+    ///|-------------------- |----------:|----------:|----------:|
+    ///| InlinedUnsafeDouble | 1.3904 ns | 0.0560 ns | 0.1106 ns |
+    ///|   InlinedSafeDouble | 0.6483 ns | 0.0084 ns | 0.0066 ns |
+    ///|        UnsafeDouble | 1.2840 ns | 0.0553 ns | 0.0969 ns |
+    ///|          SafeDouble | 0.9116 ns | 0.0373 ns | 0.0349 ns |
+    /// </summary>
+    public class DoubleTechniqueComparison
+    {
+        private ulong StateA = 1UL;
+        private ulong StateB = 1UL;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ulong NextULong()
+        {
+            var tx = StateA;
+            var ty = StateB;
+            StateA = ty;
+            tx ^= tx << 23;
+            tx ^= tx >> 17;
+            tx ^= ty ^ (ty >> 26);
+            StateB = tx;
+            return tx + ty;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe double UnsafeFormDouble(ulong value)
+        {
+            value = (value >> 12) | 0x3FF0000000000000UL;
+            return *((double*)&value) - 1.0;
+        }
+
+        [GlobalSetup(Targets = new string[]{nameof(InlinedUnsafeDouble), nameof(InlinedSafeDouble)})]
+        public void DoubleSetup()
+        {
+            StateA = 1UL;
+            StateB = 1UL;
+        }
+
+        [Benchmark]
+        public double InlinedUnsafeDouble()
+        {
+            var tx = StateA;
+            var ty = StateB;
+            StateA = ty;
+            tx ^= tx << 23;
+            tx ^= tx >> 17;
+            tx ^= ty ^ (ty >> 26);
+            StateB = tx;
+            return UnsafeFormDouble(tx + ty);
+        }
+
+        [Benchmark]
+        public double InlinedSafeDouble()
+        {
+            var tx = StateA;
+            var ty = StateB;
+            StateA = ty;
+            tx ^= tx << 23;
+            tx ^= tx >> 17;
+            tx ^= ty ^ (ty >> 26);
+            StateB = tx;
+            return BitConverter.Int64BitsToDouble((long)((tx + ty) >> 12) | 0x3FF0000000000000L) - 1.0;
+        }
+        [Benchmark]
+        public double UnsafeDouble()
+        {
+            return UnsafeFormDouble(NextULong());
+        }
+
+        [Benchmark]
+        public double SafeDouble()
+        {
+            return BitConverter.Int64BitsToDouble((long)(NextULong() >> 12) | 0x3FF0000000000000L) - 1.0;
+        }
     }
 
     internal static class Benchmarks
