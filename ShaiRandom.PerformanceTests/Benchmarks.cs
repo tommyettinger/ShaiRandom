@@ -1369,7 +1369,31 @@ namespace ShaiRandom.PerformanceTests
         }
     }
     /// <summary>
-    /// .NET 6.0:
+    /// .NET 6.0 with all "S" methods inlined manually:
+    ///|              Method |     Mean |     Error |    StdDev |   Median |
+    ///|-------------------- |---------:|----------:|----------:|---------:|
+    ///|            Distinct | 3.133 ns | 0.0902 ns | 0.2144 ns | 3.254 ns |
+    ///|           DistinctS | 1.655 ns | 0.0610 ns | 0.1438 ns | 1.624 ns |
+    ///|           FourWheel | 2.943 ns | 0.0852 ns | 0.1759 ns | 3.051 ns |
+    ///|          FourWheelS | 1.828 ns | 0.0634 ns | 0.1405 ns | 1.786 ns |
+    ///|               Laser | 2.870 ns | 0.0864 ns | 0.2054 ns | 2.947 ns |
+    ///|              LaserS | 1.655 ns | 0.0124 ns | 0.0116 ns | 1.652 ns |
+    ///|            Tricycle | 2.861 ns | 0.0276 ns | 0.0258 ns | 2.856 ns |
+    ///|           TricycleS | 1.763 ns | 0.0103 ns | 0.0091 ns | 1.762 ns |
+    ///|            RomuTrio | 2.944 ns | 0.0216 ns | 0.0202 ns | 2.946 ns |
+    ///|           RomuTrioS | 2.161 ns | 0.0249 ns | 0.0233 ns | 2.161 ns |
+    ///|             Mizuchi | 2.859 ns | 0.0143 ns | 0.0127 ns | 2.862 ns |
+    ///|            MizuchiS | 1.433 ns | 0.0157 ns | 0.0147 ns | 1.432 ns |
+    ///|            Stranger | 2.940 ns | 0.0292 ns | 0.0273 ns | 2.947 ns |
+    ///|           StrangerS | 2.019 ns | 0.0135 ns | 0.0126 ns | 2.020 ns |
+    ///|                Trim | 2.870 ns | 0.0182 ns | 0.0171 ns | 2.873 ns |
+    ///|               TrimS | 1.737 ns | 0.0145 ns | 0.0136 ns | 1.739 ns |
+    ///|     Xorshift128Plus | 2.918 ns | 0.0220 ns | 0.0206 ns | 2.913 ns |
+    ///|    Xorshift128PlusS | 1.623 ns | 0.0125 ns | 0.0117 ns | 1.627 ns |
+    ///|  Xoshiro256StarStar | 3.075 ns | 0.0256 ns | 0.0227 ns | 3.068 ns |
+    ///| Xoshiro256StarStarS | 2.193 ns | 0.0283 ns | 0.0251 ns | 2.202 ns |
+    ///
+    /// .NET 6.0 with only some methods inlined manually:
     ///|              Method |     Mean |     Error |    StdDev |   Median |
     ///|-------------------- |---------:|----------:|----------:|---------:|
     ///|            Distinct | 2.909 ns | 0.0830 ns | 0.0956 ns | 2.864 ns |
@@ -1395,8 +1419,9 @@ namespace ShaiRandom.PerformanceTests
     /// </summary>
     /// <remarks>
     /// The tests followed by "S" use NextSparseFloat(); the others use NextFloat() on
-    /// either IEnhancedRandom or IGenerator. Wow, the inlined generators are
-    /// significantly better -- DistinctS, LaserS, and MizuchiS are the only three.
+    /// either IEnhancedRandom.
+    /// In the first set of benchmarks, all "S" generators are manually inlined.
+    /// In the second set of benchmarks, DistinctS, LaserS, and MizuchiS are the only ones inlined.
     /// </remarks>
     public class RandomFloatTechniqueComparison
     {
