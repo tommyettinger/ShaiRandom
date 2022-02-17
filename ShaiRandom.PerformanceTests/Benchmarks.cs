@@ -1369,6 +1369,30 @@ namespace ShaiRandom.PerformanceTests
         }
     }
     /// <summary>
+    /// .NET 5.0 with all "S" methods inlined manually:
+    ///|              Method |     Mean |     Error |    StdDev |   Median |
+    ///|-------------------- |---------:|----------:|----------:|---------:|
+    ///|            Distinct | 2.666 ns | 0.0570 ns | 0.0505 ns | 2.631 ns |
+    ///|           DistinctS | 1.893 ns | 0.0569 ns | 0.0720 ns | 1.858 ns |
+    ///|           FourWheel | 2.793 ns | 0.0102 ns | 0.0095 ns | 2.792 ns |
+    ///|          FourWheelS | 1.743 ns | 0.0566 ns | 0.0716 ns | 1.701 ns |
+    ///|               Laser | 2.589 ns | 0.0778 ns | 0.0728 ns | 2.558 ns |
+    ///|              LaserS | 1.784 ns | 0.0638 ns | 0.1600 ns | 1.854 ns |
+    ///|            Tricycle | 2.673 ns | 0.0888 ns | 0.2228 ns | 2.689 ns |
+    ///|           TricycleS | 1.454 ns | 0.0084 ns | 0.0066 ns | 1.454 ns |
+    ///|            RomuTrio | 3.248 ns | 0.0931 ns | 0.1859 ns | 3.215 ns |
+    ///|           RomuTrioS | 1.951 ns | 0.0656 ns | 0.1022 ns | 2.016 ns |
+    ///|             Mizuchi | 2.916 ns | 0.0791 ns | 0.0846 ns | 2.960 ns |
+    ///|            MizuchiS | 1.540 ns | 0.0610 ns | 0.1116 ns | 1.517 ns |
+    ///|            Stranger | 2.997 ns | 0.0864 ns | 0.0887 ns | 3.023 ns |
+    ///|           StrangerS | 2.066 ns | 0.0691 ns | 0.1630 ns | 2.090 ns |
+    ///|                Trim | 2.962 ns | 0.0835 ns | 0.0857 ns | 2.978 ns |
+    ///|               TrimS | 1.633 ns | 0.0604 ns | 0.1375 ns | 1.625 ns |
+    ///|     Xorshift128Plus | 3.208 ns | 0.0913 ns | 0.1966 ns | 3.213 ns |
+    ///|    Xorshift128PlusS | 1.774 ns | 0.0620 ns | 0.1320 ns | 1.841 ns |
+    ///|  Xoshiro256StarStar | 2.998 ns | 0.0880 ns | 0.2004 ns | 3.002 ns |
+    ///| Xoshiro256StarStarS | 2.276 ns | 0.0728 ns | 0.1551 ns | 2.153 ns |
+    ///
     /// .NET 6.0 with all "S" methods inlined manually:
     ///|              Method |     Mean |     Error |    StdDev |   Median |
     ///|-------------------- |---------:|----------:|----------:|---------:|
