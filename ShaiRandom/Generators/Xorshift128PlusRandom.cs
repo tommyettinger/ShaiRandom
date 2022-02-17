@@ -179,6 +179,19 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
+        public override float NextSparseFloat()
+        {
+            var tx = StateA;
+            var ty = StateB;
+            StateA = ty;
+            tx ^= tx << 23;
+            tx ^= tx >> 17;
+            tx ^= ty ^ (ty >> 26);
+            StateB = tx;
+            return BitConverter.Int32BitsToSingle((int)(tx + ty >> 41) | 0x3F800000) - 1f;
+        }
+
+        /// <inheritdoc />
         public override double NextSparseDouble()
         {
             var tx = StateA;

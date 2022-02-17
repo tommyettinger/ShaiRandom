@@ -211,6 +211,19 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
+        public override float NextSparseFloat()
+        {
+            ulong fa = StateA;
+            ulong fb = StateB;
+            ulong fc = StateC;
+            StateA = 0xD1342543DE82EF95UL * fc;
+            StateB = fa ^ fb ^ fc;
+            StateC = fb.RotateLeft(41) + 0xC6BC279692B5C323UL;
+            return BitConverter.Int32BitsToSingle((int)(fa >> 41) | 0x3F800000) - 1f;
+        }
+
+
+        /// <inheritdoc />
         public override double NextSparseDouble()
         {
             ulong fa = StateA;
