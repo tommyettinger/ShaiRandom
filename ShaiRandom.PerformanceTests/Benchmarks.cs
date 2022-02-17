@@ -1376,122 +1376,101 @@ namespace ShaiRandom.PerformanceTests
         [GlobalSetup(Target = nameof(Distinct))]
         public void DistinctSetup() => _rng = new DistinctRandom(1UL);
         [Benchmark]
-        public double Distinct() => _rng.NextDouble();
+        public float Distinct() => _rng.NextFloat();
 
         [GlobalSetup(Target = nameof(DistinctS))]
         public void DistinctSSetup() => _rng = new DistinctRandom(1UL);
         [Benchmark]
-        public double DistinctS() => _rng.NextSparseDouble();
+        public float DistinctS() => _rng.NextSparseFloat();
 
         [GlobalSetup(Target = nameof(FourWheel))]
         public void FourWheelSetup() => _rng = new FourWheelRandom(1UL);
         [Benchmark]
-        public double FourWheel() => _rng.NextDouble();
+        public float FourWheel() => _rng.NextFloat();
 
         [GlobalSetup(Target = nameof(FourWheelS))]
         public void FourWheelSSetup() => _rng = new FourWheelRandom(1UL);
         [Benchmark]
-        public double FourWheelS() => _rng.NextSparseDouble();
+        public float FourWheelS() => _rng.NextSparseFloat();
 
         [GlobalSetup(Target = nameof(Laser))]
         public void LaserSetup() => _rng = new LaserRandom(1UL);
         [Benchmark]
-        public double Laser() => _rng.NextDouble();
+        public float Laser() => _rng.NextFloat();
 
         [GlobalSetup(Target = nameof(LaserS))]
         public void LaserSSetup() => _rng = new LaserRandom(1UL);
         [Benchmark]
-        public double LaserS() => _rng.NextSparseDouble();
+        public float LaserS() => _rng.NextSparseFloat();
 
         [GlobalSetup(Target = nameof(Tricycle))]
         public void TricycleSetup() => _rng = new TricycleRandom(1UL);
         [Benchmark]
-        public double Tricycle() => _rng.NextDouble();
+        public float Tricycle() => _rng.NextFloat();
 
         [GlobalSetup(Target = nameof(TricycleS))]
         public void TricycleSSetup() => _rng = new TricycleRandom(1UL);
         [Benchmark]
-        public double TricycleS() => _rng.NextSparseDouble();
+        public float TricycleS() => _rng.NextSparseFloat();
 
         [GlobalSetup(Target = nameof(RomuTrio))]
         public void RomuTrioSetup() => _rng = new RomuTrioRandom(1UL);
         [Benchmark]
-        public double RomuTrio() => _rng.NextDouble();
+        public float RomuTrio() => _rng.NextFloat();
 
         [GlobalSetup(Target = nameof(RomuTrioS))]
         public void RomuTrioSSetup() => _rng = new RomuTrioRandom(1UL);
         [Benchmark]
-        public double RomuTrioS() => _rng.NextSparseDouble();
+        public float RomuTrioS() => _rng.NextSparseFloat();
 
         [GlobalSetup(Target = nameof(Mizuchi))]
         public void MizuchiSetup() => _rng = new MizuchiRandom(1UL);
         [Benchmark]
-        public double Mizuchi() => _rng.NextDouble();
+        public float Mizuchi() => _rng.NextFloat();
 
         [GlobalSetup(Target = nameof(MizuchiS))]
         public void MizuchiSSetup() => _rng = new MizuchiRandom(1UL);
         [Benchmark]
-        public double MizuchiS() => _rng.NextSparseDouble();
+        public float MizuchiS() => _rng.NextSparseFloat();
         [GlobalSetup(Target = nameof(Stranger))]
         public void StrangerSetup() => _rng = new StrangerRandom(1UL);
         [Benchmark]
-        public double Stranger() => _rng.NextDouble();
+        public float Stranger() => _rng.NextFloat();
 
         [GlobalSetup(Target = nameof(StrangerS))]
         public void StrangerSSetup() => _rng = new StrangerRandom(1UL);
         [Benchmark]
-        public double StrangerS() => _rng.NextSparseDouble();
+        public float StrangerS() => _rng.NextSparseFloat();
 
         [GlobalSetup(Target = nameof(Trim))]
         public void TrimSetup() => _rng = new TrimRandom(1UL);
         [Benchmark]
-        public double Trim() => _rng.NextDouble();
+        public float Trim() => _rng.NextFloat();
 
         [GlobalSetup(Target = nameof(TrimS))]
         public void TrimSSetup() => _rng = new TrimRandom(1UL);
         [Benchmark]
-        public double TrimS() => _rng.NextSparseDouble();
+        public float TrimS() => _rng.NextSparseFloat();
 
         [GlobalSetup(Target = nameof(Xorshift128Plus))]
         public void Xorshift128PlusSetup() => _rng = new Xorshift128PlusRandom(1UL);
         [Benchmark]
-        public double Xorshift128Plus() => _rng.NextDouble();
+        public float Xorshift128Plus() => _rng.NextFloat();
 
         [GlobalSetup(Target = nameof(Xorshift128PlusS))]
         public void Xorshift128PlusSSetup() => _rng = new Xorshift128PlusRandom(1UL);
         [Benchmark]
-        public double Xorshift128PlusS() => _rng.NextSparseDouble();
+        public float Xorshift128PlusS() => _rng.NextSparseFloat();
 
         [GlobalSetup(Target = nameof(Xoshiro256StarStar))]
         public void Xoshiro256StarStarSetup() => _rng = new Xoshiro256StarStarRandom(1UL);
         [Benchmark]
-        public double Xoshiro256StarStar() => _rng.NextDouble();
+        public float Xoshiro256StarStar() => _rng.NextFloat();
 
         [GlobalSetup(Target = nameof(Xoshiro256StarStarS))]
         public void Xoshiro256StarStarSSetup() => _rng = new Xoshiro256StarStarRandom(1UL);
         [Benchmark]
-        public double Xoshiro256StarStarS() => _rng.NextSparseDouble();
-
-
-        [GlobalSetup(Target = nameof(XorShift128))]
-        public void XorShift128Setup() => _gen = new XorShift128Generator(1);
-        [Benchmark]
-        public double XorShift128() => _gen.NextDouble();
-
-        [GlobalSetup(Target = nameof(NR3))]
-        public void NR3Setup() => _gen = new NR3Generator(1);
-        [Benchmark]
-        public double NR3() => _gen.NextDouble();
-
-        [GlobalSetup(Target = nameof(NR3Q1))]
-        public void NR3Q1Setup() => _gen = new NR3Q1Generator(1);
-        [Benchmark]
-        public double NR3Q1() => _gen.NextDouble();
-
-        [GlobalSetup(Target = nameof(NR3Q2))]
-        public void NR3Q2Setup() => _gen = new NR3Q2Generator(1);
-        [Benchmark]
-        public double NR3Q2() => _gen.NextDouble();
+        public float Xoshiro256StarStarS() => _rng.NextSparseFloat();
     }
 
     internal static class Benchmarks
