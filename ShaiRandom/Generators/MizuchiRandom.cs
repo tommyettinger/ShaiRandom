@@ -187,13 +187,24 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
+        public override float NextSparseFloat()
+        {
+            unchecked
+            {
+                ulong z = (StateA = StateA * 0xF7C2EBC08F67F2B5UL + StateB);
+                z = (z ^ z >> 23 ^ z >> 47) * 0xAEF17502108EF2D9UL;
+                return BitConverter.Int32BitsToSingle((int)(z >> 41) | 0x3F800000) - 1f;
+            }
+        }
+
+        /// <inheritdoc />
         public override double NextSparseDouble()
         {
             unchecked
             {
                 ulong z = (StateA = StateA * 0xF7C2EBC08F67F2B5UL + StateB);
                 z = (z ^ z >> 23 ^ z >> 47) * 0xAEF17502108EF2D9UL;
-                return BitConverter.Int64BitsToDouble((long)((z ^ z >> 25) >> 12) | 0x3FF0000000000000L) - 1.0;
+                return BitConverter.Int64BitsToDouble((long)(z >> 12 ^ z >> 37) | 0x3FF0000000000000L) - 1.0;
             }
         }
 
