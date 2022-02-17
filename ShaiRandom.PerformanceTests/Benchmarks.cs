@@ -1368,6 +1368,36 @@ namespace ShaiRandom.PerformanceTests
             return BitConverter.Int64BitsToDouble((long)(NextULong() >> 12) | 0x3FF0000000000000L) - 1.0;
         }
     }
+    /// <summary>
+    /// .NET 6.0:
+    ///|              Method |     Mean |     Error |    StdDev |   Median |
+    ///|-------------------- |---------:|----------:|----------:|---------:|
+    ///|            Distinct | 2.909 ns | 0.0830 ns | 0.0956 ns | 2.864 ns |
+    ///|           DistinctS | 1.754 ns | 0.0613 ns | 0.1008 ns | 1.725 ns |
+    ///|           FourWheel | 2.805 ns | 0.0325 ns | 0.0254 ns | 2.806 ns |
+    ///|          FourWheelS | 2.391 ns | 0.0428 ns | 0.0334 ns | 2.382 ns |
+    ///|               Laser | 2.879 ns | 0.0853 ns | 0.1685 ns | 2.849 ns |
+    ///|              LaserS | 1.677 ns | 0.0603 ns | 0.1087 ns | 1.671 ns |
+    ///|            Tricycle | 2.843 ns | 0.0829 ns | 0.1474 ns | 2.829 ns |
+    ///|           TricycleS | 2.833 ns | 0.0834 ns | 0.1545 ns | 2.723 ns |
+    ///|            RomuTrio | 2.985 ns | 0.0869 ns | 0.1567 ns | 3.085 ns |
+    ///|           RomuTrioS | 2.425 ns | 0.0749 ns | 0.1596 ns | 2.337 ns |
+    ///|             Mizuchi | 2.752 ns | 0.0826 ns | 0.1510 ns | 2.756 ns |
+    ///|            MizuchiS | 1.574 ns | 0.0547 ns | 0.0562 ns | 1.602 ns |
+    ///|            Stranger | 3.009 ns | 0.0866 ns | 0.1539 ns | 3.090 ns |
+    ///|           StrangerS | 2.674 ns | 0.0799 ns | 0.1577 ns | 2.606 ns |
+    ///|                Trim | 2.762 ns | 0.0839 ns | 0.1491 ns | 2.663 ns |
+    ///|               TrimS | 2.388 ns | 0.0774 ns | 0.1527 ns | 2.491 ns |
+    ///|     Xorshift128Plus | 2.830 ns | 0.0839 ns | 0.1616 ns | 2.786 ns |
+    ///|    Xorshift128PlusS | 2.603 ns | 0.0792 ns | 0.2235 ns | 2.609 ns |
+    ///|  Xoshiro256StarStar | 3.270 ns | 0.0941 ns | 0.1436 ns | 3.315 ns |
+    ///| Xoshiro256StarStarS | 2.698 ns | 0.0809 ns | 0.1187 ns | 2.739 ns |
+    /// </summary>
+    /// <remarks>
+    /// The tests followed by "S" use NextSparseFloat(); the others use NextFloat() on
+    /// either IEnhancedRandom or IGenerator. Wow, the inlined generators are
+    /// significantly better -- DistinctS, LaserS, and MizuchiS are the only three.
+    /// </remarks>
     public class RandomFloatTechniqueComparison
     {
         private IEnhancedRandom _rng = null!;
