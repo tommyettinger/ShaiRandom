@@ -91,7 +91,46 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// Generates a random bounded int between 0.0f (inclusive) and 1.0f (exclusive) using <see cref="MixMX(ulong)"/> internally.
+        /// Generates a random bounded long between innerBound (inclusive) and outerBound (exclusive) using <see cref="MixMX(ulong)"/> internally.
+        /// </summary>
+        /// <remarks>
+        /// This can be used to generate longs in any range less broad than the full set of possible long results (to generate any long, cast <see cref="MixMX(ulong)"/> to long).
+        /// It can also be used to generate int values with arbitrary inner and outer bounds, just by giving ints for the bounds and casting the result to an int.
+        /// <br/>
+        /// It is suggested that you use <code>Mixers.MixLongMX(++state, innerBound, outerBound)</code> to produce a sequence of different numbers. You can instead use any odd increment,
+        /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
+        /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixLongMX(++state, innerBound, outerBound)</code>.</param>
+        /// <param name="innerBound">The inner inclusive bound; may be positive or negative.</param>
+        /// <param name="outerBound">The outer exclusive bound; may be positive or negative.</param>
+        /// <returns>A long between innerBound (inclusive) and outerBound (exclusive).</returns>
+        public static long MixLongMX(ulong state, long innerBound, long outerBound)
+        {
+            ulong rand = MixMX(state);
+            ulong i2, o2;
+            if (outerBound < innerBound)
+            {
+                ulong t = (ulong)outerBound;
+                o2 = (ulong)innerBound + 1UL;
+                i2 = t + 1UL;
+            }
+            else
+            {
+                o2 = (ulong)outerBound;
+                i2 = (ulong)innerBound;
+            }
+            ulong bound = o2 - i2;
+            ulong randLow = rand & 0xFFFFFFFFUL;
+            ulong boundLow = bound & 0xFFFFFFFFUL;
+            ulong randHigh = (rand >> 32);
+            ulong boundHigh = (bound >> 32);
+            return (long)(i2 + (randHigh * boundLow >> 32) + (randLow * boundHigh >> 32) + randHigh * boundHigh);
+
+        }
+
+        /// <summary>
+        /// Generates a random bounded float between 0.0f (inclusive) and 1.0f (exclusive) using <see cref="MixMX(ulong)"/> internally.
         /// </summary>
         /// <remarks>
         /// It is suggested that you use <code>Mixers.MixFloatMX(++state)</code> to produce a sequence of different numbers. You can instead use any odd increment,
@@ -99,14 +138,14 @@ namespace ShaiRandom
         /// multiplier this uses, and using that constant as an increment might cause problems.
         /// </remarks>
         /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixFloatMX(++state)</code>.</param>
-        /// <returns>An int between 0.0f (inclusive) and 1.0f (exclusive).</returns>
+        /// <returns>A float between 0.0f (inclusive) and 1.0f (exclusive).</returns>
         public static float MixFloatMX(ulong state)
         {
             return (MixMX(state) & 0xFFFFFFUL) * Generators.AbstractRandom.FloatAdjust;
         }
 
         /// <summary>
-        /// Generates a random bounded int between 0.0 (inclusive) and 1.0 (exclusive) using <see cref="MixMX(ulong)"/> internally.
+        /// Generates a random bounded double between 0.0 (inclusive) and 1.0 (exclusive) using <see cref="MixMX(ulong)"/> internally.
         /// </summary>
         /// <remarks>
         /// It is suggested that you use <code>Mixers.MixDoubleMX(++state)</code> to produce a sequence of different numbers. You can instead use any odd increment,
@@ -114,7 +153,7 @@ namespace ShaiRandom
         /// multiplier this uses, and using that constant as an increment might cause problems.
         /// </remarks>
         /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixDoubleMX(++state)</code>.</param>
-        /// <returns>An int between 0.0 (inclusive) and 1.0 (exclusive).</returns>
+        /// <returns>A double between 0.0 (inclusive) and 1.0 (exclusive).</returns>
         public static double MixDoubleMX(ulong state)
         {
             return (MixMX(state) & 0x1FFFFFFFFFFFFFUL) * Generators.AbstractRandom.DoubleAdjust;
