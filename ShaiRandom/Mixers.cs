@@ -24,7 +24,93 @@ namespace ShaiRandom
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong MixFast(ulong state)
         {
-            return (state = ((state = (((state * 0x632BE59BD9B4E019UL) ^ 0x9E3779B97F4A7C15UL) * 0xC6BC279692B5CC83UL)) ^ state >> 27) * 0xAEF17502108EF2D9UL) ^ state >> 25;
+            return (state = ((state = ((state * 0x632BE59BD9B4E019UL) ^ 0x9E3779B97F4A7C15UL) * 0xC6BC279692B5CC83UL) ^ state >> 27) * 0xAEF17502108EF2D9UL) ^ state >> 25;
+        }
+
+        /// <summary>
+        /// Generates a random bounded int between 0 (inclusive) and outerBound (exclusive) using <see cref="MixFast(ulong)"/> internally.
+        /// </summary>
+        /// <remarks>
+        /// It is suggested that you use <code>Mixers.MixIntFast(++state, bound)</code> to produce a sequence of different numbers. You can instead use any odd increment,
+        /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
+        /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixIntFast(++state, bound)</code>.</param>
+        /// <param name="outerBound">The outer exclusive bound; may be positive or negative.</param>
+        /// <returns>An int between 0 (inclusive) and outerBound (exclusive).</returns>
+        public static int MixIntFast(ulong state, int outerBound)
+        {
+            outerBound = (int)(outerBound * ((long)MixFast(state) & 0xFFFFFFFFL) >> 32);
+            return outerBound - (outerBound >> 31);
+        }
+
+        /// <summary>
+        /// Generates a random bounded long between innerBound (inclusive) and outerBound (exclusive) using <see cref="MixFast(ulong)"/> internally.
+        /// </summary>
+        /// <remarks>
+        /// This can be used to generate longs in any range less broad than the full set of possible long results (to generate any long, cast <see cref="MixFast(ulong)"/> to long).
+        /// It can also be used to generate int values with arbitrary inner and outer bounds, just by giving ints for the bounds and casting the result to an int.
+        /// <br/>
+        /// It is suggested that you use <code>Mixers.MixLongFast(++state, innerBound, outerBound)</code> to produce a sequence of different numbers. You can instead use any odd increment,
+        /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
+        /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixLongFast(++state, innerBound, outerBound)</code>.</param>
+        /// <param name="innerBound">The inner inclusive bound; may be positive or negative.</param>
+        /// <param name="outerBound">The outer exclusive bound; may be positive or negative.</param>
+        /// <returns>A long between innerBound (inclusive) and outerBound (exclusive).</returns>
+        public static long MixLongFast(ulong state, long innerBound, long outerBound)
+        {
+            ulong rand = MixFast(state);
+            ulong i2, o2;
+            if (outerBound < innerBound)
+            {
+                ulong t = (ulong)outerBound;
+                o2 = (ulong)innerBound + 1UL;
+                i2 = t + 1UL;
+            }
+            else
+            {
+                o2 = (ulong)outerBound;
+                i2 = (ulong)innerBound;
+            }
+            ulong bound = o2 - i2;
+            ulong randLow = rand & 0xFFFFFFFFUL;
+            ulong boundLow = bound & 0xFFFFFFFFUL;
+            ulong randHigh = (rand >> 32);
+            ulong boundHigh = (bound >> 32);
+            return (long)(i2 + (randHigh * boundLow >> 32) + (randLow * boundHigh >> 32) + randHigh * boundHigh);
+
+        }
+
+        /// <summary>
+        /// Generates a random bounded float between 0.0f (inclusive) and 1.0f (exclusive) using <see cref="MixFast(ulong)"/> internally.
+        /// </summary>
+        /// <remarks>
+        /// It is suggested that you use <code>Mixers.MixFloatFast(++state)</code> to produce a sequence of different numbers. You can instead use any odd increment,
+        /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
+        /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixFloatFast(++state)</code>.</param>
+        /// <returns>A float between 0.0f (inclusive) and 1.0f (exclusive).</returns>
+        public static float MixFloatFast(ulong state)
+        {
+            return (MixFast(state) & 0xFFFFFFUL) * Generators.AbstractRandom.FloatAdjust;
+        }
+
+        /// <summary>
+        /// Generates a random bounded double between 0.0 (inclusive) and 1.0 (exclusive) using <see cref="MixFast(ulong)"/> internally.
+        /// </summary>
+        /// <remarks>
+        /// It is suggested that you use <code>Mixers.MixDoubleFast(++state)</code> to produce a sequence of different numbers. You can instead use any odd increment,
+        /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
+        /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixDoubleFast(++state)</code>.</param>
+        /// <returns>A double between 0.0 (inclusive) and 1.0 (exclusive).</returns>
+        public static double MixDoubleFast(ulong state)
+        {
+            return (MixFast(state) & 0x1FFFFFFFFFFFFFUL) * Generators.AbstractRandom.DoubleAdjust;
         }
 
         /// <summary>
@@ -43,6 +129,92 @@ namespace ShaiRandom
         public static ulong MixStrong(ulong state)
         {
             return (state = ((state = ((state ^= 0xD1B54A32D192ED03UL) ^ state.RotateLeft(39) ^ state.RotateLeft(17)) * 0x9E6C63D0676A9A99L) ^ state >> 23 ^ state >> 51) * 0x9E6D62D06F6A9A9BUL) ^ state >> 23 ^ state >> 51;
+        }
+
+        /// <summary>
+        /// Generates a random bounded int between 0 (inclusive) and outerBound (exclusive) using <see cref="MixStrong(ulong)"/> internally.
+        /// </summary>
+        /// <remarks>
+        /// It is suggested that you use <code>Mixers.MixIntStrong(++state, bound)</code> to produce a sequence of different numbers. You can instead use any odd increment,
+        /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
+        /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixIntStrong(++state, bound)</code>.</param>
+        /// <param name="outerBound">The outer exclusive bound; may be positive or negative.</param>
+        /// <returns>An int between 0 (inclusive) and outerBound (exclusive).</returns>
+        public static int MixIntStrong(ulong state, int outerBound)
+        {
+            outerBound = (int)(outerBound * ((long)MixStrong(state) & 0xFFFFFFFFL) >> 32);
+            return outerBound - (outerBound >> 31);
+        }
+
+        /// <summary>
+        /// Generates a random bounded long between innerBound (inclusive) and outerBound (exclusive) using <see cref="MixStrong(ulong)"/> internally.
+        /// </summary>
+        /// <remarks>
+        /// This can be used to generate longs in any range less broad than the full set of possible long results (to generate any long, cast <see cref="MixStrong(ulong)"/> to long).
+        /// It can also be used to generate int values with arbitrary inner and outer bounds, just by giving ints for the bounds and casting the result to an int.
+        /// <br/>
+        /// It is suggested that you use <code>Mixers.MixLongStrong(++state, innerBound, outerBound)</code> to produce a sequence of different numbers. You can instead use any odd increment,
+        /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
+        /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixLongStrong(++state, innerBound, outerBound)</code>.</param>
+        /// <param name="innerBound">The inner inclusive bound; may be positive or negative.</param>
+        /// <param name="outerBound">The outer exclusive bound; may be positive or negative.</param>
+        /// <returns>A long between innerBound (inclusive) and outerBound (exclusive).</returns>
+        public static long MixLongStrong(ulong state, long innerBound, long outerBound)
+        {
+            ulong rand = MixStrong(state);
+            ulong i2, o2;
+            if (outerBound < innerBound)
+            {
+                ulong t = (ulong)outerBound;
+                o2 = (ulong)innerBound + 1UL;
+                i2 = t + 1UL;
+            }
+            else
+            {
+                o2 = (ulong)outerBound;
+                i2 = (ulong)innerBound;
+            }
+            ulong bound = o2 - i2;
+            ulong randLow = rand & 0xFFFFFFFFUL;
+            ulong boundLow = bound & 0xFFFFFFFFUL;
+            ulong randHigh = (rand >> 32);
+            ulong boundHigh = (bound >> 32);
+            return (long)(i2 + (randHigh * boundLow >> 32) + (randLow * boundHigh >> 32) + randHigh * boundHigh);
+
+        }
+
+        /// <summary>
+        /// Generates a random bounded float between 0.0f (inclusive) and 1.0f (exclusive) using <see cref="MixStrong(ulong)"/> internally.
+        /// </summary>
+        /// <remarks>
+        /// It is suggested that you use <code>Mixers.MixFloatStrong(++state)</code> to produce a sequence of different numbers. You can instead use any odd increment,
+        /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
+        /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixFloatStrong(++state)</code>.</param>
+        /// <returns>A float between 0.0f (inclusive) and 1.0f (exclusive).</returns>
+        public static float MixFloatStrong(ulong state)
+        {
+            return (MixStrong(state) & 0xFFFFFFUL) * Generators.AbstractRandom.FloatAdjust;
+        }
+
+        /// <summary>
+        /// Generates a random bounded double between 0.0 (inclusive) and 1.0 (exclusive) using <see cref="MixStrong(ulong)"/> internally.
+        /// </summary>
+        /// <remarks>
+        /// It is suggested that you use <code>Mixers.MixDoubleStrong(++state)</code> to produce a sequence of different numbers. You can instead use any odd increment,
+        /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
+        /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixDoubleStrong(++state)</code>.</param>
+        /// <returns>A double between 0.0 (inclusive) and 1.0 (exclusive).</returns>
+        public static double MixDoubleStrong(ulong state)
+        {
+            return (MixStrong(state) & 0x1FFFFFFFFFFFFFUL) * Generators.AbstractRandom.DoubleAdjust;
         }
 
         /// <summary>
