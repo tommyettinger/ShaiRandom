@@ -1,4 +1,6 @@
-﻿namespace ShaiRandom
+﻿using System.Runtime.CompilerServices;
+
+namespace ShaiRandom
 {
     /// <summary>
     /// Static methods that each take a number and scramble or mix it to get a different number, often with a one-to-one relationship between inputs and outputs.
@@ -19,6 +21,7 @@
         /// </remarks>
         /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixFast(++state)</code>.</param>
         /// <returns>Any ulong.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong MixFast(ulong state)
         {
             return (state = ((state = (((state * 0x632BE59BD9B4E019UL) ^ 0x9E3779B97F4A7C15UL) * 0xC6BC279692B5CC83UL)) ^ state >> 27) * 0xAEF17502108EF2D9UL) ^ state >> 25;
@@ -36,10 +39,10 @@
         /// </remarks>
         /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixStrong(++state)</code>.</param>
         /// <returns>Any ulong.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong MixStrong(ulong state)
         {
-            state ^= 0xD1B54A32D192ED03UL;
-            return (state = ((state = (state ^ state.RotateLeft(39) ^ state.RotateLeft(17)) * 0x9E6C63D0676A9A99L) ^ state >> 23 ^ state >> 51) * 0x9E6D62D06F6A9A9BUL) ^ state >> 23 ^ state >> 51;
+            return (state = ((state = ((state ^= 0xD1B54A32D192ED03UL) ^ state.RotateLeft(39) ^ state.RotateLeft(17)) * 0x9E6C63D0676A9A99L) ^ state >> 23 ^ state >> 51) * 0x9E6D62D06F6A9A9BUL) ^ state >> 23 ^ state >> 51;
         }
 
         /// <summary>
@@ -49,12 +52,15 @@
         /// It is suggested that you use <code>Mixers.MixMX(++state)</code> to produce a sequence of different numbers. You can instead use any odd increment,
         /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
         /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// <br/>
+        /// Unlike the other Mix methods here, passing 0 here causes this to produce 0.
         /// </remarks>
         /// <br/>
         /// This uses Jon Kagstrom's <a href="http://jonkagstrom.com/mx3/mx3_rev2.html">Revised MX3 Mixer</a>, which seems exceedingly robust even after long runs of
         /// the brutally-difficult remortality test.
         /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixMX(++state)</code>.</param>
         /// <returns>Any ulong.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong MixMX(ulong state)
         {
             state ^= state >> 32;
@@ -65,6 +71,53 @@
             state *= 0xBEA225F9EB34556DUL;
             state ^= state >> 29;
             return state;
+        }
+
+        /// <summary>
+        /// Generates a random bounded int between 0 (inclusive) and outerBound (exclusive) using <see cref="MixMX(ulong)"/> internally.
+        /// </summary>
+        /// <remarks>
+        /// It is suggested that you use <code>Mixers.MixIntMX(++state, bound)</code> to produce a sequence of different numbers. You can instead use any odd increment,
+        /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
+        /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixIntMX(++state, bound)</code>.</param>
+        /// <param name="outerBound">The outer exclusive bound; may be positive or negative.</param>
+        /// <returns>An int between 0 (inclusive) and outerBound (exclusive).</returns>
+        public static int MixIntMX(ulong state, int outerBound)
+        {
+            outerBound = (int)(outerBound * ((long)MixMX(state) & 0xFFFFFFFFL) >> 32);
+            return outerBound - (outerBound >> 31);
+        }
+
+        /// <summary>
+        /// Generates a random bounded int between 0.0f (inclusive) and 1.0f (exclusive) using <see cref="MixMX(ulong)"/> internally.
+        /// </summary>
+        /// <remarks>
+        /// It is suggested that you use <code>Mixers.MixFloatMX(++state)</code> to produce a sequence of different numbers. You can instead use any odd increment,
+        /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
+        /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixFloatMX(++state)</code>.</param>
+        /// <returns>An int between 0.0f (inclusive) and 1.0f (exclusive).</returns>
+        public static float MixFloatMX(ulong state)
+        {
+            return (MixMX(state) & 0xFFFFFFUL) * Generators.AbstractRandom.FloatAdjust;
+        }
+
+        /// <summary>
+        /// Generates a random bounded int between 0.0 (inclusive) and 1.0 (exclusive) using <see cref="MixMX(ulong)"/> internally.
+        /// </summary>
+        /// <remarks>
+        /// It is suggested that you use <code>Mixers.MixDoubleMX(++state)</code> to produce a sequence of different numbers. You can instead use any odd increment,
+        /// but smaller ones are preferred because there is probably a very large constant that is close to the modular multiplicative inverse of the one constant
+        /// multiplier this uses, and using that constant as an increment might cause problems.
+        /// </remarks>
+        /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixDoubleMX(++state)</code>.</param>
+        /// <returns>An int between 0.0 (inclusive) and 1.0 (exclusive).</returns>
+        public static double MixDoubleMX(ulong state)
+        {
+            return (MixMX(state) & 0x1FFFFFFFFFFFFFUL) * Generators.AbstractRandom.DoubleAdjust;
         }
     }
 }

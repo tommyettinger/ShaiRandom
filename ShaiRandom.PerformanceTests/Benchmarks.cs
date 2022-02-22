@@ -1444,8 +1444,8 @@ namespace ShaiRandom.PerformanceTests
     /// <remarks>
     /// The tests followed by "S" use NextSparseFloat(); the others use NextFloat() on
     /// either IEnhancedRandom.
-    /// In the first set of benchmarks, all "S" generators are manually inlined.
-    /// In the second set of benchmarks, DistinctS, LaserS, and MizuchiS are the only ones inlined.
+    /// In the first and second sets of benchmarks, all "S" generators are manually inlined.
+    /// In the last set of benchmarks, DistinctS, LaserS, and MizuchiS are the only ones inlined.
     /// </remarks>
     public class RandomFloatTechniqueComparison
     {
