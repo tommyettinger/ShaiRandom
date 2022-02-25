@@ -24,10 +24,10 @@
  */
 
 using ShaiRandom.Generators;
+using System;
 
 namespace ShaiRandom.Enhanced.Distributions.Continuous
 {
-    using System;
 
     /// <summary>
     ///   Provides generation of Kumaraswamy distributed random numbers.

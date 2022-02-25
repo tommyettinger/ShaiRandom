@@ -8,6 +8,33 @@ namespace ShaiRandom
     public static class MathUtils
     {
         /// <summary>
+        ///   The delta used when comparing doubles.
+        /// </summary>
+        public const double Tolerance = 1E-6;
+
+        /// <summary>
+        ///   Safely checks if given doubles are equal.
+        /// </summary>
+        /// <param name="d1">A double.</param>
+        /// <param name="d2">A double.</param>
+        /// <returns>True if given doubles are safely equal, false otherwise.</returns>
+        public static bool AreEqual(double d1, double d2) => IsZero(d1 - d2);
+
+        /// <summary>
+        ///   Safely checks if given double is zero.
+        /// </summary>
+        /// <param name="d">A double.</param>
+        /// <returns>True if given double is near zero, false otherwise.</returns>
+        public static bool IsZero(double d) => d > -Tolerance && d < Tolerance;
+
+        /// <summary>
+        ///   Fast square power.
+        /// </summary>
+        /// <param name="d">A double.</param>
+        /// <returns>The square of given double.</returns>
+        public static double Square(double d) => d * d;
+
+        /// <summary>
         /// A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
         /// inputs correspond to high outputs, and similarly for the low range.
         /// </summary>

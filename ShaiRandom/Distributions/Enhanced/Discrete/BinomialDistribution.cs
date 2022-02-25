@@ -24,10 +24,10 @@
  */
 
 using ShaiRandom.Generators;
+using System;
 
 namespace ShaiRandom.Enhanced.Distributions.Discrete
 {
-    using System;
 
     /// <summary>
     ///   Provides generation of Binomial distributed random numbers.

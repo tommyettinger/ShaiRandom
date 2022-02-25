@@ -1,33 +1,13 @@
-﻿/*
- * MIT License
- *
- * Copyright (c) 2006-2007 Stefan Troschuetz <stefan@troschuetz.de>
- * Copyright (c) 2012-2021 Alessio Parma <alessio.parma@gmail.com>
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
+﻿// Copyright (c) Alessio Parma <alessio.parma@gmail.com>. All rights reserved.
+//
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
-using ShaiRandom.Generators;
-using System;
-
-namespace ShaiRandom.Enhanced.Distributions.Continuous
+namespace ShaiRandom.Distributions.Continuous
 {
+    using System;
+    using System.Diagnostics;
+    using ShaiRandom;
+    using ShaiRandom.Generators;
 
     /// <summary>
     ///   Provides generation of exponential distributed random numbers.
@@ -40,12 +20,13 @@ namespace ShaiRandom.Enhanced.Distributions.Continuous
     ///   </para>
     ///   <para>The thread safety of this class depends on the one of the underlying generator.</para>
     /// </remarks>
-    public sealed class ExponentialDistribution : IEnhancedContinuousDistribution
+    [Serializable]
+    public sealed class ExponentialDistribution : AbstractDistribution, IContinuousDistribution, ILambdaDistribution<double>
     {
         #region Constants
 
         /// <summary>
-        ///   The default value assigned to <see cref="ParameterLambda"/> if none is specified.
+        ///   The default value assigned to <see cref="Lambda"/> if none is specified.
         /// </summary>
         public const double DefaultLambda = 1;
 
@@ -69,18 +50,15 @@ namespace ShaiRandom.Enhanced.Distributions.Continuous
         /// <remarks>
         ///   Calls <see cref="IsValidParam"/> to determine whether a value is valid and therefore assignable.
         /// </remarks>
-        public double ParameterLambda
+        public double Lambda
         {
-            get { return 1.0 / _lambda; }
+            get { return _lambda; }
             set
             {
-                if (!IsValidParam(value)) throw new ArgumentOutOfRangeException(nameof(ParameterLambda), "Parameter 0 (lambda) must be > 0.0 .");
-                _lambda = 1.0 / value;
+                if (!IsValidLambda(value)) throw new ArgumentOutOfRangeException(nameof(Lambda), ErrorMessages.InvalidParams);
+                _lambda = value;
             }
         }
-
-        /// <inheritdoc />
-        public IEnhancedRandom Generator { get; set; }
 
         #endregion Fields
 
@@ -88,36 +66,25 @@ namespace ShaiRandom.Enhanced.Distributions.Continuous
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
-        ///   <see cref="LaserRandom"/> as underlying random number generator.
+        ///   <see cref="TrimRandom"/> as underlying random number generator.
         /// </summary>
-        public ExponentialDistribution() : this(new LaserRandom(), DefaultLambda)
+        public ExponentialDistribution() : this(new TrimRandom(), DefaultLambda)
         {
+            Debug.Assert(Generator is TrimRandom);
+            Debug.Assert(Equals(Lambda, DefaultLambda));
         }
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
-        ///   <see cref="LaserRandom"/> with the specified seed value.
+        ///   <see cref="TrimRandom"/> with the specified seed value.
         /// </summary>
         /// <param name="seed">
         ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
-        public ExponentialDistribution(ulong seed) : this(new LaserRandom(seed), DefaultLambda)
+        public ExponentialDistribution(uint seed) : this(new TrimRandom(seed), DefaultLambda)
         {
-        }
-
-
-        /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
-        ///   <see cref="LaserRandom"/> with the specified seed value.
-        /// </summary>
-        /// <param name="seedA">
-        ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
-        /// </param>
-        /// <param name="seedB">
-        ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence; should be odd.
-        /// </param>
-        public ExponentialDistribution(ulong seedA, ulong seedB) : this(new LaserRandom(seedA, seedB), DefaultLambda)
-        {
+            Debug.Assert(Generator is TrimRandom);
+            Debug.Assert(Equals(Lambda, DefaultLambda));
         }
 
         /// <summary>
@@ -128,11 +95,13 @@ namespace ShaiRandom.Enhanced.Distributions.Continuous
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
         public ExponentialDistribution(IEnhancedRandom generator) : this(generator, DefaultLambda)
         {
+            Debug.Assert(ReferenceEquals(Generator, generator));
+            Debug.Assert(Equals(Lambda, DefaultLambda));
         }
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
-        ///   <see cref="LaserRandom"/> as underlying random number generator.
+        ///   <see cref="TrimRandom"/> as underlying random number generator.
         /// </summary>
         /// <param name="lambda">
         ///   The parameter lambda which is used for generation of exponential distributed random numbers.
@@ -140,13 +109,15 @@ namespace ShaiRandom.Enhanced.Distributions.Continuous
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="lambda"/> is less than or equal to zero.
         /// </exception>
-        public ExponentialDistribution(double lambda) : this(new LaserRandom(), lambda)
+        public ExponentialDistribution(double lambda) : this(new TrimRandom(), lambda)
         {
+            Debug.Assert(Generator is TrimRandom);
+            Debug.Assert(Equals(Lambda, lambda));
         }
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
-        ///   <see cref="LaserRandom"/> with the specified seed value.
+        ///   <see cref="TrimRandom"/> with the specified seed value.
         /// </summary>
         /// <param name="seed">
         ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
@@ -157,8 +128,10 @@ namespace ShaiRandom.Enhanced.Distributions.Continuous
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="lambda"/> is less than or equal to zero.
         /// </exception>
-        public ExponentialDistribution(ulong seed, double lambda) : this(new LaserRandom(seed), lambda)
+        public ExponentialDistribution(uint seed, double lambda) : this(new TrimRandom(seed), lambda)
         {
+            Debug.Assert(Generator is TrimRandom);
+            Debug.Assert(Equals(Lambda, lambda));
         }
 
         /// <summary>
@@ -173,80 +146,79 @@ namespace ShaiRandom.Enhanced.Distributions.Continuous
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="lambda"/> is less than or equal to zero.
         /// </exception>
-        public ExponentialDistribution(IEnhancedRandom generator, double lambda)
+        public ExponentialDistribution(IEnhancedRandom generator, double lambda) : base(generator)
         {
-            Generator = generator;
-            ParameterLambda = lambda;
+            var vp = IsValidParam;
+            if (!vp(lambda)) throw new ArgumentOutOfRangeException(nameof(lambda), ErrorMessages.InvalidParams);
+            _lambda = lambda;
         }
 
         #endregion Construction
 
+        #region Instance Methods
+
+        /// <summary>
+        ///   Determines whether the specified value is valid for parameter <see cref="Lambda"/>.
+        /// </summary>
+        /// <param name="value">The value to check.</param>
+        /// <returns><see langword="true"/> if value is greater than 0.0; otherwise, <see langword="false"/>.</returns>
+        public bool IsValidLambda(double value) => IsValidParam(value);
+
+        #endregion Instance Methods
+
         #region IContinuousDistribution Members
 
-        /// <inheritdoc />
+        /// <summary>
+        ///   Gets the maximum possible value of distributed random numbers.
+        /// </summary>
         public double Maximum => double.PositiveInfinity;
 
+        /// <summary>
+        ///   Gets the mean of distributed random numbers.
+        /// </summary>
+        /// <exception cref="NotSupportedException">
+        ///   Thrown if mean is not defined for given distribution with some parameters.
+        /// </exception>
+        public double Mean => 1.0 / _lambda;
 
-        /// <inheritdoc />
+        /// <summary>
+        ///   Gets the median of distributed random numbers.
+        /// </summary>
+        /// <exception cref="NotSupportedException">
+        ///   Thrown if median is not defined for given distribution with some parameters.
+        /// </exception>
+        public double Median => Math.Log(2.0) / _lambda;
+
+        /// <summary>
+        ///   Gets the minimum possible value of distributed random numbers.
+        /// </summary>
         public double Minimum => 0.0;
 
-
-        /// <inheritdoc />
-        public double Mean => _lambda;
-
-
-        /// <inheritdoc />
-        public double Median => Math.Log(2.0) * _lambda;
-
-
-        /// <inheritdoc />
+        /// <summary>
+        ///   Gets the mode of distributed random numbers.
+        /// </summary>
+        /// <exception cref="NotSupportedException">
+        ///   Thrown if mode is not defined for given distribution with some parameters.
+        /// </exception>
         public double[] Mode => new[] { 0.0 };
 
+        /// <summary>
+        ///   Gets the variance of distributed random numbers.
+        /// </summary>
+        /// <exception cref="NotSupportedException">
+        ///   Thrown if variance is not defined for given distribution with some parameters.
+        /// </exception>
+        public double Variance => Math.Pow(_lambda, -2.0);
 
-        /// <inheritdoc />
-        public double Variance => Math.Pow(1.0 / _lambda, -2.0);
-
-
-        /// <inheritdoc />
+        /// <summary>
+        ///   Returns a distributed floating point random number.
+        /// </summary>
+        /// <returns>A distributed double-precision floating point number.</returns>
         public double NextDouble() => Sample(Generator, _lambda);
-
-        /// <inheritdoc />
-        public int Steps => 1;
-
-        /// <inheritdoc />
-        public int ParameterCount => 1;
-
-        /// <inheritdoc />
-        public string ParameterName(int index) => index == 0 ? "Lambda" : "";
-
-        /// <inheritdoc />
-        public double ParameterValue(int index)
-        {
-            if (index == 0) return ParameterLambda;
-            throw new NotSupportedException($"The requested index does not exist in this ExponentialDistribution.");
-        }
-
-        /// <inheritdoc />
-        public void SetParameterValue(int index, double value)
-        {
-            if (index == 0)
-            {
-                if (IsValidParam(value))
-                    ParameterLambda = value;
-                else
-                    throw new NotSupportedException("The given value is invalid for Lambda.");
-            }
-            else
-            {
-                throw new NotSupportedException($"The requested index does not exist in this ExponentialDistribution.");
-            }
-        }
-
-
 
         #endregion IContinuousDistribution Members
 
-        #region Helpers
+        #region TRandom Helpers
 
         /// <summary>
         ///   Determines whether exponential distribution is defined under given parameter. The
@@ -265,9 +237,11 @@ namespace ShaiRandom.Enhanced.Distributions.Continuous
         /// </remarks>
         public static Func<IEnhancedRandom, double, double> Sample { get; set; } = (generator, lambda) =>
         {
-            return -Math.Log(1.0 - generator.NextDouble()) * lambda;
+            double u;
+            do u = generator.NextDouble(); while (MathUtils.IsZero(u));
+            return -Math.Log(u) / lambda;
         };
 
-        #endregion Helpers
+        #endregion TRandom Helpers
     }
 }
