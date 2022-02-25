@@ -24,85 +24,86 @@
  */
 
 using ShaiRandom.Generators;
+using System;
 
-namespace ShaiRandom.Distributions.Continuous
+namespace ShaiRandom.Enhanced.Distributions.Continuous
 {
-    using System;
 
     /// <summary>
-    ///   Provides generation of Kumaraswamy distributed random numbers.
+    ///   Provides generation of normal distributed random numbers.
     /// </summary>
     /// <remarks>
     ///   <para>
-    ///     The implementation of the <see cref="KumaraswamyDistribution"/> type bases upon
-    ///     information presented on
-    ///     <a href="https://en.wikipedia.org/wiki/Kumaraswamy_distribution">Wikipedia - Kumaraswamy distribution</a>.
+    ///     The implementation of the <see cref="NormalDistribution"/> type bases upon
+    ///     information presented on <a href="http://en.wikipedia.org/wiki/Normal_distribution">Wikipedia -
+    ///     Normal distribution</a> and the probit function from
+    ///     <a href="https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/">Peter John Acklam's page (archived)</a>.
     ///   </para>
     ///   <para>The thread safety of this class depends on the one of the underlying generator.</para>
     /// </remarks>
-    public sealed class KumaraswamyDistribution : IEnhancedContinuousDistribution
+    public sealed class NormalDistribution : IEnhancedContinuousDistribution
     {
         #region Constants
 
         /// <summary>
-        ///   The default value assigned to <see cref="ParameterA"/> if none is specified.
+        ///   The default value assigned to <see cref="ParameterMu"/> if none is specified.
         /// </summary>
-        public const double DefaultA = 2.0;
+        public const double DefaultMu = 0.0;
 
         /// <summary>
-        ///   The default value assigned to <see cref="ParameterB"/> if none is specified.
+        ///   The default value assigned to <see cref="ParameterSigma"/> if none is specified.
         /// </summary>
-        public const double DefaultB = 2.0;
+        public const double DefaultSigma = 1.0;
 
         #endregion Constants
 
         #region Fields
 
         /// <summary>
-        ///   Stores the shape parameter a.
+        ///   Stores the mu parameter, affecting mean.
         /// </summary>
-        private double _a;
+        private double _mu;
 
         /// <summary>
-        ///   Stores the shape parameter b.
+        ///   Stores the sigma parameter, affecting variance.
         /// </summary>
-        private double _b;
+        private double _sigma;
 
         /// <summary>
-        ///   Gets or sets the shape parameter a.
+        ///   Gets or sets the mu parameter.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="value"/> is less than or equal to zero.
+        ///   <paramref name="value"/> is NaN.
         /// </exception>
         /// <remarks>
-        ///   Calls <see cref="IsValidParam"/> to determine whether a value is valid and therefore assignable.
+        ///   Calls <see cref="IsValidMu"/> to determine whether a value is valid and therefore assignable.
         /// </remarks>
-        public double ParameterA
+        public double ParameterMu
         {
-            get { return 1.0 / _a; }
+            get { return _mu; }
             set
             {
-                if (!IsValidParam(value)) throw new ArgumentOutOfRangeException(nameof(ParameterA), "Parameter 0 (a) must be > 0.0 .");
-                _a = 1.0 / value;
+                if (!IsValidMu(value)) throw new ArgumentOutOfRangeException(nameof(ParameterMu), "Parameter 0 (mu) must not be NaN .");
+                _mu = value;
             }
         }
 
         /// <summary>
-        ///   Gets or sets the shape parameter b.
+        ///   Gets or sets the sigma parameter.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="value"/> is less than or equal to zero.
         /// </exception>
         /// <remarks>
-        ///   Calls <see cref="IsValidParam"/> to determine whether a value is valid and therefore assignable.
+        ///   Calls <see cref="IsValidSigma"/> to determine whether a value is valid and therefore assignable.
         /// </remarks>
-        public double ParameterB
+        public double ParameterSigma
         {
-            get { return 1.0 / _b; }
+            get { return _sigma; }
             set
             {
-                if (!IsValidParam(value)) throw new ArgumentOutOfRangeException(nameof(ParameterB), "Parameter 1 (b) must be > 0.0 .");
-                _b = 1.0 / value;
+                if (!IsValidSigma(value)) throw new ArgumentOutOfRangeException(nameof(ParameterSigma), "Parameter 1 (sigma) must be > 0.0 .");
+                _sigma = value;
             }
         }
 
@@ -114,27 +115,27 @@ namespace ShaiRandom.Distributions.Continuous
         #region Construction
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="NormalDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> as underlying random number generator.
         /// </summary>
-        public KumaraswamyDistribution() : this(new LaserRandom(), DefaultA, DefaultB)
+        public NormalDistribution() : this(new LaserRandom(), DefaultMu, DefaultSigma)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="NormalDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> with the specified seed value.
         /// </summary>
         /// <param name="seed">
         ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
-        public KumaraswamyDistribution(ulong seed) : this(new LaserRandom(seed), DefaultA, DefaultB)
+        public NormalDistribution(ulong seed) : this(new LaserRandom(seed), DefaultMu, DefaultSigma)
         {
         }
 
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="NormalDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> with the specified seed value.
         /// </summary>
         /// <param name="seedA">
@@ -143,80 +144,79 @@ namespace ShaiRandom.Distributions.Continuous
         /// <param name="seedB">
         ///   Another unsigned long used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
-        public KumaraswamyDistribution(ulong seedA, ulong seedB) : this(new LaserRandom(seedA, seedB), DefaultA, DefaultB)
+        public NormalDistribution(ulong seedA, ulong seedB) : this(new LaserRandom(seedA, seedB), DefaultMu, DefaultSigma)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using
+        ///   Initializes a new instance of the <see cref="NormalDistribution"/> class, using
         ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
         /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
-        public KumaraswamyDistribution(IEnhancedRandom generator) : this(generator, DefaultA, DefaultB)
+        public NormalDistribution(IEnhancedRandom generator) : this(generator, DefaultMu, DefaultSigma)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="NormalDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> as underlying random number generator.
         /// </summary>
-        /// <param name="a">
-        ///   The shape parameter a.
+        /// <param name="mu">
+        ///   The mu parameter.
         /// </param>
-        /// <param name="b">
-        ///   The shape parameter b.
+        /// <param name="sigma">
+        ///   The sigma parameter.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="a"/> is less than or equal to zero, or
-        ///   <paramref name="b"/> is less than or equal to zero.
+        ///   <paramref name="mu"/> is NaN, or
+        ///   <paramref name="sigma"/> is less than or equal to zero.
         /// </exception>
-        public KumaraswamyDistribution(double a, double b) : this(new LaserRandom(), a, b)
+        public NormalDistribution(double mu, double sigma) : this(new LaserRandom(), mu, sigma)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="NormalDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> with the specified seed value.
         /// </summary>
         /// <param name="seed">
         ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
-        /// <param name="a">
-        ///   The shape parameter a.
+        /// <param name="mu">
+        ///   The mu parameter.
         /// </param>
-        /// <param name="b">
-        ///   The shape parameter b.
+        /// <param name="sigma">
+        ///   The sigma parameter.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="a"/> is less than or equal to zero, or
-        ///   <paramref name="b"/> is less than or equal to zero.
+        ///   <paramref name="mu"/> is NaN, or
+        ///   <paramref name="sigma"/> is less than or equal to zero.
         /// </exception>
-        public KumaraswamyDistribution(ulong seed, double a, double b) : this(new LaserRandom(seed), a, b)
+        public NormalDistribution(ulong seed, double mu, double sigma) : this(new LaserRandom(seed), mu, sigma)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="KumaraswamyDistribution"/> class, using
+        ///   Initializes a new instance of the <see cref="NormalDistribution"/> class, using
         ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
         /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
-        /// <param name="a">
-        ///   The shape parameter a.
+        /// <param name="mu">
+        ///   The mu parameter.
         /// </param>
-        /// <param name="b">
-        ///   The shape parameter b.
+        /// <param name="sigma">
+        ///   The sigma parameter.
         /// </param>
-        /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="a"/> is less than or equal to zero, or
-        ///   <paramref name="b"/> is less than or equal to zero.
+        ///   <paramref name="mu"/> is NaN, or
+        ///   <paramref name="sigma"/> is less than or equal to zero.
         /// </exception>
-        public KumaraswamyDistribution(IEnhancedRandom generator, double a, double b)
+        public NormalDistribution(IEnhancedRandom generator, double mu, double sigma)
         {
             Generator = generator;
-            ParameterA = a;
-            ParameterB = b;
+            ParameterMu = mu;
+            ParameterSigma = sigma;
         }
 
         #endregion Construction
@@ -224,25 +224,25 @@ namespace ShaiRandom.Distributions.Continuous
         #region IContinuousDistribution Members
 
         /// <inheritdoc />
-        public double Maximum => 1.0;
+        public double Maximum => double.PositiveInfinity;
 
         /// <inheritdoc />
-        public double Mean => throw new NotSupportedException("I have no idea how to calculate this.");
+        public double Mean => _mu;
 
         /// <inheritdoc />
-        public double Median => Math.Pow(1.0 - Math.Pow(2.0, -_b), _a);
+        public double Median => _mu;
 
         /// <inheritdoc />
-        public double Minimum => 0.0;
+        public double Minimum => double.NegativeInfinity;
 
         /// <inheritdoc />
-        public double[] Mode => throw new NotSupportedException("I have no idea how to calculate this, or if it is even defined for all valid parameters.");
+        public double[] Mode => new[] { _mu };
 
         /// <inheritdoc />
-        public double Variance => throw new NotSupportedException("I have no idea how to calculate this, or if it is even defined for all valid parameters.");
+        public double Variance => _sigma * _sigma;
 
         /// <inheritdoc />
-        public double NextDouble() => Sample(Generator, _a, _b);
+        public double NextDouble() => Sample(Generator, _mu, _sigma);
 
         /// <inheritdoc />
         public int Steps => 1;
@@ -255,8 +255,8 @@ namespace ShaiRandom.Distributions.Continuous
         {
             switch (index)
             {
-                case 0: return "a";
-                case 1: return "b";
+                case 0: return "mu";
+                case 1: return "sigma";
                 default: return "";
             }
         }
@@ -266,9 +266,9 @@ namespace ShaiRandom.Distributions.Continuous
         {
             switch (index)
             {
-                case 0: return ParameterA;
-                case 1: return ParameterB;
-                default: throw new NotSupportedException($"The requested index does not exist in this KumaraswamyDistribution.");
+                case 0: return ParameterMu;
+                case 1: return ParameterSigma;
+                default: throw new NotSupportedException($"The requested index does not exist in this NormalDistribution.");
             }
         }
 
@@ -277,11 +277,11 @@ namespace ShaiRandom.Distributions.Continuous
         {
             switch (index)
             {
-                case 0: ParameterA = value;
+                case 0: ParameterMu = value;
                     break;
-                case 1: ParameterB = value;
+                case 1: ParameterSigma = value;
                     break;
-                default: throw new NotSupportedException($"The requested index does not exist in this KumaraswamyDistribution.");
+                default: throw new NotSupportedException($"The requested index does not exist in this NormalDistribution.");
             }
         }
 
@@ -290,23 +290,32 @@ namespace ShaiRandom.Distributions.Continuous
         #region Helpers
 
         /// <summary>
-        ///   Determines whether the Kumaraswamy distribution is defined under a given parameter. The
+        ///   Determines whether the normal distribution is defined under the given mu parameter. The
+        ///   default definition returns false if the parameter is NaN; otherwise, it returns true.
+        /// </summary>
+        /// <remarks>
+        ///   This is an extensibility point for the <see cref="NormalDistribution"/> class.
+        /// </remarks>
+        public static Func<double, bool> IsValidMu { get; set; } = p => !double.IsNaN(p);
+
+        /// <summary>
+        ///   Determines whether the normal distribution is defined under the given sigma parameter. The
         ///   default definition returns true if the parameter is greater than zero; otherwise, it returns false.
         /// </summary>
         /// <remarks>
-        ///   This is an extensibility point for the <see cref="KumaraswamyDistribution"/> class.
+        ///   This is an extensibility point for the <see cref="NormalDistribution"/> class.
         /// </remarks>
-        public static Func<double, bool> IsValidParam { get; set; } = p => p > 0.0;
+        public static Func<double, bool> IsValidSigma { get; set; } = p => p > 0.0;
 
         /// <summary>
-        ///   Declares a function returning a Kumaraswamy distributed floating point random number.
+        ///   Declares a function returning a normal distributed floating point random number.
         /// </summary>
         /// <remarks>
-        ///   This is an extensibility point for the <see cref="KumaraswamyDistribution"/> class.
+        ///   This is an extensibility point for the <see cref="NormalDistribution"/> class.
         /// </remarks>
-        public static Func<IEnhancedRandom, double, double, double> Sample { get; set; } = (generator, a, b) =>
+        public static Func<IEnhancedRandom, double, double, double> Sample { get; set; } = (generator, mu, sigma) =>
         {
-            return Math.Pow(1.0 - Math.Pow(generator.NextExclusiveDouble(), b), a);
+            return generator.NextNormal(mu, sigma);
         };
 
         #endregion Helpers

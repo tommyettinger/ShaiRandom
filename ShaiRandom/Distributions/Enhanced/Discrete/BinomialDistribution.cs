@@ -25,7 +25,7 @@
 
 using ShaiRandom.Generators;
 
-namespace ShaiRandom.Distributions.Discrete
+namespace ShaiRandom.Enhanced.Distributions.Discrete
 {
     using System;
 

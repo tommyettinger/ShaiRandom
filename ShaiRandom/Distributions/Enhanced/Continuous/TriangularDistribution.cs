@@ -24,10 +24,10 @@
  */
 
 using ShaiRandom.Generators;
+using System;
 
-namespace ShaiRandom.Distributions.Continuous
+namespace ShaiRandom.Enhanced.Distributions.Continuous
 {
-    using System;
 
     /// <summary>
     ///   Provides generation of normal distributed random numbers.

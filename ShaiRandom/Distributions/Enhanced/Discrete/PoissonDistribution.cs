@@ -25,22 +25,22 @@
 
 using ShaiRandom.Generators;
 
-namespace ShaiRandom.Distributions.Continuous
+namespace ShaiRandom.Enhanced.Distributions.Discrete
 {
     using System;
 
     /// <summary>
-    ///   Provides generation of exponential distributed random numbers.
+    ///   Provides generation of Poisson distributed random numbers.
     /// </summary>
     /// <remarks>
     ///   <para>
-    ///     The implementation of the <see cref="ExponentialDistribution"/> type bases upon
+    ///     The implementation of the <see cref="PoissonDistribution"/> type bases upon
     ///     information presented on
-    ///     <a href="http://en.wikipedia.org/wiki/Exponential_distribution">Wikipedia - Exponential distribution</a>.
+    ///     <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Wikipedia - Poisson distribution</a>.
     ///   </para>
     ///   <para>The thread safety of this class depends on the one of the underlying generator.</para>
     /// </remarks>
-    public sealed class ExponentialDistribution : IEnhancedContinuousDistribution
+    public sealed class PoissonDistribution : IEnhancedDiscreteDistribution
     {
         #region Constants
 
@@ -54,13 +54,13 @@ namespace ShaiRandom.Distributions.Continuous
         #region Fields
 
         /// <summary>
-        ///   Stores the parameter lambda which is used for generation of exponential distributed
+        ///   Stores the parameter lambda which is used for generation of Poisson distributed
         ///   random numbers.
         /// </summary>
         private double _lambda;
 
         /// <summary>
-        ///   Gets or sets the parameter lambda which is used for generation of exponential
+        ///   Gets or sets the parameter lambda which is used for generation of Poisson
         ///   distributed random numbers.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">
@@ -87,93 +87,93 @@ namespace ShaiRandom.Distributions.Continuous
         #region Construction
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="PoissonDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> as underlying random number generator.
         /// </summary>
-        public ExponentialDistribution() : this(new LaserRandom(), DefaultLambda)
+        public PoissonDistribution() : this(new LaserRandom(), DefaultLambda)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="PoissonDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> with the specified seed value.
         /// </summary>
         /// <param name="seed">
-        ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
+        ///   An unsigned long used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
-        public ExponentialDistribution(ulong seed) : this(new LaserRandom(seed), DefaultLambda)
+        public PoissonDistribution(ulong seed) : this(new LaserRandom(seed), DefaultLambda)
         {
         }
 
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="PoissonDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> with the specified seed value.
         /// </summary>
         /// <param name="seedA">
-        ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
+        ///   An unsigned long used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
         /// <param name="seedB">
-        ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence; should be odd.
+        ///   An unsigned long used to calculate a starting value for the pseudo-random number sequence. Usually an odd number; the last bit isn't used.
         /// </param>
-        public ExponentialDistribution(ulong seedA, ulong seedB) : this(new LaserRandom(seedA, seedB), DefaultLambda)
+        public PoissonDistribution(ulong seedA, ulong seedB) : this(new LaserRandom(seedA, seedB), DefaultLambda)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using
+        ///   Initializes a new instance of the <see cref="PoissonDistribution"/> class, using
         ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
         /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
-        public ExponentialDistribution(IEnhancedRandom generator) : this(generator, DefaultLambda)
+        public PoissonDistribution(IEnhancedRandom generator) : this(generator, DefaultLambda)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="PoissonDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> as underlying random number generator.
         /// </summary>
         /// <param name="lambda">
-        ///   The parameter lambda which is used for generation of exponential distributed random numbers.
+        ///   The parameter lambda which is used for generation of Poisson distributed random numbers.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="lambda"/> is less than or equal to zero.
         /// </exception>
-        public ExponentialDistribution(double lambda) : this(new LaserRandom(), lambda)
+        public PoissonDistribution(double lambda) : this(new LaserRandom(), lambda)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using a
+        ///   Initializes a new instance of the <see cref="PoissonDistribution"/> class, using a
         ///   <see cref="LaserRandom"/> with the specified seed value.
         /// </summary>
         /// <param name="seed">
         ///   An unsigned number used to calculate a starting value for the pseudo-random number sequence.
         /// </param>
         /// <param name="lambda">
-        ///   The parameter lambda which is used for generation of exponential distributed random numbers.
+        ///   The parameter lambda which is used for generation of Poisson distributed random numbers.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="lambda"/> is less than or equal to zero.
         /// </exception>
-        public ExponentialDistribution(ulong seed, double lambda) : this(new LaserRandom(seed), lambda)
+        public PoissonDistribution(ulong seed, double lambda) : this(new LaserRandom(seed), lambda)
         {
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ExponentialDistribution"/> class, using
+        ///   Initializes a new instance of the <see cref="PoissonDistribution"/> class, using
         ///   the specified <see cref="IEnhancedRandom"/> as underlying random number generator.
         /// </summary>
         /// <param name="generator">An <see cref="IEnhancedRandom"/> object.</param>
         /// <param name="lambda">
-        ///   The parameter lambda which is used for generation of exponential distributed random numbers.
+        ///   The parameter lambda which is used for generation of Poisson distributed random numbers.
         /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="generator"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="lambda"/> is less than or equal to zero.
         /// </exception>
-        public ExponentialDistribution(IEnhancedRandom generator, double lambda)
+        public PoissonDistribution(IEnhancedRandom generator, double lambda)
         {
             Generator = generator;
             ParameterLambda = lambda;
@@ -186,29 +186,26 @@ namespace ShaiRandom.Distributions.Continuous
         /// <inheritdoc />
         public double Maximum => double.PositiveInfinity;
 
-
         /// <inheritdoc />
         public double Minimum => 0.0;
-
 
         /// <inheritdoc />
         public double Mean => _lambda;
 
+        /// <inheritdoc />
+        public double Median => Math.Floor(_lambda + 0.333333333333333333 - 0.02 / _lambda);
 
         /// <inheritdoc />
-        public double Median => Math.Log(2.0) * _lambda;
-
-
-        /// <inheritdoc />
-        public double[] Mode => new[] { 0.0 };
-
+        public double[] Mode => new[] { Math.Ceiling(_lambda) - 1, Math.Floor(_lambda) };
 
         /// <inheritdoc />
-        public double Variance => Math.Pow(1.0 / _lambda, -2.0);
-
+        public double Variance => _lambda;
 
         /// <inheritdoc />
         public double NextDouble() => Sample(Generator, _lambda);
+
+        /// <inheritdoc />
+        public int NextInt() => Sample(Generator, _lambda);
 
         /// <inheritdoc />
         public int Steps => 1;
@@ -223,7 +220,7 @@ namespace ShaiRandom.Distributions.Continuous
         public double ParameterValue(int index)
         {
             if (index == 0) return ParameterLambda;
-            throw new NotSupportedException($"The requested index does not exist in this ExponentialDistribution.");
+            throw new NotSupportedException($"The requested index does not exist in this PoissonDistribution.");
         }
 
         /// <inheritdoc />
@@ -238,7 +235,7 @@ namespace ShaiRandom.Distributions.Continuous
             }
             else
             {
-                throw new NotSupportedException($"The requested index does not exist in this ExponentialDistribution.");
+                throw new NotSupportedException($"The requested index does not exist in this PoissonDistribution.");
             }
         }
 
@@ -249,23 +246,32 @@ namespace ShaiRandom.Distributions.Continuous
         #region Helpers
 
         /// <summary>
-        ///   Determines whether exponential distribution is defined under given parameter. The
+        ///   Determines whether Poisson distribution is defined under given parameter. The
         ///   default definition returns true if lambda is greater than zero; otherwise, it returns false.
         /// </summary>
         /// <remarks>
-        ///   This is an extensibility point for the <see cref="ExponentialDistribution"/> class.
+        ///   This is an extensibility point for the <see cref="PoissonDistribution"/> class.
         /// </remarks>
         public static Func<double, bool> IsValidParam { get; set; } = lambda => lambda > 0.0;
 
         /// <summary>
-        ///   Declares a function returning an exponential distributed floating point random number.
+        ///   Declares a function returning an Poisson distributed floating point random number.
+        ///   The implementation here is only meant for smaller lambda values.
         /// </summary>
         /// <remarks>
-        ///   This is an extensibility point for the <see cref="ExponentialDistribution"/> class.
+        ///   This is an extensibility point for the <see cref="PoissonDistribution"/> class.
         /// </remarks>
-        public static Func<IEnhancedRandom, double, double> Sample { get; set; } = (generator, lambda) =>
+        public static Func<IEnhancedRandom, double, int> Sample { get; set; } = (generator, lambda) =>
         {
-            return -Math.Log(1.0 - generator.NextDouble()) * lambda;
+            int x = 0;
+            double p = Math.Exp(-lambda), s = p, u = generator.NextDouble();
+            while(u > s)
+            {
+                ++x;
+                p *= lambda / x;
+                s += p;
+            }
+            return x;
         };
 
         #endregion Helpers
