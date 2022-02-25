@@ -106,7 +106,7 @@ namespace ShaiRandom.Distributions.Discrete
         {
             Debug.Assert(Generator is TrimRandom);
             Debug.Assert(Equals(Weights.Count, DefaultValueCount));
-            Debug.Assert(Weights.All(w => TMath.AreEqual(w, 1.0 / DefaultValueCount)));
+            Debug.Assert(Weights.All(w => MathUtils.AreEqual(w, 1.0 / DefaultValueCount)));
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace ShaiRandom.Distributions.Discrete
         {
             Debug.Assert(Generator is TrimRandom);
             Debug.Assert(Equals(Weights.Count, DefaultValueCount));
-            Debug.Assert(Weights.All(w => TMath.AreEqual(w, 1.0 / DefaultValueCount)));
+            Debug.Assert(Weights.All(w => MathUtils.AreEqual(w, 1.0 / DefaultValueCount)));
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace ShaiRandom.Distributions.Discrete
         {
             Debug.Assert(ReferenceEquals(Generator, generator));
             Debug.Assert(Equals(Weights.Count, DefaultValueCount));
-            Debug.Assert(Weights.All(w => TMath.AreEqual(w, 1.0 / DefaultValueCount)));
+            Debug.Assert(Weights.All(w => MathUtils.AreEqual(w, 1.0 / DefaultValueCount)));
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace ShaiRandom.Distributions.Discrete
         {
             Debug.Assert(Generator is TrimRandom);
             Debug.Assert(Equals(Weights.Count, valueCount));
-            Debug.Assert(Weights.All(w => TMath.AreEqual(w, 1.0 / valueCount)));
+            Debug.Assert(Weights.All(w => MathUtils.AreEqual(w, 1.0 / valueCount)));
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace ShaiRandom.Distributions.Discrete
         {
             Debug.Assert(Generator is TrimRandom);
             Debug.Assert(Equals(Weights.Count, valueCount));
-            Debug.Assert(Weights.All(w => TMath.AreEqual(w, 1.0 / valueCount)));
+            Debug.Assert(Weights.All(w => MathUtils.AreEqual(w, 1.0 / valueCount)));
         }
 
         /// <summary>
@@ -314,13 +314,13 @@ namespace ShaiRandom.Distributions.Discrete
             var maxI = 0; // It will store max weight index.
 
             // Let's normalize all weights, if necessary.
-            if (!TMath.AreEqual(weightsSum, 1.0))
+            if (!MathUtils.AreEqual(weightsSum, 1.0))
             {
                 for (var i = 0; i < _weights.Count; ++i)
                 {
                     _weights[i] /= weightsSum;
                 }
-                Debug.Assert(TMath.AreEqual(_weights.Sum(), 1.0));
+                Debug.Assert(MathUtils.AreEqual(_weights.Sum(), 1.0));
             }
 
             weightsSum = 0.0; // Reset weight sum to use it for cdf.
@@ -479,7 +479,7 @@ namespace ShaiRandom.Distributions.Discrete
             {
                 var idx = (maxIdx - minIdx) / 2 + minIdx;
                 var c = cdf[idx];
-                if (TMath.AreEqual(u, c))
+                if (MathUtils.AreEqual(u, c))
                 {
                     minIdx = idx;
                     break;
@@ -497,7 +497,7 @@ namespace ShaiRandom.Distributions.Discrete
         };
 
         /// <summary>
-        ///   Prepares parameters for <see cref="TRandom"/>.
+        ///   Prepares parameters for TRandom (???).
         /// </summary>
         /// <param name="weightsCount">The number of weights.</param>
         /// <param name="weights">Weights, or null.</param>
@@ -513,13 +513,13 @@ namespace ShaiRandom.Distributions.Discrete
             var maxW = 0.0; // It will store max weight (all weights are positive).
 
             // Let's normalize all weights, if necessary.
-            if (!TMath.AreEqual(weightsSum, 1.0))
+            if (!MathUtils.AreEqual(weightsSum, 1.0))
             {
                 for (var i = 0; i < weightsList.Count; ++i)
                 {
                     weightsList[i] /= weightsSum;
                 }
-                Debug.Assert(TMath.AreEqual(weightsList.Sum(), 1.0));
+                Debug.Assert(MathUtils.AreEqual(weightsList.Sum(), 1.0));
             }
 
             weightsSum = 0.0; // Reset weight sum to use it for cdf.

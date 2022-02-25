@@ -329,7 +329,7 @@ namespace ShaiRandom.Distributions.Continuous
                 u = generator.NextDouble();
             } while (u > (1.0 - 0.331 * MathUtils.Square(MathUtils.Square(x))) && Math.Log(u) > (0.5 * MathUtils.Square(x) + a1 * (1.0 - v + Math.Log(v))));
 
-            if (TMath.AreEqual(alpha, oalpha))
+            if (MathUtils.AreEqual(alpha, oalpha))
             {
                 return a1 * v / beta;
             }

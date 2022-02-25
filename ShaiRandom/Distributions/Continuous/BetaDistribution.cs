@@ -272,11 +272,11 @@ namespace ShaiRandom.Distributions.Continuous
                 {
                     return new[] { 0.0, 1.0 };
                 }
-                if (((_alpha < 1) && (_beta >= 1)) || (TMath.AreEqual(_alpha, 1) && (_beta > 1)))
+                if (((_alpha < 1) && (_beta >= 1)) || (MathUtils.AreEqual(_alpha, 1) && (_beta > 1)))
                 {
                     return new[] { 0.0 };
                 }
-                if (((_alpha >= 1) && (_beta < 1)) || ((_alpha > 1) && TMath.AreEqual(_beta, 1)))
+                if (((_alpha >= 1) && (_beta < 1)) || ((_alpha > 1) && MathUtils.AreEqual(_beta, 1)))
                 {
                     return new[] { 1.0 };
                 }

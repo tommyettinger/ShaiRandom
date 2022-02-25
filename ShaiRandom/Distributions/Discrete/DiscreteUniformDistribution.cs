@@ -317,7 +317,7 @@ namespace ShaiRandom.Distributions.Discrete
         /// </remarks>
         public static Func<IEnhancedRandom, int, int, int> Sample { get; set; } = (generator, alpha, beta) =>
         {
-            return generator.Next(alpha, beta + 1);
+            return generator.NextInt(alpha, beta + 1);
         };
 
         #endregion TRandom Helpers
