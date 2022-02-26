@@ -35,15 +35,6 @@ namespace ShaiRandom.Distributions.Continuous
         /// </summary>
         public const double DefaultLambda = 1;
 
-        /// <summary>
-        ///   Represents coefficients for the Lanczos approximation of the Gamma function.
-        /// </summary>
-        private static readonly double[] s_lanczosCoefficients = {
-            1.000000000190015, 76.18009172947146, -86.50532032941677,
-            24.01409824083091, -1.231739572450155, 1.208650973866179e-3,
-            -5.395239384953e-6
-        };
-
         #endregion Constants
 
         #region Fields
@@ -225,24 +216,6 @@ namespace ShaiRandom.Distributions.Continuous
         /// <returns><see langword="true"/> if value is greater than 0.0; otherwise, <see langword="false"/>.</returns>
         public bool IsValidLambda(double value) => AreValidParams(_alpha, value);
 
-        /// <summary>
-        ///   Represents a Lanczos approximation of the Gamma function.
-        /// </summary>
-        /// <param name="x">A double-precision floating point number.</param>
-        /// <returns>
-        ///   A double-precision floating point number representing an approximation of Gamma( <paramref name="x"/>).
-        /// </returns>
-        private static double Gamma(double x)
-        {
-            var sum = s_lanczosCoefficients[0];
-            for (var index = 1; index <= 6; index++)
-            {
-                sum += s_lanczosCoefficients[index] / (x + index);
-            }
-
-            return Math.Sqrt(2.0 * Math.PI) / x * Math.Pow(x + 5.5, x + 0.5) / Math.Exp(x + 5.5) * sum;
-        }
-
         #endregion Instance Methods
 
         #region IContinuousDistribution Members
@@ -258,7 +231,7 @@ namespace ShaiRandom.Distributions.Continuous
         /// <exception cref="NotSupportedException">
         ///   Thrown if mean is not defined for given distribution with some parameters.
         /// </exception>
-        public double Mean => Lambda * Gamma(1.0 + 1.0 / _alpha);
+        public double Mean => Lambda * MathUtils.Gamma(1.0 + 1.0 / _alpha);
 
         /// <summary>
         ///   Gets the median of distributed random numbers.
@@ -297,7 +270,7 @@ namespace ShaiRandom.Distributions.Continuous
         /// <exception cref="NotSupportedException">
         ///   Thrown if variance is not defined for given distribution with some parameters.
         /// </exception>
-        public double Variance => MathUtils.Square(Lambda) * Gamma(1.0 + 2.0 / _alpha) - MathUtils.Square(Mean);
+        public double Variance => MathUtils.Square(Lambda) * MathUtils.Gamma(1.0 + 2.0 / _alpha) - MathUtils.Square(Mean);
 
         /// <summary>
         ///   Returns a distributed floating point random number.
