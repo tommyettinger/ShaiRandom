@@ -35,30 +35,43 @@ namespace ShaiRandom
         public static double Square(double d) => d * d;
 
         /// <summary>
-        ///   Represents coefficients for the Lanczos approximation of the Gamma function.
+        ///   Represents an approximation of the Gamma function, using an algorithm by T. J. Stieltjes.
         /// </summary>
-        private static readonly double[] s_lanczosCoefficients = {
-            1.000000000190015, 76.18009172947146, -86.50532032941677,
-            24.01409824083091, -1.231739572450155, 1.208650973866179e-3,
-            -5.395239384953e-6
-        };
-
-        /// <summary>
-        ///   Represents a Lanczos approximation of the Gamma function, defined for all finite double values.
-        /// </summary>
+        /// <remarks>
+        /// This is exactly equivalent to <code>MathUtils.Factorial(x - 1.0)</code> .
+        /// <br />
+        /// The source for this function is here: http://www.luschny.de/math/factorial/approx/SimpleCases.html
+        /// </remarks>
         /// <param name="x">A double-precision floating point number.</param>
         /// <returns>
         ///   A double-precision floating point number representing an approximation of Gamma( <paramref name="x"/>).
         /// </returns>
         public static double Gamma(double x)
         {
-            var sum = s_lanczosCoefficients[0];
-            for (var index = 1; index <= 6; index++)
-            {
-                sum += s_lanczosCoefficients[index] / (x + index);
-            }
+            return Factorial(x - 1.0);
+        }
 
-            return Math.Sqrt(2.0 * Math.PI) / x * Math.Pow(x + 5.5, x + 0.5) / Math.Exp(x + 5.5) * sum;
+        /// <summary>
+        /// A close approximation to the factorial function for real numbers, using an algorithm by T. J. Stieltjes.
+        /// </summary>
+        /// <remarks>
+        /// This performs a variable number of multiplications that starts at 1 when x is between 5 and 6, and requires more
+        /// multiplications the lower x goes (to potentially many if x is, for instance, -1000.0, which would need 1006
+        /// multiplications per call). As such, you should try to call this mostly on x values that are positive or have a
+        /// low magnitude.
+        /// <br />
+        /// The source for this function is here: http://www.luschny.de/math/factorial/approx/SimpleCases.html
+        /// </remarks>
+        /// <param name="x">A double; should not be both large and negative.</param>
+        /// <returns>The generalized factorial of the given x, approximated.</returns>
+        public static double Factorial(double x)
+        {
+            double y = x + 1.0, p = 1.0;
+            for (; y < 7; y++)
+                p *= y;
+            double r = Math.Exp(y * Math.Log(y) - y + 1.0 / (12.0 * y + 2.0 / (5.0 * y + 53.0 / (42.0 * y))));
+            if (x < 7.0) r /= p;
+            return r * Math.Sqrt(6.283185307179586 / y);
         }
 
         /// <summary>

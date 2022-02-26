@@ -239,7 +239,7 @@ namespace ShaiRandom.Distributions.Continuous
             get
             {
                 double b = 1.0 / _beta;
-                return (MathUtils.Gamma(1.0 + _alpha) * MathUtils.Gamma(b) / b) / MathUtils.Gamma(1.0 + _alpha + b);
+                return (MathUtils.Gamma(1.0 + _alpha) * MathUtils.Gamma(b) * b) / MathUtils.Gamma(1.0 + _alpha + b);
             }
         }
 
