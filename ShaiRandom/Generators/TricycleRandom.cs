@@ -4,8 +4,15 @@ using System.Runtime.CompilerServices;
 namespace ShaiRandom.Generators
 {
     /// <summary>
-    /// It's an AbstractRandom with 3 states, more here later.
+    /// It's an AbstractRandom with 3 states, with no guarantee of a minimum period but a statistically-likely high actual period.
     /// </summary>
+    /// <remarks>
+    /// This is like <see cref="RomuTrioRandom"/>, which also has three states and no guarantee of a minimum period for a given stream,
+    /// but unlike RomuTrioRandom, this won't get stuck in a perpetual-zero state if all three states are 0. It may be faster or slower
+    /// than RomuTrioRandom, though it is usually slower by a fraction of a nanosecond.
+    /// <br />
+    /// This supports <see cref="PreviousULong()"/> but not <see cref="IEnhancedRandom.Skip(ulong)"/>.
+    /// </remarks>
     public sealed class TricycleRandom : AbstractRandom
     {
         /// <summary>

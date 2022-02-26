@@ -4,8 +4,17 @@ using System.Runtime.CompilerServices;
 namespace ShaiRandom.Generators
 {
     /// <summary>
-    /// It's an AbstractRandom with 4 states, more here later. This one has a good guaranteed minimum period, (2 to the 65) - 2.
+    /// It's an AbstractRandom with 4 states, with a good guaranteed minimum period, (2 to the 65) - 2.
     /// </summary>
+    /// <remarks>
+    /// This generator is similar in many ways to <see cref="TrimRandom"/>; both avoid using multiplication, have a 20-digit minimum period, and are rather high-quality.
+    /// StrangerRandom isn't as fast, however. This generator uses interleaved two-xorshift generators (using the only possible constants for a two-xorshift generator with
+    /// 64-bit state, 7 and 9), and feeds their current states into a "chaotic" construction with the other two states. Because each xorshift generator has a period of
+    /// (2 to the 64) - 1, and it takes two generated ulongs to complete one xorshift generation, this guarantees that the xorshifts will cycle after (2 to the 65) - 2 results.
+    /// The chaotic other states will usually lengthen the period significantly on top of that.
+    /// <br />
+    /// This supports <see cref="PreviousULong()"/> but not <see cref="IEnhancedRandom.Skip(ulong)"/>.
+    /// </remarks>
     public sealed class StrangerRandom : AbstractRandom
     {
         /// <summary>

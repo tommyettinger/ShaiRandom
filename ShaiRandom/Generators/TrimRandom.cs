@@ -5,13 +5,16 @@ namespace ShaiRandom.Generators
 {
     /// <summary>
     /// It's an AbstractRandom with 4 states, built around a "chaotic" construction combined with a 64-bit counter, guaranteeing a minimum period of 2 to the 64.
+    /// The maximum period varies depending on the starting state, but is virtually guaranteed to be many times longer than the minimum.
     /// </summary>
     /// <remarks>
-    /// This is very fast... on the JVM and in CUDA C. It probably won't be so fast on .NET (any version), because smaller state sizes do better here. It's still quite
+    /// This is very fast... on the JVM and in CUDA C. It isn't quite as fast on .NET (any version), because smaller state sizes do better here. It's still quite
     /// high-quality, with no known failing tests. The one test that FourWheelRandom fails on fails after 2 exabytes have been run through an extinction/saturation test;
-    /// this is currently being tested but is passing thoroughly so far at 1.8 exabytes. Some seeds do have issues with the mentioned test, but they also tend to recover
+    /// this is currently being tested but has passed thoroughly at 4 exabytes. Some seeds do have issues with the mentioned test, but they also tend to recover
     /// from issues remarkably well, and no seeds have failed at the 1 exabyte mark, at least. Anything requiring exabytes of data to find fault with is probably sufficient
     /// for most usage.
+    /// <br />
+    /// This supports <see cref="PreviousULong()"/> but not <see cref="IEnhancedRandom.Skip(ulong)"/>.
     /// </remarks>
     public sealed class TrimRandom : AbstractRandom
     {

@@ -23,9 +23,16 @@ using System.Runtime.CompilerServices;
 namespace ShaiRandom.Generators
 {
     /// <summary>
-    /// It's an AbstractRandom with 3 states, more here later. Implements the RomuTrio algorithm for fast ulongs.
-    /// TricycleRandom or FourWheelRandom may be about the same speed or faster.
+    /// It's an AbstractRandom with 3 states that implements the RomuTrio algorithm for fast ulong generation. This has no minimum period guarantee,
+    /// but is very likely to have a long period if seeded with <see cref="Seed(ulong)"/>.
     /// </summary>
+    /// <remarks>
+    /// See https://romu-random.org/ for more on this algorithm. This implementation is derived from https://github.com/bgrainger/RomuRandom .
+    /// Be aware that if this is ever allowed to have an all-zero state, it will never escape that state (this is also true for <see cref="Xorshift128PlusRandom"/>
+    /// and <see cref="Xoshiro256StarStarRandom"/>).
+    /// <br />
+    /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/> or <see cref="IEnhancedRandom.Skip(ulong)"/>.
+    /// </remarks>
     public sealed class RomuTrioRandom : AbstractRandom
     {
         /// <summary>

@@ -4,9 +4,14 @@ using System.Runtime.CompilerServices;
 namespace ShaiRandom.Generators
 {
     /// <summary>
-    /// It's an AbstractRandom with 2 states, low-quality, not recommended for external use, and this may be removed at any time.
-    /// It is pretty fast though.
+    /// It's an AbstractRandom with 2 states; low-quality, and not recommended for external use.
+    /// It is pretty fast though, and the low quality is primarily a problem with lower bits.
     /// </summary>
+    /// <remarks>
+    /// The algorithm here is xorshift128+ , which is quite old now; see https://xoshiro.di.unimi.it/xorshift.php for more information on this family of algorithms.
+    /// <br />
+    /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/> or <see cref="IEnhancedRandom.Skip(ulong)"/>.
+    /// </remarks>
     public sealed class Xorshift128PlusRandom : AbstractRandom
     {
         /// <summary>

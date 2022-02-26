@@ -10,7 +10,10 @@ namespace ShaiRandom.Generators
     /// Being 4-dimensionally equidistributed means this produces every group of 4 consecutive ulong values with equal likelihood
     /// (except for four 0s, which this never returns consecutively). This generator is not perfect (it isn't as fast as most others
     /// on .NET, and there's a known problem if all results are multiplied by a constant with a specific last byte in its 64 bits),
-    /// but it's very hard to get this level of equidistribution and keep up competitive speed.
+    /// but it's very hard to get this level of equidistribution and keep up competitive speed. The algorithm here is xoshiro256** ,
+    /// if you were wondering. See https://prng.di.unimi.it/ for more information on this family of algorithms.
+    /// <br />
+    /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/> or <see cref="IEnhancedRandom.Skip(ulong)"/>.
     /// </remarks>
     public sealed class Xoshiro256StarStarRandom : AbstractRandom
     {
