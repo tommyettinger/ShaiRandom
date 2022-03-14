@@ -9,8 +9,12 @@ namespace ShaiRandom.Generators
     /// </summary>
     /// <remarks>
     /// The algorithm here is xorshift128+ , which is quite old now; see https://xoshiro.di.unimi.it/xorshift.php for more information on this family of algorithms.
+    /// Modern JavaScript engines in browsers do still use xorshift128+, but they also introduce various mitigating measures to prevent tampering with the state.
+    /// JavaScript also doesn't have a 64-bit integer type, so the serious weakness in the returned low bits can be mostly ignored by only using the upper bits.
+    /// If statistical quality is a concern, <see cref="Xoshiro256StarStarRandom"/> is a similar generator but has much higher quality.
     /// <br />
-    /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/> or <see cref="IEnhancedRandom.Skip(ulong)"/>.
+    /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/> or <see cref="IEnhancedRandom.Skip(ulong)"/>,
+    /// but does support <see cref="IEnhancedRandom.Leap()"/>.
     /// </remarks>
     public sealed class Xorshift128PlusRandom : AbstractRandom
     {
@@ -215,6 +219,37 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new Xorshift128PlusRandom(StateA, StateB);
-
+        /// <summary>
+        /// Jumps extremely far in the generator's sequence, such that it requires <code>Math.Pow(2, 64)</code> calls to Leap() to complete
+        /// a cycle through the generator's entire sequence. This can be used to create over 18 quintillion substreams of this generator's
+        /// sequence, each with a period of <code>Math.Pow(2, 64)</code>.
+        /// </summary>
+        /// <returns>The result of what NextULong() would return if it was called at the state this jumped to.</returns>
+        public override ulong Leap()
+        {
+            ulong s0 = 0UL;
+            ulong s1 = 0UL;
+            for (ulong b = 0x8a5cd789635d2dffUL; b != 0UL; b >>= 1)
+            {
+                if ((1UL & b) != 0UL)
+                {
+                    s0 ^= StateA;
+                    s1 ^= StateB;
+                }
+                NextULong();
+            }
+            for (ulong b = 0x121fd2155c472f96UL; b != 0UL; b >>= 1)
+            {
+                if ((1UL & b) != 0UL)
+                {
+                    s0 ^= StateA;
+                    s1 ^= StateB;
+                }
+                NextULong();
+            }
+            StateA = s0;
+            StateB = s1;
+            return s0 + s1;
+        }
     }
 }
