@@ -280,6 +280,72 @@ namespace ShaiRandom.Generators
             }
         }
 
+        /// <summary>
+        /// Jumps extremely far in the generator's sequence, such that it requires <code>Math.Pow(2, 64)</code> calls to Leap() to complete
+        /// a cycle through the generator's entire sequence. This can be used to create over 18 quintillion substreams of this generator's
+        /// sequence, each with a period of <code>Math.Pow(2, 192)</code>.
+        /// </summary>
+        /// <returns>The result of what NextULong() would return if it was called at the state this jumped to.</returns>
+        public override ulong Leap()
+        {
+            ulong s0 = 0UL;
+            ulong s1 = 0UL;
+            ulong s2 = 0UL;
+            ulong s3 = 0UL;
+            for (ulong b = 0x76e15d3efefdcbbfUL; b != 0UL; b >>= 1)
+            {
+                if ((1UL & b) != 0UL)
+                {
+                    s0 ^= StateA;
+                    s1 ^= StateB;
+                    s2 ^= StateC;
+                    s3 ^= StateD;
+                }
+                NextULong();
+            }
+            for (ulong b = 0xc5004e441c522fb3UL; b != 0UL; b >>= 1)
+            {
+                if ((1UL & b) != 0UL)
+                {
+                    s0 ^= StateA;
+                    s1 ^= StateB;
+                    s2 ^= StateC;
+                    s3 ^= StateD;
+                }
+                NextULong();
+            }
+            for (ulong b = 0x77710069854ee241UL; b != 0UL; b >>= 1)
+            {
+                if ((1UL & b) != 0UL)
+                {
+                    s0 ^= StateA;
+                    s1 ^= StateB;
+                    s2 ^= StateC;
+                    s3 ^= StateD;
+                }
+                NextULong();
+            }
+            for (ulong b = 0x39109bb02acbe635UL; b != 0UL; b >>= 1)
+            {
+                if ((1UL & b) != 0UL)
+                {
+                    s0 ^= StateA;
+                    s1 ^= StateB;
+                    s2 ^= StateC;
+                    s3 ^= StateD;
+                }
+                NextULong();
+            }
+
+            StateA = s0;
+            StateB = s1;
+            StateC = s2;
+            StateD = s3;
+            return (s1 * 5UL).RotateLeft(7) * 9UL;
+        }
+
+
+
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new Xoshiro256StarStarRandom(StateA, StateB, StateC, StateD);
     }
