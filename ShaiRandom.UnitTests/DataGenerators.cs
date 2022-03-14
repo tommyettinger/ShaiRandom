@@ -40,7 +40,7 @@ namespace ShaiRandom.UnitTests
                 yield return new ReversingWrapper();
 
                 // ShaiRandom.TroschuetzCompat
-                yield return new TRGeneratorWrapper();
+                //yield return new TRGeneratorWrapper();
             }
         }
     }

@@ -113,9 +113,9 @@ namespace ShaiRandom.Generators
         /// </summary>
         public override bool SupportsLeap => true;
         /// <summary>
-        /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/>.
+        /// This supports <see cref="IEnhancedRandom.PreviousULong()"/>.
         /// </summary>
-        public override bool SupportsPrevious => false;
+        public override bool SupportsPrevious => true;
 
         /// <summary>
         /// Gets the state determined by selection, as-is.
@@ -245,6 +245,34 @@ namespace ShaiRandom.Generators
                 return result;
             }
         }
+
+        /// <inheritdoc />
+        public override ulong PreviousULong()
+        {
+            //ulong a = StateA, b = StateB, c = StateC, d = _d;
+
+            //StateB ^= c ^ a;
+            //StateA ^= d ^ b;
+            //StateC ^= a ^ b << 17;
+            //_d = (d ^ b).RotateLeft(45);
+
+            _d = _d.RotateRight(45); // _d has d ^ b
+            StateA ^= _d; // StateA has a
+            StateC ^= StateB; // StateC has b ^ b << 17;
+            StateC ^= StateC << 17;
+            StateC ^= StateC << 34; // StateC has b
+            StateB ^= StateA; // StateB has b ^ c
+            ulong oc = StateC ^= StateB; // StateC has c;
+            ulong ob = StateB ^= StateC; // StateB has b;
+            _d ^= StateB; // _d has d;
+
+            oc ^= ob;
+            oc ^= oc << 17;
+            oc ^= oc << 34;
+            return (oc * 5UL).RotateLeft(7) * 9UL;
+        }
+
+
 
         /// <inheritdoc />
         public override float NextSparseFloat()
