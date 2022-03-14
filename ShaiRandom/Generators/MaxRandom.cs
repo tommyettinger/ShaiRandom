@@ -39,12 +39,17 @@ namespace ShaiRandom.Generators
         public bool SupportsWriteAccess => false;
 
         /// <summary>
-        /// Supports <see cref="Skip"/>.
+        /// Supports <see cref="Skip(ulong)"/>, but it is equivalent to <see cref="NextULong()"/>.
         /// </summary>
         public bool SupportsSkip => true;
 
         /// <summary>
-        /// Supports <see cref="IEnhancedRandom.PreviousULong"/>.
+        /// Supports <see cref="Leap()"/>, but it is equivalent to <see cref="NextULong()"/>.
+        /// </summary>
+        public bool SupportsLeap => true;
+
+        /// <summary>
+        /// Supports <see cref="IEnhancedRandom.PreviousULong()"/>.
         /// </summary>
         public bool SupportsPrevious => true;
 
@@ -91,6 +96,12 @@ namespace ShaiRandom.Generators
         /// <param name="distance"/>
         /// <returns><see cref="ulong.MaxValue"/>.</returns>
         public ulong Skip(ulong distance) => NextULong();
+
+        /// <summary>
+        /// Does nothing since the return value is always predetermined based on the parameters or implicit bounds.
+        /// </summary>
+        /// <returns><see cref="ulong.MaxValue"/>.</returns>
+        public ulong Leap() => NextULong();
 
         /// <summary>
         /// Does nothing, since this generator has no state.  Always returns <see cref="ulong.MaxValue"/>.

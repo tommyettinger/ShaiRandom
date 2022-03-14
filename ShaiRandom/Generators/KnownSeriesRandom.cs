@@ -158,6 +158,10 @@ namespace ShaiRandom.Generators
         /// This does NOT support <see cref="IEnhancedRandom.Skip(ulong)"/>.
         /// </summary>
         public bool SupportsSkip => false;
+        /// <summary>
+        /// This does not support <see cref="IEnhancedRandom.Leap()"/>.
+        /// </summary>
+        public bool SupportsLeap => false;
 
         /// <summary>
         /// This does NOT support <see cref="PreviousULong()"/>.
@@ -785,6 +789,11 @@ namespace ShaiRandom.Generators
         /// Not supported by this generator.
         /// </summary>
         public ulong Skip(ulong distance) => throw new NotSupportedException();
+
+        /// <summary>
+        /// Not supported by this generator.
+        /// </summary>
+        public ulong Leap() => throw new NotSupportedException("Leap() is not implemented for this generator.");
 
         /// <inheritdoc />
         public IEnhancedRandom StringDeserialize(ReadOnlySpan<char> data)

@@ -43,6 +43,11 @@ namespace ShaiRandom.Generators
         bool SupportsSkip { get; }
 
         /// <summary>
+        /// This should be true if the implementation supports <see cref="Leap()"/>, or false if that method is unsupported.
+        /// </summary>
+        bool SupportsLeap { get; }
+
+        /// <summary>
         /// This should be true if the implementation supports <see cref="PreviousULong"/>, or false if that method is unsupported.
         /// </summary>
         bool SupportsPrevious { get; }
@@ -916,5 +921,13 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <returns>The result of what NextULong() would return at the previous state.</returns>
         ulong PreviousULong();
+
+        /// <summary>
+        /// (Optional) If implemented, jumps extremely far in the generator's sequence, such that it would require at least <code>Math.Pow(2, 64)</code> calls to Leap() to complete
+        /// a cycle through the generator's entire sequence. This is meant only for generators with known, predictable, and very large periods; it does not necessitate
+        /// that this generator implements <see cref="Skip(ulong)"/> or even <see cref="PreviousULong()"/>.
+        /// </summary>
+        /// <returns>The result of what NextULong() would return if it was called at the state this jumped to.</returns>
+        ulong Leap();
     }
 }

@@ -126,6 +126,11 @@ namespace ShaiRandom.Wrappers
         public bool SupportsSkip => Wrapped.SupportsSkip;
 
         /// <summary>
+        /// This supports <see cref="IEnhancedRandom.Leap()"/> if the wrapped generator does.
+        /// </summary>
+        public bool SupportsLeap => Wrapped.SupportsLeap;
+
+        /// <summary>
         /// This supports <see cref="PreviousULong()"/> if the wrapped generator does.
         /// </summary>
         public bool SupportsPrevious => false;
@@ -567,6 +572,15 @@ namespace ShaiRandom.Wrappers
             _ulongSeries.Add(v);
             return v;
         }
+
+        /// <inheritdoc />
+        public ulong Leap()
+        {
+            ulong v = Wrapped.Leap();
+            _ulongSeries.Add(v);
+            return v;
+        }
+
 
         /// <inheritdoc />
         public string StringSerialize()

@@ -81,6 +81,10 @@ namespace ShaiRandom.Generators
         /// </summary>
         public override bool SupportsSkip => false;
         /// <summary>
+        /// This supports <see cref="IEnhancedRandom.Leap()"/>, with one call to Leap() equivalent to <code>Math.Pow(2, 64)</code> calls to <see cref="NextULong()"/>.
+        /// </summary>
+        public override bool SupportsLeap => true;
+        /// <summary>
         /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/>.
         /// </summary>
         public override bool SupportsPrevious => false;

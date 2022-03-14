@@ -76,6 +76,11 @@ namespace ShaiRandom.Wrappers
         public override bool SupportsSkip => Wrapped.SupportsSkip;
 
         /// <summary>
+        /// The <see cref="IEnhancedRandom.SupportsLeap"/> value of the wrapped generator.
+        /// </summary>
+        public override bool SupportsLeap => Wrapped.SupportsLeap;
+
+        /// <summary>
         /// The <see cref="IEnhancedRandom.SupportsPrevious"/> value of the wrapped generator.
         /// </summary>
         public override bool SupportsPrevious => Wrapped.SupportsPrevious;

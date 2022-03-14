@@ -7,7 +7,7 @@ namespace ShaiRandom.Generators
     /// It's an AbstractRandom with 1 state that only returns each ulong result exactly once over its period.
     /// </summary>
     /// <remarks>
-    /// This generator supports <see cref="Skip(ulong)"/>, along with all other optional operations.
+    /// This generator supports <see cref="Skip(ulong)"/>, along with all other optional operations except <see cref="IEnhancedRandom.Leap()"/>
     /// It is very similar to Java 8's SplittableRandom, though not identical, and only if using one stream of that generator.
     /// It uses the same pattern of generation; add a large odd constant to the state, then run the value of that state through a
     /// unary hash (SplittableRandom uses something close to murmurhash3's finalizer; this uses a similar function that is better
@@ -61,6 +61,10 @@ namespace ShaiRandom.Generators
         /// This supports <see cref="IEnhancedRandom.Skip(ulong)"/>.
         /// </summary>
         public override bool SupportsSkip => true;
+        /// <summary>
+        /// This does not support <see cref="IEnhancedRandom.Leap()"/>.
+        /// </summary>
+        public override bool SupportsLeap => false;
         /// <summary>
         /// This supports <see cref="PreviousULong()"/>.
         /// </summary>

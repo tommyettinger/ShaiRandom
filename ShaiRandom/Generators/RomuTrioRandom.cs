@@ -124,6 +124,10 @@ namespace ShaiRandom.Generators
         /// </summary>
         public override bool SupportsSkip => false;
         /// <summary>
+        /// This does not support <see cref="IEnhancedRandom.Leap()"/>.
+        /// </summary>
+        public override bool SupportsLeap => false;
+        /// <summary>
         /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/>.
         /// </summary>
         public override bool SupportsPrevious => false;
@@ -230,21 +234,20 @@ namespace ShaiRandom.Generators
             unchecked
             {
                 ulong fa = StateA;
-                StateA = 15241094284759029579UL * _c;
+                StateA = 0xD3833E804F4C574BL * _c;
                 _c -= _b;
                 _b = (_b - fa).RotateLeft(12);
                 _c = _c.RotateLeft(44);
                 return fa;
             }
         }
-
         /// <inheritdoc />
         public override float NextSparseFloat()
         {
             unchecked
             {
                 ulong fa = StateA;
-                StateA = 15241094284759029579UL * _c;
+                StateA = 0xD3833E804F4C574BL * _c;
                 _c -= _b;
                 _b = (_b - fa).RotateLeft(12);
                 _c = _c.RotateLeft(44);
@@ -259,7 +262,7 @@ namespace ShaiRandom.Generators
             unchecked
             {
                 ulong fa = StateA;
-                StateA = 15241094284759029579UL * _c;
+                StateA = 0xD3833E804F4C574BL * _c;
                 _c -= _b;
                 _b = (_b - fa).RotateLeft(12);
                 _c = _c.RotateLeft(44);

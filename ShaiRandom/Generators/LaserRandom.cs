@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace ShaiRandom.Generators
 {
+    //TODO: class docs
+
     /// <summary>
     /// It's an AbstractRandom with 2 states, more here later. This one supports <see cref="Skip(ulong)"/>.
     /// </summary>
@@ -82,6 +84,10 @@ namespace ShaiRandom.Generators
         /// This supports <see cref="IEnhancedRandom.Skip(ulong)"/>.
         /// </summary>
         public override bool SupportsSkip => true;
+        /// <summary>
+        /// This does not support <see cref="IEnhancedRandom.Leap()"/>.
+        /// </summary>
+        public override bool SupportsLeap => false;
         /// <summary>
         /// This supports <see cref="PreviousULong()"/>.
         /// </summary>

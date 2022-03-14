@@ -1450,7 +1450,6 @@ namespace ShaiRandom.PerformanceTests
     public class RandomFloatTechniqueComparison
     {
         private IEnhancedRandom _rng = null!;
-        private IGenerator _gen = null!;
 
         [GlobalSetup(Target = nameof(Distinct))]
         public void DistinctSetup() => _rng = new DistinctRandom(1UL);

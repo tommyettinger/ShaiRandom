@@ -58,6 +58,9 @@ namespace ShaiRandom.Generators
         public abstract bool SupportsSkip { get; }
 
         /// <inheritdoc />
+        public abstract bool SupportsLeap { get; }
+
+        /// <inheritdoc />
         public abstract bool SupportsPrevious { get; }
 
         /// <inheritdoc />
@@ -542,6 +545,12 @@ namespace ShaiRandom.Generators
         public virtual ulong Skip(ulong distance)
         {
             throw new NotSupportedException("Skip() is not implemented for this generator.");
+        }
+
+        /// <inheritdoc />
+        public virtual ulong Leap()
+        {
+            throw new NotSupportedException("Leap() is not implemented for this generator.");
         }
 
         /// <summary>
