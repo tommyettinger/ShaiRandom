@@ -261,12 +261,11 @@ namespace ShaiRandom.Generators
             StateC ^= StateB; // StateC has b ^ b << 17;
             StateC ^= StateC << 17;
             StateC ^= StateC << 34; // StateC has b
-            StateB ^= StateA; // StateB has b ^ c
-            ulong oc = StateC ^= StateB; // StateC has c;
-            ulong ob = StateB ^= StateC; // StateB has b;
+            ulong oc = StateB ^= StateA; // StateB has b ^ c
+            StateC ^= StateB; // StateC has c;
+            StateB ^= StateC; // StateB has b;
             _d ^= StateB; // _d has d;
 
-            oc ^= ob;
             oc ^= oc << 17;
             oc ^= oc << 34;
             return (oc * 5UL).RotateLeft(7) * 9UL;

@@ -8,7 +8,7 @@ namespace ShaiRandom.Generators
     /// </summary>
     /// <remarks>
     /// This is very fast... on the JVM. It isn't nearly as fast on .NET (any version), because smaller state sizes do better here. It's still fairly high-quality,
-    /// with only one known failing test, and it only failed after 2 exabytes of data were processed (an extinction-saturation test).
+    /// with only one known failing test, and it only failed after 300PB of data were processed (an extinction-saturation test; suspect results occurred earlier).
     /// </remarks>
     public sealed class FourWheelRandom : AbstractRandom
     {

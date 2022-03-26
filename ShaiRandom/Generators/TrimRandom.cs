@@ -9,10 +9,7 @@ namespace ShaiRandom.Generators
     /// </summary>
     /// <remarks>
     /// This is very fast... on the JVM and in CUDA C. It isn't quite as fast on .NET (any version), because smaller state sizes do better here. It's still quite
-    /// high-quality, with no known failing tests. The one test that FourWheelRandom fails on fails after 2 exabytes have been run through an extinction/saturation test;
-    /// this is currently being tested but has passed thoroughly at 4 exabytes. Some seeds do have issues with the mentioned test, but they also tend to recover
-    /// from issues remarkably well, and no seeds have failed at the 1 exabyte mark, at least. Anything requiring exabytes of data to find fault with is probably sufficient
-    /// for most usage.
+    /// high-quality, with no known failing tests. This continues to get robust results on the "remortality" test after over 150PB of tested data.
     /// <br />
     /// This supports <see cref="PreviousULong()"/> but not <see cref="IEnhancedRandom.Skip(ulong)"/>.
     /// </remarks>
@@ -226,10 +223,12 @@ namespace ShaiRandom.Generators
             ulong fd = StateD;
             unchecked
             {
-                StateA = (fb + fc).RotateLeft(35);
-                StateB = (fc ^ fd).RotateLeft(46);
-                StateC = fa + fb;
-                StateD = fd + 0x06A0F81D3D2E35EFUL;
+                ulong bc = fb ^ fc;
+                ulong cd = fc ^ fd;
+                StateA = bc.RotateLeft(57);
+                StateB = cd.RotateLeft(18);
+                StateC = fa + bc;
+                StateD = fd + 0xDE916ABCC965815BUL;
             }
             return fc;
         }
@@ -243,10 +242,12 @@ namespace ShaiRandom.Generators
             ulong fd = StateD;
             unchecked
             {
-                StateA = (fb + fc).RotateLeft(35);
-                StateB = (fc ^ fd).RotateLeft(46);
-                StateC = fa + fb;
-                StateD = fd + 0x06A0F81D3D2E35EFUL;
+                ulong bc = fb ^ fc;
+                ulong cd = fc ^ fd;
+                StateA = bc.RotateLeft(57);
+                StateB = cd.RotateLeft(18);
+                StateC = fa + bc;
+                StateD = fd + 0xDE916ABCC965815BUL;
                 return BitConverter.Int32BitsToSingle((int)(fc >> 41) | 0x3F800000) - 1f;
             }
         }
@@ -260,12 +261,14 @@ namespace ShaiRandom.Generators
             ulong fd = StateD;
             unchecked
             {
-                StateA = (fb + fc).RotateLeft(35);
-                StateB = (fc ^ fd).RotateLeft(46);
-                StateC = fa + fb;
-                StateD = fd + 0x06A0F81D3D2E35EFUL;
+                ulong bc = fb ^ fc;
+                ulong cd = fc ^ fd;
+                StateA = bc.RotateLeft(57);
+                StateB = cd.RotateLeft(18);
+                StateC = fa + bc;
+                StateD = fd + 0xDE916ABCC965815BUL;
+                return BitConverter.Int64BitsToDouble((long)(fc >> 12) | 0x3FF0000000000000L) - 1.0;
             }
-            return BitConverter.Int64BitsToDouble((long)(fc >> 12) | 0x3FF0000000000000L) - 1.0;
         }
 
         /// <inheritdoc />
@@ -274,15 +277,15 @@ namespace ShaiRandom.Generators
             ulong fa = StateA;
             ulong fb = StateB;
             ulong fc = StateC;
-            StateD -= 0x06A0F81D3D2E35EFUL;
             unchecked
             {
-                ulong t = fb.RotateRight(46);
+                StateD -= 0xDE916ABCC965815BL;
+                ulong t = fb.RotateRight(18);
                 StateC = t ^ StateD;
-                t = fa.RotateRight(35);
-                StateB = t - StateC;
-                StateA = fc - StateB;
-                return StateB.RotateRight(46) ^ StateD - 0x06A0F81D3D2E35EFUL;
+                t = fa.RotateRight(57);
+                StateB = t ^ StateC;
+                StateA = fc - t;
+                return StateB.RotateRight(18) ^ StateD - 0xDE916ABCC965815BL;
             }
         }
 
