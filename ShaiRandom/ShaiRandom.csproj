@@ -11,7 +11,7 @@
     Configure versioning information, making sure to append "debug" to Debug version to allow publishing
     to NuGet seperately from Release version.
     -->
-    <Version>0.0.1-alpha05</Version>
+    <Version>0.0.1-beta01</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
 
 	<!-- More nuget package settings-->
@@ -43,14 +43,9 @@
                   a parameter via "ref".
         - CA1307: In string comparisons in ShaiRandom, ordinal behavior is desired, as they are only compared for
                   equality, not sort-order.
-        - CA2211: ShaiRandom specifically allows static mutable fields for configuration options like
-                  GlobalRandom.DefaultRNG and Dice parsers.  These fields explicitly document that changing them is not
-                  thread-safe behavior, and that they are meant as configuration to be performed during application
-                  initialization.  This addresses the main concerns with static mutable fields (thread safety), without
-                  costing non-trivial code complexity and performance.
         - CA1062: Nullability validation is performed by C#8 nullable reference types in ShaiRandom.
     -->
-    <NoWarn>CA1303;CA1305;CA1051;CA1307;CA2211;CA1062</NoWarn>
+    <NoWarn>CA1303;CA1305;CA1051;CA1307;CA1062</NoWarn>
 
     <!-- Generate documentation files for all configurations since Debug and Release are published to NuGet. -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
