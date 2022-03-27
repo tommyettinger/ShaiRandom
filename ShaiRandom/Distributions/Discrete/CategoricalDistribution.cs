@@ -413,7 +413,7 @@ namespace ShaiRandom.Distributions.Discrete
         ///   Returns a distributed random number.
         /// </summary>
         /// <returns>A distributed 32-bit signed integer.</returns>
-        public int Next() => Sample(Generator, _cdf);
+        public int NextInt() => Sample(Generator, _cdf);
 
         /// <summary>
         ///   Returns a distributed floating point random number.

@@ -66,7 +66,7 @@ namespace ShaiRandom.Distributions
         ///   Returns a distributed random number.
         /// </summary>
         /// <returns>A distributed 32-bit signed integer.</returns>
-        int Next();
+        int NextInt();
     }
 
     /// <summary>
