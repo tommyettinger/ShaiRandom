@@ -2,12 +2,11 @@
 //
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
+using System;
+using ShaiRandom.Generators;
+
 namespace ShaiRandom.Distributions
 {
-    using System;
-    using ShaiRandom;
-    using ShaiRandom.Generators;
-
     /// <summary>
     ///   Abstract class which implements some features shared across all distributions.
     /// </summary>

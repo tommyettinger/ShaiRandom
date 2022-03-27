@@ -2,6 +2,12 @@
 //
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using ShaiRandom.Generators;
+
 #region Original Copyright
 
 // <copyright file="Categorical.cs" company="Math.NET">
@@ -25,13 +31,6 @@
 
 namespace ShaiRandom.Distributions.Discrete
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using ShaiRandom;
-    using ShaiRandom.Generators;
-
     /// <summary>
     ///   Implements the categorical distribution. For details about this distribution, see
     ///   <a href="http://en.wikipedia.org/wiki/Categorical_distribution">Wikipedia - Categorical

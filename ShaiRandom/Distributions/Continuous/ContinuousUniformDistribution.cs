@@ -2,13 +2,12 @@
 //
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Diagnostics;
+using ShaiRandom.Generators;
+
 namespace ShaiRandom.Distributions.Continuous
 {
-    using System;
-    using System.Diagnostics;
-    using ShaiRandom;
-    using ShaiRandom.Generators;
-
     /// <summary>
     ///   Provides generation of continuous uniformly distributed random numbers.
     /// </summary>

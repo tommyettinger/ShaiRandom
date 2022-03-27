@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ShaiRandom.Generators;
-using ShaiRandom.TroschuetzCompat.Generators;
 using ShaiRandom.Wrappers;
 
 namespace ShaiRandom.UnitTests

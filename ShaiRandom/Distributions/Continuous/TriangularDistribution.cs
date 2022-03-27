@@ -2,6 +2,10 @@
 //
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Diagnostics;
+using ShaiRandom.Generators;
+
 #region Original Copyright
 
 /* boost random/triangle_distribution.hpp header file
@@ -23,11 +27,6 @@
 
 namespace ShaiRandom.Distributions.Continuous
 {
-    using System;
-    using System.Diagnostics;
-    using ShaiRandom;
-    using ShaiRandom.Generators;
-
     /// <summary>
     ///   Provides generation of triangular distributed random numbers.
     /// </summary>
