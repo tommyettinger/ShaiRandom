@@ -11,7 +11,7 @@
     Configure versioning information, making sure to append "debug" to Debug version to allow publishing
     to NuGet seperately from Release version.
     -->
-    <Version>0.0.1-beta02</Version>
+    <Version>0.0.1-beta03</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
 
 	<!-- More nuget package settings-->
@@ -84,8 +84,9 @@
 
   <PropertyGroup>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <ErrorReport>none</ErrorReport>
   </PropertyGroup>
 
   <!-- Pack a read-me with the nuget package, so it displays when installed -->
