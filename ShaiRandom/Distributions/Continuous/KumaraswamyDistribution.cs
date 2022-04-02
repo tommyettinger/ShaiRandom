@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using ShaiRandom.Generators;
 
 namespace ShaiRandom.Distributions.Continuous
@@ -261,6 +262,7 @@ namespace ShaiRandom.Distributions.Continuous
         /// <exception cref="NotSupportedException">
         ///   Thrown if mode is not defined for given distribution with some parameters.
         /// </exception>
+        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
         public double[] Mode
         {
             get

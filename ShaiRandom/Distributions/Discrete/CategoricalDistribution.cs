@@ -61,7 +61,7 @@ namespace ShaiRandom.Distributions.Discrete
         /// <summary>
         ///   Stores the cumulative distribution of current normalized weights.
         /// </summary>
-        private double[] _cdf;
+        private double[] _cdf = null!; // Initialized via helper method
 
         /// <summary>
         ///   Stores the unnormalized categorical weights.
@@ -85,6 +85,7 @@ namespace ShaiRandom.Distributions.Discrete
             get { return _weights.ToList(); }
             set
             {
+                // ReSharper disable once SuspiciousParameterNameInArgumentNullException
                 if (value == null) throw new ArgumentNullException(nameof(Weights), ErrorMessages.NullWeights);
                 if (value.Count == 0) throw new ArgumentException(ErrorMessages.EmptyList, nameof(Weights));
                 if (!AreValidWeights(value)) throw new ArgumentOutOfRangeException(nameof(Weights), ErrorMessages.InvalidParams);
@@ -399,7 +400,7 @@ namespace ShaiRandom.Distributions.Discrete
         /// <exception cref="NotSupportedException">
         ///   Thrown if mode is not defined for given distribution with some parameters.
         /// </exception>
-        public double[] Mode { get; private set; }
+        public double[] Mode { get; private set; } = null!;
 
         /// <summary>
         ///   Gets the variance of distributed random numbers.
@@ -504,7 +505,7 @@ namespace ShaiRandom.Distributions.Discrete
         /// <remarks>
         ///   Also remember to change <see cref="UpdateHelpers"/> when changing this method.
         /// </remarks>
-        internal static void SetUp(int weightsCount, IEnumerable<double> weights, out double[] cdf)
+        internal static void SetUp(int weightsCount, IEnumerable<double>? weights, out double[] cdf)
         {
             var weightsList = (weights == null) ? Ones(weightsCount) : weights.ToList();
             var weightsSum = weightsList.Sum(); // It will store the sum of all UNNORMALIZED weights.

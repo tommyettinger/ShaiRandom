@@ -1,5 +1,4 @@
-﻿using ShaiRandom.Distributions;
-using ShaiRandom.Generators;
+﻿using ShaiRandom.Generators;
 using ShaiRandom.TroschuetzCompat.Generators;
 using Troschuetz.Random;
 using IDistribution = Troschuetz.Random.IDistribution;
@@ -31,25 +30,25 @@ namespace ShaiRandom.TroschuetzCompat.Distributions
         /// <inheritdoc />
         public IEnhancedRandom Generator => Wrapped.Generator;
 
-        /// <inheritdoc cref="IEnhancedDistribution.Maximum" />
+        /// <inheritdoc cref="IDistribution.Maximum" />
         public double Maximum => Wrapped.Maximum;
 
-        /// <inheritdoc cref="IEnhancedDistribution.Mean" />
+        /// <inheritdoc cref="IDistribution.Mean" />
         public double Mean => Wrapped.Mean;
 
-        /// <inheritdoc cref="IEnhancedDistribution.Median" />
+        /// <inheritdoc cref="IDistribution.Median" />
         public double Median => Wrapped.Median;
 
-        /// <inheritdoc cref="IEnhancedDistribution.Minimum" />
+        /// <inheritdoc cref="IDistribution.Minimum" />
         public double Minimum => Wrapped.Minimum;
 
-        /// <inheritdoc cref="IEnhancedDistribution.Mode" />
+        /// <inheritdoc cref="IDistribution.Mode" />
         public double[] Mode => Wrapped.Mode;
 
-        /// <inheritdoc cref="IEnhancedDistribution.Variance" />
+        /// <inheritdoc cref="IDistribution.Variance" />
         public double Variance => Wrapped.Variance;
 
-        /// <inheritdoc cref="IEnhancedDistribution.NextDouble" />
+        /// <inheritdoc cref="IDistribution.NextDouble" />
         public double NextDouble() => Wrapped.NextDouble();
 
         #region IDistribution Explicit Implementations

@@ -17,9 +17,9 @@ namespace ShaiRandom.Collections
         /// <summary>
         /// The IReadOnlyList of (item, weight) pairs this uses for what <see cref="NextItem()"/> can return.
         /// </summary>
-        public IReadOnlyList<(TItem item, double weight)> Items { get; private set; }
-        private uint[] _mixed;
-        private IEnhancedRandom _random;
+        public IReadOnlyList<(TItem item, double weight)> Items { get; private set; } = null!; // Initialized by Reset (called from constructor)
+        private uint[]? _mixed;
+
         /// <summary>
         /// How many item-weight pairs this stores (not necessarily how many unique items).
         /// </summary>
@@ -27,10 +27,7 @@ namespace ShaiRandom.Collections
         /// <summary>
         /// The IEnhancedRandom this uses to make its weighted random choices. This defaults to an unseeded <see cref="MizuchiRandom"/> if not specified.
         /// </summary>
-        public IEnhancedRandom Random
-        {
-            get => _random; set => _random = value?? new MizuchiRandom();
-        }
+        public IEnhancedRandom Random { get; set; }
 
         /// <summary>
         /// Constructs an empty ProbabilityTable. You must call Reset() with some items this can choose from before using this ProbabilityTable.
@@ -53,10 +50,8 @@ namespace ShaiRandom.Collections
         /// <param name="items">An IReadOnlyList of pairs, where the first item of a pair is the TItem to be potentially returned, and the second item is the weight for how much to favor returning that item.</param>
         public ProbabilityTable(IEnhancedRandom random, IReadOnlyList<(TItem item, double weight)> items)
         {
-            _random = random;
+            Random = random;
             Reset(items);
-            Items ??= new List<(TItem item, double weight)>(0);
-            _mixed ??= new uint[Count << 1];
         }
         /// <summary>
         /// Constructs a ProbabilityTable that will use the given items and weights as side-by-side sequences of the same length, and an unseeded MizuchiRandom.
@@ -74,10 +69,8 @@ namespace ShaiRandom.Collections
         /// <param name="weights">An IReadOnlyList of double weights; this should have the same length as items.</param>
         public ProbabilityTable(IEnhancedRandom random, IReadOnlyList<TItem> items, IReadOnlyList<double> weights)
         {
-            _random = random;
+            Random = random;
             Reset(items, weights);
-            Items ??= new List<(TItem item, double weight)>(0);
-            _mixed ??= new uint[Count << 1];
         }
         /// <summary>
         /// Resets the ProbabilityTable to use a different group of items and weights, with the items and weights specified in side-by-side IReadOnlyList instances.
@@ -113,10 +106,8 @@ namespace ShaiRandom.Collections
         }
         private void Reset(IReadOnlyList<(TItem item, double weight)> items, bool defensiveCopy)
         {
-            if (defensiveCopy)
-                Items = new List<(TItem item, double weight)>(items);
-            else
-                Items = items;
+            Items = defensiveCopy ? new List<(TItem item, double weight)>(items) : items;
+
             if (_mixed is null || _mixed.Length != (items.Count << 1))
                 _mixed = new uint[items.Count << 1];
 
@@ -155,9 +146,9 @@ namespace ShaiRandom.Collections
             while (small.Count > 0 && large.Count > 0)
             {
                 /* Get the index of the small and the large probabilities. */
-                uint less = small[small.Count - 1], less2 = less << 1;
+                uint less = small[^1], less2 = less << 1;
                 small.RemoveAt(small.Count - 1);
-                uint more = large[large.Count - 1];
+                uint more = large[^1];
                 large.RemoveAt(large.Count - 1);
 
                 /* These probabilities have not yet been scaled up to be such that
@@ -176,12 +167,12 @@ namespace ShaiRandom.Collections
 
             while (small.Count > 0)
             {
-                _mixed[small[small.Count - 1] << 1] = 0xFFFFFFFF;
+                _mixed[small[^1] << 1] = 0xFFFFFFFF;
                 small.RemoveAt(small.Count - 1);
             }
             while (large.Count > 0)
             {
-                _mixed[large[large.Count - 1] << 1] = 0xFFFFFFFF;
+                _mixed[large[^1] << 1] = 0xFFFFFFFF;
                 large.RemoveAt(large.Count - 1);
             }
         }
@@ -198,7 +189,7 @@ namespace ShaiRandom.Collections
             uint column = (uint)(((ulong)Count * (state & 0xFFFFFFFFUL)) >> 32);
             // use the other half of the bits of state to get a 31-bit int, compare to probability and choose either the
             // current column or the alias for that column based on that probability
-            return Items[(int)(((state >> 32) <= _mixed[column << 1]) ? column : _mixed[column << 1 | 1])].item;
+            return Items[(int)(((state >> 32) <= _mixed![column << 1]) ? column : _mixed[column << 1 | 1])].item;
 
         }
     }
