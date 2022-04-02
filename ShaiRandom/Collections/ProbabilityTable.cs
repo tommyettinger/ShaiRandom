@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ShaiRandom.Generators;
 
 namespace ShaiRandom.Collections
@@ -17,9 +18,9 @@ namespace ShaiRandom.Collections
         /// <summary>
         /// The IReadOnlyList of (item, weight) pairs this uses for what <see cref="NextItem()"/> can return.
         /// </summary>
-        public IReadOnlyList<(TItem item, double weight)> Items { get; private set; }
-        private uint[] _mixed;
-        private IEnhancedRandom _random;
+        public IReadOnlyList<(TItem item, double weight)> Items { get; private set; } = null!; // Initialized by Reset (called from constructor)
+        private uint[]? _mixed;
+
         /// <summary>
         /// How many item-weight pairs this stores (not necessarily how many unique items).
         /// </summary>
@@ -27,96 +28,142 @@ namespace ShaiRandom.Collections
         /// <summary>
         /// The IEnhancedRandom this uses to make its weighted random choices. This defaults to an unseeded <see cref="MizuchiRandom"/> if not specified.
         /// </summary>
-        public IEnhancedRandom Random
-        {
-            get => _random; set => _random = value?? new MizuchiRandom();
-        }
+        public IEnhancedRandom Random { get; set; }
 
         /// <summary>
         /// Constructs an empty ProbabilityTable. You must call Reset() with some items this can choose from before using this ProbabilityTable.
         /// </summary>
-        public ProbabilityTable() : this(new MizuchiRandom(), new List<(TItem item, double weight)>(0))
+        public ProbabilityTable() : this(new MizuchiRandom(), Array.Empty<(TItem, double)>())
         {
         }
 
         /// <summary>
         /// Constructs a ProbabilityTable that will use the given (item, weight) pairs and an unseeded MizuchiRandom.
         /// </summary>
-        /// <param name="items">An IReadOnlyList of pairs, where the first item of a pair is the TItem to be potentially returned, and the second item is the weight for how much to favor returning that item.</param>
-        public ProbabilityTable(IReadOnlyList<(TItem item, double weight)> items) : this(new MizuchiRandom(), items)
+        /// <param name="items">
+        /// A list of pairs, where the first item of a pair is the TItem to be potentially returned,
+        /// and the second item is the weight for how much to favor returning that item.
+        /// </param>
+        public ProbabilityTable(IEnumerable<(TItem item, double weight)> items) : this(new MizuchiRandom(), items.ToArray())
         {
         }
+
+        /// <summary>
+        /// Constructs a ProbabilityTable that will use the given (item, weight) pairs and an unseeded MizuchiRandom.
+        /// </summary>
+        /// <param name="items">
+        /// An IReadOnlyList of pairs, where the first item of a pair is the TItem to be potentially returned,
+        /// and the second item is the weight for how much to favor returning that item.  The list will NOT be copied,
+        /// and must not be modified after it is passed to this function.
+        /// </param>
+        public ProbabilityTable(ref IReadOnlyList<(TItem item, double weight)> items) : this(new MizuchiRandom(), items)
+        {
+        }
+
+
         /// <summary>
         /// Constructs a ProbabilityTable that will use the given (item, weight) pairs and the given IEnhancedRandom.
         /// </summary>
         /// <param name="random">Any IEnhancedRandom, such as a <see cref="TrimRandom"/> or <see cref="LaserRandom"/>.</param>
-        /// <param name="items">An IReadOnlyList of pairs, where the first item of a pair is the TItem to be potentially returned, and the second item is the weight for how much to favor returning that item.</param>
-        public ProbabilityTable(IEnhancedRandom random, IReadOnlyList<(TItem item, double weight)> items)
-        {
-            _random = random;
-            Reset(items);
-            Items ??= new List<(TItem item, double weight)>(0);
-            _mixed ??= new uint[Count << 1];
-        }
-        /// <summary>
-        /// Constructs a ProbabilityTable that will use the given items and weights as side-by-side sequences of the same length, and an unseeded MizuchiRandom.
-        /// </summary>
-        /// <param name="items">An IReadOnlyList of TItem instances; this should have the same length as weights.</param>
-        /// <param name="weights">An IReadOnlyList of double weights; this should have the same length as items.</param>
-        public ProbabilityTable(IReadOnlyList<TItem> items, IReadOnlyList<double> weights) : this(new MizuchiRandom(), items, weights)
+        /// <param name="items">
+        /// A list of pairs, where the first item of a pair is the TItem to be potentially returned, and the
+        /// second item is the weight for how much to favor returning that item.
+        /// </param>
+        public ProbabilityTable(IEnhancedRandom random, IEnumerable<(TItem item, double weight)> items) : this(random, items.ToArray())
         {
         }
+
         /// <summary>
-        /// Constructs a ProbabilityTable that will use the given items and weights as side-by-side sequences of the same length, and the given IEnhancedRandom.
+        /// Constructs a ProbabilityTable that will use the given (item, weight) pairs and the given IEnhancedRandom.
         /// </summary>
         /// <param name="random">Any IEnhancedRandom, such as a <see cref="TrimRandom"/> or <see cref="LaserRandom"/>.</param>
-        /// <param name="items">An IReadOnlyList of TItem instances; this should have the same length as weights.</param>
-        /// <param name="weights">An IReadOnlyList of double weights; this should have the same length as items.</param>
-        public ProbabilityTable(IEnhancedRandom random, IReadOnlyList<TItem> items, IReadOnlyList<double> weights)
+        /// <param name="items">
+        /// An IReadOnlyList of pairs, where the first item of a pair is the TItem to be potentially returned, and the
+        /// second item is the weight for how much to favor returning that item.  The list will NOT be copied,
+        /// and must not be modified after it is passed to this function.
+        /// </param>
+        public ProbabilityTable(IEnhancedRandom random, ref IReadOnlyList<(TItem item, double weight)> items) : this(random, items)
         {
-            _random = random;
-            Reset(items, weights);
-            Items ??= new List<(TItem item, double weight)>(0);
-            _mixed ??= new uint[Count << 1];
         }
-        /// <summary>
-        /// Resets the ProbabilityTable to use a different group of items and weights, with the items and weights specified in side-by-side IReadOnlyList instances.
-        /// </summary>
-        /// <remarks>
-        /// This does not keep a reference to items or to weights, but does use direct references to the same TItem instances of they are reference types.
-        /// </remarks>
-        /// <param name="items">An IReadOnlyList of TItem instances; this should have the same length as weights.</param>
-        /// <param name="weights">An IReadOnlyList of double weights; this should have the same length as items.</param>
-        /// <exception cref="ArgumentNullException">If items is null or weights is null.</exception>
-        public void Reset(IReadOnlyList<TItem> items, IReadOnlyList<double> weights)
-        {
-            if (items is null) throw new ArgumentNullException(nameof(items));
-            if (weights is null) throw new ArgumentNullException(nameof(weights));
 
-            int used = Math.Min(items.Count, weights.Count);
-            List<(TItem item, double weight)> newItems = new List<(TItem item, double weight)>(used);
-            for (int i = 0; i < used; i++)
-            {
-                newItems.Add((items[i], weights[i]));
-            }
-            Reset(newItems, false);
-        }
         /// <summary>
-        /// Resets the ProbabilityTable to use a different group of items and weights, with the items and weights specified as pairs in one IReadOnlyList.
+        /// Constructs a ProbabilityTable that will use the given items and weights as side-by-side sequences, and an unseeded MizuchiRandom.
         /// </summary>
         /// <remarks>
-        /// This defensively copies the given IReadOnlyList.
+        /// If TItem is a reference type, the objects themselves are not copied.  If the two lists given are not the same size,
+        /// items will be paired until the end of one of the lists is reached.
+        /// </remarks>
+        /// <param name="items">A list of TItem instances.</param>
+        /// <param name="weights">A list of double weights.</param>
+        public ProbabilityTable(IEnumerable<TItem> items, IEnumerable<double> weights) : this(new MizuchiRandom(), items, weights)
+        {
+        }
+        /// <summary>
+        /// Constructs a ProbabilityTable that will use the given items and weights as side-by-side sequences, and the given IEnhancedRandom.
+        /// </summary>
+        /// <remarks>
+        /// If TItem is a reference type, the objects themselves are not copied.  If the two lists given are not the same size,
+        /// items will be paired until the end of one of the lists is reached.
+        /// </remarks>
+        /// <param name="random">Any IEnhancedRandom, such as a <see cref="TrimRandom"/> or <see cref="LaserRandom"/>.</param>
+        /// <param name="items">A list of TItem instances.</param>
+        /// <param name="weights">A list of double weights.</param>
+        public ProbabilityTable(IEnhancedRandom random, IEnumerable<TItem> items, IEnumerable<double> weights)
+        {
+            Random = random;
+            Reset(items, weights);
+        }
+
+        // No deep copy
+        private ProbabilityTable(IEnhancedRandom random, IReadOnlyList<(TItem item, double weight)> items)
+        {
+            Random = random;
+            Reset(items);
+        }
+
+        /// <summary>
+        /// Resets the ProbabilityTable to use a different group of items and weights, with the items and weights specified in side-by-side lists.
+        /// </summary>
+        /// <remarks>
+        /// If TItem is a reference type, the objects themselves will not be copied.  If the two lists given are not the same size,
+        /// items will be paired until the end of one of the lists is reached.
+        /// </remarks>
+        /// <param name="items">A list of TItem instances.</param>
+        /// <param name="weights">An IReadOnlyList of double weights.</param>
+        public void Reset(IEnumerable<TItem> items, IEnumerable<double> weights)
+        {
+            var list = new List<(TItem item, double weight)>();
+
+            using (IEnumerator<TItem> itemsIt = items.GetEnumerator())
+            using (IEnumerator<double> weightsIt = weights.GetEnumerator())
+            {
+                while (itemsIt.MoveNext() && weightsIt.MoveNext())
+                    list.Add((itemsIt.Current, weightsIt.Current));
+            }
+
+            Reset(list);
+        }
+
+        /// <summary>
+        /// Resets the ProbabilityTable to use a different group of items and weights, with the items and weights specified as pairs in one list.
+        /// </summary>
+        /// <param name="items">A list of pairs, where the first item of a pair is the TItem to be potentially returned, and the second item is the weight for how much to favor returning that item.</param>
+        public void Reset(IEnumerable<(TItem item, double weight)> items) => Reset(items.ToArray());
+
+        /// <summary>
+        /// Resets the ProbabilityTable to use a different group of items and weights, with the items and weights specified as pairs in one list.
+        /// </summary>
+        /// <remarks>
+        /// This does NOT copy the given list, and the list must not be changed after it is passed to this function.
         /// </remarks>
         /// <param name="items">An IReadOnlyList of pairs, where the first item of a pair is the TItem to be potentially returned, and the second item is the weight for how much to favor returning that item.</param>
-        public void Reset(IReadOnlyList<(TItem item, double weight)> items) {
-            Reset(items, true);
-        }
-        private void Reset(IReadOnlyList<(TItem item, double weight)> items, bool defensiveCopy)
+        public void Reset(ref IReadOnlyList<(TItem item, double weight)> items) => Reset(items);
+
+        // No defensive copy
+        private void Reset(IReadOnlyList<(TItem item, double weight)> items)
         {
-            if (defensiveCopy)
-                Items = new List<(TItem item, double weight)>(items);
-            else
-                Items = items;
+            Items = items;
+
             if (_mixed is null || _mixed.Length != (items.Count << 1))
                 _mixed = new uint[items.Count << 1];
 
@@ -155,9 +202,9 @@ namespace ShaiRandom.Collections
             while (small.Count > 0 && large.Count > 0)
             {
                 /* Get the index of the small and the large probabilities. */
-                uint less = small[small.Count - 1], less2 = less << 1;
+                uint less = small[^1], less2 = less << 1;
                 small.RemoveAt(small.Count - 1);
-                uint more = large[large.Count - 1];
+                uint more = large[^1];
                 large.RemoveAt(large.Count - 1);
 
                 /* These probabilities have not yet been scaled up to be such that
@@ -176,29 +223,30 @@ namespace ShaiRandom.Collections
 
             while (small.Count > 0)
             {
-                _mixed[small[small.Count - 1] << 1] = 0xFFFFFFFF;
+                _mixed[small[^1] << 1] = 0xFFFFFFFF;
                 small.RemoveAt(small.Count - 1);
             }
             while (large.Count > 0)
             {
-                _mixed[large[large.Count - 1] << 1] = 0xFFFFFFFF;
+                _mixed[large[^1] << 1] = 0xFFFFFFFF;
                 large.RemoveAt(large.Count - 1);
             }
         }
+
         /// <summary>
         /// Gets a randomly-chosen TItem item (obeying the given weights) from the data this stores.
         /// </summary>
         /// <returns>A randomly-chosen TItem item.</returns>
-        /// <exception cref="IndexOutOfRangeException">If this was reset or initialized with an empty list of items.</exception>
+        /// <exception cref="InvalidOperationException">If this was reset or initialized with an empty list of items.</exception>
         public TItem NextItem()
         {
-            if (Items.Count == 0) throw new IndexOutOfRangeException("NextItem() cannot be used if there are no items; use Reset() before calling.");
+            if (Items.Count == 0) throw new InvalidOperationException("NextItem() cannot be used if there are no items; use Reset() before calling.");
             ulong state = Random.NextULong();
             // get a random int (using half the bits of our previously-calculated state) that is less than size
             uint column = (uint)(((ulong)Count * (state & 0xFFFFFFFFUL)) >> 32);
             // use the other half of the bits of state to get a 31-bit int, compare to probability and choose either the
             // current column or the alias for that column based on that probability
-            return Items[(int)(((state >> 32) <= _mixed[column << 1]) ? column : _mixed[column << 1 | 1])].item;
+            return Items[(int)(((state >> 32) <= _mixed![column << 1]) ? column : _mixed[column << 1 | 1])].item;
 
         }
     }

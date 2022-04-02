@@ -1,7 +1,4 @@
-﻿using ShaiRandom.Distributions;
-using Troschuetz.Random;
-
-namespace ShaiRandom.TroschuetzCompat.Distributions
+﻿namespace ShaiRandom.TroschuetzCompat.Distributions
 {
     /// <summary>
     /// Wraps a ShaiRandom IEnhancedDiscreteDistribution object so it can also be used as a Troschuetz.Random IDiscreteDistribution.
