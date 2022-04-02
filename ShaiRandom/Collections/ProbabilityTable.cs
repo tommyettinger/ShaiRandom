@@ -117,7 +117,7 @@ namespace ShaiRandom.Collections
                 Items = new List<(TItem item, double weight)>(items);
             else
                 Items = items;
-            if (_mixed.Length != (items.Count << 1))
+            if (_mixed is null || _mixed.Length != (items.Count << 1))
                 _mixed = new uint[items.Count << 1];
 
             int size = Count;
