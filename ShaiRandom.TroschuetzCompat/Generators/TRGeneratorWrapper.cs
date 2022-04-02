@@ -53,6 +53,8 @@ namespace ShaiRandom.TroschuetzCompat.Generators
         public override bool SupportsSkip => Wrapped.SupportsSkip;
         /// <inheritdoc />
         public override bool SupportsPrevious => Wrapped.SupportsPrevious;
+        /// <inheritdoc />
+        public override bool SupportsLeap => Wrapped.SupportsLeap;
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new TRGeneratorWrapper(Wrapped.Copy());

@@ -2,6 +2,8 @@
 using ShaiRandom.Generators;
 using ShaiRandom.TroschuetzCompat.Generators;
 using Troschuetz.Random;
+using IDistribution = Troschuetz.Random.IDistribution;
+using IShaiDistribution = ShaiRandom.Distributions.IDistribution;
 
 namespace ShaiRandom.TroschuetzCompat.Distributions
 {
@@ -13,18 +15,18 @@ namespace ShaiRandom.TroschuetzCompat.Distributions
     /// implemented by simply forwarding to the ShaiRandom distribution being wrapped;  all IDistribution methods are
     /// explicitly implemented and are implemented in terms of IEnhancedDistribution methods.
     /// </remarks>
-    public class TRDistributionWrapper : IDistribution, IEnhancedDistribution
+    public class TRDistributionWrapper : IDistribution, IShaiDistribution
     {
         /// <summary>
         /// The ShaiRandom distribution being wrapped.
         /// </summary>
-        public IEnhancedDistribution Wrapped { get; }
+        public IShaiDistribution Wrapped { get; }
 
         /// <summary>
         /// Creates a new wrapper which wraps the given ShaiRandom distribution.
         /// </summary>
         /// <param name="wrapped">The ShaiRandom distribution to wrap.</param>
-        public TRDistributionWrapper(IEnhancedDistribution wrapped) => Wrapped = wrapped;
+        public TRDistributionWrapper(IShaiDistribution wrapped) => Wrapped = wrapped;
 
         /// <inheritdoc />
         public IEnhancedRandom Generator => Wrapped.Generator;
@@ -49,21 +51,6 @@ namespace ShaiRandom.TroschuetzCompat.Distributions
 
         /// <inheritdoc cref="IEnhancedDistribution.NextDouble" />
         public double NextDouble() => Wrapped.NextDouble();
-
-        /// <inheritdoc />
-        public int Steps => Wrapped.Steps;
-
-        /// <inheritdoc />
-        public int ParameterCount => Wrapped.ParameterCount;
-
-        /// <inheritdoc />
-        public string ParameterName(int index) => Wrapped.ParameterName(index);
-
-        /// <inheritdoc />
-        public double ParameterValue(int index) => Wrapped.ParameterValue(index);
-
-        /// <inheritdoc />
-        public void SetParameterValue(int index, double value) => Wrapped.SetParameterValue(index, value);
 
         #region IDistribution Explicit Implementations
 

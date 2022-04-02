@@ -11,18 +11,18 @@ namespace ShaiRandom.TroschuetzCompat.Distributions
     /// implemented by simply forwarding to the ShaiRandom distribution being wrapped;  all Troschuetz methods are
     /// explicitly implemented and are implemented in terms of ShaiRandom distribution methods.
     /// </remarks>
-    public class TRDiscreteDistributionWrapper : TRDistributionWrapper, IDiscreteDistribution, IEnhancedDiscreteDistribution
+    public class TRDiscreteDistributionWrapper : TRDistributionWrapper, Troschuetz.Random.IDiscreteDistribution, ShaiRandom.Distributions.IDiscreteDistribution
     {
         /// <summary>
         /// The ShaiRandom distribution being wrapped.
         /// </summary>
-        public new IEnhancedDiscreteDistribution Wrapped => (IEnhancedDiscreteDistribution)base.Wrapped;
+        public new ShaiRandom.Distributions.IDiscreteDistribution Wrapped => (ShaiRandom.Distributions.IDiscreteDistribution)base.Wrapped;
 
         /// <summary>
         /// Creates a new wrapper which wraps the given ShaiRandom distribution.
         /// </summary>
         /// <param name="wrapped">The ShaiRandom distribution to wrap.</param>
-        public TRDiscreteDistributionWrapper(IEnhancedDiscreteDistribution wrapped)
+        public TRDiscreteDistributionWrapper(ShaiRandom.Distributions.IDiscreteDistribution wrapped)
             : base(wrapped)
         { }
 
@@ -30,7 +30,7 @@ namespace ShaiRandom.TroschuetzCompat.Distributions
         public int NextInt() => Wrapped.NextInt();
 
         #region IDiscreteDistribution Explicit Implementation
-        int IDiscreteDistribution.Next() => NextInt();
+        int Troschuetz.Random.IDiscreteDistribution.Next() => NextInt();
         #endregion
     }
 }

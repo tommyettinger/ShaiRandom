@@ -93,7 +93,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Troschuetz.Random" Version="5.0.1" />
-    <PackageReference Include="ShaiRandom" Version="0.0.1-alpha05" />
+    <PackageReference Include="ShaiRandom" Version="0.0.1-beta02" />
   </ItemGroup>
 
   <!-- When packing, copy the nuget files to the nuget output directory -->

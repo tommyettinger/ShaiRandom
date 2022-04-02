@@ -11,18 +11,18 @@ namespace ShaiRandom.TroschuetzCompat.Distributions
     /// implemented by simply forwarding to the ShaiRandom distribution being wrapped;  all IDistribution methods are
     /// explicitly implemented and are implemented in terms of IEnhancedDistribution methods.
     /// </remarks>
-    public class TRContinuousDistributionWrapper : TRDistributionWrapper, IContinuousDistribution, IEnhancedContinuousDistribution
+    public class TRContinuousDistributionWrapper : TRDistributionWrapper, Troschuetz.Random.IContinuousDistribution
     {
         /// <summary>
         /// The ShaiRandom distribution being wrapped.
         /// </summary>
-        public new IEnhancedContinuousDistribution Wrapped => (IEnhancedContinuousDistribution)base.Wrapped;
+        public new ShaiRandom.Distributions.IContinuousDistribution Wrapped => (ShaiRandom.Distributions.IContinuousDistribution)base.Wrapped;
 
         /// <summary>
         /// Creates a new wrapper which wraps the given ShaiRandom distribution.
         /// </summary>
         /// <param name="wrapped">The ShaiRandom distribution to wrap.</param>
-        public TRContinuousDistributionWrapper(IEnhancedContinuousDistribution wrapped)
+        public TRContinuousDistributionWrapper(ShaiRandom.Distributions.IContinuousDistribution wrapped)
             : base(wrapped)
         { }
     }
