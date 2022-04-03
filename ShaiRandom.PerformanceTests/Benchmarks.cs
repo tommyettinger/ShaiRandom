@@ -311,8 +311,18 @@ namespace ShaiRandom.PerformanceTests
     ///|           RomuTrio | 1.267 ns | 0.0532 ns | 0.0546 ns | 1.299 ns |
     ///|            Mizuchi | 1.329 ns | 0.0542 ns | 0.0603 ns | 1.291 ns |
     ///|               Trim | 1.381 ns | 0.0584 ns | 0.1294 ns | 1.347 ns |
-    ///
-    ///
+    ///Attempting MathNet.Numerics' style for Xoshiro256StarStar... .NET 6.0 still, by interface, individually:
+    ///|             Method |     Mean |     Error |    StdDev |   Median |
+    ///|------------------- |---------:|----------:|----------:|---------:|
+    ///|           Distinct | 1.561 ns | 0.0593 ns | 0.1039 ns | 1.506 ns |
+    ///|              Laser | 1.367 ns | 0.0559 ns | 0.1371 ns | 1.411 ns |
+    ///|           Tricycle | 1.295 ns | 0.0547 ns | 0.1311 ns | 1.202 ns |
+    ///|          FourWheel | 1.378 ns | 0.0567 ns | 0.1391 ns | 1.366 ns |
+    ///|           Stranger | 1.295 ns | 0.0565 ns | 0.1265 ns | 1.365 ns |
+    ///| Xoshiro256StarStar | 2.879 ns | 0.0875 ns | 0.1938 ns | 3.021 ns |
+    ///|           RomuTrio | 1.308 ns | 0.0541 ns | 0.1141 ns | 1.262 ns |
+    ///|            Mizuchi | 1.360 ns | 0.0556 ns | 0.1267 ns | 1.311 ns |
+    ///|               Trim | 1.375 ns | 0.0559 ns | 0.1238 ns | 1.323 ns |
     /// </summary>
     public class RandomULongComparison
     {
