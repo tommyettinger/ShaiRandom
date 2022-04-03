@@ -237,39 +237,41 @@ namespace ShaiRandom.Generators
                 // This implementation style is from MathNet.Numerics, specifically:
                 // https://github.com/mathnet/mathnet-numerics/blob/fce10b24c2326e0fff85a4adbb1a2cbb40045a5e/src/Numerics/Random/Xoshiro256StarStar.cs#L252-L275
                 // It also closely matches the style used by FourWheelRandom, StrangerRandom, and TrimRandom.
-                ulong s0 = StateA;
-                ulong s1 = StateB;
-                ulong s2 = StateC;
-                ulong s3 = StateD;
+                // Unfortunately, benchmarking doesn't seem to show it in a favorable light, at all (about 50% to 60% more time taken per ulong).
 
-                ulong result = BitExtensions.RotateLeft(s1 * 5, 7) * 9;
+                //ulong s0 = StateA;
+                //ulong s1 = StateB;
+                //ulong s2 = StateC;
+                //ulong s3 = StateD;
 
-                ulong t = s1 << 17;
-                s2 ^= s0;
-                s3 ^= s1;
-                s1 ^= s2;
-                s0 ^= s3;
-                s2 ^= t;
-                s3 = BitExtensions.RotateLeft(s3, 45);
+                //ulong result = BitExtensions.RotateLeft(s1 * 5, 7) * 9;
 
-                StateA = s0;
-                StateB = s1;
-                StateC = s2;
-                StateD = s3;
+                //ulong t = s1 << 17;
+                //s2 ^= s0;
+                //s3 ^= s1;
+                //s1 ^= s2;
+                //s0 ^= s3;
+                //s2 ^= t;
+                //s3 = BitExtensions.RotateLeft(s3, 45);
 
-                return result;
+                //StateA = s0;
+                //StateB = s1;
+                //StateC = s2;
+                //StateD = s3;
+
+                //return result;
 
                 // This implementation style is the original implementation used here.
 
-                //ulong result = (StateB * 5UL).RotateLeft(7) * 9UL;
-                //ulong t = StateB << 17;
-                //StateC ^= StateA;
-                //_d ^= StateB;
-                //StateB ^= StateC;
-                //StateA ^= _d;
-                //StateC ^= t;
-                //_d = _d.RotateLeft(45);
-                //return result;
+                ulong result = (StateB * 5UL).RotateLeft(7) * 9UL;
+                ulong t = StateB << 17;
+                StateC ^= StateA;
+                _d ^= StateB;
+                StateB ^= StateC;
+                StateA ^= _d;
+                StateC ^= t;
+                _d = _d.RotateLeft(45);
+                return result;
             }
         }
 
@@ -305,33 +307,34 @@ namespace ShaiRandom.Generators
         {
             unchecked
             {
-                //ulong result = (StateB * 5UL).RotateLeft(7) * 9UL;
-                //ulong t = StateB << 17;
-                //StateC ^= StateA;
-                //_d ^= StateB;
-                //StateB ^= StateC;
-                //StateA ^= _d;
-                //StateC ^= t;
-                //_d = _d.RotateLeft(45);
-                ulong s0 = StateA;
-                ulong s1 = StateB;
-                ulong s2 = StateC;
-                ulong s3 = StateD;
+                ulong result = (StateB * 5UL).RotateLeft(7) * 9UL;
+                ulong t = StateB << 17;
+                StateC ^= StateA;
+                _d ^= StateB;
+                StateB ^= StateC;
+                StateA ^= _d;
+                StateC ^= t;
+                _d = _d.RotateLeft(45);
 
-                ulong result = BitExtensions.RotateLeft(s1 * 5, 7) * 9;
+                //ulong s0 = StateA;
+                //ulong s1 = StateB;
+                //ulong s2 = StateC;
+                //ulong s3 = StateD;
 
-                ulong t = s1 << 17;
-                s2 ^= s0;
-                s3 ^= s1;
-                s1 ^= s2;
-                s0 ^= s3;
-                s2 ^= t;
-                s3 = BitExtensions.RotateLeft(s3, 45);
+                //ulong result = BitExtensions.RotateLeft(s1 * 5, 7) * 9;
 
-                StateA = s0;
-                StateB = s1;
-                StateC = s2;
-                StateD = s3;
+                //ulong t = s1 << 17;
+                //s2 ^= s0;
+                //s3 ^= s1;
+                //s1 ^= s2;
+                //s0 ^= s3;
+                //s2 ^= t;
+                //s3 = BitExtensions.RotateLeft(s3, 45);
+
+                //StateA = s0;
+                //StateB = s1;
+                //StateC = s2;
+                //StateD = s3;
                 return BitConverter.Int32BitsToSingle((int)(result >> 41) | 0x3F800000) - 1f;
             }
         }
@@ -341,33 +344,34 @@ namespace ShaiRandom.Generators
         {
             unchecked
             {
-                //ulong result = (StateB * 5UL).RotateLeft(7) * 9UL;
-                //ulong t = StateB << 17;
-                //StateC ^= StateA;
-                //_d ^= StateB;
-                //StateB ^= StateC;
-                //StateA ^= _d;
-                //StateC ^= t;
-                //_d = _d.RotateLeft(45);
-                ulong s0 = StateA;
-                ulong s1 = StateB;
-                ulong s2 = StateC;
-                ulong s3 = StateD;
+                ulong result = (StateB * 5UL).RotateLeft(7) * 9UL;
+                ulong t = StateB << 17;
+                StateC ^= StateA;
+                _d ^= StateB;
+                StateB ^= StateC;
+                StateA ^= _d;
+                StateC ^= t;
+                _d = _d.RotateLeft(45);
 
-                ulong result = BitExtensions.RotateLeft(s1 * 5, 7) * 9;
+                //ulong s0 = StateA;
+                //ulong s1 = StateB;
+                //ulong s2 = StateC;
+                //ulong s3 = StateD;
 
-                ulong t = s1 << 17;
-                s2 ^= s0;
-                s3 ^= s1;
-                s1 ^= s2;
-                s0 ^= s3;
-                s2 ^= t;
-                s3 = BitExtensions.RotateLeft(s3, 45);
+                //ulong result = BitExtensions.RotateLeft(s1 * 5, 7) * 9;
 
-                StateA = s0;
-                StateB = s1;
-                StateC = s2;
-                StateD = s3;
+                //ulong t = s1 << 17;
+                //s2 ^= s0;
+                //s3 ^= s1;
+                //s1 ^= s2;
+                //s0 ^= s3;
+                //s2 ^= t;
+                //s3 = BitExtensions.RotateLeft(s3, 45);
+
+                //StateA = s0;
+                //StateB = s1;
+                //StateC = s2;
+                //StateD = s3;
                 return BitConverter.Int64BitsToDouble((long)(result >> 12) | 0x3FF0000000000000L) - 1.0;
             }
         }
