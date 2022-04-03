@@ -222,6 +222,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public uint Xoshiro256StarStar() => _rng.NextUInt(999u);
 
+        [GlobalSetup(Target = nameof(Xorshift128Plus))]
+        public void Xorshift128PlusSetup() => _rng = new Xorshift128PlusRandom(1UL);
+        [Benchmark]
+        public uint Xorshift128Plus() => _rng.NextUInt(999u);
+
         [GlobalSetup(Target = nameof(RomuTrio))]
         public void RomuTrioSetup() => _rng = new RomuTrioRandom(1UL);
         [Benchmark]
@@ -370,6 +375,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public ulong Xoshiro256StarStar() => _rng.NextULong();
 
+        [GlobalSetup(Target = nameof(Xorshift128Plus))]
+        public void Xorshift128PlusSetup() => _rng = new Xorshift128PlusRandom(1UL);
+        [Benchmark]
+        public ulong Xorshift128Plus() => _rng.NextULong();
+
         [GlobalSetup(Target = nameof(RomuTrio))]
         public void RomuTrioSetup() => _rng = new RomuTrioRandom(1UL);
         [Benchmark]
@@ -424,8 +434,10 @@ namespace ShaiRandom.PerformanceTests
         private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
         private readonly StrangerRandom _strangerRandom = new StrangerRandom(1UL);
         private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
+        private readonly Xorshift128PlusRandom _xorshift128PlusRandom = new Xorshift128PlusRandom(1UL);
         private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
         private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+        private readonly TrimRandom _trimRandom = new TrimRandom(1UL);
 
 #if NET6_0
         private readonly System.Random _seededRandom = new System.Random(1);
@@ -454,13 +466,19 @@ namespace ShaiRandom.PerformanceTests
         public ulong Stranger() => _strangerRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
-        public ulong XoshiroStarStar() => _xoshiro256StarStarRandom.NextULong(1UL, 1000UL);
+        public ulong Xoshiro256StarStar() => _xoshiro256StarStarRandom.NextULong(1UL, 1000UL);
+
+        [Benchmark]
+        public ulong Xorshift128Plus() => _xorshift128PlusRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
         public ulong RomuTrio() => _romuTrioRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
         public ulong Mizuchi() => _mizuchiRandom.NextULong(1UL, 1000UL);
+
+        [Benchmark]
+        public ulong Trim() => _trimRandom.NextULong(1UL, 1000UL);
     }
     /// <summary>
     /// .NET 6.0 (newer benchmark, using IEnhancedRandom and IGenerator):
@@ -568,6 +586,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double Xoshiro256StarStar() => _rng.NextDouble();
 
+        [GlobalSetup(Target = nameof(Xorshift128Plus))]
+        public void Xorshift128PlusSetup() => _rng = new Xorshift128PlusRandom(1UL);
+        [Benchmark]
+        public double Xorshift128Plus() => _rng.NextDouble();
+
         [GlobalSetup(Target = nameof(RomuTrio))]
         public void RomuTrioSetup() => _rng = new RomuTrioRandom(1UL);
         [Benchmark]
@@ -661,6 +684,11 @@ namespace ShaiRandom.PerformanceTests
         public void Xoshiro256StarStarSetup() => _rng = new Xoshiro256StarStarRandom(1UL);
         [Benchmark]
         public double Xoshiro256StarStar() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Xorshift128Plus))]
+        public void Xorshift128PlusSetup() => _rng = new Xorshift128PlusRandom(1UL);
+        [Benchmark]
+        public double Xorshift128Plus() => _rng.NextDouble(1.1, -0.1);
 
         [GlobalSetup(Target = nameof(RomuTrio))]
         public void RomuTrioSetup() => _rng = new RomuTrioRandom(1UL);
@@ -764,6 +792,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double Xoshiro256StarStar() => _rng.NextExclusiveDouble();
 
+        [GlobalSetup(Target = nameof(Xorshift128Plus))]
+        public void Xorshift128PlusSetup() => _rng = new Xorshift128PlusRandom(1UL);
+        [Benchmark]
+        public double Xorshift128Plus() => _rng.NextExclusiveDouble();
+
         [GlobalSetup(Target = nameof(RomuTrio))]
         public void RomuTrioSetup() => _rng = new RomuTrioRandom(1UL);
         [Benchmark]
@@ -836,6 +869,11 @@ namespace ShaiRandom.PerformanceTests
         public void Xoshiro256StarStarSetup() => _rng = new Xoshiro256StarStarRandom(1UL);
         [Benchmark]
         public double Xoshiro256StarStar() => _rng.NextExclusiveDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Xorshift128Plus))]
+        public void Xorshift128PlusSetup() => _rng = new Xorshift128PlusRandom(1UL);
+        [Benchmark]
+        public double Xorshift128Plus() => _rng.NextExclusiveDouble(1.1, -0.1);
 
         [GlobalSetup(Target = nameof(RomuTrio))]
         public void RomuTrioSetup() => _rng = new RomuTrioRandom(1UL);
@@ -1571,6 +1609,74 @@ namespace ShaiRandom.PerformanceTests
         public void Xoshiro256StarStarSSetup() => _rng = new Xoshiro256StarStarRandom(1UL);
         [Benchmark]
         public float Xoshiro256StarStarS() => _rng.NextSparseFloat();
+    }
+    /// <summary>
+    /// .NET 6.0:
+    ///
+    /// </summary>
+    public class BareULongBoundedComparison
+    {
+        public DistinctRandom _DistinctRandom = null!;
+        public LaserRandom _LaserRandom = null!;
+        public TricycleRandom _TricycleRandom = null!;
+        public FourWheelRandom _FourWheelRandom = null!;
+        public StrangerRandom _StrangerRandom = null!;
+        public Xoshiro256StarStarRandom _Xoshiro256StarStarRandom = null!;
+        public Xorshift128PlusRandom _Xorshift128PlusRandom = null!;
+        public RomuTrioRandom _RomuTrioRandom = null!;
+        public MizuchiRandom _MizuchiRandom = null!;
+        public TrimRandom _TrimRandom = null!;
+
+        [GlobalSetup(Target = nameof(Distinct))]
+        public void DistinctSetup() => _DistinctRandom = new DistinctRandom(1UL);
+        [Benchmark]
+        public ulong Distinct() => _DistinctRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(Laser))]
+        public void LaserSetup() => _LaserRandom = new LaserRandom(1UL);
+        [Benchmark]
+        public ulong Laser() => _LaserRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(Tricycle))]
+        public void TricycleSetup() => _TricycleRandom = new TricycleRandom(1UL);
+        [Benchmark]
+        public ulong Tricycle() => _TricycleRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(FourWheel))]
+        public void FourWheelSetup() => _FourWheelRandom = new FourWheelRandom(1UL);
+        [Benchmark]
+        public ulong FourWheel() => _FourWheelRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(Stranger))]
+        public void StrangerSetup() => _StrangerRandom = new StrangerRandom(1UL);
+        [Benchmark]
+        public ulong Stranger() => _StrangerRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(Xoshiro256StarStar))]
+        public void Xoshiro256StarStarSetup() => _Xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
+        [Benchmark]
+        public ulong Xoshiro256StarStar() => _Xoshiro256StarStarRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(Xorshift128Plus))]
+        public void Xorshift128PlusSetup() => _Xorshift128PlusRandom = new Xorshift128PlusRandom(1UL);
+        [Benchmark]
+        public ulong Xorshift128Plus() => _Xorshift128PlusRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(RomuTrio))]
+        public void RomuTrioSetup() => _RomuTrioRandom = new RomuTrioRandom(1UL);
+        [Benchmark]
+        public ulong RomuTrio() => _RomuTrioRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(Mizuchi))]
+        public void MizuchiSetup() => _MizuchiRandom = new MizuchiRandom(1UL);
+        [Benchmark]
+        public ulong Mizuchi() => _MizuchiRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(Trim))]
+        public void TrimSetup() => _TrimRandom = new TrimRandom(1UL);
+        [Benchmark]
+        public ulong Trim() => _TrimRandom.NextULong();
+
     }
 
     internal static class Benchmarks
