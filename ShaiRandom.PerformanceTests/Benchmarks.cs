@@ -1612,8 +1612,23 @@ namespace ShaiRandom.PerformanceTests
     }
     /// <summary>
     /// .NET 6.0:
-    ///
+    ///|             Method |      Mean |     Error |    StdDev |    Median |
+    ///|------------------- |----------:|----------:|----------:|----------:|
+    ///|           Distinct | 0.6660 ns | 0.0317 ns | 0.0248 ns | 0.6646 ns |
+    ///|              Laser | 0.5466 ns | 0.0147 ns | 0.0137 ns | 0.5433 ns |
+    ///|           Tricycle | 0.5214 ns | 0.0413 ns | 0.0679 ns | 0.4931 ns |
+    ///|          FourWheel | 0.8006 ns | 0.0460 ns | 0.0940 ns | 0.7657 ns |
+    ///|           Stranger | 0.8540 ns | 0.0474 ns | 0.0979 ns | 0.8076 ns |
+    ///| Xoshiro256StarStar | 1.3248 ns | 0.0561 ns | 0.1312 ns | 1.3882 ns |
+    ///|    Xorshift128Plus | 0.4080 ns | 0.0386 ns | 0.0488 ns | 0.3834 ns |
+    ///|           RomuTrio | 0.6035 ns | 0.0083 ns | 0.0069 ns | 0.6054 ns |
+    ///|            Mizuchi | 0.7001 ns | 0.0439 ns | 0.1000 ns | 0.6739 ns |
+    ///|               Trim | 0.8340 ns | 0.0470 ns | 0.1089 ns | 0.7570 ns |
     /// </summary>
+    /// <remarks>
+    /// OK, now THIS is where the sub-nanosecond times are. This was run on a laptop with a 10th-gen Intel i7 mobile hexacore processor,
+    /// like all of the benchmarks here.
+    /// </remarks>
     public class BareULongBoundedComparison
     {
         public DistinctRandom _DistinctRandom = null!;
