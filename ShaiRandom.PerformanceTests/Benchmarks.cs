@@ -323,6 +323,18 @@ namespace ShaiRandom.PerformanceTests
     ///|           RomuTrio | 1.308 ns | 0.0541 ns | 0.1141 ns | 1.262 ns |
     ///|            Mizuchi | 1.360 ns | 0.0556 ns | 0.1267 ns | 1.311 ns |
     ///|               Trim | 1.375 ns | 0.0559 ns | 0.1238 ns | 1.323 ns |
+    ///Same as above, but with the Xoshiro256StarStar changes reverted... .NET 6.0, by interface, individually:
+    ///|             Method |     Mean |     Error |    StdDev |   Median |
+    ///|------------------- |---------:|----------:|----------:|---------:|
+    ///|           Distinct | 1.643 ns | 0.0625 ns | 0.1158 ns | 1.711 ns |
+    ///|              Laser | 1.189 ns | 0.0446 ns | 0.0348 ns | 1.201 ns |
+    ///|           Tricycle | 1.363 ns | 0.0565 ns | 0.1141 ns | 1.434 ns |
+    ///|          FourWheel | 1.413 ns | 0.0568 ns | 0.0994 ns | 1.476 ns |
+    ///|           Stranger | 1.280 ns | 0.0491 ns | 0.0383 ns | 1.300 ns |
+    ///| Xoshiro256StarStar | 1.661 ns | 0.0618 ns | 0.1370 ns | 1.718 ns |
+    ///|           RomuTrio | 1.244 ns | 0.0503 ns | 0.0494 ns | 1.220 ns |
+    ///|            Mizuchi | 1.407 ns | 0.0572 ns | 0.0971 ns | 1.471 ns |
+    ///|               Trim | 1.323 ns | 0.0558 ns | 0.1249 ns | 1.235 ns |
     /// </summary>
     public class RandomULongComparison
     {
