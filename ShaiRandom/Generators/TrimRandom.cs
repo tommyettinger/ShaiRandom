@@ -35,7 +35,6 @@ namespace ShaiRandom.Generators
         /// <summary>
         /// The fourth state; can be any ulong.
         /// </summary>
-        /// <remarks>If this has just been set to some value, then the next call to <see cref="NextULong()">NextUlong()</see> will return that value as-is. Later calls will be more random.</remarks>
         public ulong StateD { get; set; }
 
         /// <summary>
@@ -53,7 +52,7 @@ namespace ShaiRandom.Generators
         /// Creates a new TrimRandom with the given seed; all ulong values are permitted.
         /// </summary>
         /// <remarks>
-        /// The seed will be passed to <see cref="SetSeed(TrimRandom, ulong)">SetSeed(TrimRandom, ulong)</see>, to attempt to adequately distribute the seed randomly.
+        /// The seed will be passed to the equivalent of <see cref="Seed(ulong)">Seed(ulong)</see>, to attempt to adequately distribute the seed randomly.
         /// </remarks>
         /// <param name="seed">Any ulong.</param>
         public TrimRandom(ulong seed)
@@ -157,7 +156,7 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <remarks>
         /// (2 to the 64) possible initial generator states can be produced here, all with a different first value returned
-        /// by <see cref="NextULong()">NextUlong()</see> (because stateC is guaranteed to be different for every different seed).
+        /// by <see cref="NextULong()">NextUlong()</see>.
         /// </remarks>
         /// <param name="seed">The initial seed; may be any ulong.</param>
         public override void Seed(ulong seed) => SetSeed(this, seed);
@@ -166,30 +165,11 @@ namespace ShaiRandom.Generators
         {
             unchecked
             {
-                ulong x = (seed += 0x9E3779B97F4A7C15UL);
-                x ^= x >> 27;
-                x *= 0x3C79AC492BA7B653UL;
-                x ^= x >> 33;
-                x *= 0x1C69B3F74AC4AE35UL;
-                rng.StateA = x ^ x >> 27;
-                x = (seed += 0x9E3779B97F4A7C15UL);
-                x ^= x >> 27;
-                x *= 0x3C79AC492BA7B653UL;
-                x ^= x >> 33;
-                x *= 0x1C69B3F74AC4AE35UL;
-                rng.StateB = x ^ x >> 27;
-                x = (seed += 0x9E3779B97F4A7C15UL);
-                x ^= x >> 27;
-                x *= 0x3C79AC492BA7B653UL;
-                x ^= x >> 33;
-                x *= 0x1C69B3F74AC4AE35UL;
-                rng.StateC = x ^ x >> 27;
-                x = (seed + 0x9E3779B97F4A7C15UL);
-                x ^= x >> 27;
-                x *= 0x3C79AC492BA7B653UL;
-                x ^= x >> 33;
-                x *= 0x1C69B3F74AC4AE35UL;
-                rng.StateD = x ^ x >> 27;
+                ulong x = Mixers.MixMX(seed);
+                rng.StateA = x ^ 0xC6BC279692B5C323L;
+                rng.StateB = ~x;
+                rng.StateC = x ^ ~0xC6BC279692B5C323L;
+                rng.StateD = x;
             }
         }
 
@@ -230,7 +210,7 @@ namespace ShaiRandom.Generators
                 StateC = fa + bc;
                 StateD = fd + 0xDE916ABCC965815BUL;
             }
-            return fc;
+            return StateC;
         }
 
         /// <inheritdoc />
@@ -248,7 +228,7 @@ namespace ShaiRandom.Generators
                 StateB = cd.RotateLeft(18);
                 StateC = fa + bc;
                 StateD = fd + 0xDE916ABCC965815BUL;
-                return BitConverter.Int32BitsToSingle((int)(fc >> 41) | 0x3F800000) - 1f;
+                return BitConverter.Int32BitsToSingle((int)(StateC >> 41) | 0x3F800000) - 1f;
             }
         }
 
@@ -267,7 +247,7 @@ namespace ShaiRandom.Generators
                 StateB = cd.RotateLeft(18);
                 StateC = fa + bc;
                 StateD = fd + 0xDE916ABCC965815BUL;
-                return BitConverter.Int64BitsToDouble((long)(fc >> 12) | 0x3FF0000000000000L) - 1.0;
+                return BitConverter.Int64BitsToDouble((long)(StateC >> 12) | 0x3FF0000000000000L) - 1.0;
             }
         }
 
@@ -285,7 +265,7 @@ namespace ShaiRandom.Generators
                 t = fa.RotateRight(57);
                 StateB = t ^ StateC;
                 StateA = fc - t;
-                return StateB.RotateRight(18) ^ StateD - 0xDE916ABCC965815BL;
+                return StateC;
             }
         }
 
