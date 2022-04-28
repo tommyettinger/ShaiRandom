@@ -197,20 +197,19 @@ namespace ShaiRandom.Generators
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override ulong NextULong()
         {
-            ulong fa = StateA;
-            ulong fb = StateB;
-            ulong fc = StateC;
-            ulong fd = StateD;
             unchecked
             {
+                ulong fa = StateA;
+                ulong fb = StateB;
+                ulong fc = StateC;
+                ulong fd = StateD;
                 ulong bc = fb ^ fc;
                 ulong cd = fc ^ fd;
                 StateA = bc.RotateLeft(57);
                 StateB = cd.RotateLeft(18);
-                StateC = fa + bc;
                 StateD = fd + 0xDE916ABCC965815BUL;
+                return (StateC = fa + bc);
             }
-            return StateC;
         }
 
         /// <inheritdoc />
@@ -226,9 +225,8 @@ namespace ShaiRandom.Generators
                 ulong cd = fc ^ fd;
                 StateA = bc.RotateLeft(57);
                 StateB = cd.RotateLeft(18);
-                StateC = fa + bc;
                 StateD = fd + 0xDE916ABCC965815BUL;
-                return BitConverter.Int32BitsToSingle((int)(StateC >> 41) | 0x3F800000) - 1f;
+                return BitConverter.Int32BitsToSingle((int)((StateC = fa + bc) >> 41) | 0x3F800000) - 1f;
             }
         }
 
@@ -245,9 +243,8 @@ namespace ShaiRandom.Generators
                 ulong cd = fc ^ fd;
                 StateA = bc.RotateLeft(57);
                 StateB = cd.RotateLeft(18);
-                StateC = fa + bc;
                 StateD = fd + 0xDE916ABCC965815BUL;
-                return BitConverter.Int64BitsToDouble((long)(StateC >> 12) | 0x3FF0000000000000L) - 1.0;
+                return BitConverter.Int64BitsToDouble((long)((StateC = fa + bc) >> 12) | 0x3FF0000000000000L) - 1.0;
             }
         }
 

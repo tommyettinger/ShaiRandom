@@ -484,23 +484,24 @@ namespace ShaiRandom.PerformanceTests
     /// .NET 6.0 (newer benchmark, using IEnhancedRandom and IGenerator):
     ///|             Method |     Mean |     Error |    StdDev |   Median |
 	///|------------------- |---------:|----------:|----------:|---------:|
-	///|             Seeded | 9.007 ns | 0.1236 ns | 0.1156 ns | 9.007 ns |
-	///|           Unseeded | 2.450 ns | 0.0760 ns | 0.1270 ns | 2.418 ns |
-	///|           Distinct | 2.776 ns | 0.0843 ns | 0.1760 ns | 2.639 ns |
-	///|              Laser | 2.736 ns | 0.0522 ns | 0.0559 ns | 2.713 ns |
-	///|           Tricycle | 2.843 ns | 0.0838 ns | 0.0654 ns | 2.877 ns |
-	///|          FourWheel | 2.749 ns | 0.0846 ns | 0.1670 ns | 2.716 ns |
-	///|           Stranger | 2.912 ns | 0.0865 ns | 0.1604 ns | 2.903 ns |
-	///| Xoshiro256StarStar | 2.788 ns | 0.0865 ns | 0.2038 ns | 2.671 ns |
-	///|           RomuTrio | 2.634 ns | 0.0822 ns | 0.1583 ns | 2.605 ns |
-	///|            Mizuchi | 3.157 ns | 0.0323 ns | 0.0302 ns | 3.153 ns |
-	///|               Trim | 2.915 ns | 0.0239 ns | 0.0224 ns | 2.916 ns |
-	///|        XorShift128 | 1.927 ns | 0.0138 ns | 0.0122 ns | 1.927 ns |
-	///|                ALF | 6.251 ns | 0.0562 ns | 0.0525 ns | 6.231 ns |
-	///|                NR3 | 3.867 ns | 0.0236 ns | 0.0220 ns | 3.869 ns |
-	///|              NR3Q1 | 2.444 ns | 0.0165 ns | 0.0154 ns | 2.445 ns |
-	///|              NR3Q2 | 2.489 ns | 0.0149 ns | 0.0132 ns | 2.491 ns |
-	///|            MT19937 | 9.222 ns | 0.0622 ns | 0.0552 ns | 9.219 ns |
+	///|             Seeded | 9.078 ns | 0.0716 ns | 0.0670 ns | 9.098 ns |
+	///|           Unseeded | 2.591 ns | 0.0797 ns | 0.0918 ns | 2.635 ns |
+	///|           Distinct | 2.647 ns | 0.0541 ns | 0.0452 ns | 2.658 ns |
+	///|              Laser | 2.816 ns | 0.0855 ns | 0.1998 ns | 2.838 ns |
+	///|           Tricycle | 2.480 ns | 0.0176 ns | 0.0173 ns | 2.476 ns |
+	///|          FourWheel | 3.090 ns | 0.0391 ns | 0.0305 ns | 3.093 ns |
+	///|           Stranger | 2.823 ns | 0.0861 ns | 0.2237 ns | 2.969 ns |
+	///| Xoshiro256StarStar | 2.597 ns | 0.0791 ns | 0.0879 ns | 2.577 ns |
+	///|    Xorshift128Plus | 3.281 ns | 0.0932 ns | 0.1608 ns | 3.323 ns |
+	///|           RomuTrio | 2.966 ns | 0.0898 ns | 0.1398 ns | 2.968 ns |
+	///|            Mizuchi | 2.872 ns | 0.0916 ns | 0.1952 ns | 2.869 ns |
+	///|               Trim | 2.663 ns | 0.0856 ns | 0.2358 ns | 2.640 ns |
+	///|        XorShift128 | 2.420 ns | 0.0761 ns | 0.1808 ns | 2.508 ns |
+	///|                ALF | 6.280 ns | 0.0891 ns | 0.0833 ns | 6.296 ns |
+	///|                NR3 | 3.501 ns | 0.0333 ns | 0.0327 ns | 3.499 ns |
+	///|              NR3Q1 | 2.307 ns | 0.0751 ns | 0.1741 ns | 2.354 ns |
+	///|              NR3Q2 | 2.443 ns | 0.0786 ns | 0.1200 ns | 2.498 ns |
+	///|            MT19937 | 8.673 ns | 0.2029 ns | 0.3711 ns | 8.533 ns |
 	/// .NET 5.0 (older benchmark with direct generators):
     ///|          Method |     Mean |     Error |    StdDev |   Median |
     ///|---------------- |---------:|----------:|----------:|---------:|
@@ -1614,22 +1615,22 @@ namespace ShaiRandom.PerformanceTests
     /// .NET 6.0:
     ///|             Method |      Mean |     Error |    StdDev |    Median |
     ///|------------------- |----------:|----------:|----------:|----------:|
-    ///|           Distinct | 0.6660 ns | 0.0317 ns | 0.0248 ns | 0.6646 ns |
-    ///|              Laser | 0.5466 ns | 0.0147 ns | 0.0137 ns | 0.5433 ns |
-    ///|           Tricycle | 0.5214 ns | 0.0413 ns | 0.0679 ns | 0.4931 ns |
-    ///|          FourWheel | 0.8006 ns | 0.0460 ns | 0.0940 ns | 0.7657 ns |
-    ///|           Stranger | 0.8540 ns | 0.0474 ns | 0.0979 ns | 0.8076 ns |
-    ///| Xoshiro256StarStar | 1.3248 ns | 0.0561 ns | 0.1312 ns | 1.3882 ns |
-    ///|    Xorshift128Plus | 0.4080 ns | 0.0386 ns | 0.0488 ns | 0.3834 ns |
-    ///|           RomuTrio | 0.6035 ns | 0.0083 ns | 0.0069 ns | 0.6054 ns |
-    ///|            Mizuchi | 0.7001 ns | 0.0439 ns | 0.1000 ns | 0.6739 ns |
-    ///|               Trim | 0.8340 ns | 0.0470 ns | 0.1089 ns | 0.7570 ns |
+    ///|           Distinct | 0.4932 ns | 0.0384 ns | 0.0731 ns | 0.4565 ns |
+    ///|              Laser | 0.4814 ns | 0.0406 ns | 0.0873 ns | 0.4811 ns |
+    ///|           Tricycle | 0.5993 ns | 0.0088 ns | 0.0069 ns | 0.5996 ns |
+    ///|          FourWheel | 0.7264 ns | 0.0320 ns | 0.0267 ns | 0.7197 ns |
+    ///|           Stranger | 0.9327 ns | 0.0480 ns | 0.1073 ns | 0.9887 ns |
+    ///| Xoshiro256StarStar | 1.2766 ns | 0.0556 ns | 0.1521 ns | 1.2029 ns |
+    ///|    Xorshift128Plus | 0.4314 ns | 0.0169 ns | 0.0142 ns | 0.4354 ns |
+    ///|           RomuTrio | 0.8104 ns | 0.0456 ns | 0.1029 ns | 0.8475 ns |
+    ///|            Mizuchi | 0.5867 ns | 0.0295 ns | 0.0290 ns | 0.5741 ns |
+    ///|               Trim | 0.8073 ns | 0.0474 ns | 0.1107 ns | 0.7908 ns |
     /// </summary>
     /// <remarks>
     /// OK, now THIS is where the sub-nanosecond times are. This was run on a laptop with a 10th-gen Intel i7 mobile hexacore processor,
     /// like all of the benchmarks here.
     /// </remarks>
-    public class BareULongBoundedComparison
+    public class BareULongComparison
     {
         public DistinctRandom _DistinctRandom = null!;
         public LaserRandom _LaserRandom = null!;
