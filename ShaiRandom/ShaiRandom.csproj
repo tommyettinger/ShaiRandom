@@ -11,12 +11,12 @@
     Configure versioning information, making sure to append "debug" to Debug version to allow publishing
     to NuGet seperately from Release version.
     -->
-    <Version>0.0.1-beta03</Version>
+    <Version>0.0.1</Version>
     <Version Condition="'$(Configuration)'=='Debug'">$(Version)-debug</Version>
 
 	<!-- More nuget package settings-->
     <PackageId>ShaiRandom</PackageId>
-	<PackageReleaseNotes>Prerelease Version</PackageReleaseNotes>
+	<PackageReleaseNotes>Stable Release</PackageReleaseNotes>
 	<PackageProjectUrl>https://github.com/tommyettinger/ShaiRandom</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/tommyettinger/ShaiRandom</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
@@ -57,11 +57,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>5</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>5</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net5.0|AnyCPU'">
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
@@ -87,6 +87,7 @@
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <ErrorReport>none</ErrorReport>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <!-- Pack a read-me with the nuget package, so it displays when installed -->
@@ -95,6 +96,12 @@
       <Pack>true</Pack>
       <PackagePath>.</PackagePath>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <!-- Dependencies -->
