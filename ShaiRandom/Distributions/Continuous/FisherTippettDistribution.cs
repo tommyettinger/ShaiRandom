@@ -15,7 +15,7 @@ namespace ShaiRandom.Distributions.Continuous
     ///   <para>
     ///     The implementation of the <see cref="FisherTippettDistribution"/> type bases upon
     ///     information presented on
-    ///     <a href="http://en.wikipedia.org/wiki/Laplace_distribution">Wikipedia - Fisher-Tippett distribution</a>.
+    ///     <a href="https://en.wikipedia.org/wiki/Generalized_extreme_value_distribution">Wikipedia - Fisher-Tippett distribution</a>.
     ///   </para>
     ///   <para>The thread safety of this class depends on the one of the underlying generator.</para>
     /// </remarks>

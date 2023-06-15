@@ -291,7 +291,7 @@ namespace ShaiRandom.Distributions.Continuous
         /// </remarks>
         public static Func<int, double, bool> AreValidParams { get; set; } = (alpha, lambda) =>
         {
-            return alpha > 0 && lambda > 0.0;
+            return alpha > 0.0 && lambda > 0.0;
         };
 
         /// <summary>
@@ -315,7 +315,7 @@ namespace ShaiRandom.Distributions.Continuous
             // Fix when alpha is less than one.
             if (alpha < 1.0)
             {
-                a = alpha + 1;
+                ++a;
                 alphafix = Math.Pow(generator.NextDouble(), 1.0 / alpha);
             }
 

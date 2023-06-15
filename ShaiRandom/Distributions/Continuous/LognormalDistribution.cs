@@ -48,7 +48,7 @@ namespace ShaiRandom.Distributions.Continuous
         /// <summary>
         ///   The default value assigned to <see cref="Mu"/> if none is specified.
         /// </summary>
-        public const double DefaultMu = 1;
+        public const double DefaultMu = 0;
 
         /// <summary>
         ///   The default value assigned to <see cref="Sigma"/> if none is specified.
@@ -316,9 +316,7 @@ namespace ShaiRandom.Distributions.Continuous
         /// </remarks>
         public static Func<IEnhancedRandom, double, double, double> Sample { get; set; } = (generator, mu, sigma) =>
         {
-            const double Nm = 0.0;
-            const double Ns = 1.0;
-            return Math.Exp(NormalDistribution.Sample(generator, Nm, Ns) * sigma + mu);
+            return Math.Exp(NormalDistribution.Sample(generator, mu, sigma));
         };
 
         #endregion TRandom Helpers

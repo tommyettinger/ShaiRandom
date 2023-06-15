@@ -14,7 +14,7 @@ namespace ShaiRandom.Distributions.Continuous
     /// <remarks>
     ///   <para>
     ///     The implementation of the <see cref="LogisticDistribution"/> type bases upon information
-    ///     presented on <a href="http://en.wikipedia.org/wiki/Log-normal_distribution">Wikipedia -
+    ///     presented on <a href="https://en.wikipedia.org/wiki/Logistic_distribution">Wikipedia -
     ///     Logistic Distribution</a> and the implementation in the
     ///     <a href="http://www.boost.org/libs/random/index.html">Boost Random Number Library</a>.
     ///   </para>

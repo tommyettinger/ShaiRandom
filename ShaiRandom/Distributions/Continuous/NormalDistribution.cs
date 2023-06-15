@@ -28,7 +28,7 @@ namespace ShaiRandom.Distributions.Continuous
         /// <summary>
         ///   The default value assigned to <see cref="Mu"/> if none is specified.
         /// </summary>
-        public const double DefaultMu = 1;
+        public const double DefaultMu = 0;
 
         /// <summary>
         ///   The default value assigned to <see cref="Sigma"/> if none is specified.

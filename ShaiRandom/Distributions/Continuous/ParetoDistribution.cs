@@ -237,7 +237,7 @@ namespace ShaiRandom.Distributions.Continuous
             {
                 if (_beta > 1.0)
                 {
-                    return Alpha * _beta / (_beta - 1.0);
+                    return _alpha * _beta / (_beta - 1.0);
                 }
                 throw new NotSupportedException(ErrorMessages.UndefinedMeanForParams);
             }

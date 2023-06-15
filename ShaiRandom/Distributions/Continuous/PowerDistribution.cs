@@ -14,7 +14,7 @@ namespace ShaiRandom.Distributions.Continuous
     /// <remarks>
     ///   <para>
     ///     The implementation of the <see cref="PowerDistribution"/> type bases upon information
-    ///     presented on <a href="http://www.xycoon.com/power.htm">Xycoon - Power Distribution</a>.
+    ///     presented on <a href="https://www.xycoon.com/power.htm">Xycoon - Power Distribution</a>.
     ///   </para>
     ///   <para>The thread safety of this class depends on the one of the underlying generator.</para>
     /// </remarks>

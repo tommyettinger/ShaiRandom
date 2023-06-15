@@ -389,7 +389,7 @@ namespace ShaiRandom.Distributions.Continuous
         /// </remarks>
         public static Func<double, double, double, bool> AreValidParams { get; set; } = (alpha, beta, gamma) =>
         {
-            return alpha < beta && alpha <= gamma && beta >= gamma;
+            return alpha < beta && alpha <= gamma && gamma <= beta;
         };
 
         /// <summary>

@@ -209,7 +209,7 @@ namespace ShaiRandom.Distributions.Continuous
         /// </summary>
         /// <param name="value">The value to check.</param>
         /// <returns><see langword="true"/> if value is greater than 0.0; otherwise, <see langword="false"/>.</returns>
-        public bool IsValidAlpha(double value) => AreValidParams(value, Beta);
+        public bool IsValidAlpha(double value) => AreValidParams(value, _beta);
 
         /// <summary>
         ///   Determines whether the specified value is valid for parameter <see cref="Beta"/>.
@@ -233,7 +233,7 @@ namespace ShaiRandom.Distributions.Continuous
         /// <exception cref="NotSupportedException">
         ///   Thrown if mean is not defined for given distribution with some parameters.
         /// </exception>
-        public double Mean => _alpha / Beta;
+        public double Mean => _alpha / _beta;
 
         /// <summary>
         ///   Gets the median of distributed random numbers.
@@ -275,7 +275,7 @@ namespace ShaiRandom.Distributions.Continuous
         /// <exception cref="NotSupportedException">
         ///   Thrown if variance is not defined for given distribution with some parameters.
         /// </exception>
-        public double Variance => _alpha / MathUtils.Square(Beta);
+        public double Variance => _alpha / (_beta * _beta);
 
         /// <summary>
         ///   Returns a distributed floating point random number.

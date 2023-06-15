@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Toolkit.HighPerformance;
+using CommunityToolkit.HighPerformance;
 
 namespace ShaiRandom.Generators
 {
@@ -875,7 +875,7 @@ namespace ShaiRandom.Generators
             return this;
         }
 
-        private void SerializeList<T>(StringBuilder ser, IReadOnlyList<T> series, char lastChar = '~')
+        private static void SerializeList<T>(StringBuilder ser, IReadOnlyList<T> series, char lastChar = '~')
         {
             if (series.Count > 0)
             {
