@@ -49,6 +49,9 @@
 
     <!-- Generate documentation files for all configurations since Debug and Release are published to NuGet. -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- Since we explicitly support .NET 5.0 as one (of many) targets, suppress the warning about .NET 5 being at end of life. -->
+    <CheckEolTargetFramework Condition="$(TargetFramework.StartsWith('net5.0')) == true">false</CheckEolTargetFramework>
   </PropertyGroup>
 
   <!-- Define trace constant for debug builds. -->
