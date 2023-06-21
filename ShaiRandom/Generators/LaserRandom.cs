@@ -218,8 +218,10 @@ namespace ShaiRandom.Generators
         {
             unchecked
             {
-                ulong z = (StateA -= 0xC6BC279692B5C323UL);
-                z = (z ^ z >> 31) * (_b -= 0x9E3779B97F4A7C16UL);
+                ulong z = StateA;
+                StateA -= 0xC6BC279692B5C323UL;
+                z = (z ^ z >> 31) * _b;
+                _b -= 0x9E3779B97F4A7C16UL;
                 return z ^ z >> 26 ^ z >> 6;
             }
         }

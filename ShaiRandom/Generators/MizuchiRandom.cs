@@ -217,7 +217,8 @@ namespace ShaiRandom.Generators
         {
             unchecked
             {
-                ulong z = (StateA = (StateA - StateB) * 0x09795DFF8024EB9DUL);
+                ulong z = StateA;
+                StateA = (StateA - StateB) * 0x09795DFF8024EB9DUL;
                 z = (z ^ z >> 23 ^ z >> 47) * 0xAEF17502108EF2D9UL;
                 return z ^ z >> 25;
             }

@@ -175,7 +175,8 @@ namespace ShaiRandom.Generators
         {
             unchecked
             {
-                ulong x = (State -= 0x9E3779B97F4A7C15UL);
+                ulong x = State;
+                State -= 0x9E3779B97F4A7C15UL;
                 x ^= x >> 27;
                 x *= 0x3C79AC492BA7B653UL;
                 x ^= x >> 33;
