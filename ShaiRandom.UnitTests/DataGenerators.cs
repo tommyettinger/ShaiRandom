@@ -23,16 +23,17 @@ namespace ShaiRandom.UnitTests
             yield return new DistinctRandom();
             yield return new FourWheelRandom();
             yield return new LaserRandom();
+            yield return new MaxRandom();
+            yield return new MinRandom();
             yield return new MizuchiRandom();
             yield return new RomuTrioRandom();
+            yield return new ScruffRandom();
             yield return new StrangerRandom();
             yield return new TricycleRandom();
-            yield return new Xoshiro256StarStarRandom();
             yield return new TrimRandom();
             yield return new WhiskerRandom();
-            yield return new ScruffRandom();
-            yield return new MinRandom();
-            yield return new MaxRandom();
+            yield return new Xorshift128PlusRandom();
+            yield return new Xoshiro256StarStarRandom();
 
             if (includeWrappers)
             {
