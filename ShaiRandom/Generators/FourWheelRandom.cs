@@ -267,15 +267,15 @@ namespace ShaiRandom.Generators
         {
             ulong fa = StateA;
             ulong fb = StateB;
-            ulong fc = StateC;
             ulong fd = StateD;
             unchecked
             {
-                StateD = 0x572B5EE77A54E3BDUL * fa;
-                StateA = fb - 0xC6BC279692B5C323UL;
-                StateB = (fc + StateD).RotateRight(47);
+                StateD = 0x572B5EE77A54E3BDL * fa;
+                ulong fc = StateC + StateD;
+                StateA = fb - 0xC6BC279692B5C323L;
+                StateB = fc.RotateRight(47);
                 StateC = fd ^ StateB;
-                return 0x572B5EE77A54E3BDUL * StateA;
+                return StateD;
             }
         }
 

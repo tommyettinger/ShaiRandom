@@ -256,13 +256,13 @@ namespace ShaiRandom.Generators
             ulong fc = StateC;
             unchecked
             {
-                StateD -= 0xDE916ABCC965815BL;
+                StateD -= 0xDE916ABCC965815BUL;
                 ulong t = fb.RotateRight(18);
                 StateC = t ^ StateD;
                 t = fa.RotateRight(57);
                 StateB = t ^ StateC;
                 StateA = fc - t;
-                return StateC;
+                return fc;
             }
         }
 

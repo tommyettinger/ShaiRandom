@@ -310,7 +310,6 @@ namespace ShaiRandom.Generators
         {
             ulong fa = _a;
             ulong fb = _b;
-            ulong fc = StateC;
             ulong fd = StateD;
             ulong t = fb ^ fb >> 9;
             t ^= t >> 18;
@@ -320,13 +319,11 @@ namespace ShaiRandom.Generators
             m ^= m << 28;
             m ^= m << 56;
             StateA = t;
+            ulong fc = StateC + m;
             StateB = m;
-            StateC = t - fd + 0xC6BC279692B5C323UL;
-            StateD = (fc + m).RotateRight(39);
-            t = m ^ m >> 9;
-            t ^= t >> 18;
-            t ^= t >> 36;
-            return t - StateD + 0xC6BC279692B5C323UL;
+            StateC = t - fd + 0xC6BC279692B5C323L;
+            StateD = fc.RotateRight(39);
+            return StateC;
         }
 
 
