@@ -128,9 +128,9 @@ namespace ShaiRandom.Generators
         /// </summary>
         public override bool SupportsLeap => false;
         /// <summary>
-        /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/>.
+        /// This supports <see cref="IEnhancedRandom.PreviousULong()"/>.
         /// </summary>
-        public override bool SupportsPrevious => false;
+        public override bool SupportsPrevious => true;
 
         /// <summary>
         /// Gets the state determined by selection, as-is.
@@ -267,6 +267,21 @@ namespace ShaiRandom.Generators
                 _b = (_b - fa).RotateLeft(12);
                 _c = _c.RotateLeft(44);
                 return BitConverter.Int64BitsToDouble((long)(fa >> 12) | 0x3FF0000000000000L) - 1.0;
+            }
+        }
+
+        /// <inheritdoc />
+        public override ulong PreviousULong()
+        {
+            unchecked
+            {
+                ulong fc = StateC.RotateRight(44);
+                ulong fb = StateB.RotateRight(12);
+                StateC = StateA * 0x43D68ED20CD1FA63UL; // modular multiplicative inverse
+                StateB = StateC - fc;
+                StateA = StateB - fb;
+                return StateA;
+
             }
         }
 

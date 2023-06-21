@@ -213,12 +213,11 @@ namespace ShaiRandom.Generators
         {
             ulong fa = StateA;
             ulong fb = StateB;
-            ulong fc = StateC;
-
-            StateC = 0x572B5EE77A54E3BDUL * fa;
-            StateB = BitExtensions.RotateRight(fc - 0xC6BC279692B5C323UL, 41);
+            ulong fc = StateC - 0xC6BC279692B5C323UL;
+            StateC = 0x572B5EE77A54E3BDL * fa;
+            StateB = fc.RotateLeft(23);
             StateA = fb ^ StateB ^ StateC;
-            return StateB ^ 0x572B5EE77A54E3BDUL * StateA ^ BitExtensions.RotateRight(StateC - 0xC6BC279692B5C323UL, 41);
+            return StateA;
         }
 
         /// <inheritdoc />

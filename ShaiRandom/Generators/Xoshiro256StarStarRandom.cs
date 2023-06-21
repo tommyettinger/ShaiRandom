@@ -278,26 +278,18 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public override ulong PreviousULong()
         {
-            //ulong a = StateA, b = StateB, c = StateC, d = _d;
-
-            //StateB ^= c ^ a;
-            //StateA ^= d ^ b;
-            //StateC ^= a ^ b << 17;
-            //_d = (d ^ b).RotateLeft(45);
-
-            _d = _d.RotateRight(45); // _d has d ^ b
+            _d = _d.RotateRight(45); // stateD has d ^ b
             StateA ^= _d; // StateA has a
             StateC ^= StateB; // StateC has b ^ b << 17;
             StateC ^= StateC << 17;
             StateC ^= StateC << 34; // StateC has b
-            ulong oc = StateB ^= StateA; // StateB has b ^ c
+            StateB ^= StateA; // StateB has b ^ c
             StateC ^= StateB; // StateC has c;
-            StateB ^= StateC; // StateB has b;
-            _d ^= StateB; // _d has d;
+            ulong pb = StateB ^= StateC; // StateB has b;
+            _d ^= StateB; // StateD has d;
 
-            oc ^= oc << 17;
-            oc ^= oc << 34;
-            return (oc * 5UL).RotateLeft(7) * 9UL;
+            pb *= 5UL;
+            return pb.RotateLeft(7) * 9UL;
         }
 
 
