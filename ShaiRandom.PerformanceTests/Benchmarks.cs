@@ -1713,16 +1713,18 @@ namespace ShaiRandom.PerformanceTests
     /// .NET 6.0:
     ///|             Method |      Mean |     Error |    StdDev |    Median |
     ///|------------------- |----------:|----------:|----------:|----------:|
-    ///|           Distinct | 0.4932 ns | 0.0384 ns | 0.0731 ns | 0.4565 ns |
-    ///|              Laser | 0.4814 ns | 0.0406 ns | 0.0873 ns | 0.4811 ns |
-    ///|           Tricycle | 0.5993 ns | 0.0088 ns | 0.0069 ns | 0.5996 ns |
-    ///|          FourWheel | 0.7264 ns | 0.0320 ns | 0.0267 ns | 0.7197 ns |
-    ///|           Stranger | 0.9327 ns | 0.0480 ns | 0.1073 ns | 0.9887 ns |
-    ///| Xoshiro256StarStar | 1.2766 ns | 0.0556 ns | 0.1521 ns | 1.2029 ns |
-    ///|    Xorshift128Plus | 0.4314 ns | 0.0169 ns | 0.0142 ns | 0.4354 ns |
-    ///|           RomuTrio | 0.8104 ns | 0.0456 ns | 0.1029 ns | 0.8475 ns |
-    ///|            Mizuchi | 0.5867 ns | 0.0295 ns | 0.0290 ns | 0.5741 ns |
-    ///|               Trim | 0.8073 ns | 0.0474 ns | 0.1107 ns | 0.7908 ns |
+    ///|           Distinct | 0.4259 ns | 0.0389 ns | 0.0660 ns | 0.4645 ns |
+    ///|              Laser | 0.4763 ns | 0.0396 ns | 0.0371 ns | 0.4857 ns |
+    ///|           Tricycle | 0.4728 ns | 0.0176 ns | 0.0137 ns | 0.4699 ns |
+    ///|          FourWheel | 0.7419 ns | 0.0449 ns | 0.0534 ns | 0.7096 ns |
+    ///|           Stranger | 0.8115 ns | 0.0458 ns | 0.0490 ns | 0.8316 ns |
+    ///| Xoshiro256StarStar | 1.1587 ns | 0.0169 ns | 0.0132 ns | 1.1602 ns |
+    ///|    Xorshift128Plus | 0.4567 ns | 0.0397 ns | 0.0674 ns | 0.4128 ns |
+    ///|           RomuTrio | 0.6962 ns | 0.0433 ns | 0.0577 ns | 0.7357 ns |
+    ///|            Mizuchi | 0.6047 ns | 0.0424 ns | 0.0536 ns | 0.6202 ns |
+    ///|               Trim | 0.7616 ns | 0.0451 ns | 0.0422 ns | 0.7475 ns |
+    ///|            Whisker | 0.9124 ns | 0.0492 ns | 0.0460 ns | 0.8892 ns |
+    ///|             Scruff | 0.7445 ns | 0.0455 ns | 0.0558 ns | 0.7205 ns |
     /// </summary>
     /// <remarks>
     /// OK, now THIS is where the sub-nanosecond times are. This was run on a laptop with a 10th-gen Intel i7 mobile hexacore processor,
