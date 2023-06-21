@@ -134,7 +134,7 @@ namespace ShaiRandom.Generators
         /// Sets one of the states, determined by selection, to value, as-is.
         /// </summary>
         /// <remarks>
-        /// Selections 0, 1, 2, and 3 refer to states A, B, C, and D,  and if the selection is anything else, this treats it as 3 and sets stateD.
+        /// Selections 0, 1, 2, and 3 refer to states A, B, C, and D, and if the selection is anything else, this treats it as 3 and sets stateD.
         /// </remarks>
         /// <param name="selection">Used to select which state variable to set; generally 0, 1, 2, or 3.</param>
         /// <param name="value">The exact value to use for the selected state, if valid.</param>

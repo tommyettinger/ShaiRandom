@@ -98,6 +98,16 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public uint Trim() => _rng.NextUInt();
 
+        [GlobalSetup(Target = nameof(Whisker))]
+        public void WhiskerSetup() => _rng = new WhiskerRandom(1UL);
+        [Benchmark]
+        public uint Whisker() => _rng.NextUInt();
+
+        [GlobalSetup(Target = nameof(Scruff))]
+        public void ScruffSetup() => _rng = new ScruffRandom(1UL);
+        [Benchmark]
+        public uint Scruff() => _rng.NextUInt();
+
         [GlobalSetup(Target = nameof(XorShift128))]
         public void XorShift128Setup() => _gen = new XorShift128Generator(1);
         [Benchmark]
@@ -241,6 +251,16 @@ namespace ShaiRandom.PerformanceTests
         public void TrimSetup() => _rng = new TrimRandom(1UL);
         [Benchmark]
         public uint Trim() => _rng.NextUInt(999u);
+
+        [GlobalSetup(Target = nameof(Whisker))]
+        public void WhiskerSetup() => _rng = new WhiskerRandom(1UL);
+        [Benchmark]
+        public uint Whisker() => _rng.NextUInt(999u);
+
+        [GlobalSetup(Target = nameof(Scruff))]
+        public void ScruffSetup() => _rng = new ScruffRandom(1UL);
+        [Benchmark]
+        public uint Scruff() => _rng.NextUInt(999u);
 
         [GlobalSetup(Target = nameof(XorShift128))]
         public void XorShift128Setup() => _gen = new XorShift128Generator(1);
@@ -395,6 +415,16 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public ulong Trim() => _rng.NextULong();
 
+        [GlobalSetup(Target = nameof(Whisker))]
+        public void WhiskerSetup() => _rng = new WhiskerRandom(1UL);
+        [Benchmark]
+        public ulong Whisker() => _rng.NextULong();
+
+        [GlobalSetup(Target = nameof(Scruff))]
+        public void ScruffSetup() => _rng = new ScruffRandom(1UL);
+        [Benchmark]
+        public ulong Scruff() => _rng.NextULong();
+
     }
     /// <summary>
     /// On .NET 5.0:
@@ -438,6 +468,8 @@ namespace ShaiRandom.PerformanceTests
         private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
         private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
         private readonly TrimRandom _trimRandom = new TrimRandom(1UL);
+        private readonly WhiskerRandom _whiskerRandom = new WhiskerRandom(1UL);
+        private readonly ScruffRandom _scruffRandom = new ScruffRandom(1UL);
 
 #if NET6_0
         private readonly System.Random _seededRandom = new System.Random(1);
@@ -479,6 +511,12 @@ namespace ShaiRandom.PerformanceTests
 
         [Benchmark]
         public ulong Trim() => _trimRandom.NextULong(1UL, 1000UL);
+
+        [Benchmark]
+        public ulong Whisker() => _whiskerRandom.NextULong(1UL, 1000UL);
+
+        [Benchmark]
+        public ulong Scruff() => _scruffRandom.NextULong(1UL, 1000UL);
     }
     /// <summary>
     /// .NET 6.0 (newer benchmark, using IEnhancedRandom and IGenerator):
@@ -607,6 +645,16 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double Trim() => _rng.NextDouble();
 
+        [GlobalSetup(Target = nameof(Whisker))]
+        public void WhiskerSetup() => _rng = new WhiskerRandom(1UL);
+        [Benchmark]
+        public double Whisker() => _rng.NextDouble();
+
+        [GlobalSetup(Target = nameof(Scruff))]
+        public void ScruffSetup() => _rng = new ScruffRandom(1UL);
+        [Benchmark]
+        public double Scruff() => _rng.NextDouble();
+
         [GlobalSetup(Target = nameof(XorShift128))]
         public void XorShift128Setup() => _gen = new XorShift128Generator(1);
         [Benchmark]
@@ -705,6 +753,16 @@ namespace ShaiRandom.PerformanceTests
         public void TrimSetup() => _rng = new TrimRandom(1UL);
         [Benchmark]
         public double Trim() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Whisker))]
+        public void WhiskerSetup() => _rng = new WhiskerRandom(1UL);
+        [Benchmark]
+        public double Whisker() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Scruff))]
+        public void ScruffSetup() => _rng = new ScruffRandom(1UL);
+        [Benchmark]
+        public double Scruff() => _rng.NextDouble(1.1, -0.1);
     }
 
     /// <summary>
@@ -812,6 +870,16 @@ namespace ShaiRandom.PerformanceTests
         public void TrimSetup() => _rng = new TrimRandom(1UL);
         [Benchmark]
         public double Trim() => _rng.NextExclusiveDouble();
+
+        [GlobalSetup(Target = nameof(Whisker))]
+        public void WhiskerSetup() => _rng = new WhiskerRandom(1UL);
+        [Benchmark]
+        public double Whisker() => _rng.NextExclusiveDouble();
+
+        [GlobalSetup(Target = nameof(Scruff))]
+        public void ScruffSetup() => _rng = new ScruffRandom(1UL);
+        [Benchmark]
+        public double Scruff() => _rng.NextExclusiveDouble();
     }
 
     /// <summary>
@@ -890,6 +958,16 @@ namespace ShaiRandom.PerformanceTests
         public void TrimSetup() => _rng = new TrimRandom(1UL);
         [Benchmark]
         public double Trim() => _rng.NextExclusiveDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Whisker))]
+        public void WhiskerSetup() => _rng = new WhiskerRandom(1UL);
+        [Benchmark]
+        public double Whisker() => _rng.NextExclusiveDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Scruff))]
+        public void ScruffSetup() => _rng = new ScruffRandom(1UL);
+        [Benchmark]
+        public double Scruff() => _rng.NextExclusiveDouble(1.1, -0.1);
     }
 
     /// <summary>
@@ -1591,6 +1669,26 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public float TrimS() => _rng.NextSparseFloat();
 
+        [GlobalSetup(Target = nameof(Whisker))]
+        public void WhiskerSetup() => _rng = new WhiskerRandom(1UL);
+        [Benchmark]
+        public float Whisker() => _rng.NextFloat();
+
+        [GlobalSetup(Target = nameof(WhiskerS))]
+        public void WhiskerSSetup() => _rng = new WhiskerRandom(1UL);
+        [Benchmark]
+        public float WhiskerS() => _rng.NextSparseFloat();
+
+        [GlobalSetup(Target = nameof(Scruff))]
+        public void ScruffSetup() => _rng = new ScruffRandom(1UL);
+        [Benchmark]
+        public float Scruff() => _rng.NextFloat();
+
+        [GlobalSetup(Target = nameof(ScruffS))]
+        public void ScruffSSetup() => _rng = new ScruffRandom(1UL);
+        [Benchmark]
+        public float ScruffS() => _rng.NextSparseFloat();
+
         [GlobalSetup(Target = nameof(Xorshift128Plus))]
         public void Xorshift128PlusSetup() => _rng = new Xorshift128PlusRandom(1UL);
         [Benchmark]
@@ -1642,6 +1740,8 @@ namespace ShaiRandom.PerformanceTests
         public RomuTrioRandom _RomuTrioRandom = null!;
         public MizuchiRandom _MizuchiRandom = null!;
         public TrimRandom _TrimRandom = null!;
+        public WhiskerRandom _WhiskerRandom = null!;
+        public ScruffRandom _ScruffRandom = null!;
 
         [GlobalSetup(Target = nameof(Distinct))]
         public void DistinctSetup() => _DistinctRandom = new DistinctRandom(1UL);
@@ -1692,6 +1792,16 @@ namespace ShaiRandom.PerformanceTests
         public void TrimSetup() => _TrimRandom = new TrimRandom(1UL);
         [Benchmark]
         public ulong Trim() => _TrimRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(Whisker))]
+        public void WhiskerSetup() => _WhiskerRandom = new WhiskerRandom(1UL);
+        [Benchmark]
+        public ulong Whisker() => _WhiskerRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(Scruff))]
+        public void ScruffSetup() => _ScruffRandom = new ScruffRandom(1UL);
+        [Benchmark]
+        public ulong Scruff() => _ScruffRandom.NextULong();
 
     }
 
