@@ -33,11 +33,14 @@ Licenses for other projects which ShaiRandom depends on or from which inspiratio
 ## Credits
 ShaiRandom depends on some other .NET Standard libraries for some of its functionality.  Those projects and their licenses are listed below.
 
-### jdkgdxds
-This Java data structure library (by the same author as this library) has the same general structure for its random number generators and uses the same algorithms.
+### juniper
+This Java random number generation library (by the same author as this library) has the same general structure for its random number generators and uses the same algorithms.
 It is licensed under Apache 2, but permission from all contributors (or the only contributor, me) to the random number generators allows that code to be freely relicensed as MIT here.
-- [jdkgdxds](https://github.com/tommyettinger/jdkgdxds)
-- [jdkgdxds License](https://github.com/tommyettinger/jdkgdxds/blob/master/LICENSE)
+The serialized forms of any generators present in both libraries tend to be either very similar or identical, which should help interoperability. Similarly, the results of most (but
+not all) methods are the same if the states and algorithms are the same. The code in juniper was pulled out of [jdkgdxds](https://github.com/tommyettinger/jdkgdxds), which this README
+mentioned in earlier revisions.
+- [juniper](https://github.com/tommyettinger/juniper)
+- [juniper License](https://github.com/tommyettinger/juniper/blob/main/LICENSE)
 
 ### GoRogue
 GoRogue was used as an optimal project structure for a .NET library targeting modern versions, and ShaiRandom is meant to be usable by GoRogue.
@@ -48,6 +51,8 @@ GoRogue's author, Chris3606, is a major contributor to this library. GoRogue is 
 
 
 ### Troschuetz.Random
-ShaiRandom's optional TroschuetzCompat library depends on Troschuetz.Random to help bridge compatibility between that now-archived library and this one. Troschuetz.Random is also licensed under MIT:
+ShaiRandom's optional TroschuetzCompat library depends on Troschuetz.Random to help bridge compatibility between that now-archived library and this one. With Troschuetz.Random now
+archived, compatibility with it is probably less important than it used to be, but older versions of GoRogue used Troschuetz.Random, and it's still a well-made library.
+Troschuetz.Random is also licensed under MIT:
 - [Troschuetz.Random](https://gitlab.com/pomma89/troschuetz-random/-/tree/master)
 - [Troschuetz.Random License](https://gitlab.com/pomma89/troschuetz-random/-/blob/master/LICENSE)
