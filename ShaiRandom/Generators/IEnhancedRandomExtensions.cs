@@ -678,6 +678,12 @@ namespace ShaiRandom.Generators
             }
         }
 
+        public static GapShufflerEnumerator<TItem> GapShuffleInPlace<TItem>(this IEnhancedRandom rng, IList<TItem> items)
+            => new GapShufflerEnumerator<TItem>(rng, ref items);
+
+        public static GapShufflerEnumerator<TItem> GapShuffle<TItem>(this IEnhancedRandom rng, IEnumerable<TItem> items)
+            => new GapShufflerEnumerator<TItem>(rng, items);
+
         /// <summary>
         /// Gets a normally-distributed (Gaussian) double, with a the specified mean (default 0.0) and standard deviation (default 1.0).
         /// If the standard deviation is 1.0 and the mean is 0.0, then this can produce results between -8.209536145151493 and 8.209536145151493 (both extremely rarely).
