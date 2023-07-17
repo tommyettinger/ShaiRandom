@@ -17,23 +17,32 @@ namespace ShaiRandom
     /// (or one of their overloads) to get an instance of this, rather than creating one yourself.
     /// </summary>
     /// <remarks>
-    /// This enumerator is infinite, so you will need to use it in a foreach loop and break out of it, use something
-    /// like LINQ's .Take(n) function, or use it in a while loop with a condition to break out of it in order to prevent
-    /// an infinite loop.  Until you break out of the loop, it will continue to produce a mostly random shuffled stream
-    /// of the items. These shuffles are spaced so that a single element should always have a large amount of "gap" in
-    /// order between one appearance and the next. Specifically, all elements must be returned precisely once before
-    /// elements are allowed to repeat.
+    /// The "gap shuffle" algorithm this enumerator implements, is akin to an infinite-length IEnumerable that shuffles
+    /// a sequence, iterates over the shuffled elements as they are requested, and when it runs out of elements it
+    /// shuffles the sequence again. The Gap in the name refers to how it prevents the most-recently returned item in the
+    /// sequence from being returned again immediately after the items are shuffled.
     ///
-    /// It supports in-place enumeration, where you give it a list and it performs its shuffles in place on the list or array
+    /// One use case for the GapShuffle implementation is for text generation, where using the same word in rapid
+    /// succession makes the writing look less "educated." It can also be useful for color selection; in pixel art,
+    /// using the same colors for skin and for long hair will make a human look like they have tentacles on their head,
+    /// so you'd almost always want different colors for those two.
+    ///
+    /// This enumerator is infinite (but lazily evaluated), so you will need to ensure you do not attempt to iterate it
+    /// until its completion.  You can simply call the <see cref="Next"/> function a fixed number of times, or if
+    /// you need to use it in a loop, you will need to either ensure you call "break", or use LINQ's .Take(n) function,
+    /// in order to avoid an infinite loop.
+    ///
+    /// It supports in-place enumeration, where you give it a list and it performs its shuffles in place on the list
     /// you specify.  It also provides a constructor where you give it an IEnumerable, and it will copy elements into an
     /// array, as well a a similar constructor which copies a Span.  In the case of in-place enumeration, like most
-    /// enumerators, modifying the collection while the shuffle is active (including adding or removing items) will cause
-    /// undefined behavior.
+    /// enumerators, modifying the collection while the shuffle is active (including adding or removing items) is not
+    /// supported and is considered undefined behavior.
     ///
-    /// This type is a struct, and as such is much more efficient when used in a foreach loop than a function returning
-    /// IEnumerable&lt;TItem&gt; by using "yield return".  This type does implement <see cref="IEnumerable{TItem}"/>,
-    /// so you can pass it to functions which require one (for example, System.LINQ).  However, this will have reduced
-    /// performance due to boxing of the iterator.
+    /// This type is a struct which implements the enumerator paradigm, so it can be used directly in a foreach loop;
+    /// and when you do so, it's much more efficient than a function returning IEnumerable&lt;TItem&gt; by using
+    /// "yield return".  This type does also implement <see cref="IEnumerable{TItem}"/>, so you can pass it to functions
+    /// which require one (for example, System.LINQ).  However, this will have reduced performance due to boxing of the
+    /// iterator.
     /// </remarks>
     public struct GapShufflerEnumerator<TItem> : IEnumerator<TItem>, IEnumerable<TItem>
     {
@@ -184,22 +193,30 @@ namespace ShaiRandom
     /// one yourself.
     /// </summary>
     /// <remarks>
-    /// This enumerator is infinite, so you will need to use it in a foreach loop and break out of it, use something
-    /// like LINQ's .Take(n) function, or use it in a while loop with a condition to break out of it in order to prevent
-    /// an infinite loop.  Until you break out of the loop, it will continue to produce a mostly random shuffled stream
-    /// of the items. These shuffles are spaced so that a single element should always have a large amount of "gap" in
-    /// order between one appearance and the next. Specifically, all elements must be returned precisely once before
-    /// elements are allowed to repeat.
+    /// The "gap shuffle" algorithm this enumerator implements, is akin to an infinite-length IEnumerable that shuffles
+    /// a sequence, iterates over the shuffled elements as they are requested, and when it runs out of elements it
+    /// shuffles the sequence again. The Gap in the name refers to how it prevents the most-recently returned item in the
+    /// sequence from being returned again immediately after the items are shuffled.
     ///
-    /// The Memory object is provided in the constructor, and it will store this object internally and repeatedly shuffle
-    /// it as the iterator progresses.it will copy elements into an
-    /// array, as well a a similar constructor which copies a Span.  Like most enumerators, modifying the collection
-    /// while the shuffle is active (including adding or removing items) will cause undefined behavior.
+    /// One use case for the GapShuffle implementation is for text generation, where using the same word in rapid
+    /// succession makes the writing look less "educated." It can also be useful for color selection; in pixel art,
+    /// using the same colors for skin and for long hair will make a human look like they have tentacles on their head,
+    /// so you'd almost always want different colors for those two.
     ///
-    /// This type is a struct, and as such is much more efficient when used in a foreach loop than a function returning
-    /// IEnumerable&lt;TItem&gt; by using "yield return".  This type does implement <see cref="IEnumerable{TItem}"/>,
-    /// so you can pass it to functions which require one (for example, System.LINQ).  However, this will have reduced
-    /// performance due to boxing of the iterator.
+    /// This enumerator is infinite (but lazily evaluated), so you will need to ensure you do not attempt to iterate it
+    /// until its completion.  You can simply call the <see cref="Next"/> function a fixed number of times, or if
+    /// you need to use it in a loop, you will need to either ensure you call "break", or use LINQ's .Take(n) function,
+    /// in order to avoid an infinite loop.
+    ///
+    /// The Memory object given in the constructor is stored internally, and will be shuffled in-place as needed
+    /// as the enumerator advances.Like most in-place enumerators, modifying the collection while the shuffle is active
+    /// (including adding or removing items) is not supported and is considered undefined behavior.
+    ///
+    /// This type is a struct which implements the enumerator paradigm, so it can be used directly in a foreach loop;
+    /// and when you do so, it's much more efficient than a function returning IEnumerable&lt;TItem&gt; by using
+    /// "yield return".  This type does also implement <see cref="IEnumerable{TItem}"/>, so you can pass it to functions
+    /// which require one (for example, System.LINQ).  However, this will have reduced performance due to boxing of the
+    /// iterator.
     /// </remarks>
     public struct GapShufflerInPlaceMemoryEnumerator<TItem> : IEnumerator<TItem>, IEnumerable<TItem>
     {
