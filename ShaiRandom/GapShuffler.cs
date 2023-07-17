@@ -12,9 +12,9 @@ namespace ShaiRandom
     /// set of items and produce a shuffled stream of them such that an element is never chosen in
     /// quick succession.
     ///
-    /// Generally, you should use <see cref="EnhancedRandomExtensions.GapShuffle{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IEnumerable{TItem})"/>
-    /// or <see cref="EnhancedRandomExtensions.GapShuffleInPlace{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IList{TItem})"/>
-    /// to get an instance of this, rather than creating one yourself.
+    /// Generally, you should use <see cref="EnhancedRandomExtensions.GapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IEnumerable{TItem})"/>
+    /// or <see cref="EnhancedRandomExtensions.InPlaceGapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IList{TItem})"/>
+    /// (or one of their overloads) to get an instance of this, rather than creating one yourself.
     /// </summary>
     /// <remarks>
     /// This enumerator is infinite, so you will need to use it in a foreach loop and break out of it, use something
@@ -179,8 +179,8 @@ namespace ShaiRandom
     /// set of items and produce a shuffled stream of them such that an element is never chosen in
     /// quick succession.
     ///
-    /// Generally, you should use <see cref="EnhancedRandomExtensions.GapShuffle{TItem}(ShaiRandom.Generators.IEnhancedRandom,ReadOnlyMemory{TItem})"/>
-    /// or <see cref="EnhancedRandomExtensions.GapShuffleInPlace{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Memory{TItem})"/>to get an instance of this, rather than creating
+    /// Generally, you should use <see cref="EnhancedRandomExtensions.GapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.ReadOnlyMemory{TItem})"/>
+    /// or <see cref="EnhancedRandomExtensions.InPlaceGapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Memory{TItem})"/>to get an instance of this, rather than creating
     /// one yourself.
     /// </summary>
     /// <remarks>

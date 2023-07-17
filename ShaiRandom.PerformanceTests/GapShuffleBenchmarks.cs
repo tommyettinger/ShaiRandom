@@ -102,7 +102,7 @@ namespace ShaiRandom.PerformanceTests
             int sum = 0;
             int take = 0;
             // Don't use .Take(Size) here to avoid boxing
-            foreach (var num in _rng.GapShuffle(_numbers))
+            foreach (var num in _rng.GapShuffler(_numbers))
             {
                 sum += num;
                 take++;
@@ -118,7 +118,7 @@ namespace ShaiRandom.PerformanceTests
             int sum = 0;
             int take = 0;
             // Don't use .Take(Size) here to avoid boxing
-            foreach (var num in _rng.GapShuffleInPlace(_inPlaceNumbers))
+            foreach (var num in _rng.InPlaceGapShuffler(_inPlaceNumbers))
             {
                 sum += num;
                 take++;
@@ -133,7 +133,7 @@ namespace ShaiRandom.PerformanceTests
         public int ShaiRandomForeachTake()
         {
             int sum = 0;
-            foreach (var num in _rng.GapShuffle(_numbers).Take(Size))
+            foreach (var num in _rng.GapShuffler(_numbers).Take(Size))
                 sum += num;
 
             return sum;
@@ -143,7 +143,7 @@ namespace ShaiRandom.PerformanceTests
         public int ShaiRandomForeachInPlaceTake()
         {
             int sum = 0;
-            foreach (var num in _rng.GapShuffleInPlace(_inPlaceNumbers).Take(Size))
+            foreach (var num in _rng.InPlaceGapShuffler(_inPlaceNumbers).Take(Size))
                 sum += num;
 
             return sum;
@@ -201,11 +201,11 @@ namespace ShaiRandom.PerformanceTests
 
         [Benchmark]
         public int ShaiRandomLinq()
-            => _rng.GapShuffle(_numbers).Take(Size).Sum();
+            => _rng.GapShuffler(_numbers).Take(Size).Sum();
 
         [Benchmark]
         public int ShaiRandomLinqInPlace()
-            => _rng.GapShuffleInPlace(_inPlaceNumbers).Take(Size).Sum();
+            => _rng.InPlaceGapShuffler(_inPlaceNumbers).Take(Size).Sum();
 
         [Benchmark]
         public int YieldReturnLinq()
@@ -220,7 +220,7 @@ namespace ShaiRandom.PerformanceTests
         public int ShaiRandomIEnumerable()
         {
             int sum = 0;
-            IEnumerable<int> enumerable = _rng.GapShuffle(_numbers);
+            IEnumerable<int> enumerable = _rng.GapShuffler(_numbers);
             int take = 0;
             foreach (var num in enumerable)
             {
@@ -236,7 +236,7 @@ namespace ShaiRandom.PerformanceTests
         public int ShaiRandomIEnumerableInPlace()
         {
             int sum = 0;
-            IEnumerable<int> enumerable = _rng.GapShuffleInPlace(_inPlaceNumbers);
+            IEnumerable<int> enumerable = _rng.InPlaceGapShuffler(_inPlaceNumbers);
             int take = 0;
             foreach (var num in enumerable)
             {

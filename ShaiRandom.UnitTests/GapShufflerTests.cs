@@ -19,7 +19,7 @@ namespace ShaiRandom.UnitTests
         public void GapShuffle()
         {
             var list = new[] { 1, 2, 3, 4, 5 };
-            var shuffler = _rng.GapShuffle(list);
+            var shuffler = _rng.GapShuffler(list);
 
             var shuffled = shuffler.Take(10).ToArray();
             Assert.NotEqual(list, shuffled[..5]);
@@ -31,7 +31,7 @@ namespace ShaiRandom.UnitTests
         {
             var originalList = new[] { 1, 2, 3, 4, 5 };
             var list = new[] { 1, 2, 3, 4, 5 };
-            var shuffler = _rng.GapShuffleInPlace(list);
+            var shuffler = _rng.InPlaceGapShuffler(list);
 
             var shuffled = shuffler.Take(10).ToArray();
             Assert.NotEqual(originalList, shuffled[..5]);

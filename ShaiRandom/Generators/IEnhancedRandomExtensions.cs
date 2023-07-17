@@ -691,7 +691,7 @@ namespace ShaiRandom.Generators
         /// elements are allowed to repeat.
         ///
         /// The elements in the IEnumerable specified are copied internally into an array; if you need to avoid a copy,
-        /// you can instead use <see cref="GapShuffleInPlace{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IList{TItem})"/>.
+        /// you can instead use <see cref="InPlaceGapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IList{TItem})"/>.
         ///
         /// The returned struct is a custom iterator which is very fast when used in a foreach loop.
         /// If you need an IEnumerable to use with LINQ or other code, the returned struct does implement that interface;
@@ -700,7 +700,7 @@ namespace ShaiRandom.Generators
         /// <param name="rng">RNG to use for shuffling.</param>
         /// <param name="items">Items to shuffle, which are copied into an array internally.</param>
         /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
-        public static GapShufflerEnumerator<TItem> GapShuffle<TItem>(this IEnhancedRandom rng, IEnumerable<TItem> items)
+        public static GapShufflerEnumerator<TItem> GapShuffler<TItem>(this IEnhancedRandom rng, IEnumerable<TItem> items)
             => new GapShufflerEnumerator<TItem>(rng, items);
 
         /// <summary>
@@ -717,7 +717,7 @@ namespace ShaiRandom.Generators
         ///
         /// The elements in the span specified are copied internally into an array; if you need to avoid a copy,
         /// you can instead use one of the overloads of
-        /// <see cref="GapShuffleInPlace{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IList{TItem})"/>;
+        /// <see cref="InPlaceGapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IList{TItem})"/>;
         /// however you'll need a Memory or IList object instead.
         ///
         /// The returned struct is a custom iterator which is very fast when used in a foreach loop.
@@ -727,7 +727,7 @@ namespace ShaiRandom.Generators
         /// <param name="rng">RNG to use for shuffling.</param>
         /// <param name="items">Items to shuffle, which are copied into an array internally.</param>
         /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
-        public static GapShufflerEnumerator<TItem> GapShuffle<TItem>(this IEnhancedRandom rng, ReadOnlySpan<TItem> items)
+        public static GapShufflerEnumerator<TItem> GapShuffler<TItem>(this IEnhancedRandom rng, ReadOnlySpan<TItem> items)
             => new GapShufflerEnumerator<TItem>(rng, items);
 
         /// <summary>
@@ -744,7 +744,7 @@ namespace ShaiRandom.Generators
         /// elements are allowed to repeat.
         ///
         /// The list specified is stored internally by the iterator; no copy of the list is made.  If you want to instead
-        /// make a copy, you can use one of the overloads of <see cref="GapShuffle{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IEnumerable{TItem})"/>.
+        /// make a copy, you can use one of the overloads of <see cref="GapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IEnumerable{TItem})"/>.
         /// Note that the order of elements in the list you give will be randomized as the iterator advances, and you should
         /// not make any changes to the list while the iterator is active.
         ///
@@ -755,7 +755,7 @@ namespace ShaiRandom.Generators
         /// <param name="rng">RNG to use for shuffling.</param>
         /// <param name="items">List of items to shuffle, which will be repeatedly shuffled in-place as the iterator advances.</param>
         /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
-        public static GapShufflerEnumerator<TItem> GapShuffleInPlace<TItem>(this IEnhancedRandom rng, IList<TItem> items)
+        public static GapShufflerEnumerator<TItem> InPlaceGapShuffler<TItem>(this IEnhancedRandom rng, IList<TItem> items)
             => new GapShufflerEnumerator<TItem>(rng, ref items);
 
         /// <summary>
@@ -771,7 +771,7 @@ namespace ShaiRandom.Generators
         /// elements are allowed to repeat.
         ///
         /// The elements in the Memory object specified are copied internally into an array; if you need to avoid a copy,
-        /// you can instead use <see cref="GapShuffleInPlace{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Memory{TItem})"/>; but this wont' work with spans.
+        /// you can instead use <see cref="InPlaceGapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Memory{TItem})"/>; but this wont' work with spans.
         ///
         /// The returned struct is a custom iterator which is very fast when used in a foreach loop.
         /// If you need an IEnumerable to use with LINQ or other code, the returned struct does implement that interface;
@@ -780,7 +780,7 @@ namespace ShaiRandom.Generators
         /// <param name="rng">RNG to use for shuffling.</param>
         /// <param name="items">Items to shuffle, which are copied into an array internally.</param>
         /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
-        public static GapShufflerEnumerator<TItem> GapShuffle<TItem>(this IEnhancedRandom rng, ReadOnlyMemory<TItem> items)
+        public static GapShufflerEnumerator<TItem> GapShuffler<TItem>(this IEnhancedRandom rng, ReadOnlyMemory<TItem> items)
             => new GapShufflerEnumerator<TItem>(rng, items.Span);
 
         /// <summary>
@@ -797,7 +797,7 @@ namespace ShaiRandom.Generators
         /// elements are allowed to repeat.
         ///
         /// The list specified is stored internally by the iterator; no copy of the list is made.  If you want to instead
-        /// make a copy, you can use <see cref="GapShuffle{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.ReadOnlyMemory{TItem})"/>.
+        /// make a copy, you can use <see cref="GapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.ReadOnlyMemory{TItem})"/>.
         /// Note that the order of elements in the list you give will be randomized as the iterator advances, and you should
         /// not make any changes to the list while the iterator is active.
         ///
@@ -808,7 +808,7 @@ namespace ShaiRandom.Generators
         /// <param name="rng">RNG to use for shuffling.</param>
         /// <param name="items">List of items to shuffle, which will be repeatedly shuffled in-place as the iterator advances.</param>
         /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
-        public static GapShufflerInPlaceMemoryEnumerator<TItem> GapShuffleInPlace<TItem>(this IEnhancedRandom rng, Memory<TItem> items)
+        public static GapShufflerInPlaceMemoryEnumerator<TItem> InPlaceGapShuffler<TItem>(this IEnhancedRandom rng, Memory<TItem> items)
             => new GapShufflerInPlaceMemoryEnumerator<TItem>(rng, items);
 
         /// <summary>
