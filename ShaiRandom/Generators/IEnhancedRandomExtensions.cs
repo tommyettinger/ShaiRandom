@@ -678,11 +678,83 @@ namespace ShaiRandom.Generators
             }
         }
 
-        public static GapShufflerEnumerator<TItem> GapShuffleInPlace<TItem>(this IEnhancedRandom rng, IList<TItem> items)
-            => new GapShufflerEnumerator<TItem>(rng, ref items);
-
+        /// <summary>
+        /// Implements an infinite "gap shuffle"; a shuffle which takes a fixed-size set of items and produce a shuffled
+        /// stream of them such that an element is never chosen in quick succession.
+        /// </summary>
+        /// <remarks>
+        /// The returned enumerator is infinite, so you will need to use it in a foreach loop and break out of it, use something
+        /// like LINQ's .Take(n) function, or use it in a while loop with a condition to break out of it in order to prevent
+        /// an infinite loop.  Until you break out of the loop, it will continue to produce a mostly random shuffled stream
+        /// of the items.  These shuffles are spaced so that a single element should always have a large amount of "gap" in
+        /// order between one appearance and the next.  Specifically, all elements must be returned precisely once before
+        /// elements are allowed to repeat.
+        ///
+        /// The elements in the IEnumerable specified are copied internally into an array; if you need to avoid a copy,
+        /// you can instead use <see cref="GapShuffleInPlace{TItem}"/>.
+        ///
+        /// The returned struct is a custom iterator which is very fast when used in a foreach loop.
+        /// If you need an IEnumerable to use with LINQ or other code, the returned struct does implement that interface;
+        /// however note that iterating over it this way will not perform as well as iterating directly over this object.
+        /// </remarks>
+        /// <param name="rng">RNG to use for shuffling.</param>
+        /// <param name="items">Items to shuffle, which are copied into an array internally.</param>
+        /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
         public static GapShufflerEnumerator<TItem> GapShuffle<TItem>(this IEnhancedRandom rng, IEnumerable<TItem> items)
             => new GapShufflerEnumerator<TItem>(rng, items);
+
+        /// <summary>
+        /// Implements an infinite "gap shuffle"; a shuffle which takes a fixed-size set of items and produce a shuffled
+        /// stream of them such that an element is never chosen in quick succession.
+        /// </summary>
+        /// <remarks>
+        /// The returned enumerator is infinite, so you will need to use it in a foreach loop and break out of it, use something
+        /// like LINQ's .Take(n) function, or use it in a while loop with a condition to break out of it in order to prevent
+        /// an infinite loop.  Until you break out of the loop, it will continue to produce a mostly random shuffled stream
+        /// of the items.  These shuffles are spaced so that a single element should always have a large amount of "gap" in
+        /// order between one appearance and the next.  Specifically, all elements must be returned precisely once before
+        /// elements are allowed to repeat.
+        ///
+        /// The elements in the span specified are copied internally into an array; if you need to avoid a copy,
+        /// you can instead use <see cref="GapShuffleInPlace{TItem}"/>; but this wont' work with spans.
+        ///
+        /// The returned struct is a custom iterator which is very fast when used in a foreach loop.
+        /// If you need an IEnumerable to use with LINQ or other code, the returned struct does implement that interface;
+        /// however note that iterating over it this way will not perform as well as iterating directly over this object.
+        /// </remarks>
+        /// <param name="rng">RNG to use for shuffling.</param>
+        /// <param name="items">Items to shuffle, which are copied into an array internally.</param>
+        /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
+        public static GapShufflerEnumerator<TItem> GapShuffle<TItem>(this IEnhancedRandom rng, ReadOnlySpan<TItem> items)
+            => new GapShufflerEnumerator<TItem>(rng, items);
+
+        /// <summary>
+        /// Implements an infinite "gap shuffle"; a shuffle which takes a fixed-size set of items and produce a shuffled
+        /// stream of them such that an element is never chosen in quick succession.  The given list is used directly,
+        /// so its order will be randomized as the iterator advances.
+        /// </summary>
+        /// <remarks>
+        /// The returned enumerator is infinite, so you will need to use it in a foreach loop and break out of it, use something
+        /// like LINQ's .Take(n) function, or use it in a while loop with a condition to break out of it in order to prevent
+        /// an infinite loop.  Until you break out of the loop, it will continue to produce a mostly random shuffled stream
+        /// of the items.  These shuffles are spaced so that a single element should always have a large amount of "gap" in
+        /// order between one appearance and the next.  Specifically, all elements must be returned precisely once before
+        /// elements are allowed to repeat.
+        ///
+        /// The list specified is stored internally by the iterator; no copy of the list is made.  If you want to instead
+        /// make a copy, you can use one of the overloads of <see cref="GapShuffle{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IEnumerable{TItem})"/>.
+        /// Note that the order of elements in the list you give will be randomized as the iterator advances, and you should
+        /// not make any changes to the list while the iterator is active.
+        ///
+        /// The returned struct is a custom iterator which is very fast when used in a foreach loop.
+        /// If you need an IEnumerable to use with LINQ or other code, the returned struct does implement that interface;
+        /// however note that iterating over it this way will not perform as well as iterating directly over this object.
+        /// </remarks>
+        /// <param name="rng">RNG to use for shuffling.</param>
+        /// <param name="items">List of items to shuffle, which will be repeatedly shuffled in-place as the iterator advances.</param>
+        /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
+        public static GapShufflerEnumerator<TItem> GapShuffleInPlace<TItem>(this IEnhancedRandom rng, IList<TItem> items)
+            => new GapShufflerEnumerator<TItem>(rng, ref items);
 
         /// <summary>
         /// Gets a normally-distributed (Gaussian) double, with a the specified mean (default 0.0) and standard deviation (default 1.0).
