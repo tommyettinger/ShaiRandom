@@ -679,6 +679,190 @@ namespace ShaiRandom.Generators
         }
 
         /// <summary>
+        /// Implements an infinite "gap shuffle"; a shuffle which takes a fixed-size set of items and produce an
+        /// infinite shuffled stream of them such that an element is never chosen in quick succession.
+        /// </summary>
+        /// <remarks>
+        /// The "gap shuffle" algorithm the returned enumerator implements, is akin to an infinite-length IEnumerable
+        /// that shuffles a sequence, iterates over the shuffled elements as they are requested, and when it runs out of
+        /// elements it shuffles the sequence again. The Gap in the name refers to how it prevents the most-recently
+        /// returned item in the sequence from being returned again immediately after the items are shuffled.
+        ///
+        /// One use case for the gap-shuffle algorithm is for text generation, where using the same word in rapid
+        /// succession makes the writing look less "educated." It can also be useful for color selection; in pixel art,
+        /// using the same colors for skin and for long hair will make a human look like they have tentacles on their
+        /// head, so you'd almost always want different colors for those two.
+        ///
+        /// The returned enumerator is infinite (but lazily evaluated), so you will need to ensure you do not attempt to
+        /// iterate it until its completion.  You can simply call the <see cref="GapShufflerEnumerator{TItem}.Next"/>
+        /// function a fixed number of times, or if you need to use it in a loop, you will need to either ensure you
+        /// call "break", or use LINQ's .Take(n) function, in order to avoid an infinite loop.
+        ///
+        /// The elements in the IEnumerable specified are copied internally into an array; if you need to avoid a copy,
+        /// you can instead use <see cref="InPlaceGapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IList{TItem})"/>
+        /// or one of its overloads.
+        ///
+        /// Many use cases may simply involve calling the Next function when you need to advance; but the returned struct
+        /// is also a custom IEnumerator, so you can use it directly in a foreach loop (and it is faster than a typical
+        /// IEnumerable when used this way).  If you need an IEnumerable to use with LINQ or other code, the returned struct
+        /// also implements IEnumerable; however note that iterating over it this way will not perform as well as
+        /// iterating directly over this object.
+        /// </remarks>
+        /// <param name="rng">RNG to use for shuffling.</param>
+        /// <param name="items">Items to shuffle, which are copied into an array internally.</param>
+        /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
+        public static GapShufflerEnumerator<TItem> GapShuffler<TItem>(this IEnhancedRandom rng, IEnumerable<TItem> items)
+            => new GapShufflerEnumerator<TItem>(rng, items);
+
+        /// <summary>
+        /// Implements an infinite "gap shuffle"; a shuffle which takes a fixed-size set of items and produce an
+        /// infinite shuffled stream of them such that an element is never chosen in quick succession.
+        /// </summary>
+        /// <remarks>
+        /// The "gap shuffle" algorithm the returned enumerator implements, is akin to an infinite-length IEnumerable
+        /// that shuffles a sequence, iterates over the shuffled elements as they are requested, and when it runs out of
+        /// elements it shuffles the sequence again. The Gap in the name refers to how it prevents the most-recently
+        /// returned item in the sequence from being returned again immediately after the items are shuffled.
+        ///
+        /// One use case for the gap-shuffle algorithm is for text generation, where using the same word in rapid
+        /// succession makes the writing look less "educated." It can also be useful for color selection; in pixel art,
+        /// using the same colors for skin and for long hair will make a human look like they have tentacles on their
+        /// head, so you'd almost always want different colors for those two.
+        ///
+        /// The returned enumerator is infinite (but lazily evaluated), so you will need to ensure you do not attempt to
+        /// iterate it until its completion.  You can simply call the <see cref="GapShufflerEnumerator{TItem}.Next"/>
+        /// function a fixed number of times, or if you need to use it in a loop, you will need to either ensure you
+        /// call "break", or use LINQ's .Take(n) function, in order to avoid an infinite loop.
+        ///
+        /// The elements in the Span specified are copied internally into an array; if you need to avoid a copy,
+        /// you can instead use <see cref="InPlaceGapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IList{TItem})"/>
+        /// or one of its overloads; however you'll need a Memory&lt;T&gt; object or some other non-ref struct.
+        ///
+        /// Many use cases may simply involve calling the Next function when you need to advance; but the returned struct
+        /// is also a custom IEnumerator, so you can use it directly in a foreach loop (and it is faster than a typical
+        /// IEnumerable when used this way).  If you need an IEnumerable to use with LINQ or other code, the returned struct
+        /// also implements IEnumerable; however note that iterating over it this way will not perform as well as
+        /// iterating directly over this object.
+        /// </remarks>
+        /// <param name="rng">RNG to use for shuffling.</param>
+        /// <param name="items">Items to shuffle, which are copied into an array internally.</param>
+        /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
+        public static GapShufflerEnumerator<TItem> GapShuffler<TItem>(this IEnhancedRandom rng, ReadOnlySpan<TItem> items)
+            => new GapShufflerEnumerator<TItem>(rng, items);
+
+        /// <summary>
+        /// Implements an infinite "gap shuffle"; a shuffle which takes a fixed-size set of items and produce an
+        /// infinite shuffled stream of them such that an element is never chosen in quick succession.
+        /// </summary>
+        /// <remarks>
+        /// The "gap shuffle" algorithm the returned enumerator implements, is akin to an infinite-length IEnumerable
+        /// that shuffles a sequence, iterates over the shuffled elements as they are requested, and when it runs out of
+        /// elements it shuffles the sequence again. The Gap in the name refers to how it prevents the most-recently
+        /// returned item in the sequence from being returned again immediately after the items are shuffled.
+        ///
+        /// One use case for the gap-shuffle algorithm is for text generation, where using the same word in rapid
+        /// succession makes the writing look less "educated." It can also be useful for color selection; in pixel art,
+        /// using the same colors for skin and for long hair will make a human look like they have tentacles on their
+        /// head, so you'd almost always want different colors for those two.
+        ///
+        /// The returned enumerator is infinite (but lazily evaluated), so you will need to ensure you do not attempt to
+        /// iterate it until its completion.  You can simply call the <see cref="GapShufflerEnumerator{TItem}.Next"/>
+        /// function a fixed number of times, or if you need to use it in a loop, you will need to either ensure you
+        /// call "break", or use LINQ's .Take(n) function, in order to avoid an infinite loop.
+        ///
+        /// The elements in the Memory object specified are copied internally into an array; if you need to avoid a copy,
+        /// you can instead use <see cref="InPlaceGapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Memory{TItem})"/>
+        /// or one of its overloads instead.
+        ///
+        /// Many use cases may simply involve calling the Next function when you need to advance; but the returned struct
+        /// is also a custom IEnumerator, so you can use it directly in a foreach loop (and it is faster than a typical
+        /// IEnumerable when used this way).  If you need an IEnumerable to use with LINQ or other code, the returned struct
+        /// also implements IEnumerable; however note that iterating over it this way will not perform as well as
+        /// iterating directly over this object.
+        /// </remarks>
+        /// <param name="rng">RNG to use for shuffling.</param>
+        /// <param name="items">Items to shuffle, which are copied into an array internally.</param>
+        /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
+        public static GapShufflerEnumerator<TItem> GapShuffler<TItem>(this IEnhancedRandom rng, ReadOnlyMemory<TItem> items)
+            => new GapShufflerEnumerator<TItem>(rng, items.Span);
+
+        /// <summary>
+        /// Implements an infinite "gap shuffle"; a shuffle which takes a fixed-size set of items and produce an
+        /// infinite shuffled stream of them such that an element is never chosen in quick succession.
+        /// </summary>
+        /// <remarks>
+        /// The "gap shuffle" algorithm the returned enumerator implements, is akin to an infinite-length IEnumerable
+        /// that shuffles a sequence, iterates over the shuffled elements as they are requested, and when it runs out of
+        /// elements it shuffles the sequence again. The Gap in the name refers to how it prevents the most-recently
+        /// returned item in the sequence from being returned again immediately after the items are shuffled.
+        ///
+        /// One use case for the gap-shuffle algorithm is for text generation, where using the same word in rapid
+        /// succession makes the writing look less "educated." It can also be useful for color selection; in pixel art,
+        /// using the same colors for skin and for long hair will make a human look like they have tentacles on their
+        /// head, so you'd almost always want different colors for those two.
+        ///
+        /// The returned enumerator is infinite (but lazily evaluated), so you will need to ensure you do not attempt to
+        /// iterate it until its completion.  You can simply call the <see cref="GapShufflerEnumerator{TItem}.Next"/>
+        /// function a fixed number of times, or if you need to use it in a loop, you will need to either ensure you
+        /// call "break", or use LINQ's .Take(n) function, in order to avoid an infinite loop.
+        ///
+        /// The given list is stored directly in the enumerator, so elements will be shuffled in-place as needed as the
+        /// enumerator is advanced.  Therefore, you should not make any changes to the list while the enumerator is active.
+        /// If you want to instead make a copy, you can use one of the overloads of
+        /// <see cref="GapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IEnumerable{TItem})"/>
+        /// instead.
+        ///
+        /// Many use cases may simply involve calling the Next function when you need to advance; but the returned struct
+        /// is also a custom IEnumerator, so you can use it directly in a foreach loop (and it is faster than a typical
+        /// IEnumerable when used this way).  If you need an IEnumerable to use with LINQ or other code, the returned struct
+        /// also implements IEnumerable; however note that iterating over it this way will not perform as well as
+        /// iterating directly over this object.
+        /// </remarks>
+        /// <param name="rng">RNG to use for shuffling.</param>
+        /// <param name="items">List of items to shuffle, which will be repeatedly shuffled in-place as the iterator advances.</param>
+        /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
+        public static GapShufflerEnumerator<TItem> InPlaceGapShuffler<TItem>(this IEnhancedRandom rng, IList<TItem> items)
+            => new GapShufflerEnumerator<TItem>(rng, ref items);
+
+        /// <summary>
+        /// Implements an infinite "gap shuffle"; a shuffle which takes a fixed-size set of items and produce an
+        /// infinite shuffled stream of them such that an element is never chosen in quick succession.
+        /// </summary>
+        /// <remarks>
+        /// The "gap shuffle" algorithm the returned enumerator implements, is akin to an infinite-length IEnumerable
+        /// that shuffles a sequence, iterates over the shuffled elements as they are requested, and when it runs out of
+        /// elements it shuffles the sequence again. The Gap in the name refers to how it prevents the most-recently
+        /// returned item in the sequence from being returned again immediately after the items are shuffled.
+        ///
+        /// One use case for the gap-shuffle algorithm is for text generation, where using the same word in rapid
+        /// succession makes the writing look less "educated." It can also be useful for color selection; in pixel art,
+        /// using the same colors for skin and for long hair will make a human look like they have tentacles on their
+        /// head, so you'd almost always want different colors for those two.
+        ///
+        /// The returned enumerator is infinite (but lazily evaluated), so you will need to ensure you do not attempt to
+        /// iterate it until its completion.  You can simply call the <see cref="GapShufflerInPlaceMemoryEnumerator{TItem}.Next"/>
+        /// function a fixed number of times, or if you need to use it in a loop, you will need to either ensure you
+        /// call "break", or use LINQ's .Take(n) function, in order to avoid an infinite loop.
+        ///
+        /// The given Memory object is stored directly in the enumerator, so elements will be shuffled in-place as needed as the
+        /// enumerator is advanced.  Therefore, you should not make any changes to the memory while the enumerator is active.
+        /// If you want to instead make a copy, you can use
+        /// <see cref="GapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.ReadOnlyMemory{TItem})"/> or one of
+        /// its overloads instead.
+        ///
+        /// Many use cases may simply involve calling the Next function when you need to advance; but the returned struct
+        /// is also a custom IEnumerator, so you can use it directly in a foreach loop (and it is faster than a typical
+        /// IEnumerable when used this way).  If you need an IEnumerable to use with LINQ or other code, the returned struct
+        /// also implements IEnumerable; however note that iterating over it this way will not perform as well as
+        /// iterating directly over this object.
+        /// </remarks>
+        /// <param name="rng">RNG to use for shuffling.</param>
+        /// <param name="items">List of items to shuffle, which will be repeatedly shuffled in-place as the iterator advances.</param>
+        /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
+        public static GapShufflerInPlaceMemoryEnumerator<TItem> InPlaceGapShuffler<TItem>(this IEnhancedRandom rng, Memory<TItem> items)
+            => new GapShufflerInPlaceMemoryEnumerator<TItem>(rng, items);
+
+        /// <summary>
         /// Gets a normally-distributed (Gaussian) double, with a the specified mean (default 0.0) and standard deviation (default 1.0).
         /// If the standard deviation is 1.0 and the mean is 0.0, then this can produce results between -8.209536145151493 and 8.209536145151493 (both extremely rarely).
         /// </summary>
