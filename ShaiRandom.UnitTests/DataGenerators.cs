@@ -20,6 +20,7 @@ namespace ShaiRandom.UnitTests
         /// <returns>All qualifying generator types in the library.</returns>
         public static IEnumerable<IEnhancedRandom> CreateGenerators(bool includeWrappers)
         {
+            yield return new AceRandom();
             yield return new DistinctRandom();
             yield return new FourWheelRandom();
             yield return new LaserRandom();

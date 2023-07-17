@@ -222,6 +222,52 @@ namespace ShaiRandom.Generators
         }
 
         /// <summary>
+        /// Sets each state variable to stateA, stateB, stateC, stateD, or stateE, alternating.
+        /// </summary>
+        /// <remarks>
+        /// This uses <see cref="SetSelectedState(int, ulong)"/> to
+        /// set the values. If there is one state variable (<see cref="StateCount"/> is 1),
+        /// then this only sets that state variable to stateA. If there are two state
+        /// variables, the first is set to stateA, and the second to stateB. With three
+        /// state variables, the first is set to stateA, the second to stateB, and the third
+        /// to stateC. With four state variables, the first is set to stateA, the second to
+        /// stateB, the third to stateC, and the fourth to stateD. With give state variables,
+        /// the first is set to stateA, the second to stateB, the third to stateC, the fourth
+        /// to stateD, and the fifth to stateE. If there are more, it
+        /// reuses stateA, then stateB, then stateC, then stateD, then stateE, then stateA,
+        /// and so on until all variables are set.
+        /// </remarks>
+        /// <param name="stateA">the ulong value to use for states at index 0, 5, 10, 15...</param>
+        /// <param name="stateB">the ulong value to use for states at index 1, 6, 11, 16...</param>
+        /// <param name="stateC">the ulong value to use for states at index 2, 7, 12, 17...</param>
+        /// <param name="stateD">the ulong value to use for states at index 3, 8, 13, 18...</param>
+        /// <param name="stateE">the ulong value to use for states at index 4, 9, 14, 19...</param>
+        void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD, ulong stateE)
+        {
+            int c = StateCount;
+            for (int i = 0; i < c; i += 5)
+            {
+                SetSelectedState(i, stateA);
+            }
+            for (int i = 1; i < c; i += 5)
+            {
+                SetSelectedState(i, stateB);
+            }
+            for (int i = 2; i < c; i += 5)
+            {
+                SetSelectedState(i, stateC);
+            }
+            for (int i = 3; i < c; i += 5)
+            {
+                SetSelectedState(i, stateD);
+            }
+            for (int i = 4; i < c; i += 5)
+            {
+                SetSelectedState(i, stateE);
+            }
+        }
+
+        /// <summary>
         /// Sets all state variables to alternating values chosen from states. If states is empty,
         /// then this does nothing, and leaves the current generator unchanged. This works for
         /// generators with any <see cref="StateCount"/>, but may allocate an array if states is

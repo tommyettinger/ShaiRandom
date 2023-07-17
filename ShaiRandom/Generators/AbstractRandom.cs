@@ -128,6 +128,9 @@ namespace ShaiRandom.Generators
         public virtual void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD) => ((IEnhancedRandom)this).SetState(stateA, stateB, stateC, stateD);
 
         /// <inheritdoc />
+        public virtual void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD, ulong stateE) => ((IEnhancedRandom)this).SetState(stateA, stateB, stateC, stateD, stateE);
+
+        /// <inheritdoc />
         public virtual void SetState(params ulong[] states) => ((IEnhancedRandom)this).SetState(states);
 
         /// <inheritdoc />

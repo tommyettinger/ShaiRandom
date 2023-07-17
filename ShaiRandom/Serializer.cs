@@ -302,6 +302,7 @@ namespace ShaiRandom
         private static IEnumerable<IEnhancedRandom> GetSerializerInstancesForShaiRandomGens()
         {
             // Generators
+            yield return new AceRandom(1UL, 1UL, 1UL, 1UL, 1UL);
             yield return new DistinctRandom(1UL);
             yield return new FourWheelRandom(1UL, 1UL, 1UL, 1UL);
             yield return new KnownSeriesRandom();
