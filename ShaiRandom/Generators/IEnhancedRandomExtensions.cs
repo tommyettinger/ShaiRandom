@@ -770,11 +770,9 @@ namespace ShaiRandom.Generators
         /// function a fixed number of times, or if you need to use it in a loop, you will need to either ensure you
         /// call "break", or use LINQ's .Take(n) function, in order to avoid an infinite loop.
         ///
-        /// The given list is stored directly in the enumerator, so elements will be shuffled in-place as needed as the
-        /// enumerator is advanced.  Therefore, you should not make any changes to the list while the enumerator is active.
-        /// If you want to instead make a copy, you can use one of the overloads of
-        /// <see cref="GapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IEnumerable{TItem})"/>
-        /// instead.
+        /// The elements in the Memory object specified are copied internally into an array; if you need to avoid a copy,
+        /// you can instead use <see cref="InPlaceGapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Memory{TItem})"/>
+        /// or one of its overloads instead.
         ///
         /// Many use cases may simply involve calling the Next function when you need to advance; but the returned struct
         /// is also a custom IEnumerator, so you can use it directly in a foreach loop (and it is faster than a typical
@@ -783,10 +781,10 @@ namespace ShaiRandom.Generators
         /// iterating directly over this object.
         /// </remarks>
         /// <param name="rng">RNG to use for shuffling.</param>
-        /// <param name="items">List of items to shuffle, which will be repeatedly shuffled in-place as the iterator advances.</param>
+        /// <param name="items">Items to shuffle, which are copied into an array internally.</param>
         /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
-        public static GapShufflerEnumerator<TItem> InPlaceGapShuffler<TItem>(this IEnhancedRandom rng, IList<TItem> items)
-            => new GapShufflerEnumerator<TItem>(rng, ref items);
+        public static GapShufflerEnumerator<TItem> GapShuffler<TItem>(this IEnhancedRandom rng, ReadOnlyMemory<TItem> items)
+            => new GapShufflerEnumerator<TItem>(rng, items.Span);
 
         /// <summary>
         /// Implements an infinite "gap shuffle"; a shuffle which takes a fixed-size set of items and produce an
@@ -808,9 +806,11 @@ namespace ShaiRandom.Generators
         /// function a fixed number of times, or if you need to use it in a loop, you will need to either ensure you
         /// call "break", or use LINQ's .Take(n) function, in order to avoid an infinite loop.
         ///
-        /// The elements in the Memory object specified are copied internally into an array; if you need to avoid a copy,
-        /// you can instead use <see cref="InPlaceGapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Memory{TItem})"/>
-        /// or one of its overloads instead.
+        /// The given list is stored directly in the enumerator, so elements will be shuffled in-place as needed as the
+        /// enumerator is advanced.  Therefore, you should not make any changes to the list while the enumerator is active.
+        /// If you want to instead make a copy, you can use one of the overloads of
+        /// <see cref="GapShuffler{TItem}(ShaiRandom.Generators.IEnhancedRandom,System.Collections.Generic.IEnumerable{TItem})"/>
+        /// instead.
         ///
         /// Many use cases may simply involve calling the Next function when you need to advance; but the returned struct
         /// is also a custom IEnumerator, so you can use it directly in a foreach loop (and it is faster than a typical
@@ -819,10 +819,10 @@ namespace ShaiRandom.Generators
         /// iterating directly over this object.
         /// </remarks>
         /// <param name="rng">RNG to use for shuffling.</param>
-        /// <param name="items">Items to shuffle, which are copied into an array internally.</param>
+        /// <param name="items">List of items to shuffle, which will be repeatedly shuffled in-place as the iterator advances.</param>
         /// <returns>An infinite stream of (mostly) random shuffles of the given items, one item at a time.</returns>
-        public static GapShufflerEnumerator<TItem> GapShuffler<TItem>(this IEnhancedRandom rng, ReadOnlyMemory<TItem> items)
-            => new GapShufflerEnumerator<TItem>(rng, items.Span);
+        public static GapShufflerEnumerator<TItem> InPlaceGapShuffler<TItem>(this IEnhancedRandom rng, IList<TItem> items)
+            => new GapShufflerEnumerator<TItem>(rng, ref items);
 
         /// <summary>
         /// Implements an infinite "gap shuffle"; a shuffle which takes a fixed-size set of items and produce an
