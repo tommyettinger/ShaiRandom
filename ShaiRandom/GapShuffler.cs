@@ -143,6 +143,16 @@ namespace ShaiRandom
         }
 
         /// <summary>
+        /// Returns the next item in the sequence.
+        /// </summary>
+        /// <returns>The next (shuffled) item in the sequence.</returns>
+        public TItem Next()
+        {
+            MoveNext();
+            return _current;
+        }
+
+        /// <summary>
         /// Returns this enumerator.
         /// </summary>
         /// <returns>This enumerator.</returns>
@@ -257,6 +267,16 @@ namespace ShaiRandom
             }
             _current = span[_index++];
             return true;
+        }
+
+        /// <summary>
+        /// Returns the next item in the sequence.
+        /// </summary>
+        /// <returns>The next (shuffled) item in the sequence.</returns>
+        public TItem Next()
+        {
+            MoveNext();
+            return _current;
         }
 
         /// <summary>
