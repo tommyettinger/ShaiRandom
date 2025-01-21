@@ -560,6 +560,102 @@ namespace ShaiRandom.PerformanceTests
         public ulong Ace() => _aceRandom.NextULong(1UL, 1000UL);
     }
     /// <summary>
+    /// On .NET 9.0, newer machine:
+    /// <code>
+    ///BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.3880/23H2/2023Update/SunValley3)
+    ///12th Gen Intel Core i7-12800H, 1 CPU, 20 logical and 14 physical cores
+    ///.NET SDK 9.0.101
+    ///  [Host]     : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///  Job-BFMEEA : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///
+    ///Runtime=.NET 9.0  Toolchain=net90
+    ///
+    ///| Method             | Mean      | Error     | StdDev    |
+    ///|------------------- |----------:|----------:|----------:|
+    ///| Seeded             | 8.8398 ns | 0.0448 ns | 0.0397 ns |
+    ///| Unseeded           | 0.5654 ns | 0.0159 ns | 0.0149 ns |
+    ///| Distinct           | 0.3708 ns | 0.0122 ns | 0.0114 ns |
+    ///| Laser              | 0.0000 ns | 0.0000 ns | 0.0000 ns |
+    ///| Tricycle           | 0.3560 ns | 0.0056 ns | 0.0052 ns |
+    ///| FourWheel          | 0.3582 ns | 0.0068 ns | 0.0064 ns |
+    ///| Stranger           | 0.3455 ns | 0.0118 ns | 0.0110 ns |
+    ///| Xoshiro256StarStar | 0.3432 ns | 0.0087 ns | 0.0068 ns |
+    ///| Xorshift128Plus    | 0.3535 ns | 0.0075 ns | 0.0070 ns |
+    ///| RomuTrio           | 0.1393 ns | 0.0092 ns | 0.0087 ns |
+    ///| Mizuchi            | 0.3496 ns | 0.0118 ns | 0.0110 ns |
+    ///| Trim               | 0.2369 ns | 0.0083 ns | 0.0078 ns |
+    ///| Whisker            | 0.4129 ns | 0.0121 ns | 0.0113 ns |
+    ///| Scruff             | 0.3437 ns | 0.0069 ns | 0.0065 ns |
+    ///| Ace                | 0.3083 ns | 0.0072 ns | 0.0067 ns |
+    /// </code>
+    /// </summary>
+    public class RandomULongBigMulComparison
+    {
+        private readonly DistinctRandom _distinctRandom = new DistinctRandom(1UL);
+        private readonly LaserRandom _laserRandom = new LaserRandom(1UL);
+        private readonly TricycleRandom _tricycleRandom = new TricycleRandom(1UL);
+        private readonly FourWheelRandom _fourWheelRandom = new FourWheelRandom(1UL);
+        private readonly StrangerRandom _strangerRandom = new StrangerRandom(1UL);
+        private readonly Xoshiro256StarStarRandom _xoshiro256StarStarRandom = new Xoshiro256StarStarRandom(1UL);
+        private readonly Xorshift128PlusRandom _xorshift128PlusRandom = new Xorshift128PlusRandom(1UL);
+        private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
+        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+        private readonly TrimRandom _trimRandom = new TrimRandom(1UL);
+        private readonly WhiskerRandom _whiskerRandom = new WhiskerRandom(1UL);
+        private readonly ScruffRandom _scruffRandom = new ScruffRandom(1UL);
+        private readonly AceRandom _aceRandom = new AceRandom(1UL);
+
+#if NET6_0_OR_GREATER
+        private readonly Random _seededRandom = new Random(1);
+        private readonly Random _unseededRandom = new Random();
+
+        [Benchmark]
+        public long Seeded() => _seededRandom.NextInt64(1L, 1000L);
+
+        [Benchmark]
+        public long Unseeded() => _unseededRandom.NextInt64(1L, 1000L);
+#endif
+
+        [Benchmark]
+        public ulong Distinct() => Math.BigMul(_distinctRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong Laser() => Math.BigMul(_laserRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong Tricycle() => Math.BigMul(_tricycleRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong FourWheel() => Math.BigMul(_fourWheelRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong Stranger() => Math.BigMul(_strangerRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong Xoshiro256StarStar() => Math.BigMul(_xoshiro256StarStarRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong Xorshift128Plus() => Math.BigMul(_xorshift128PlusRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong RomuTrio() => Math.BigMul(_romuTrioRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong Mizuchi() => Math.BigMul(_mizuchiRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong Trim() => Math.BigMul(_trimRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong Whisker() => Math.BigMul(_whiskerRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong Scruff() => Math.BigMul(_scruffRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong Ace() => Math.BigMul(_aceRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+    }
+    /// <summary>
     /// .NET 6.0 (newer benchmark, using IEnhancedRandom and IGenerator):
     ///|             Method |     Mean |     Error |    StdDev |   Median |
 	///|------------------- |---------:|----------:|----------:|---------:|
