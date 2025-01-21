@@ -1,10 +1,10 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System;
+using System.Runtime.CompilerServices;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using ShaiRandom.Generators;
-using Troschuetz.Random.Generators;
 using Troschuetz.Random;
-using System.Runtime.CompilerServices;
-using System;
+using Troschuetz.Random.Generators;
 #if NETCOREAPP3_0_OR_GREATER
 using System.Numerics;
 #endif
@@ -194,16 +194,16 @@ namespace ShaiRandom.PerformanceTests
         private IGenerator _gen = null!;
 
 #if NET6_0_OR_GREATER
-        private System.Random _seededRandom = null!;
-        private System.Random _unseededRandom = null!;
+        private Random _seededRandom = null!;
+        private Random _unseededRandom = null!;
 
         [GlobalSetup(Target = nameof(Seeded))]
-        public void SeededSetup() => _seededRandom = new System.Random(1);
+        public void SeededSetup() => _seededRandom = new Random(1);
         [Benchmark]
         public int Seeded() => _seededRandom.Next(999);
 
         [GlobalSetup(Target = nameof(Unseeded))]
-        public void UnseededSetup() => _unseededRandom = new System.Random();
+        public void UnseededSetup() => _unseededRandom = new Random();
         [Benchmark]
         public int Unseeded() => _unseededRandom.Next(999);
 #endif
@@ -466,6 +466,32 @@ namespace ShaiRandom.PerformanceTests
     ///|        RomuTrio |  0.9722 ns | 0.0480 ns | 0.0761 ns |  1.0006 ns |
     ///|         Mizuchi |  1.0065 ns | 0.0498 ns | 0.0648 ns |  0.9937 ns |
     /// </code>
+    /// On .NET 9.0, newr machine:
+    ///BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.3880/23H2/2023Update/SunValley3)
+    ///12th Gen Intel Core i7-12800H, 1 CPU, 20 logical and 14 physical cores
+    ///.NET SDK 9.0.101
+    ///  [Host]     : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///  Job-LBPMMR : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///
+    ///Runtime=.NET 9.0  Toolchain=net90
+    ///
+    ///| Method             | Mean      | Error     | StdDev    |
+    ///|------------------- |----------:|----------:|----------:|
+    ///| Seeded             | 9.1019 ns | 0.1863 ns | 0.1555 ns |
+    ///| Unseeded           | 0.5776 ns | 0.0099 ns | 0.0093 ns |
+    ///| Distinct           | 0.3463 ns | 0.0179 ns | 0.0168 ns |
+    ///| Laser              | 0.1209 ns | 0.0112 ns | 0.0105 ns |
+    ///| Tricycle           | 0.3586 ns | 0.0133 ns | 0.0111 ns |
+    ///| FourWheel          | 0.1368 ns | 0.0057 ns | 0.0047 ns |
+    ///| Stranger           | 0.3475 ns | 0.0068 ns | 0.0064 ns |
+    ///| Xoshiro256StarStar | 0.1385 ns | 0.0075 ns | 0.0070 ns |
+    ///| Xorshift128Plus    | 0.1449 ns | 0.0065 ns | 0.0061 ns |
+    ///| RomuTrio           | 0.1367 ns | 0.0145 ns | 0.0128 ns |
+    ///| Mizuchi            | 0.1336 ns | 0.0096 ns | 0.0090 ns |
+    ///| Trim               | 0.1424 ns | 0.0137 ns | 0.0128 ns |
+    ///| Whisker            | 0.3322 ns | 0.0123 ns | 0.0115 ns |
+    ///| Scruff             | 0.1361 ns | 0.0080 ns | 0.0075 ns |
+    ///| Ace                | 0.1352 ns | 0.0082 ns | 0.0076 ns |
     /// </summary>
     public class RandomULongBoundedComparison
     {
@@ -483,9 +509,9 @@ namespace ShaiRandom.PerformanceTests
         private readonly ScruffRandom _scruffRandom = new ScruffRandom(1UL);
         private readonly AceRandom _aceRandom = new AceRandom(1UL);
 
-#if NET6_0
-        private readonly System.Random _seededRandom = new System.Random(1);
-        private readonly System.Random _unseededRandom = new System.Random();
+#if NET6_0_OR_GREATER
+        private readonly Random _seededRandom = new Random(1);
+        private readonly Random _unseededRandom = new Random();
 
         [Benchmark]
         public long Seeded() => _seededRandom.NextInt64(1L, 1000L);
@@ -596,16 +622,16 @@ namespace ShaiRandom.PerformanceTests
         private IGenerator _gen = null!;
 
 #if NET6_0_OR_GREATER
-        private System.Random _seededRandom = null!;
-        private System.Random _unseededRandom = null!;
+        private Random _seededRandom = null!;
+        private Random _unseededRandom = null!;
 
         [GlobalSetup(Target = nameof(Seeded))]
-        public void SeededSetup() => _seededRandom = new System.Random(1);
+        public void SeededSetup() => _seededRandom = new Random(1);
         [Benchmark]
         public double Seeded() => _seededRandom.NextDouble();
 
         [GlobalSetup(Target = nameof(Unseeded))]
-        public void UnseededSetup() => _unseededRandom = new System.Random();
+        public void UnseededSetup() => _unseededRandom = new Random();
         [Benchmark]
         public double Unseeded() => _unseededRandom.NextDouble();
 #endif
@@ -1052,13 +1078,13 @@ namespace ShaiRandom.PerformanceTests
         private static double StrangeDouble(MizuchiRandom random)
         {
             long bits = random.NextLong();
-            return System.BitConverter.Int64BitsToDouble((0x7C10000000000000L + (System.BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
+            return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
         }
         private static double BitsyDouble(MizuchiRandom random)
         {
             ulong bits = random.NextULong();
 #if NETCOREAPP3_0_OR_GREATER
-            return System.BitConverter.Int64BitsToDouble(1022L - BitOperations.TrailingZeroCount(bits) << 52 | (long)(bits >> 12));
+            return BitConverter.Int64BitsToDouble(1022L - BitOperations.TrailingZeroCount(bits) << 52 | (long)(bits >> 12));
 #else
             ulong v = bits;
             long c = 64L;
@@ -1498,7 +1524,7 @@ namespace ShaiRandom.PerformanceTests
             return *((double*)&value) - 1.0;
         }
 
-        [GlobalSetup(Targets = new string[]{nameof(InlinedUnsafeDouble), nameof(InlinedSafeDouble)})]
+        [GlobalSetup(Targets = new[]{nameof(InlinedUnsafeDouble), nameof(InlinedSafeDouble)})]
         public void DoubleSetup()
         {
             StateA = 1UL;

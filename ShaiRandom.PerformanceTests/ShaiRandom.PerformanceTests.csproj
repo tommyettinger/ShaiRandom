@@ -10,7 +10,7 @@
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <TargetFrameworks>net5.0;net6.0;net8.0;net9.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
