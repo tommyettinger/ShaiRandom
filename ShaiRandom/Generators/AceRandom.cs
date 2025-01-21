@@ -19,7 +19,7 @@ namespace ShaiRandom.Generators
         /// The identifying tag here is "AceR" .
         /// </summary>
         public override string DefaultTag => "AceR";
-        
+
         /// <summary>
         /// The first state; can be any ulong.
         /// </summary>
@@ -75,6 +75,7 @@ namespace ShaiRandom.Generators
         /// <param name="stateB">Any ulong.</param>
         /// <param name="stateC">Any ulong.</param>
         /// <param name="stateD">Any ulong.</param>
+        /// <param name="stateE">Any ulong.</param>
         public AceRandom(ulong stateA, ulong stateB, ulong stateC, ulong stateD, ulong stateE)
         {
             StateA = stateA;

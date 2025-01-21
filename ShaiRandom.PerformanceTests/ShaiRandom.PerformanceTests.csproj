@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <StartupObject>ShaiRandom.PerformanceTests.Benchmarks</StartupObject>
@@ -12,10 +10,14 @@
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <TargetFrameworks>net5.0;net6.0;net8.0;net9.0;netcoreapp3.1</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   
   <ItemGroup>
