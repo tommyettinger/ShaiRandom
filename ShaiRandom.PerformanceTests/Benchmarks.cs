@@ -12,6 +12,7 @@ using System.Numerics;
 namespace ShaiRandom.PerformanceTests
 {
     /// <summary>
+    ///The .NET 5 and 6 benchmarks here were done on an older machine.
 	///.NET 5.0
     ///|          Method |      Mean |     Error |    StdDev |    Median |
     ///|---------------- |----------:|----------:|----------:|----------:|
@@ -47,6 +48,30 @@ namespace ShaiRandom.PerformanceTests
     ///|              NR3Q1 | 2.726 ns | 0.0152 ns | 0.0135 ns | 2.726 ns |
     ///|              NR3Q2 | 2.628 ns | 0.0098 ns | 0.0087 ns | 2.629 ns |
     ///|            MT19937 | 4.643 ns | 0.0144 ns | 0.0135 ns | 4.642 ns |
+    ///.NET 9.0:
+    ///BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.3880/23H2/2023Update/SunValley3)
+    ///12th Gen Intel Core i7-12800H, 1 CPU, 20 logical and 14 physical cores
+    ///.NET SDK 9.0.101
+    ///  [Host]     : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///  Job-UYLXYQ : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///
+    ///Runtime=.NET 9.0  Toolchain=net90
+    ///
+    ///| Method             | Mean      | Error     | StdDev    |
+    ///|------------------- |----------:|----------:|----------:|
+    ///| Distinct           | 0.3538 ns | 0.0084 ns | 0.0079 ns |
+    ///| Laser              | 0.1390 ns | 0.0087 ns | 0.0082 ns |
+    ///| Tricycle           | 0.1431 ns | 0.0079 ns | 0.0070 ns |
+    ///| FourWheel          | 0.1383 ns | 0.0062 ns | 0.0058 ns |
+    ///| Stranger           | 0.1330 ns | 0.0060 ns | 0.0056 ns |
+    ///| Xoshiro256StarStar | 0.2319 ns | 0.0109 ns | 0.0102 ns |
+    ///| Xorshift128Plus    | 0.0000 ns | 0.0000 ns | 0.0000 ns |
+    ///| RomuTrio           | 0.1319 ns | 0.0134 ns | 0.0125 ns |
+    ///| Mizuchi            | 0.1322 ns | 0.0101 ns | 0.0094 ns |
+    ///| Trim               | 0.1184 ns | 0.0063 ns | 0.0053 ns |
+    ///| Whisker            | 0.1287 ns | 0.0090 ns | 0.0080 ns |
+    ///| Scruff             | 0.1345 ns | 0.0104 ns | 0.0097 ns |
+    ///| Ace                | 0.1360 ns | 0.0085 ns | 0.0080 ns |
     /// </summary>
     public class RandomUIntComparison
     {
