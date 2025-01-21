@@ -371,6 +371,30 @@ namespace ShaiRandom.PerformanceTests
     ///|           RomuTrio | 1.244 ns | 0.0503 ns | 0.0494 ns | 1.220 ns |
     ///|            Mizuchi | 1.407 ns | 0.0572 ns | 0.0971 ns | 1.471 ns |
     ///|               Trim | 1.323 ns | 0.0558 ns | 0.1249 ns | 1.235 ns |
+    ///.NET 9.0, by interface, newer hardware:
+    ///BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.3880/23H2/2023Update/SunValley3)
+    ///12th Gen Intel Core i7-12800H, 1 CPU, 20 logical and 14 physical cores
+    ///.NET SDK 9.0.101
+    ///  [Host]     : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///  Job-VUZCHT : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///
+    ///Runtime=.NET 9.0  Toolchain=net90
+    ///
+    ///| Method             | Mean      | Error     | StdDev    |
+    ///|------------------- |----------:|----------:|----------:|
+    ///| Distinct           | 0.1326 ns | 0.0056 ns | 0.0052 ns |
+    ///| Laser              | 0.1335 ns | 0.0090 ns | 0.0084 ns |
+    ///| Tricycle           | 0.3493 ns | 0.0146 ns | 0.0137 ns |
+    ///| FourWheel          | 0.1347 ns | 0.0068 ns | 0.0060 ns |
+    ///| Stranger           | 0.3343 ns | 0.0075 ns | 0.0070 ns |
+    ///| Xoshiro256StarStar | 0.2120 ns | 0.0175 ns | 0.0164 ns |
+    ///| Xorshift128Plus    | 0.1532 ns | 0.0087 ns | 0.0082 ns |
+    ///| RomuTrio           | 0.1138 ns | 0.0084 ns | 0.0075 ns |
+    ///| Mizuchi            | 0.1163 ns | 0.0087 ns | 0.0081 ns |
+    ///| Trim               | 0.3587 ns | 0.0146 ns | 0.0137 ns |
+    ///| Whisker            | 0.1615 ns | 0.0080 ns | 0.0071 ns |
+    ///| Scruff             | 0.1384 ns | 0.0049 ns | 0.0044 ns |
+    ///| Ace                | 0.3373 ns | 0.0070 ns | 0.0065 ns |
     /// </summary>
     public class RandomULongComparison
     {
@@ -435,6 +459,11 @@ namespace ShaiRandom.PerformanceTests
         public void ScruffSetup() => _rng = new ScruffRandom(1UL);
         [Benchmark]
         public ulong Scruff() => _rng.NextULong();
+
+        [GlobalSetup(Target = nameof(Ace))]
+        public void AceSetup() => _rng = new AceRandom(1UL);
+        [Benchmark]
+        public ulong Ace() => _rng.NextULong();
 
     }
     /// <summary>
