@@ -17,12 +17,12 @@ namespace ShaiRandom.Generators
     public abstract class AbstractRandom : IEnhancedRandom
     {
         /// <summary>
-        /// 2^-24; used in the process of creating a single-precision floating point value in range [0, 1) based on a ulong.
+        /// 2^-24; used in the process of creating a single-precision floating point value in range [0, 1) based on an ulong.
         /// </summary>
         public static readonly float FloatAdjust = MathF.Pow(2f, -24f);
 
         /// <summary>
-        /// 2^-53; used in the process of creating a double-precision floating point value in range [0, 1) based on a ulong.
+        /// 2^-53; used in the process of creating a double-precision floating point value in range [0, 1) based on an ulong.
         /// </summary>
         public static readonly double DoubleAdjust = Math.Pow(2.0, -53.0);
 
@@ -35,7 +35,7 @@ namespace ShaiRandom.Generators
         /// Used by zero-argument constructors, typically, as a "don't care" option for seeding that creates a random ulong state.
         /// </summary>
         /// <returns>A random ulong from an unseeded random number generator, typically to be used as a random seed.</returns>
-        protected static ulong MakeSeed()
+        public static ulong MakeSeed()
         {
             unchecked {
                 return (ulong)SeedingRandom.Next() ^ (ulong)SeedingRandom.Next() << 21 ^ (ulong)SeedingRandom.Next() << 42;
@@ -366,7 +366,9 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public virtual double NextInclusiveDouble()
         {
-            return NextULong(0x20000000000001L) * DoubleAdjust;
+            // return NextULong(0x20000000000001L) * DoubleAdjust;
+            ulong bits = NextULong();
+            return BitConverter.Int64BitsToDouble(1022L - BitOperations.LeadingZeroCount(bits) << 52 | ((long)bits & 0xFFFFFFFFFFFFFL) + 1L) - 2.7105054312137617E-20;
         }
 
         /// <inheritdoc />
@@ -384,7 +386,9 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public virtual float NextInclusiveFloat()
         {
-            return NextInt(0x1000001) * FloatAdjust;
+            // return NextInt(0x1000001) * FloatAdjust;
+            ulong bits = NextULong();
+            return BitConverter.Int32BitsToSingle(126 - BitOperations.LeadingZeroCount(bits) << 23 | ((int)bits & 0x7FFFFF) + 1) - 2.7105058E-20f;
         }
 
         /// <inheritdoc />
