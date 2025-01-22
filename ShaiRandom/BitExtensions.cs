@@ -86,26 +86,31 @@ namespace ShaiRandom
         /// <summary>
         /// If x is finite, returns a double that is stepsFromZero ULPs from x moving away from 0.
         /// </summary>
-        /// <remarks>This is almost the same as Math.BitIncrement in more recent .NET versions, but returns
-        /// x as-is if it is not finite (matching the behavior in mathematics more accurately).
+        /// <remarks>This acts like <see cref="BitIncrement(double)"/> or <see cref="BitDecrement(double)"/> depending
+        /// on the sign of stepsFromZero, and can step more than once.
         /// It can move away from 0 if stepsFromZero is positive, or toward 0 if it is negative.
         /// If x is +0.0, then positive steps move toward positive infinity, and negative steps move toward negative
         /// infinity. This is reversed if x is -0.0 . If stepsFromZero is negative and larger (in ULPs) than the
-        /// distance to zero, behavior is undefined.
+        /// distance to zero, this returns 0.0 if x is positive, of -0.0 if x is negative. If this would return a double
+        /// greater than <see cref="double.MaxValue"/>, it instead returns positive infinity; similarly, values lower
+        /// than negative MaxValue return negative infinity. Overflow can result in other results being returned;
+        /// stepsFromZero should generally be small in most cases (all int values are valid, for instance).
         /// </remarks>
         /// <param name="x">The starting value.</param>
         /// <param name="stepsFromZero">How many ULPs to move away from 0; may be negative to move toward 0 .</param>
         /// <returns>The double that is the given number of ULPs from x moving away from 0.</returns>
         public static double BitStep(double x, long stepsFromZero)
         {
-            long bits = BitConverter.DoubleToInt64Bits(x);
-
+            long bits = BitConverter.DoubleToInt64Bits(x),
+                sign = bits & -0x8000000000000000L,
+                mag = bits & 0x7FFFFFFFFFFFFFFFL;
             return (bits & 0x7FF0000000000000L) >= 0x7FF0000000000000L
                 // NaN returns NaN
                 // -Infinity returns -Infinity
                 // +Infinity returns +Infinity
                 ? x
-                : BitConverter.Int64BitsToDouble(bits + (bits >> 63 | 1L) * stepsFromZero);
+                : BitConverter.Int64BitsToDouble(Math.Clamp(mag + stepsFromZero, 0L, 0x7FF0000000000000L) | sign);
+
         }
 
         /// <summary>
