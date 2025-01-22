@@ -18,32 +18,32 @@ namespace ShaiRandom.UnitTests
                 Assert.InRange(fwr.NextLong(-100L, 101L), -100L, 100L);
                 Assert.InRange(fwr.NextLong(100L, -101L), -100L, 100L);
                 Assert.InRange(fwr.NextULong(100UL, 301UL), 100UL, 300UL);
-                Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
+                Assert.InRange(fwr.NextExclusiveDouble(), 2.710505431213761E-20, 0.9999999999999999);
                 Assert.InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
             }
             fwr.StateD = 1UL;
-            Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
+            Assert.InRange(fwr.NextExclusiveDouble(), 2.710505431213761E-20, 0.9999999999999999);
 
             fwr.StateD = 0UL;
-            Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
+            Assert.InRange(fwr.NextExclusiveDouble(), 2.710505431213761E-20, 0.9999999999999999);
 
             fwr.StateD = 0xFFFFFFFFFFFFFFFFUL;
-            Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
+            Assert.InRange(fwr.NextExclusiveDouble(), 2.710505431213761E-20, 0.9999999999999999);
 
             fwr.StateD = 0x8000000000000000UL;
-            Assert.InRange(fwr.NextExclusiveDouble(), 1.0842021724855044E-19, 0.9999999999999999);
+            Assert.InRange(fwr.NextExclusiveDouble(), 2.710505431213761E-20, 0.9999999999999999);
 
             fwr.StateD = 1UL;
-            Assert.InRange(fwr.NextExclusiveFloat(), 1.0842022E-19f, 0.99999994f);
+            Assert.InRange(fwr.NextExclusiveFloat(), 2.7105054E-20f, 0.99999994f);
 
             fwr.StateD = 0UL;
-            Assert.InRange(fwr.NextExclusiveFloat(), 1.0842022E-19f, 0.99999994f);
+            Assert.InRange(fwr.NextExclusiveFloat(), 2.7105054E-20f, 0.99999994f);
 
             fwr.StateD = 0xFFFFFFFFFFFFFFFFUL;
-            Assert.InRange(fwr.NextExclusiveFloat(), 1.0842022E-19f, 0.99999994f);
+            Assert.InRange(fwr.NextExclusiveFloat(), 2.7105054E-20f, 0.99999994f);
 
             fwr.StateD = 0x8000000000000000UL;
-            Assert.InRange(fwr.NextExclusiveFloat(), 1.0842022E-19f, 0.99999994f);
+            Assert.InRange(fwr.NextExclusiveFloat(), 2.7105054E-20f, 0.99999994f);
         }
         [Fact]
         public void AverageValueTest()

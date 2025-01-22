@@ -24,7 +24,7 @@ namespace ShaiRandom.UnitTests
 
         private const int NumValuesToGenerate = 100;
 
-        // MUST be different than values used in other sets.
+        // MUST be different from values used in other sets.
         private const decimal EqualTestValue = 1.2M;
         private static readonly (decimal inner, decimal outer)[] s_floatingBounds =
         {
