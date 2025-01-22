@@ -844,13 +844,9 @@ namespace ShaiRandom.Generators
         /// <remarks>
         /// This can be implemented in various ways; the simplest is to generate a number in the range between 1 (inclusive) and 2<sup>53</sup> (exclusive), then divide the result by 2<sup>53</sup>.
         /// The technique used in AbstractRandom is very different; it is related to <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>.
-        /// Because the ability to get the number of leading or trailing zeros is in a method not present in .NET Standard, we get close to that by using
-        /// <see cref="BitConverter.DoubleToInt64Bits(double)"/> on a negative long and using its exponent bits directly. The smallest double AbstractRandom can return is 1.0842021724855044E-19 ; the largest it
-        /// can return is 0.9999999999999999 . The smallest result is significantly closer to 0 than <see cref="NextDouble()"/> can produce without actually returning 0, and also much closer than the first method.
-        /// <br/>
-        /// The method used by AbstractRandom has several possible variations; the one it uses now is about 25% slower or less than NextDouble(). If .NET 6 becomes the default framework, another implementation
-        /// for this method becomes possible that outperforms NextDouble() and actually has an even better range as it approaches 0.0. This second method is not the default because it is over 300% slower on earlier,
-        /// pre-.NET Core versions, and switching between the two would change results between platforms.
+        /// See the docs in <see cref="AbstractRandom.NextExclusiveDouble()"/> for more details; the technique uses almost entirely bitwise operations.
+        /// The smallest double this can return is 2.710505431213761E-20 ; the largest it can return is 0.9999999999999999 . The smallest result is significantly closer to 0
+        /// than <see cref="NextDouble()"/> can produce without actually returning 0, and also much closer than the first method.
         /// </remarks>
         /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
 

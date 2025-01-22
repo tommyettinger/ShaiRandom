@@ -38,7 +38,7 @@ namespace ShaiRandom
         {
             long bits = BitConverter.DoubleToInt64Bits(x);
 
-            if (((bits >> 32) & 0x7FF00000L) >= 0x7FF00000L)
+            if ((bits & 0x7FF0000000000000L) >= 0x7FF0000000000000L)
             {
                 // NaN returns NaN
                 // -Infinity returns -Infinity
@@ -46,15 +46,13 @@ namespace ShaiRandom
                 return x;
             }
 
-            if (x == 0.0)
-            {
+            return (x == 0.0)
                 // +0.0 or -0.0 returns -double.Epsilon
-                return -double.Epsilon;
-            }
+                ? -double.Epsilon
+                // Negative values need to be incremented
+                // Positive values need to be decremented
+                : BitConverter.Int64BitsToDouble(bits - (bits >> 63 | 1L));
 
-            // Negative values need to be incremented
-            // Positive values need to be decremented
-            return BitConverter.Int64BitsToDouble(bits - (bits >> 63 | 1L));
         }
 
         /// <summary>
@@ -69,7 +67,7 @@ namespace ShaiRandom
         {
             long bits = BitConverter.DoubleToInt64Bits(x);
 
-            if (((bits >> 32) & 0x7FF00000) >= 0x7FF00000)
+            if ((bits & 0x7FF0000000000000L) >= 0x7FF0000000000000L)
             {
                 // NaN returns NaN
                 // -Infinity returns -Infinity
@@ -77,15 +75,36 @@ namespace ShaiRandom
                 return x;
             }
 
-            if (bits == 0.0)
-            {
-                // -0.0 returns double.Epsilon
-                return double.Epsilon;
-            }
+            return bits == 0.0 ?
+                // +0.0 or -0.0 returns double.Epsilon
+                double.Epsilon :
+                // Negative values need to be decremented
+                // Positive values need to be incremented
+                BitConverter.Int64BitsToDouble(bits + (bits >> 63 | 1L));
+        }
 
-            // Negative values need to be decremented
-            // Positive values need to be incremented
-            return BitConverter.Int64BitsToDouble(bits + (bits >> 63 | 1L));
+        /// <summary>
+        /// If x is finite, returns a double that is stepsFromZero ULPs from x moving away from 0.
+        /// </summary>
+        /// <remarks>This is almost the same as Math.BitIncrement in more recent .NET versions, but returns
+        /// x as-is if it is not finite (matching the behavior in mathematics more accurately).
+        /// It can move away from 0 if stepsFromZero is positive, or toward 0 if it is negative.
+        /// If x is +0.0, then positive steps move toward positive infinity, and negative steps move toward negative
+        /// infinity. This is reversed if x is -0.0 .
+        /// </remarks>
+        /// <param name="x">The starting value.</param>
+        /// <param name="stepsFromZero">How many ULPs to move away from 0; may be negative to move toward 0 .</param>
+        /// <returns>The double that is the given number of ULPs from x moving away from 0.</returns>
+        public static double BitStep(double x, long stepsFromZero)
+        {
+            long bits = BitConverter.DoubleToInt64Bits(x);
+
+            return (bits & 0x7FF0000000000000L) >= 0x7FF0000000000000L
+                // NaN returns NaN
+                // -Infinity returns -Infinity
+                // +Infinity returns +Infinity
+                ? x
+                : BitConverter.Int64BitsToDouble(bits + (bits >> 63 | 1L) * stepsFromZero);
         }
 
         /// <summary>
@@ -108,15 +127,12 @@ namespace ShaiRandom
                 return x;
             }
 
-            if (x == 0f)
-            {
-                // +0.0 returns -float.Epsilon
-                return -float.Epsilon;
-            }
-
-            // Negative values need to be incremented
-            // Positive values need to be decremented
-            return BitConverter.Int32BitsToSingle(bits - (bits >> 31 | 1));
+            return x == 0f
+                // -0.0 or +0.0 returns -float.Epsilon
+                ? -float.Epsilon
+                // Negative values need to be incremented
+                // Positive values need to be decremented
+                : BitConverter.Int32BitsToSingle(bits - (bits >> 31 | 1));
         }
 
         /// <summary>
@@ -139,15 +155,12 @@ namespace ShaiRandom
                 return x;
             }
 
-            if (x == 0f)
-            {
+            return x == 0f
                 // -0.0 or +0.0 returns float.Epsilon
-                return float.Epsilon;
-            }
-
-            // Negative values need to be decremented
-            // Positive values need to be incremented
-            return BitConverter.Int32BitsToSingle(bits + (bits >> 31 | 1));
+                ? float.Epsilon
+                // Negative values need to be decremented
+                // Positive values need to be incremented
+                : BitConverter.Int32BitsToSingle(bits + (bits >> 31 | 1));
         }
     }
 }
