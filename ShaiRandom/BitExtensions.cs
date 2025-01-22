@@ -90,7 +90,8 @@ namespace ShaiRandom
         /// x as-is if it is not finite (matching the behavior in mathematics more accurately).
         /// It can move away from 0 if stepsFromZero is positive, or toward 0 if it is negative.
         /// If x is +0.0, then positive steps move toward positive infinity, and negative steps move toward negative
-        /// infinity. This is reversed if x is -0.0 .
+        /// infinity. This is reversed if x is -0.0 . If stepsFromZero is negative and larger (in ULPs) than the
+        /// distance to zero, behavior is undefined.
         /// </remarks>
         /// <param name="x">The starting value.</param>
         /// <param name="stepsFromZero">How many ULPs to move away from 0; may be negative to move toward 0 .</param>
@@ -161,6 +162,31 @@ namespace ShaiRandom
                 // Negative values need to be decremented
                 // Positive values need to be incremented
                 : BitConverter.Int32BitsToSingle(bits + (bits >> 31 | 1));
+        }
+
+        /// <summary>
+        /// If x is finite, returns a float that is stepsFromZero ULPs from x moving away from 0.
+        /// </summary>
+        /// <remarks>This is almost the same as Math.BitIncrement in more recent .NET versions, but returns
+        /// x as-is if it is not finite (matching the behavior in mathematics more accurately).
+        /// It can move away from 0 if stepsFromZero is positive, or toward 0 if it is negative.
+        /// If x is +0.0, then positive steps move toward positive infinity, and negative steps move toward negative
+        /// infinity. This is reversed if x is -0.0 . If stepsFromZero is negative and larger (in ULPs) than the
+        /// distance to zero, behavior is undefined.
+        /// </remarks>
+        /// <param name="x">The starting value.</param>
+        /// <param name="stepsFromZero">How many ULPs to move away from 0; may be negative to move toward 0 .</param>
+        /// <returns>The float that is the given number of ULPs from x moving away from 0.</returns>
+        public static float BitStep(float x, int stepsFromZero)
+        {
+            int bits = BitConverter.SingleToInt32Bits(x);
+
+            return (bits & 0x7F800000) >= 0x7F800000
+                // NaN returns NaN
+                // -Infinity returns -Infinity
+                // +Infinity returns +Infinity
+                ? x
+                : BitConverter.Int32BitsToSingle(bits + (bits >> 31 | 1) * stepsFromZero);
         }
     }
 }
