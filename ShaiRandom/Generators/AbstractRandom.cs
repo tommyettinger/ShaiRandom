@@ -430,9 +430,12 @@ namespace ShaiRandom.Generators
         /// (near to 0) than other methods.
         /// </summary>
         /// <remarks>
-        /// The code for this is small, but extremely unorthodox. The technique is related to <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>,
-        /// but because the ability to get the number of leading or trailing zeros is in a method not present in .NET Standard, we get close to that by using
-        /// <see cref="BitConverter.DoubleToInt64Bits(double)"/> on a negative long and using its exponent bits directly. The smallest double this can return is 1.0842021724855044E-19 ; the largest it
+        /// The code for this is small, but unorthodox. The technique is related to <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>,
+        /// and uses only bitwise operations and one 64-bit integer subtraction. The <see cref="BitOperations.LeadingZeroCount(ulong"/> mthod from System.Numerics is used
+        /// to produce doubles in the 0.5 to 1.0 range half the time, doubles in the 0.25 to 0.5 range a quarter of the time, and so on.
+        /// That affects the exponent portion of the double's bits; the low-order 52 bits are used to determine the mantissa.
+        /// <see cref="BitConverter.Int64BitsToDouble(long)"/> finally takes the assembled bits and makes them a double directly, needing
+        /// no additional arithmetic on the double result. The smallest double this can return is 2.710505431213761E-20 ; the largest it
         /// can return is 0.9999999999999999 . The smallest result is significantly closer to 0 than <see cref="NextDouble()"/> can produce without actually returning 0.
         /// <br/>If you decide to edit this, be advised: here be dragons.
         /// </remarks>
@@ -442,7 +445,7 @@ namespace ShaiRandom.Generators
             // long bits = NextLong();
             // return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
             ulong bits = NextULong();
-            return BitConverter.Int64BitsToDouble(1022L - BitOperations.TrailingZeroCount(bits) << 52 | (long)(bits >> 12));
+            return BitConverter.Int64BitsToDouble(1022L - BitOperations.LeadingZeroCount(bits) << 52 | ((long)bits & 0x000FFFFFFFFFFFFFL));
         }
 
         /// <inheritdoc />
