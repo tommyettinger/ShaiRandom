@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- Basic package info -->
-    <TargetFrameworks>net5.0;net6.0;netcoreapp3.1;netstandard2.1;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
 	<RootNamespace>ShaiRandom</RootNamespace>
 	<Authors>tommyettinger</Authors>
 	<Copyright>Copyright © 2021-2022 Tommy Ettinger (tommyettinger)</Copyright>

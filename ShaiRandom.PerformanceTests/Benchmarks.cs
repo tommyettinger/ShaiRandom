@@ -1198,38 +1198,39 @@ namespace ShaiRandom.PerformanceTests
     /// </remarks>
     public class ExclusiveDoubleComparison
     {
-        private readonly MizuchiRandom _mizuchiRandom = new MizuchiRandom(1UL);
+        private readonly RomuTrioRandom _romuTrioRandom = new RomuTrioRandom(1UL);
 
-        private static double StrangeDouble(MizuchiRandom random)
+        private static double StrangeDouble(RomuTrioRandom random)
         {
             long bits = random.NextLong();
             return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
         }
-        private static double BitsyDouble(MizuchiRandom random)
+        private static double BitsyDouble(RomuTrioRandom random)
         {
+            // ulong bits = random.NextULong();
+// #if NETCOREAPP3_0_OR_GREATER
             ulong bits = random.NextULong();
-#if NETCOREAPP3_0_OR_GREATER
             return BitConverter.Int64BitsToDouble(1022L - BitOperations.TrailingZeroCount(bits) << 52 | (long)(bits >> 12));
-#else
-            ulong v = bits;
-            long c = 64L;
-            v &= 0UL - v;
-            if (v != 0UL) c--;
-            if ((v & 0x00000000FFFFFFFFUL) != 0UL) c -= 32;
-            if ((v & 0x0000FFFF0000FFFFUL) != 0UL) c -= 16;
-            if ((v & 0x00FF00FF00FF00FFUL) != 0UL) c -= 8;
-            if ((v & 0x0F0F0F0F0F0F0F0FUL) != 0UL) c -= 4;
-            if ((v & 0x3333333333333333UL) != 0UL) c -= 2;
-            if ((v & 0x5555555555555555UL) != 0UL) c -= 1;
-            return BitConverter.Int64BitsToDouble(1022L - c << 52 | (long)(bits >> 12));
-#endif
+// #else
+//             ulong v = bits;
+//             long c = 64L;
+//             v &= 0UL - v;
+//             if (v != 0UL) c--;
+//             if ((v & 0x00000000FFFFFFFFUL) != 0UL) c -= 32;
+//             if ((v & 0x0000FFFF0000FFFFUL) != 0UL) c -= 16;
+//             if ((v & 0x00FF00FF00FF00FFUL) != 0UL) c -= 8;
+//             if ((v & 0x0F0F0F0F0F0F0F0FUL) != 0UL) c -= 4;
+//             if ((v & 0x3333333333333333UL) != 0UL) c -= 2;
+//             if ((v & 0x5555555555555555UL) != 0UL) c -= 1;
+//             return BitConverter.Int64BitsToDouble(1022L - c << 52 | (long)(bits >> 12));
+// #endif
         }
         [Benchmark]
-        public double Strange() => StrangeDouble(_mizuchiRandom);
+        public double Strange() => StrangeDouble(_romuTrioRandom);
         [Benchmark]
-        public double Bitsy() => BitsyDouble(_mizuchiRandom);
+        public double Bitsy() => BitsyDouble(_romuTrioRandom);
         [Benchmark]
-        public double NotExclusive() => _mizuchiRandom.NextDouble();
+        public double NotExclusive() => _romuTrioRandom.NextDouble();
 
     }
 

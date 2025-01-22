@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Numerics;
 using System.Text;
 
 namespace ShaiRandom.Generators
@@ -434,8 +435,10 @@ namespace ShaiRandom.Generators
         /// <returns>A double between 0.0 and 1.0, exclusive at both ends.</returns>
         public virtual double NextExclusiveDouble()
         {
-            long bits = NextLong();
-            return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
+            // long bits = NextLong();
+            // return BitConverter.Int64BitsToDouble((0x7C10000000000000L + (BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) & -0x0010000000000000L)) | (~bits & 0x000FFFFFFFFFFFFFL));
+            ulong bits = NextULong();
+            return BitConverter.Int64BitsToDouble(1022L - BitOperations.TrailingZeroCount(bits) << 52 | (long)(bits >> 12));
         }
 
         /// <inheritdoc />
@@ -469,8 +472,10 @@ namespace ShaiRandom.Generators
         /// <inheritdoc />
         public virtual float NextExclusiveFloat()
         {
-            long bits = NextLong();
-            return BitConverter.Int32BitsToSingle((1089 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF));
+            // long bits = NextLong();
+            // return BitConverter.Int32BitsToSingle((1089 + (int)(BitConverter.DoubleToInt64Bits(-0x7FFFFFFFFFFFF001L | bits) >> 52) << 23) | ((int)~bits & 0x007FFFFF));
+            ulong bits = NextULong();
+            return BitConverter.Int32BitsToSingle(126 - BitOperations.LeadingZeroCount(bits) << 23 | ((int)bits & 0x7FFFFF));
         }
 
         /// <inheritdoc />
