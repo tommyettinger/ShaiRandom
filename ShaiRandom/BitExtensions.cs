@@ -172,26 +172,30 @@ namespace ShaiRandom
         /// <summary>
         /// If x is finite, returns a float that is stepsFromZero ULPs from x moving away from 0.
         /// </summary>
-        /// <remarks>This is almost the same as Math.BitIncrement in more recent .NET versions, but returns
-        /// x as-is if it is not finite (matching the behavior in mathematics more accurately).
+        /// <remarks>This acts like <see cref="BitIncrement(float)"/> or <see cref="BitDecrement(float)"/> depending
+        /// on the sign of stepsFromZero, and can step more than once.
         /// It can move away from 0 if stepsFromZero is positive, or toward 0 if it is negative.
         /// If x is +0.0, then positive steps move toward positive infinity, and negative steps move toward negative
         /// infinity. This is reversed if x is -0.0 . If stepsFromZero is negative and larger (in ULPs) than the
-        /// distance to zero, behavior is undefined.
+        /// distance to zero, this returns 0.0 if x is positive, of -0.0 if x is negative. If this would return a float
+        /// greater than <see cref="float.MaxValue"/>, it instead returns positive infinity; similarly, values lower
+        /// than negative MaxValue return negative infinity. Overflow can result in other results being returned;
+        /// stepsFromZero should generally be small in most cases (all short values are valid, for instance).
         /// </remarks>
         /// <param name="x">The starting value.</param>
         /// <param name="stepsFromZero">How many ULPs to move away from 0; may be negative to move toward 0 .</param>
         /// <returns>The float that is the given number of ULPs from x moving away from 0.</returns>
         public static float BitStep(float x, int stepsFromZero)
         {
-            int bits = BitConverter.SingleToInt32Bits(x);
-
+            int bits = BitConverter.SingleToInt32Bits(x),
+                sign = bits & -0x80000000,
+                mag = bits & 0x7FFFFFFF;
             return (bits & 0x7F800000) >= 0x7F800000
                 // NaN returns NaN
                 // -Infinity returns -Infinity
                 // +Infinity returns +Infinity
                 ? x
-                : BitConverter.Int32BitsToSingle(bits + (bits >> 31 | 1) * stepsFromZero);
+                : BitConverter.Int32BitsToSingle(Math.Clamp(mag + stepsFromZero, 0, 0x7F800000) | sign);
         }
     }
 }
