@@ -1970,6 +1970,34 @@ namespace ShaiRandom.PerformanceTests
     ///| Whisker            | 0.1287 ns | 0.0090 ns | 0.0080 ns |
     ///| Scruff             | 0.1345 ns | 0.0104 ns | 0.0097 ns |
     ///| Ace                | 0.1360 ns | 0.0085 ns | 0.0080 ns |
+    ///
+    /// This tried using a much larger UnrollFactor (256 instead of the default 16).
+    /// That didn't help with Xorshift128Plus, which seems to be getting totally ignored
+    /// because its time is the same as an empty method.
+    ///
+    ///BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.3880/23H2/2023Update/SunValley3)
+    ///12th Gen Intel Core i7-12800H, 1 CPU, 20 logical and 14 physical cores
+    ///.NET SDK 9.0.101
+    ///  [Host]     : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///  Job-APRLIO : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///
+    ///Runtime=.NET 9.0  Toolchain=net90  UnrollFactor=256
+    ///
+    ///| Method             | Mean      | Error     | StdDev    |
+    ///|------------------- |----------:|----------:|----------:|
+    ///| Distinct           | 0.1368 ns | 0.0119 ns | 0.0112 ns |
+    ///| Laser              | 0.1675 ns | 0.0112 ns | 0.0099 ns |
+    ///| Tricycle           | 0.1346 ns | 0.0077 ns | 0.0068 ns |
+    ///| FourWheel          | 0.1916 ns | 0.0045 ns | 0.0040 ns |
+    ///| Stranger           | 0.1539 ns | 0.0092 ns | 0.0086 ns |
+    ///| Xoshiro256StarStar | 0.5216 ns | 0.0096 ns | 0.0090 ns |
+    ///| Xorshift128Plus    | 0.0350 ns | 0.0121 ns | 0.0107 ns |
+    ///| RomuTrio           | 0.2491 ns | 0.0098 ns | 0.0092 ns |
+    ///| Mizuchi            | 0.1718 ns | 0.0107 ns | 0.0100 ns |
+    ///| Trim               | 0.1376 ns | 0.0093 ns | 0.0087 ns |
+    ///| Whisker            | 0.1425 ns | 0.0098 ns | 0.0092 ns |
+    ///| Scruff             | 0.1319 ns | 0.0105 ns | 0.0098 ns |
+    ///| Ace                | 0.2374 ns | 0.0079 ns | 0.0074 ns |
     /// </summary>
     /// <remarks>
     /// OK, now THIS is where the sub-nanosecond times are. The .NET 5 and 6 benchmarks were run on a laptop with a

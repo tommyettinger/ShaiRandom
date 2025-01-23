@@ -431,7 +431,7 @@ namespace ShaiRandom.Generators
         /// </summary>
         /// <remarks>
         /// The code for this is small, but unorthodox. The technique is related to <a href="https://allendowney.com/research/rand/">this algorithm by Allen Downey</a>,
-        /// and uses only bitwise operations and one 64-bit integer subtraction. The <see cref="BitOperations.LeadingZeroCount(ulong"/> mthod from System.Numerics is used
+        /// and uses only bitwise operations and one 64-bit integer subtraction. The <see cref="BitOperations.LeadingZeroCount(ulong)"/> mthod from System.Numerics is used
         /// to produce doubles in the 0.5 to 1.0 range half the time, doubles in the 0.25 to 0.5 range a quarter of the time, and so on.
         /// That affects the exponent portion of the double's bits; the low-order 52 bits are used to determine the mantissa.
         /// <see cref="BitConverter.Int64BitsToDouble(long)"/> finally takes the assembled bits and makes them a double directly, needing

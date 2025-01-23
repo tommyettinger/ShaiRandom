@@ -188,7 +188,10 @@ namespace ShaiRandom.Generators
             tx ^= tx >> 17;
             tx ^= ty ^ (ty >> 26);
             StateB = tx;
-            return tx + ty;
+            unchecked
+            {
+                return tx + ty;
+            }
         }
 
         /// <inheritdoc />
