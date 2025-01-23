@@ -244,5 +244,55 @@ namespace ShaiRandom.Generators
 
         /// <inheritdoc />
         public override IEnhancedRandom Copy() => new FlowRandom(StateA, StateB);
+
+        /// <summary>
+        /// Gets an ulong that identifies which of the 2 to the 64 possible streams this is on.
+        /// This takes constant time.
+        /// </summary>
+        /// <returns>
+        /// An ulong that identifies which stream the main state of the generator is on.
+        /// </returns>
+        public ulong GetStream()
+        {
+            unchecked
+            {
+                return StateB * 0xC83D0A80F9B4B5E7UL - StateA * 0x06106CCFA448E5ABUL;
+            }
+        }
+
+        /// <summary>
+        /// Changes the generator's stream to any of the 2 to the 64 possible streams this can be on.
+        /// </summary>
+        /// <remarks>
+        /// The <c>stream</c> this takes uses the same numbering convention used by GetStream() and ShiftStream().
+        /// This makes an absolute change to the stream, while ShiftStream() is relative.
+        /// This takes constant time.
+        /// </remarks>
+        /// <param name="stream">The identifying number of the stream to change to; may be any ulong.</param>
+        public void SetStream(ulong stream)
+        {
+            unchecked
+            {
+                StateB += 0x8CB92BA72F3D8DD7L *
+                          (stream - (StateB * 0xC83D0A80F9B4B5E7L - StateA * 0x06106CCFA448E5ABL));
+            }
+        }
+
+        /// <summary>
+        /// Adjusts the generator's stream "up" or "down" to any of the 2 to the 64 possible streams this can be on.
+        /// </summary>
+        /// <remarks>
+        /// The <c>difference</c> this takes will be the difference between the result of GetStream() before the
+        /// shift, and after the shift. This makes a relative change to the stream, while SetStream() is absolute.
+        /// This takes constant time.
+        /// </remarks>
+        /// <param name="difference">How much to change the stream by; may be any ulong.</param>
+        public void ShiftStream(ulong difference)
+        {
+            unchecked
+            {
+                StateB += 0x8CB92BA72F3D8DD7UL * difference;
+            }
+        }
     }
 }
