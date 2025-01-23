@@ -19,7 +19,7 @@ namespace ShaiRandom.UnitTests
                 Assert.InRange(fwr.NextLong(100L, -101L), -100L, 100L);
                 Assert.InRange(fwr.NextULong(100UL, 301UL), 100UL, 300UL);
                 Assert.InRange(fwr.NextExclusiveDouble(), 2.710505431213761E-20, 0.9999999999999999);
-                Assert.InRange(fwr.NextExclusiveFloat(), 0f, 0.99999994f);
+                Assert.InRange(fwr.NextExclusiveFloat(), 2.7105054E-20f, 0.99999994f);
             }
             fwr.StateD = 1UL;
             Assert.InRange(fwr.NextExclusiveDouble(), 2.710505431213761E-20, 0.9999999999999999);

@@ -863,8 +863,8 @@ namespace ShaiRandom.Generators
             => new GapShufflerInPlaceMemoryEnumerator<TItem>(rng, items);
 
         /// <summary>
-        /// Gets a normally-distributed (Gaussian) double, with a the specified mean (default 0.0) and standard deviation (default 1.0).
-        /// If the standard deviation is 1.0 and the mean is 0.0, then this can produce results between -8.209536145151493 and 8.209536145151493 (both extremely rarely).
+        /// Gets a normally-distributed (Gaussian) double, with the specified mean (default 0.0) and standard deviation (default 1.0).
+        /// If the standard deviation is 1.0 and the mean is 0.0, then this can produce results between -26.48372928592822 and 26.48372928592822 (both extremely rarely).
         /// </summary>
         /// <param name="rng" />
         /// <param name="mean">Mean for normal distribution.</param>
@@ -872,7 +872,7 @@ namespace ShaiRandom.Generators
         /// <returns>A double from the normal distribution with the specified mean (default 0.0) and standard deviation (default 1.0).</returns>
         public static double NextNormal(this IEnhancedRandom rng, double mean = 0.0, double stdDev = 1.0)
         {
-            return MathUtils.Probit(rng.NextExclusiveDouble()) * stdDev + mean;
+            return MathUtils.Probit(rng.NextInclusiveDouble()) * stdDev + mean;
         }
 
         /// <summary>
