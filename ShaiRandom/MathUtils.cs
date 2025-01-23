@@ -108,10 +108,11 @@ namespace ShaiRandom
         /// <returns>A normal-distributed double centered on 0.0; all results will be between -26.48372928592822 and 26.48372928592822, both inclusive.</returns>
         public static double Probit(double p)
         {
-            if(0.0465 > p){
+            if(0.0465 > p) {
                 double r = Math.Sqrt(Math.Log(1.0 / (p * p + 5.56268464626801E-309)));
                 return C3 * r + C2 + (C1 * r + C0) / (r * (r + D1) + D0);
-            } else if(0.9535 < p) {
+            }
+            if(0.9535 < p) {
                 double q = 1.0 - p, r = Math.Sqrt(Math.Log(1.0 / (q * q + 5.56268464626801E-309)));
                 return -C3 * r - C2 - (C1 * r + C0) / (r * (r + D1) + D0);
             } else {

@@ -12,6 +12,9 @@ namespace ShaiRandom.Generators
     /// subtraction), with a good compiler able to handle those as instruction-level parallel operations.
     ///
     /// This generator is about as fast as WhiskerRandom (on the JVM), plus it offers a strong period guarantee, and has been tested just as thoroughly.
+    /// Where numerically-similar initial states given to many WhiskerRandom instances tend to return very large clumps
+    /// of the same result for all of those similarly-seeded generators for many generations, AceRandom appears immune
+    /// to that issue.
     /// </remarks>
     public sealed class AceRandom : AbstractRandom
     {
@@ -179,10 +182,10 @@ namespace ShaiRandom.Generators
                 rng.StateB = seed ^ 0xD3833E804F4C574BL;
                 seed *= 0xBEA225F9EB34556DL;                               // MX3 unary hash
                 seed ^= seed >> 29;
-                rng.StateC = seed ^ ~0xD3833E804F4C574BL;                      // updates are spread across the MX3 hash
+                rng.StateC = seed ^ ~0xD3833E804F4C574BL;                  // updates are spread across the MX3 hash
                 seed *= 0xBEA225F9EB34556DL;
                 seed ^= seed >> 32;
-                rng.StateD = seed ^ 0xC6BC279692B5C323L; ;
+                rng.StateD = seed ^ 0xC6BC279692B5C323L;
                 seed *= 0xBEA225F9EB34556DL;
                 seed ^= seed >> 29;
                 rng.StateE = seed;

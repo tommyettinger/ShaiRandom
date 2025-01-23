@@ -7,8 +7,8 @@ using ShaiRandom.Wrappers;
 namespace ShaiRandom
 {
     /// <summary>
-    /// Static class containing logic to take a string produced by <see cref="IEnhancedRandom.StringDeserialize"/>
-    /// and produce an appropriate generator.
+    /// Static class containing logic to take a string produced by <see cref="IEnhancedRandom.StringSerialize"/>
+    /// and deserialize to an appropriate generator.
     /// </summary>
     /// <remarks>
     /// Before serializing/deserializing, you must register "tags" with the Serializer, which will be used to identify

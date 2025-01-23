@@ -228,7 +228,7 @@ namespace ShaiRandom
         /// Unlike the other Mix methods here, passing 0 here causes this to produce 0.
         /// </remarks>
         /// <br/>
-        /// This uses Jon Kagstrom's <a href="http://jonkagstrom.com/mx3/mx3_rev2.html">Revised MX3 Mixer</a>, which seems exceedingly robust even after long runs of
+        /// This uses Jon Maiga's <a href="http://jonkagstrom.com/mx3/mx3_rev2.html">Revised MX3 Mixer</a>, which seems exceedingly robust even after long runs of
         /// the brutally-difficult remortality test.
         /// <param name="state">Any ulong; subsequent calls should change by an odd number, such as with <code>Mixers.MixMX(++state)</code>.</param>
         /// <returns>Any ulong.</returns>

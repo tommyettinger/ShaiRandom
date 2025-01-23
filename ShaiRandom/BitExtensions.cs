@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace ShaiRandom
@@ -15,7 +16,7 @@ namespace ShaiRandom
         /// <param name="amt">How many bits to rotate.</param>
         /// <returns>The rotated ul.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ulong RotateLeft(this ulong ul, int amt) => (ul << amt) | (ul >> 64 - amt);
+        public static ulong RotateLeft(this ulong ul, int amt) => BitOperations.RotateLeft(ul, amt);
 
         /// <summary>
         /// Bitwise right-rotation of a ulong by amt, in bits.
@@ -24,7 +25,7 @@ namespace ShaiRandom
         /// <param name="amt">How many bits to rotate.</param>
         /// <returns>The rotated ul.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ulong RotateRight(this ulong ul, int amt) => (ul >> amt) | (ul << 64 - amt);
+        public static ulong RotateRight(this ulong ul, int amt) => BitOperations.RotateRight(ul, amt);
 
         /// <summary>
         /// If x is finite, returns the next smallest value that compares less than x.
