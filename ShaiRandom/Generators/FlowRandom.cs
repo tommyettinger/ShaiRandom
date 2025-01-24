@@ -4,12 +4,25 @@ using System.Runtime.CompilerServices;
 
 namespace ShaiRandom.Generators
 {
-    //TODO: class docs
-
     /// <summary>
-    /// It's an AbstractRandom with 2 states, more here later. This one supports <see cref="Skip(ulong)"/>.
-    /// Both states allow all ulong values.
+    /// A higher-quality hash-based generator with two states. Supports <see cref="Skip(ulong)"/> and
+    /// <see cref="PreviousULong()"/>.
     /// </summary>
+    /// <remarks>
+    /// FlowRandom has a period of 2 to the 64, and allows 2 to the 64 possible streams, which appear to avoid
+    /// correlation with each other in any obvious pattern. All ulong values are valid for both states.
+    /// This is very similar internally to <see cref="DistinctRandom"/>, and is the same near the end of the code for
+    /// <see cref="NextULong()"/>. Because this ends with what is effectively a unary hash, it can be used to
+    /// immediately set the two states and generate one or more random numbers from it. That is not advisable for most
+    /// other generators here! A generator like <see cref="AceRandom"/> only produces truly different outputs when
+    /// seeded with very similar initial states if it has generated about 16 numbers, while a generator like
+    /// <see cref="WhiskerRandom"/> never produces reliably different outputs if the initial states are too similar.
+    /// <br/>
+    /// This class offers a few additional methods, not part of the <see cref="IEnhancedRandom"/> interface, to better
+    /// handle the many possible streams. <see cref="GetStream"/> gets you a 64-bit identifier for which stream the
+    /// generator uses. <see cref="SetStream"/>  allows you to set the stream absolutely to a given identifier, and
+    /// <see cref="ShiftStream"/> allows you to move to a different stream relative to the current one.
+    /// </remarks>
     public sealed class FlowRandom : AbstractRandom
     {
         /// <summary>

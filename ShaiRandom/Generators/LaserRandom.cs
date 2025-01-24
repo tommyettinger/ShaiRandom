@@ -3,18 +3,24 @@ using System.Runtime.CompilerServices;
 
 namespace ShaiRandom.Generators
 {
-    //TODO: class docs
-
     /// <summary>
-    /// It's an AbstractRandom with 2 states, more here later. This one supports <see cref="Skip(ulong)"/>.
+    /// A fast, but somewhat flawed, generator with two states. Supports <see cref="Skip(ulong)"/> and
+    /// <see cref="PreviousULong()"/>.
     /// </summary>
+    /// <remarks>
+    /// LaserRandom has a period of 2 to the 64, but may show statistical issues after 2 to the 63 numbers have been
+    /// produced. There are two states, one of which is always an odd number (StateB). You can in theory create
+    /// multiple LaserRandom instances with different seeds, but every initial state is correlated with some portion of
+    /// the 2 to the 127 possible initial states. You should be fine if you only use one LaserRandom in a program, or
+    /// don't have any problem if correlations appear.
+    /// </remarks>
     public sealed class LaserRandom : AbstractRandom
     {
         /// <summary>
         /// The identifying tag here is "LasR" .
         /// </summary>
         public override string DefaultTag => "LasR";
-        
+
         /// <summary>
         /// The first state; can be any ulong.
         /// </summary>

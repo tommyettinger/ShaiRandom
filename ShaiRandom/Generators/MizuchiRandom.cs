@@ -4,12 +4,16 @@ using System.Runtime.CompilerServices;
 namespace ShaiRandom.Generators
 {
     /// <summary>
-    /// It's an AbstractRandom with 2 states, more here later.
+    /// A two-state generator built around a linear congruential generator with lightly mixed output.
     /// </summary>
     /// <remarks>
+    /// While <see cref="StateA"/> can be any ulong, <see cref="StateB"/> must be an odd number.
     /// This one supports <see cref="PreviousULong()"/>, but not <see cref="AbstractRandom.Skip(ulong)"/>.
-    /// It's based on a permutation of an LCG, like PCG-Random by way of SplitMix64. A mizuchi is a mythological river dragon,
-    /// and since this supports multiple streams (by changing StateB), the waterway theme seemed fitting.
+    /// It's based on a permutation of an LCG, like PCG-Random by way of SplitMix64. A mizuchi is a mythological river
+    /// dragon, and since this supports multiple streams (by changing StateB), the waterway theme seemed fitting.
+    /// <br/>
+    /// This can be considered higher-quality than <see cref="LaserRandom"/>, but likely lower-quality than
+    /// <see cref="FlowRandom"/>.
     /// </remarks>
     public sealed class MizuchiRandom : AbstractRandom
     {
@@ -17,7 +21,7 @@ namespace ShaiRandom.Generators
         /// The identifying tag here is "MizR" .
         /// </summary>
         public override string DefaultTag => "MizR";
-        
+
         /// <summary>
         /// The first state; can be any ulong.
         /// </summary>

@@ -304,6 +304,7 @@ namespace ShaiRandom
             // Generators
             yield return new AceRandom(1UL, 1UL, 1UL, 1UL, 1UL);
             yield return new DistinctRandom(1UL);
+            yield return new FlowRandom(1UL, 1UL);
             yield return new FourWheelRandom(1UL, 1UL, 1UL, 1UL);
             yield return new KnownSeriesRandom();
             yield return new LaserRandom(1UL, 1UL);

@@ -16,12 +16,13 @@ namespace ShaiRandom.UnitTests
         /// <remarks>
         /// New generator implementations should be added here to ensure they're unit tested.
         /// </remarks>
-        /// <param name="includeWrappers">Whether or not to include things in the ShaiRandom.Wrappers namespace.</param>
+        /// <param name="includeWrappers">Whether to include things in the ShaiRandom.Wrappers namespace.</param>
         /// <returns>All qualifying generator types in the library.</returns>
         public static IEnumerable<IEnhancedRandom> CreateGenerators(bool includeWrappers)
         {
             yield return new AceRandom();
             yield return new DistinctRandom();
+            yield return new FlowRandom();
             yield return new FourWheelRandom();
             yield return new LaserRandom();
             yield return new MaxRandom();

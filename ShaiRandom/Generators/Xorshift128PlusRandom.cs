@@ -11,7 +11,10 @@ namespace ShaiRandom.Generators
     /// The algorithm here is xorshift128+ , which is quite old now; see https://xoshiro.di.unimi.it/xorshift.php for more information on this family of algorithms.
     /// Modern JavaScript engines in browsers do still use xorshift128+, but they also introduce various mitigating measures to prevent tampering with the state.
     /// JavaScript also doesn't have a 64-bit integer type, so the serious weakness in the returned low bits can be mostly ignored by only using the upper bits.
-    /// If statistical quality is a concern, <see cref="Xoshiro256StarStarRandom"/> is a similar generator but has much higher quality.
+    /// If statistical quality is a concern, <see cref="Xoshiro256StarStarRandom"/> is a similar generator but has much higher quality. This is mostly present to
+    /// support porting code that relies on xorshift128+, but browsers sometimes use different implementations of that algorithm, so it isn't that useful there.
+    /// It may be most useful if porting code using "RandomXS128" from libGDX, though new code should prefer <see cref="FlowRandom"/> if having two states is
+    /// important or <see cref="Xoshiro256StarStarRandom"/> if having a long period and equidistribution are important.
     /// <br />
     /// This does not support <see cref="IEnhancedRandom.PreviousULong()"/> or <see cref="IEnhancedRandom.Skip(ulong)"/>,
     /// but does support <see cref="IEnhancedRandom.Leap()"/>.
