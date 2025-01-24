@@ -165,6 +165,46 @@ namespace ShaiRandom.Generators
         }
 
         /// <inheritdoc />
+        public override double NextInclusiveDouble()
+        {
+            /* 1.0000000000000002 is 0x1.0000000000001p0 */
+            return NextDouble() * 1.0000000000000002;
+        }
+
+        /// <inheritdoc />
+        public override float NextInclusiveFloat()
+        {
+            /* 1.0000001f is 0x1.000002p0f */
+            return NextFloat() * 1.0000001f;
+        }
+
+        /// <inheritdoc />
+        public override decimal NextInclusiveDecimal()
+        {
+            return NextDecimal() * 1.0000000000000000000000000001m;
+        }
+
+        /// <inheritdoc />
+        public override double NextExclusiveDouble()
+        {
+            /* 1.1102230246251565E-16 is 0x1p-53, 5.551115123125782E-17 is 0x1.fffffffffffffp-55 */
+            return (NextULong() >> 11) * 1.1102230246251565E-16 + 5.551115123125782E-17;
+        }
+
+        /// <inheritdoc />
+        public override float NextExclusiveFloat()
+        {
+            /* 5.9604645E-8f is 0x1p-24f, 2.980232E-8f is 0x1.FFFFFEp-26f */
+            return (NextULong() >> 40) * 5.9604645E-8f + 2.980232E-8f;
+        }
+
+        /// <inheritdoc />
+        public override decimal NextExclusiveDecimal()
+        {
+            return NextDecimal() * 0.9999999999999999999999999999m + 0.0000000000000000000000000001m;
+        }
+
+        /// <inheritdoc />
         public override IEnhancedRandom Copy() => new GoldenQuasiRandom(State);
     }
 }

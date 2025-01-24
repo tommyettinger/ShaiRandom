@@ -24,6 +24,7 @@ namespace ShaiRandom.UnitTests
             yield return new DistinctRandom();
             yield return new FlowRandom();
             yield return new FourWheelRandom();
+            yield return new GoldenQuasiRandom();
             yield return new LaserRandom();
             yield return new MaxRandom();
             yield return new MinRandom();
