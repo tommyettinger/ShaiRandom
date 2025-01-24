@@ -511,7 +511,7 @@ namespace ShaiRandom.PerformanceTests
     ///|        RomuTrio |  0.9722 ns | 0.0480 ns | 0.0761 ns |  1.0006 ns |
     ///|         Mizuchi |  1.0065 ns | 0.0498 ns | 0.0648 ns |  0.9937 ns |
     /// </code>
-    /// On .NET 9.0, newr machine:
+    /// On .NET 9.0, newer machine:
     ///BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.3880/23H2/2023Update/SunValley3)
     ///12th Gen Intel Core i7-12800H, 1 CPU, 20 logical and 14 physical cores
     ///.NET SDK 9.0.101
@@ -537,6 +537,34 @@ namespace ShaiRandom.PerformanceTests
     ///| Whisker            | 0.3322 ns | 0.0123 ns | 0.0115 ns |
     ///| Scruff             | 0.1361 ns | 0.0080 ns | 0.0075 ns |
     ///| Ace                | 0.1352 ns | 0.0082 ns | 0.0076 ns |
+    ///
+    /// Trying to get consistent results by forcing many more invocations; still .NET 9.0:
+    ///BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.3880/23H2/2023Update/SunValley3)
+    ///12th Gen Intel Core i7-12800H, 1 CPU, 20 logical and 14 physical cores
+    ///.NET SDK 9.0.101
+    ///  [Host]     : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///  Job-MLAJTO : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///
+    ///Runtime=.NET 9.0  Toolchain=net90  InvocationCount=1000000000
+    ///
+    ///| Method             | Mean       | Error     | StdDev    |
+    ///|------------------- |-----------:|----------:|----------:|
+    ///| Seeded             | 19.1402 ns | 0.1552 ns | 0.1452 ns |
+    ///| Unseeded           |  0.7806 ns | 0.0134 ns | 0.0125 ns |
+    ///| Distinct           |  0.1288 ns | 0.0096 ns | 0.0090 ns |
+    ///| Laser              |  0.1870 ns | 0.0292 ns | 0.0400 ns |
+    ///| Tricycle           |  0.3403 ns | 0.0100 ns | 0.0094 ns |
+    ///| FourWheel          |  0.1283 ns | 0.0081 ns | 0.0075 ns |
+    ///| Stranger           |  0.3436 ns | 0.0032 ns | 0.0029 ns |
+    ///| Xoshiro256StarStar |  0.3328 ns | 0.0094 ns | 0.0088 ns |
+    ///| Xorshift128Plus    |  0.1384 ns | 0.0064 ns | 0.0060 ns |
+    ///| RomuTrio           |  0.1255 ns | 0.0058 ns | 0.0052 ns |
+    ///| Mizuchi            |  0.1465 ns | 0.0117 ns | 0.0110 ns |
+    ///| Trim               |  0.1223 ns | 0.0065 ns | 0.0060 ns |
+    ///| Whisker            |  0.1487 ns | 0.0127 ns | 0.0118 ns |
+    ///| Scruff             |  0.1418 ns | 0.0171 ns | 0.0143 ns |
+    ///| Ace                |  0.1467 ns | 0.0048 ns | 0.0043 ns |
+    ///| Flow               |  0.1313 ns | 0.0090 ns | 0.0084 ns |
     /// </summary>
     public class RandomULongBoundedComparison
     {
@@ -560,10 +588,10 @@ namespace ShaiRandom.PerformanceTests
         private readonly Random _unseededRandom = new Random();
 
         [Benchmark]
-        public long Seeded() => _seededRandom.NextInt64(1L, 1000L);
+        public long Seeded() => _seededRandom.NextInt64();
 
         [Benchmark]
-        public long Unseeded() => _unseededRandom.NextInt64(1L, 1000L);
+        public long Unseeded() => _unseededRandom.NextInt64();
 #endif
 
         [Benchmark]
