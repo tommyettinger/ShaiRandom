@@ -312,6 +312,7 @@ namespace ShaiRandom
             yield return MaxRandom.Instance;
             yield return MinRandom.Instance;
             yield return new MizuchiRandom(1UL, 1UL);
+            yield return new PcgRxsmxsRandom(1UL, 1UL);
             yield return new RomuTrioRandom(1UL, 1UL, 1UL);
             yield return new ScruffRandom(1UL, 1UL, 1UL, 1UL);
             yield return new StrangerRandom(1UL, 1UL, 1UL, 1UL);

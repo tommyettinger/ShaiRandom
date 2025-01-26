@@ -120,6 +120,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public uint Flow() => _rng.NextUInt();
 
+        [GlobalSetup(Target = nameof(PcgRxsmxs))]
+        public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
+        [Benchmark]
+        public uint PcgRxsmxs() => _rng.NextUInt();
+
         [GlobalSetup(Target = nameof(XorShift128))]
         public void XorShift128Setup() => _gen = new XorShift128Generator(1);
         [Benchmark]
@@ -283,6 +288,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _rng = new FlowRandom(1UL);
         [Benchmark]
         public uint Flow() => _rng.NextUInt(999u);
+
+        [GlobalSetup(Target = nameof(PcgRxsmxs))]
+        public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
+        [Benchmark]
+        public uint PcgRxsmxs() => _rng.NextUInt(999u);
 
         [GlobalSetup(Target = nameof(XorShift128))]
         public void XorShift128Setup() => _gen = new XorShift128Generator(1);
@@ -481,6 +491,10 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public ulong Flow() => _rng.NextULong();
 
+        [GlobalSetup(Target = nameof(PcgRxsmxs))]
+        public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
+        [Benchmark]
+        public ulong PcgRxsmxs() => _rng.NextULong();
     }
     /// <summary>
     /// On .NET 5.0:
@@ -582,6 +596,7 @@ namespace ShaiRandom.PerformanceTests
         private readonly ScruffRandom _scruffRandom = new ScruffRandom(1UL);
         private readonly AceRandom _aceRandom = new AceRandom(1UL);
         private readonly FlowRandom _flowRandom = new FlowRandom(1UL);
+        private readonly PcgRxsmxsRandom _pcgRxsmxsRandom = new PcgRxsmxsRandom(1UL);
 
 #if NET6_0_OR_GREATER
         private readonly Random _seededRandom = new Random(1);
@@ -635,6 +650,9 @@ namespace ShaiRandom.PerformanceTests
 
         [Benchmark]
         public ulong Flow() => _flowRandom.NextULong(1UL, 1000UL);
+
+        [Benchmark]
+        public ulong PcgRxsmxs() => _pcgRxsmxsRandom.NextULong(1UL, 1000UL);
     }
     /// <summary>
     /// On .NET 9.0, newer machine:
@@ -682,6 +700,7 @@ namespace ShaiRandom.PerformanceTests
         private readonly ScruffRandom _scruffRandom = new ScruffRandom(1UL);
         private readonly AceRandom _aceRandom = new AceRandom(1UL);
         private readonly FlowRandom _flowRandom = new FlowRandom(1UL);
+        private readonly PcgRxsmxsRandom _pcgRxsmxsRandom = new PcgRxsmxsRandom(1UL);
 
 #if NET6_0_OR_GREATER
         private readonly Random _seededRandom = new Random(1);
@@ -735,6 +754,9 @@ namespace ShaiRandom.PerformanceTests
 
         [Benchmark]
         public ulong Flow() => Math.BigMul(_flowRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong PcgRxsmxs() => Math.BigMul(_pcgRxsmxsRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
     }
     /// <summary>
     /// .NET 6.0 (newer benchmark, using IEnhancedRandom and IGenerator):
@@ -883,6 +905,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double Flow() => _rng.NextDouble();
 
+        [GlobalSetup(Target = nameof(PcgRxsmxs))]
+        public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
+        [Benchmark]
+        public double PcgRxsmxs() => _rng.NextDouble();
+
         [GlobalSetup(Target = nameof(XorShift128))]
         public void XorShift128Setup() => _gen = new XorShift128Generator(1);
         [Benchmark]
@@ -1001,6 +1028,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _rng = new FlowRandom(1UL);
         [Benchmark]
         public double Flow() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(PcgRxsmxs))]
+        public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
+        [Benchmark]
+        public double PcgRxsmxs() => _rng.NextDouble(1.1, -0.1);
     }
 
     /// <summary>
@@ -1128,6 +1160,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _rng = new FlowRandom(1UL);
         [Benchmark]
         public double Flow() => _rng.NextExclusiveDouble();
+
+        [GlobalSetup(Target = nameof(PcgRxsmxs))]
+        public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
+        [Benchmark]
+        public double PcgRxsmxs() => _rng.NextExclusiveDouble();
     }
 
     /// <summary>
@@ -1226,6 +1263,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _rng = new FlowRandom(1UL);
         [Benchmark]
         public double Flow() => _rng.NextExclusiveDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(PcgRxsmxs))]
+        public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
+        [Benchmark]
+        public double PcgRxsmxs() => _rng.NextExclusiveDouble(1.1, -0.1);
     }
 
     /// <summary>
@@ -1638,6 +1680,16 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double FlowS() => _rng.NextSparseDouble();
 
+        [GlobalSetup(Target = nameof(PcgRxsmxs))]
+        public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
+        [Benchmark]
+        public double PcgRxsmxs() => _rng.NextDouble();
+
+        [GlobalSetup(Target = nameof(PcgRxsmxsS))]
+        public void PcgRxsmxsSSetup() => _rng = new PcgRxsmxsRandom(1UL);
+        [Benchmark]
+        public double PcgRxsmxsS() => _rng.NextSparseDouble();
+
         [GlobalSetup(Target = nameof(XorShift128))]
         public void XorShift128Setup() => _gen = new XorShift128Generator(1);
         [Benchmark]
@@ -1988,6 +2040,16 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public float FlowS() => _rng.NextSparseFloat();
 
+        [GlobalSetup(Target = nameof(PcgRxsmxs))]
+        public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
+        [Benchmark]
+        public float PcgRxsmxs() => _rng.NextFloat();
+
+        [GlobalSetup(Target = nameof(PcgRxsmxsS))]
+        public void PcgRxsmxsSSetup() => _rng = new PcgRxsmxsRandom(1UL);
+        [Benchmark]
+        public float PcgRxsmxsS() => _rng.NextSparseFloat();
+
         [GlobalSetup(Target = nameof(Xorshift128Plus))]
         public void Xorshift128PlusSetup() => _rng = new Xorshift128PlusRandom(1UL);
         [Benchmark]
@@ -2124,6 +2186,7 @@ namespace ShaiRandom.PerformanceTests
         private ScruffRandom _ScruffRandom = null!;
         private AceRandom _AceRandom = null!;
         private FlowRandom _FlowRandom = null!;
+        private PcgRxsmxsRandom _PcgRxsmxsRandom = null!;
 
         [GlobalSetup(Target = nameof(Distinct))]
         public void DistinctSetup() => _DistinctRandom = new DistinctRandom(1UL);
@@ -2194,6 +2257,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _FlowRandom = new FlowRandom(1UL);
         [Benchmark]
         public ulong Flow() => _FlowRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(PcgRxsmxs))]
+        public void PcgRxsmxsSetup() => _PcgRxsmxsRandom = new PcgRxsmxsRandom(1UL);
+        [Benchmark]
+        public ulong PcgRxsmxs() => _PcgRxsmxsRandom.NextULong();
     }
 
     internal static class Benchmarks

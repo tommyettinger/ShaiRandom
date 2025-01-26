@@ -29,6 +29,7 @@ namespace ShaiRandom.UnitTests
             yield return new MaxRandom();
             yield return new MinRandom();
             yield return new MizuchiRandom();
+            yield return new PcgRxsmxsRandom();
             yield return new RomuTrioRandom();
             yield return new ScruffRandom();
             yield return new StrangerRandom();
