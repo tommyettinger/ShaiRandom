@@ -579,6 +579,38 @@ namespace ShaiRandom.PerformanceTests
     ///| Scruff             |  0.1418 ns | 0.0171 ns | 0.0143 ns |
     ///| Ace                |  0.1467 ns | 0.0048 ns | 0.0043 ns |
     ///| Flow               |  0.1313 ns | 0.0090 ns | 0.0084 ns |
+    ///
+    /// This uses the same range for Seeded and Unseeded as the rest, which somehow
+    /// seems to be faster than just returning a 63-bit non-negative long.
+    /// Both Seeded and Unseeded are slower than they probably should be.
+    ///  
+    /// BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.3880/23H2/2023Update/SunValley3)
+    ///12th Gen Intel Core i7-12800H, 1 CPU, 20 logical and 14 physical cores
+    ///.NET SDK 9.0.101
+    ///  [Host]     : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///  Job-NZKQKG : .NET 9.0.0 (9.0.24.52809), X64 RyuJIT AVX2
+    ///
+    ///Runtime=.NET 9.0  Toolchain=net90  InvocationCount=1000000000
+    ///
+    ///| Method             | Mean      | Error     | StdDev    |
+    ///|------------------- |----------:|----------:|----------:|
+    ///| Seeded             | 8.7697 ns | 0.0361 ns | 0.0282 ns |
+    ///| Unseeded           | 0.5770 ns | 0.0231 ns | 0.0216 ns |
+    ///| Distinct           | 0.3365 ns | 0.0126 ns | 0.0118 ns |
+    ///| Laser              | 0.3628 ns | 0.0088 ns | 0.0078 ns |
+    ///| Tricycle           | 0.3526 ns | 0.0116 ns | 0.0103 ns |
+    ///| FourWheel          | 0.1384 ns | 0.0131 ns | 0.0122 ns |
+    ///| Stranger           | 0.3558 ns | 0.0121 ns | 0.0113 ns |
+    ///| Xoshiro256StarStar | 0.1201 ns | 0.0087 ns | 0.0081 ns |
+    ///| Xorshift128Plus    | 0.1308 ns | 0.0066 ns | 0.0058 ns |
+    ///| RomuTrio           | 0.1141 ns | 0.0079 ns | 0.0070 ns |
+    ///| Mizuchi            | 0.1581 ns | 0.0058 ns | 0.0054 ns |
+    ///| Trim               | 0.1236 ns | 0.0119 ns | 0.0106 ns |
+    ///| Whisker            | 0.1398 ns | 0.0071 ns | 0.0067 ns |
+    ///| Scruff             | 0.1354 ns | 0.0080 ns | 0.0075 ns |
+    ///| Ace                | 0.1214 ns | 0.0052 ns | 0.0044 ns |
+    ///| Flow               | 0.3543 ns | 0.0137 ns | 0.0128 ns |
+    ///| PcgRxsmxs          | 0.3389 ns | 0.0095 ns | 0.0089 ns |
     /// </summary>
     public class RandomULongBoundedComparison
     {
@@ -603,10 +635,10 @@ namespace ShaiRandom.PerformanceTests
         private readonly Random _unseededRandom = new Random();
 
         [Benchmark]
-        public long Seeded() => _seededRandom.NextInt64();
+        public long Seeded() => _seededRandom.NextInt64(1L, 1000L);
 
         [Benchmark]
-        public long Unseeded() => _unseededRandom.NextInt64();
+        public long Unseeded() => _unseededRandom.NextInt64(1L, 1000L);
 #endif
 
         [Benchmark]
