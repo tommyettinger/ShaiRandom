@@ -583,7 +583,7 @@ namespace ShaiRandom.PerformanceTests
     /// This uses the same range for Seeded and Unseeded as the rest, which somehow
     /// seems to be faster than just returning a 63-bit non-negative long.
     /// Both Seeded and Unseeded are slower than they probably should be.
-    ///  
+    ///
     /// BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.3880/23H2/2023Update/SunValley3)
     ///12th Gen Intel Core i7-12800H, 1 CPU, 20 logical and 14 physical cores
     ///.NET SDK 9.0.101

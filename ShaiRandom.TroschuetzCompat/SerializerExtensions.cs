@@ -18,7 +18,7 @@ namespace ShaiRandom.TroschuetzCompat
     public static class SerializerExtensions
     {
         /// <summary>
-        /// Registers the DefaultTag for all of the IEnhancedRandom implementations in ShaiRandom.TroschuetzCompat.
+        /// Registers the DefaultTag for all IEnhancedRandom implementations in ShaiRandom.TroschuetzCompat.
         /// </summary>
         /// <exception cref="ArgumentException">One of the tags failed to register.</exception>
         /// <remarks>
