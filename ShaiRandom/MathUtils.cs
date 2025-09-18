@@ -89,12 +89,12 @@ namespace ShaiRandom
         }
 
         /// <summary>
-        /// A way of taking a double in the (0.0, 1.0) range and mapping it to a Gaussian or normal distribution, so high
+        /// A way of taking a double in the [0.0, 1.0] range and mapping it to a Gaussian or normal distribution, so high
         /// inputs correspond to high outputs, and similarly for the low range.
         /// </summary>
         /// <remarks>This is centered on 0.0 and its standard deviation seems to be 1.0 .
-        /// If this is given an input of 0.0, it returns -26.48372928592822 . If given an input of 1.0, it returns
-        /// 26.48372928592822 . If given <see cref="double.NaN"/>, it returns NaN.
+        /// If this is given an input of 0.0, it returns -38.467454509186325 . If given an input of 1.0, it returns
+        /// 38.467454509186325 . If given <see cref="double.NaN"/>, it returns NaN.
         /// <a href="https://www.researchgate.net/publication/46462650_A_New_Approximation_to_the_Normal_Distribution_Quantile_Function">Uses this algorithm by Paul Voutier</a>.
         /// <br/>
         /// This can be used both as an optimization for generating Gaussian random values, and as a way of generating
@@ -105,15 +105,15 @@ namespace ShaiRandom
         /// <a href="https://en.wikipedia.org/wiki/Probit_function">Wikipedia has a page on the probit function.</a>
         /// </remarks>
         /// <param name="p">Should be between 0 and 1, inclusive; other values are undefined but are not errors.</param>
-        /// <returns>A normal-distributed double centered on 0.0; all results will be between -26.48372928592822 and 26.48372928592822, both inclusive.</returns>
+        /// <returns>A normal-distributed double centered on 0.0; all results will be between -38.467454509186325 and 38.467454509186325, both inclusive.</returns>
         public static double Probit(double p)
         {
             if(0.0465 > p) {
-                double r = Math.Sqrt(Math.Log(1.0 / (p * p + 5.56268464626801E-309)));
+                double r = Math.Sqrt(Math.Log(p + 4.9E-324) * -2.0);
                 return C3 * r + C2 + (C1 * r + C0) / (r * (r + D1) + D0);
             }
             if(0.9535 < p) {
-                double q = 1.0 - p, r = Math.Sqrt(Math.Log(1.0 / (q * q + 5.56268464626801E-309)));
+                double r = Math.Sqrt(Math.Log(1.0 - p + 4.9E-324) * -2.0);
                 return -C3 * r - C2 - (C1 * r + C0) / (r * (r + D1) + D0);
             } else {
                 double q = p - 0.5, r = q * q;
