@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace ShaiRandom
 {
@@ -186,5 +187,45 @@ namespace ShaiRandom
             x *= 2ul - a * x;
             return x;
         }
+
+        /// <summary>
+        /// Attempts to gauge the quality of a "gamma" increment for an additive (Weyl) sequence.
+        /// </summary>
+        /// <remarks>
+        /// This is stricter than the checks in Java 8's SplittableRandom.
+        /// The goal here is to see if the gamma is "sufficiently random" to avoid pattern when used as an increment.
+        /// Examples of gamma values that aren't random enough include <code>1UL</code>, <code>3UL</code>,
+        /// <code>0xFFFFFFFFFFFFFFFFUL</code>, <code>0xAAAAAAAAAAAAAAABUL</code>, and so on.
+        /// This returns the "score" for any gamma value, where the score is the maximum difference of four bit counts
+        /// from an ideal of 32. The values that have their bits counted are:
+        /// <ul>
+        ///     <li>The gamma itself,</li>
+        ///     <li>The Gray code of the gamma, defined as <code>(gamma ^ (gamma >>> 1))</code>,</li>
+        ///     <li>The <see cref="ModularMultiplicativeInverse(ulong)"/> of the gamma,</li>
+        ///     <li>And the Gray code of the above inverse of the gamma.</li>
+        /// </ul>
+        /// A score of 9 can typically be considered "potentially problematic," and though it isn't necessarily a real
+        /// problem, there are so many other possible gammas that it should be avoided. Scores higher than 9 can be
+        /// considered more "problematic," and scores less than 9 are probably fine for SplitMix gammas.
+        /// <br/>
+        /// If the given gamma is even, it is not suitable as a SplitMix gamma automatically, and the maximum (worst)
+        /// rating is returned, 32.
+        /// <br/>
+        /// This was informed by O'Neill's blog post about SplittableRandom's gamma,
+        /// https://www.pcg-random.org/posts/bugs-in-splitmix.html
+        /// </remarks>
+        /// <param name="gamma">Any ulong, though almost always an odd number, that would be added as an increment in a sequence.</param>
+        /// <returns>How far the given gamma is from an optimal score of 0.</returns>
+        public static int RateGamma(ulong gamma)
+        {
+            if ((gamma & 1UL) == 0UL) return 32;
+            ulong inverse = ModularMultiplicativeInverse(gamma);
+            return Math.Max(Math.Max(Math.Max(
+                        Math.Abs(BitOperations.PopCount(gamma) - 32),
+                        Math.Abs(BitOperations.PopCount(gamma ^ gamma >> 1) - 32)),
+                    Math.Abs(BitOperations.PopCount(inverse) - 32)),
+                Math.Abs(BitOperations.PopCount(inverse ^ inverse >> 1) - 32));
+        }
+
     }
 }
