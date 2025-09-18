@@ -231,7 +231,7 @@ namespace ShaiRandom.Generators
         /// variables, the first is set to stateA, and the second to stateB. With three
         /// state variables, the first is set to stateA, the second to stateB, and the third
         /// to stateC. With four state variables, the first is set to stateA, the second to
-        /// stateB, the third to stateC, and the fourth to stateD. With give state variables,
+        /// stateB, the third to stateC, and the fourth to stateD. With five state variables,
         /// the first is set to stateA, the second to stateB, the third to stateC, the fourth
         /// to stateD, and the fifth to stateE. If there are more, it
         /// reuses stateA, then stateB, then stateC, then stateD, then stateE, then stateA,
@@ -264,6 +264,59 @@ namespace ShaiRandom.Generators
             for (int i = 4; i < c; i += 5)
             {
                 SetSelectedState(i, stateE);
+            }
+        }
+
+        /// <summary>
+        /// Sets each state variable to stateA, stateB, stateC, stateD, stateE, or stateF, alternating.
+        /// </summary>
+        /// <remarks>
+        /// This uses <see cref="SetSelectedState(int, ulong)"/> to
+        /// set the values. If there is one state variable (<see cref="StateCount"/> is 1),
+        /// then this only sets that state variable to stateA. If there are two state
+        /// variables, the first is set to stateA, and the second to stateB. With three
+        /// state variables, the first is set to stateA, the second to stateB, and the third
+        /// to stateC. With four state variables, the first is set to stateA, the second to
+        /// stateB, the third to stateC, and the fourth to stateD. With five state variables,
+        /// the first is set to stateA, the second to stateB, the third to stateC, the fourth
+        /// to stateD, and the fifth to stateE. With six state variables, the first is set to
+        /// stateA, the second to stateB, the third to stateC, the fourth to stateD, the
+        /// fifth to stateE, and the sixth to stateF. If there are more, it
+        /// reuses stateA, then stateB, then stateC, then stateD, then stateE, then stateF, then
+        /// stateA, and so on until all variables are set.
+        /// </remarks>
+        /// <param name="stateA">the ulong value to use for states at index 0,  6, 12, 18...</param>
+        /// <param name="stateB">the ulong value to use for states at index 1,  7, 13, 19...</param>
+        /// <param name="stateC">the ulong value to use for states at index 2,  8, 14, 20...</param>
+        /// <param name="stateD">the ulong value to use for states at index 3,  9, 15, 21...</param>
+        /// <param name="stateE">the ulong value to use for states at index 4, 10, 16, 22...</param>
+        /// <param name="stateF">the ulong value to use for states at index 5, 11, 17, 23...</param>
+        void SetState(ulong stateA, ulong stateB, ulong stateC, ulong stateD, ulong stateE, ulong stateF)
+        {
+            int c = StateCount;
+            for (int i = 0; i < c; i += 6)
+            {
+                SetSelectedState(i, stateA);
+            }
+            for (int i = 1; i < c; i += 6)
+            {
+                SetSelectedState(i, stateB);
+            }
+            for (int i = 2; i < c; i += 6)
+            {
+                SetSelectedState(i, stateC);
+            }
+            for (int i = 3; i < c; i += 6)
+            {
+                SetSelectedState(i, stateD);
+            }
+            for (int i = 4; i < c; i += 6)
+            {
+                SetSelectedState(i, stateE);
+            }
+            for (int i = 5; i < c; i += 6)
+            {
+                SetSelectedState(i, stateF);
             }
         }
 
