@@ -156,7 +156,7 @@ namespace ShaiRandom
         /// </summary>
         /// <remarks>
         /// The modular multiplicative inverse is only defined when <paramref name="a"/> is odd. Multiplying
-        /// <paramref name="a"/> by its inverse will produce <code>1U</code>.
+        /// <paramref name="a"/> by its inverse will produce 1U.
         /// </remarks>
         /// <param name="a">Must be an odd uint.</param>
         /// <returns>The multiplicative inverse of <paramref name="a"/> modulo (2 to the 32).</returns>
@@ -174,7 +174,7 @@ namespace ShaiRandom
         /// </summary>
         /// <remarks>
         /// The modular multiplicative inverse is only defined when <paramref name="a"/> is odd. Multiplying
-        /// <paramref name="a"/> by its inverse will produce <code>1UL</code>.
+        /// <paramref name="a"/> by its inverse will produce 1UL.
         /// </remarks>
         /// <param name="a">Must be an odd ulong.</param>
         /// <returns>The multiplicative inverse of <paramref name="a"/> modulo (2 to the 64).</returns>
@@ -194,13 +194,13 @@ namespace ShaiRandom
         /// <remarks>
         /// This is stricter than the checks in Java 8's SplittableRandom.
         /// The goal here is to see if the gamma is "sufficiently random" to avoid pattern when used as an increment.
-        /// Examples of gamma values that aren't random enough include <code>1UL</code>, <code>3UL</code>,
-        /// <code>0xFFFFFFFFFFFFFFFFUL</code>, <code>0xAAAAAAAAAAAAAAABUL</code>, and so on.
+        /// Examples of gamma values that aren't random enough include 1UL, 3UL,
+        /// 0xFFFFFFFFFFFFFFFFUL, 0xAAAAAAAAAAAAAAABUL, and so on.
         /// This returns the "score" for any gamma value, where the score is the maximum difference of four bit counts
         /// from an ideal of 32. The values that have their bits counted are:
         /// <ul>
         ///     <li>The gamma itself,</li>
-        ///     <li>The Gray code of the gamma, defined as <code>(gamma ^ (gamma >>> 1))</code>,</li>
+        ///     <li>The Gray code of the gamma, defined as (gamma ^ (gamma >>> 1)),</li>
         ///     <li>The <see cref="ModularMultiplicativeInverse(ulong)"/> of the gamma,</li>
         ///     <li>And the Gray code of the above inverse of the gamma.</li>
         /// </ul>
@@ -227,5 +227,46 @@ namespace ShaiRandom
                 Math.Abs(BitOperations.PopCount(inverse ^ inverse >> 1) - 32));
         }
 
+
+        /// <summary>
+        /// Attempts to improve the quality of a "gamma" increment for an additive (Weyl) sequence.
+        /// </summary>
+        /// <remarks>
+        /// This is stricter than the checks in Java 8's SplittableRandom.
+        /// The goal here is to see if the gamma is "sufficiently random" to avoid pattern when used as an increment.
+        /// Examples of gamma values that aren't random enough include 1UL, 3UL,
+        /// 0xFFFFFFFFFFFFFFFFUL, 0xAAAAAAAAAAAAAAABUL, and so on.
+        /// This rejects any gamma value where any of four bit counts are less than 32 - threshold or greater
+        /// than 32 + threshold. The values that have their bits counted are:
+        /// <ul>
+        ///     <li>The gamma itself,</li>
+        ///     <li>The Gray code of the gamma, defined as {@code (gamma ^ (gamma >>> 1))},</li>
+        ///     <li>The {@link MathTools#modularMultiplicativeInverse(long)} of the gamma,</li>
+        ///     <li>And the Gray code of the above inverse of the gamma.</li>
+        /// </ul>
+        /// If a gamma is rejected, this multiplies it by an LCG constant, 0xD1342543DE82EF95UL, adds an increasing even
+        /// number (first 2, then 4, then 6, and so on) and tries again repeatedly. It returns the first gamma that wasn't
+        /// rejected, which could be the original gamma.
+        /// <br/>
+        /// This was informed by O'Neill's blog post about SplittableRandom's gamma,
+        /// https://www.pcg-random.org/posts/bugs-in-splitmix.html
+        /// </remarks>
+        /// <param name="gamma">Any ulong, though almost always an odd number, that would be added as an increment in a sequence.</param>
+        /// <param name="threshold">The maximum acceptable "score" as evaluated by <see cref="RateGamma(ulong)"/>; must be at least 1.</param>
+        /// <returns>The gamma or a modification upon it such that its bits are "sufficiently random" to be a good increment.</returns>
+        public static ulong FixGamma(ulong gamma, int threshold)
+        {
+            gamma |= 1UL;
+            threshold = Math.Max(1, threshold);
+            ulong inverse, add = 0UL;
+            while (Math.Abs(BitOperations.PopCount(gamma) - 32) > threshold
+                   || Math.Abs(BitOperations.PopCount(gamma ^ gamma >> 1) - 32) > threshold
+                   || Math.Abs(BitOperations.PopCount(inverse = ModularMultiplicativeInverse(gamma)) - 32) > threshold
+                   || Math.Abs(BitOperations.PopCount(inverse ^ inverse >> 1) - 32) > threshold)
+            {
+                gamma = gamma * 0xD1342543DE82EF95UL + (add += 2UL);
+            }
+            return gamma;
+        }
     }
 }
