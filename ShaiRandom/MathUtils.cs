@@ -149,5 +149,24 @@ namespace ShaiRandom
         /// wrapTo - 1], inclusive.
         /// </returns>
         public static int WrapAround(int num, int wrapTo) => (num % wrapTo + wrapTo) % wrapTo;
+
+        /// <summary>
+        /// Computes and returns the multiplicative inverse of <paramref name="a"/> modulo (2 to the 64).
+        /// </summary>
+        /// <remarks>
+        /// The modular multiplicative inverse is only defined when <paramref name="a"/> is odd. Multiplying
+        /// <paramref name="a"/> by its inverse will produce <code>1UL</code>.
+        /// </remarks>
+        /// <param name="a">Must be an odd ulong.</param>
+        /// <returns>The multiplicative inverse of <paramref name="a"/> modulo (2 to the 64).</returns>
+        public static ulong ModularMultiplicativeInverse(ulong a)
+        {
+            ulong x = 2ul ^ a * 3ul;
+            x *= 2ul - a * x;
+            x *= 2ul - a * x;
+            x *= 2ul - a * x;
+            x *= 2ul - a * x;
+            return x;
+        }
     }
 }
