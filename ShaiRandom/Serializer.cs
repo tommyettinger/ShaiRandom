@@ -316,6 +316,7 @@ namespace ShaiRandom
             yield return new RomuTrioRandom(1UL, 1UL, 1UL);
             yield return new ScruffRandom(1UL, 1UL, 1UL, 1UL);
             yield return new StrangerRandom(1UL, 1UL, 1UL, 1UL);
+            yield return new TraceRandom(1UL, 1UL, 1UL, 1UL, 1UL, 1UL);
             yield return new TricycleRandom(1UL, 1UL, 1UL);
             yield return new TrimRandom(1UL, 1UL, 1UL, 1UL);
             yield return new WhiskerRandom(1UL, 1UL, 1UL, 1UL);

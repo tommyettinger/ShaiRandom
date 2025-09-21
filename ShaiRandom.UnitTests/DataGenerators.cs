@@ -33,6 +33,7 @@ namespace ShaiRandom.UnitTests
             yield return new RomuTrioRandom();
             yield return new ScruffRandom();
             yield return new StrangerRandom();
+            yield return new TraceRandom();
             yield return new TricycleRandom();
             yield return new TrimRandom();
             yield return new WhiskerRandom();
