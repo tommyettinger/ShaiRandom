@@ -10,8 +10,8 @@ namespace ShaiRandom.Generators
     /// </summary>
     /// <remarks>
     /// Tommy Ettinger:
-    /// This is "medium-chaotic" because it has six states and performs five math operations per update (two adds, two
-    /// XORs, and a bitwise rotation, with a good compiler able to handle those as instruction-level parallel
+    /// This is "medium-chaotic" because it has six states and performs five math operations per update (three adds, one
+    /// XOR, and a bitwise rotation), with a good compiler able to handle those as instruction-level parallel
     /// operations. The "stream" doesn't need to change unless a new state is requested, such as by deserialization.
     ///
     /// This generator is a tiny bit slower than AceRandom. There are at minimum 2 to the 28 unique streams that can be
@@ -49,7 +49,7 @@ namespace ShaiRandom.Generators
         public ulong StateE { get; set; }
 
         /// <summary>
-        /// The fifth state; this is limited to holding an odd ulong that "rates" to a threshold of 1 by
+        /// The fifth state; this is constrained to holding an odd ulong that "rates" to a threshold of 1 by
         /// <see cref="MathUtils.RateGamma(ulong)"/>. The setter will enforce this constraint by calling
         /// <see cref="MathUtils.FixGamma(ulong, int)"/> with a threshold of 1. If you pass in only odd ulong values
         /// less than 536870912, then all values this can be assigned will be distinct.
@@ -99,6 +99,7 @@ namespace ShaiRandom.Generators
         /// <param name="stateC">Any ulong.</param>
         /// <param name="stateD">Any ulong.</param>
         /// <param name="stateE">Any ulong.</param>
+        /// <param name="stateF">The sixth state; must be odd and may be changed to satisfy a constraint.</param>
         public TraceRandom(ulong stateA, ulong stateB, ulong stateC, ulong stateD, ulong stateE, ulong stateF)
         {
             StateA = stateA;
@@ -203,22 +204,41 @@ namespace ShaiRandom.Generators
         {
             unchecked
             {
-                seed = (seed ^ 0x1C69B3F74AC4AE35UL) * 0x3C79AC492BA7B653UL; // an XLCG
-                rng.StateA = seed ^ ~0xC6BC279692B5C323UL;
-                seed ^= seed >> 32;
-                rng.StateB = seed ^ 0xD3833E804F4C574BUL;
-                seed *= 0xBEA225F9EB34556DUL;                               // MX3 unary hash
-                seed ^= seed >> 29;
-                rng.StateC = seed ^ ~0xD3833E804F4C574BUL;                  // updates are spread across the MX3 hash
-                seed *= 0xBEA225F9EB34556DUL;
-                seed ^= seed >> 32;
-                rng.StateD = seed ^ 0xC6BC279692B5C323UL;
-                seed *= 0xBEA225F9EB34556DUL;
-                seed ^= seed >> 29;
-                rng.StateE = seed;
-                seed ^= (seed * seed) | 7UL;
-                seed ^= seed >> 27;
-                rng.StateF = seed ^ 0xBEA225F9EB34556DUL;
+                // Based on (not identical to) the Speck block cipher's key expansion.
+                // Only uses add, bitwise rotation, and XOR operations.
+                ulong s0 = seed, s1 = seed ^ 0xC6BC279692B5C323UL, ctr = seed ^ 0x1C69B3F74AC4AE35UL;
+                s1 = s1.RotateLeft(56) + s0 ^ (ctr += 0xBEA225F9EB34556DUL);
+                s0 = s0.RotateLeft(3) ^ s1;
+                rng.StateA = s0;
+                s1 = s1.RotateLeft(56) + s0 ^ (ctr += 0xBEA225F9EB34556DUL);
+                s0 = s0.RotateLeft(3) ^ s1;
+                rng.StateB = s0;
+                s1 = s1.RotateLeft(56) + s0 ^ (ctr += 0xBEA225F9EB34556DUL);
+                s0 = s0.RotateLeft(3) ^ s1;
+                rng.StateC = s0;
+                s1 = s1.RotateLeft(56) + s0 ^ (ctr += 0xBEA225F9EB34556DUL);
+                s0 = s0.RotateLeft(3) ^ s1;
+                rng.StateD = s0;
+                s1 = s1.RotateLeft(56) + s0 ^ (ctr += 0xBEA225F9EB34556DUL);
+                s0 = s0.RotateLeft(3) ^ s1;
+                rng.StateE = s0;
+                s1 = s1.RotateLeft(56) + s0 ^ (ctr += 0xBEA225F9EB34556DUL);
+                s0 = s0.RotateLeft(3) ^ s1;
+                rng.StateA += s0;
+                s1 = s1.RotateLeft(56) + s0 ^ (ctr += 0xBEA225F9EB34556DUL);
+                s0 = s0.RotateLeft(3) ^ s1;
+                rng.StateB += s0;
+                s1 = s1.RotateLeft(56) + s0 ^ (ctr += 0xBEA225F9EB34556DUL);
+                s0 = s0.RotateLeft(3) ^ s1;
+                rng.StateC += s0;
+                s1 = s1.RotateLeft(56) + s0 ^ (ctr += 0xBEA225F9EB34556DUL);
+                s0 = s0.RotateLeft(3) ^ s1;
+                rng.StateD += s0;
+                s1 = s1.RotateLeft(56) + s0 ^ (ctr += 0xBEA225F9EB34556DUL);
+                s0 = s0.RotateLeft(3) ^ s1;
+                rng.StateE += s0;
+
+                rng.StateF = s0.RotateLeft(3) ^ s1.RotateLeft(56) + s0 ^ (ctr + 0xBEA225F9EB34556DL);
             }
         }
 
@@ -255,11 +275,12 @@ namespace ShaiRandom.Generators
             ulong fe = StateE;
             unchecked
             {
-                StateA = fa + 0x9E3779B97F4A7C15L;
+                StateA = fa + StateF;
                 StateB = fa ^ fe;
                 StateC = fb + fd;
-                StateD = fc.RotateLeft(52);
-                return StateE = fb - fc;
+                StateD = fc.RotateLeft(44);
+                StateE = fb + fc;
+                return fb;
             }
         }
 
@@ -273,11 +294,12 @@ namespace ShaiRandom.Generators
             ulong fe = StateE;
             unchecked
             {
-                StateA = fa + 0x9E3779B97F4A7C15L;
+                StateA = fa + StateF;
                 StateB = fa ^ fe;
                 StateC = fb + fd;
-                StateD = fc.RotateLeft(52);
-                return BitConverter.Int32BitsToSingle((int)((StateE = fb - fc) >> 41) | 0x3F800000) - 1f;
+                StateD = fc.RotateLeft(44);
+                StateE = fb + fc;
+                return BitConverter.Int32BitsToSingle((int)(fb >> 41) | 0x3F800000) - 1f;
             }
         }
 
@@ -291,11 +313,12 @@ namespace ShaiRandom.Generators
             ulong fe = StateE;
             unchecked
             {
-                StateA = fa + 0x9E3779B97F4A7C15L;
+                StateA = fa + StateF;
                 StateB = fa ^ fe;
                 StateC = fb + fd;
-                StateD = fc.RotateLeft(52);
-                return BitConverter.Int64BitsToDouble((long)((StateE = fb - fc) >> 12) | 0x3FF0000000000000L) - 1.0;
+                StateD = fc.RotateLeft(44);
+                StateE = fb + fc;
+                return BitConverter.Int64BitsToDouble((long)(fb >> 12) | 0x3FF0000000000000L) - 1.0;
             }
         }
 
@@ -308,12 +331,12 @@ namespace ShaiRandom.Generators
                 ulong fc = StateC;
                 ulong fd = StateD;
                 ulong fe = StateE;
-                StateA -= 0x9E3779B97F4A7C15L;
-                StateC = fd.RotateRight(52);
-                StateB = StateC + fe;
+                StateA -= StateF;
+                StateC = fd.RotateRight(44);
+                StateB = fe - StateC;
                 StateD = fc - StateB;
                 StateE = fb ^ StateA;
-                return fe;
+                return StateB;
             }
         }
 
