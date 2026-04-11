@@ -120,6 +120,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public uint Flow() => _rng.NextUInt();
 
+        [GlobalSetup(Target = nameof(Orbital))]
+        public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
+        [Benchmark]
+        public uint Orbital() => _rng.NextUInt();
+
         [GlobalSetup(Target = nameof(PcgRxsmxs))]
         public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
         [Benchmark]
@@ -288,6 +293,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _rng = new FlowRandom(1UL);
         [Benchmark]
         public uint Flow() => _rng.NextUInt(999u);
+
+        [GlobalSetup(Target = nameof(Orbital))]
+        public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
+        [Benchmark]
+        public uint Orbital() => _rng.NextUInt(999u);
 
         [GlobalSetup(Target = nameof(PcgRxsmxs))]
         public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
@@ -491,6 +501,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public ulong Flow() => _rng.NextULong();
 
+        [GlobalSetup(Target = nameof(Orbital))]
+        public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
+        [Benchmark]
+        public ulong Orbital() => _rng.NextULong();
+
         [GlobalSetup(Target = nameof(PcgRxsmxs))]
         public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
         [Benchmark]
@@ -628,6 +643,7 @@ namespace ShaiRandom.PerformanceTests
         private readonly ScruffRandom _scruffRandom = new ScruffRandom(1UL);
         private readonly AceRandom _aceRandom = new AceRandom(1UL);
         private readonly FlowRandom _flowRandom = new FlowRandom(1UL);
+        private readonly OrbitalRandom _orbitalRandom = new OrbitalRandom(1UL);
         private readonly PcgRxsmxsRandom _pcgRxsmxsRandom = new PcgRxsmxsRandom(1UL);
 
 #if NET6_0_OR_GREATER
@@ -684,6 +700,9 @@ namespace ShaiRandom.PerformanceTests
         public ulong Flow() => _flowRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
+        public ulong Orbital() => _orbitalRandom.NextULong(1UL, 1000UL);
+
+        [Benchmark]
         public ulong PcgRxsmxs() => _pcgRxsmxsRandom.NextULong(1UL, 1000UL);
     }
     /// <summary>
@@ -732,6 +751,7 @@ namespace ShaiRandom.PerformanceTests
         private readonly ScruffRandom _scruffRandom = new ScruffRandom(1UL);
         private readonly AceRandom _aceRandom = new AceRandom(1UL);
         private readonly FlowRandom _flowRandom = new FlowRandom(1UL);
+        private readonly OrbitalRandom _orbitalRandom = new OrbitalRandom(1UL);
         private readonly PcgRxsmxsRandom _pcgRxsmxsRandom = new PcgRxsmxsRandom(1UL);
 
 #if NET6_0_OR_GREATER
@@ -786,6 +806,9 @@ namespace ShaiRandom.PerformanceTests
 
         [Benchmark]
         public ulong Flow() => Math.BigMul(_flowRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong Orbital() => Math.BigMul(_orbitalRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
 
         [Benchmark]
         public ulong PcgRxsmxs() => Math.BigMul(_pcgRxsmxsRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
@@ -937,6 +960,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double Flow() => _rng.NextDouble();
 
+        [GlobalSetup(Target = nameof(Orbital))]
+        public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
+        [Benchmark]
+        public double Orbital() => _rng.NextDouble();
+
         [GlobalSetup(Target = nameof(PcgRxsmxs))]
         public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
         [Benchmark]
@@ -1060,6 +1088,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _rng = new FlowRandom(1UL);
         [Benchmark]
         public double Flow() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Orbital))]
+        public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
+        [Benchmark]
+        public double Orbital() => _rng.NextDouble(1.1, -0.1);
 
         [GlobalSetup(Target = nameof(PcgRxsmxs))]
         public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
@@ -1193,6 +1226,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double Flow() => _rng.NextExclusiveDouble();
 
+        [GlobalSetup(Target = nameof(Orbital))]
+        public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
+        [Benchmark]
+        public double Orbital() => _rng.NextExclusiveDouble();
+
         [GlobalSetup(Target = nameof(PcgRxsmxs))]
         public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
         [Benchmark]
@@ -1295,6 +1333,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _rng = new FlowRandom(1UL);
         [Benchmark]
         public double Flow() => _rng.NextExclusiveDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Orbital))]
+        public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
+        [Benchmark]
+        public double Orbital() => _rng.NextExclusiveDouble(1.1, -0.1);
 
         [GlobalSetup(Target = nameof(PcgRxsmxs))]
         public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
@@ -1712,6 +1755,16 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double FlowS() => _rng.NextSparseDouble();
 
+        [GlobalSetup(Target = nameof(Orbital))]
+        public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
+        [Benchmark]
+        public double Orbital() => _rng.NextDouble();
+
+        [GlobalSetup(Target = nameof(OrbitalS))]
+        public void OrbitalSSetup() => _rng = new OrbitalRandom(1UL);
+        [Benchmark]
+        public double OrbitalS() => _rng.NextSparseDouble();
+
         [GlobalSetup(Target = nameof(PcgRxsmxs))]
         public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
         [Benchmark]
@@ -2072,6 +2125,16 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public float FlowS() => _rng.NextSparseFloat();
 
+        [GlobalSetup(Target = nameof(Orbital))]
+        public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
+        [Benchmark]
+        public float Orbital() => _rng.NextFloat();
+
+        [GlobalSetup(Target = nameof(OrbitalS))]
+        public void OrbitalSSetup() => _rng = new OrbitalRandom(1UL);
+        [Benchmark]
+        public float OrbitalS() => _rng.NextSparseFloat();
+
         [GlobalSetup(Target = nameof(PcgRxsmxs))]
         public void PcgRxsmxsSetup() => _rng = new PcgRxsmxsRandom(1UL);
         [Benchmark]
@@ -2218,6 +2281,7 @@ namespace ShaiRandom.PerformanceTests
         private ScruffRandom _ScruffRandom = null!;
         private AceRandom _AceRandom = null!;
         private FlowRandom _FlowRandom = null!;
+        private OrbitalRandom _OrbitalRandom = null!;
         private PcgRxsmxsRandom _PcgRxsmxsRandom = null!;
 
         [GlobalSetup(Target = nameof(Distinct))]
@@ -2289,6 +2353,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _FlowRandom = new FlowRandom(1UL);
         [Benchmark]
         public ulong Flow() => _FlowRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(Orbital))]
+        public void OrbitalSetup() => _OrbitalRandom = new OrbitalRandom(1UL);
+        [Benchmark]
+        public ulong Orbital() => _OrbitalRandom.NextULong();
 
         [GlobalSetup(Target = nameof(PcgRxsmxs))]
         public void PcgRxsmxsSetup() => _PcgRxsmxsRandom = new PcgRxsmxsRandom(1UL);
