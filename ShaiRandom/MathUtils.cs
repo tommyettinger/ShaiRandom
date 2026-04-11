@@ -26,6 +26,19 @@ namespace ShaiRandom
             D0 = 7.173787663925508066,
             D1 = 8.759693508958633869;
 
+        private const float
+            A0F = 0.195740115269792f,
+            A1F = -0.652871358365296f,
+            A2F = 1.246899760652504f,
+            B0F = 0.155331081623168f,
+            B1F = -0.839293158122257f,
+            C3F = -1.000182518730158122f,
+            C0F = 16.682320830719986527f,
+            C1F = 4.120411523939115059f,
+            C2F = 0.029814187308200211f,
+            D0F = 7.173787663925508066f,
+            D1F = 8.759693508958633869f;
+
 
         /// <summary>
         ///   Safely checks if given doubles are equal.
@@ -120,6 +133,79 @@ namespace ShaiRandom
                 double q = p - 0.5, r = q * q;
                 return q * (A2 + (A1 * r + A0) / (r * (r + B1) + B0));
             }
+        }
+
+        /// <summary>
+        /// A single-precision probit() approximation that returns an approximately-Gaussian-distributed float.
+        /// </summary>
+        /// <remarks>
+        /// The function maps the lowest inputs to the most negative outputs,
+        /// the highest inputs to the most positive outputs, and inputs near
+        /// 0.5 to outputs near 0. All possible results are between
+        /// -13.003068 and 13.003068, inclusive, for valid inputs.
+        /// <a href="https://www.researchgate.net/publication/46462650_A_New_Approximation_to_the_Normal_Distribution_Quantile_Function">Uses this algorithm by Paul Voutier</a>.
+        /// <a href="https://en.wikipedia.org/wiki/Probit_function">Wikipedia has a page on the probit function.</a>
+        /// </remarks>
+        /// <param name="p">a non-NaN float between 0 and 1 inclusive.</param>
+        /// <returns>an approximately-Gaussian-distributed float between -13.003068 and 13.003068 .</returns>
+        public static float ProbitF(float p)
+        {
+            if(0.0465f > p){
+                float r = MathF.Sqrt(LogRough(p) * -2f);
+                return C3F * r + C2F + (C1F * r + C0F) / (r * (r + D1F) + D0F);
+            }
+
+            if(0.9535f < p) {
+                float r = MathF.Sqrt(LogRough(1f - p) * -2f);
+                return -C3F * r - C2F - (C1F * r + C0F) / (r * (r + D1F) + D0F);
+            }
+
+            float h = p - 0.5f, q = h * h;
+            return h * (A2F + (A1F * q + A0F) / (q * (q + B1F) + B0F));
+        }
+
+        /// <summary>
+        /// Approximates the natural logarithm of {@code x} (that is, with base E), using single-precision, somewhat roughly.
+        /// </summary>
+        /// <remarks>
+        /// Ported from <a href="https://code.google.com/archive/p/fastapprox/">fastapprox</a>, which is open source
+        /// under the New BSD License.
+        /// </remarks>
+        /// <param name="x">the argument to the logarithm; should be greater than 0, but 0 is tolerated.</param>
+        /// <returns>an approximation of the logarithm of x with base E; can be any float.</returns>
+        public static float LogRough (float x)
+        {
+            int vx = BitConverter.SingleToInt32Bits(x);
+            float mx = BitConverter.Int32BitsToSingle((vx & 0x007FFFFF) | 0x3f000000);
+            return vx * 8.262958E-8f - 86.10657f - 1.0383555f * mx - 1.1962888f / (0.3520887068f + mx);
+        }
+
+        /// <summary>
+        /// Given uniformly distributed ulong input, this produces approximately normal-distributed float results.
+        /// </summary>
+        /// <remarks>
+        /// This won't preserve input patterns when x has a pattern you might want to
+        /// keep, such as being quasi-random. This differs from <see cref="Probit"/>
+        /// in that regard.
+        /// <br/>
+        /// This can't produce as extreme results in extremely-rare cases as methods
+        /// like Box-Muller and Marsaglia Polar can. All possible results are between
+        /// {@code -7.92908} and {@code 7.92908}, inclusive. This method is fairly
+	    /// accurate to the normal distribution; the center has a rounded top.
+        /// <br/>
+        /// <a href="https://marc-b-reynolds.github.io/distribution/2021/03/18/CheapGaussianApprox.html">Credit
+        /// to Marc B. Reynolds</a> for coming up with this clever fusion of the
+        /// already-bell-curved bit count and two triangular distributions to smooth
+        /// it out. Using one random long split into four parts instead of two
+        /// random longs being needed is the contribution here.
+        /// Using x * x + x is another contribution; it's slightly faster.
+        /// </remarks>
+        /// <param name="x">a typically random ulong; input patterns will not be preserved.</param>
+        /// <returns>a Gaussian-distributed ("normally distributed") float between -7.92908 and 7.92908 .</returns>
+        public static float NormalRough (ulong x) {
+            long c = BitOperations.PopCount(x) - 32L << 16;
+            long u = (long)(x * x + x); /* Note, this is always even, but it is unlikely to matter. */
+            return 3.78088E-6f * (c + (short)(u) - (u >> 48) - (short)(u >> 32) - (short)(u >> 16));
         }
 
         /// <summary>
