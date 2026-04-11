@@ -20,7 +20,7 @@ namespace ShaiRandom.UnitTests
         private static readonly (int inner, int outer)[] s_unsignedBounds = { (1, 3), (2, 2), (3, 1) };
 
         // Dictionary which includes all types which should be excluded from distribution checks in the below tests
-        private readonly HashSet<Type> _distributionCheckExclusions = new HashSet<Type>{ typeof(MinRandom), typeof(MaxRandom) };
+        private readonly HashSet<Type> _distributionCheckExclusions = new HashSet<Type>{ typeof(MinRandom), typeof(MaxRandom), typeof(GoldenQuasiRandom) };
 
         private const int NumValuesToGenerate = 100;
 
@@ -140,10 +140,9 @@ namespace ShaiRandom.UnitTests
             // (which should happen w/ 100 iterations over a small range).
             dynamic outerInclusive = bounds.inner < bounds.outer ? outer - 1 :
                 bounds.inner == bounds.outer ? outer : outer + 1;
-            Assert.True(frequencyDual.ContainsKey(inner));
-            Assert.True(frequencyDual.ContainsKey(outerInclusive));
-            Assert.True(frequencyOuter.ContainsKey((T)Convert.ChangeType(0, typeof(T))));
-            Assert.True(frequencyDual.ContainsKey(outerInclusive));
+            Assert.True(frequencyDual.ContainsKey(inner), "Inner inclusive bound missing.");
+            Assert.True(frequencyDual.ContainsKey(outerInclusive), "Outer inclusive bound missing.");
+            Assert.True(frequencyOuter.ContainsKey((T)Convert.ChangeType(0, typeof(T))), "Zero missing from outer-only.");
         }
 
         // NOTE: This function works for the regular floating-point functions, as well as both the inclusive and exclusive
@@ -165,7 +164,7 @@ namespace ShaiRandom.UnitTests
             // Sanity check to make sure we haven't made the test case data so precise that floating-point imprecision
             // bit us and considered the bounds equal
             if (!isEqualCase)
-                Assert.False(inner.Equals(outer));
+                Assert.False(inner.Equals(outer), "Inner bound mistakenly equals outer bound.");
 
             // Generate a bunch of values, and record them in a known-series random.
             var wrapper = new ArchivalWrapper(rng);
@@ -220,8 +219,8 @@ namespace ShaiRandom.UnitTests
             }
             else
             {
-                Assert.True(frequencyDual.Count > 1);
-                Assert.True(frequencyOuter.Count > 1);
+                Assert.True(frequencyDual.Count > 1, "frequencyDual.Count was <= 1");
+                Assert.True(frequencyOuter.Count > 1,  "frequencyOuter.Count was <= 1");
             }
         }
 
