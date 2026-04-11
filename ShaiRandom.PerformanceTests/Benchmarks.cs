@@ -2268,6 +2268,31 @@ namespace ShaiRandom.PerformanceTests
     ///| Whisker            | 0.1570 ns | 0.0074 ns | 0.0069 ns |
     ///| Scruff             | 0.0887 ns | 0.0077 ns | 0.0072 ns |
     ///| Ace                | 0.2280 ns | 0.0047 ns | 0.0041 ns |
+    ///.NET 8.0 target, built with SDK 10, newer laptop:
+    ///BenchmarkDotNet v0.15.2, Windows 11 (10.0.22631.3880/23H2/2023Update/SunValley3)
+    ///12th Gen Intel Core i7-12800H 2.40GHz, 1 CPU, 20 logical and 14 physical cores
+    ///    .NET SDK 10.0.103
+    ///    [Host]     : .NET 8.0.24 (8.0.2426.7010), X64 RyuJIT AVX2
+    ///DefaultJob : .NET 8.0.24 (8.0.2426.7010), X64 RyuJIT AVX2
+    ///| Method             | Mean      | Error     | StdDev    |
+    ///|------------------- |----------:|----------:|----------:|
+    ///| Distinct           | 0.4991 ns | 0.0048 ns | 0.0043 ns |
+    ///| Laser              | 0.1296 ns | 0.0061 ns | 0.0051 ns |
+    ///| Tricycle           | 0.1199 ns | 0.0074 ns | 0.0070 ns |
+    ///| FourWheel          | 0.5573 ns | 0.0148 ns | 0.0131 ns |
+    ///| Stranger           | 0.1154 ns | 0.0055 ns | 0.0049 ns |
+    ///| Xoshiro256StarStar | 0.2237 ns | 0.0078 ns | 0.0065 ns |
+    ///| Xorshift128Plus    | 0.1448 ns | 0.0046 ns | 0.0041 ns |
+    ///| RomuTrio           | 0.1465 ns | 0.0051 ns | 0.0045 ns |
+    ///| Mizuchi            | 0.1532 ns | 0.0066 ns | 0.0061 ns |
+    ///| Trim               | 0.1488 ns | 0.0076 ns | 0.0063 ns |
+    ///| Whisker            | 0.1203 ns | 0.0071 ns | 0.0067 ns |
+    ///| Scruff             | 0.3110 ns | 0.0314 ns | 0.0612 ns |
+    ///| Ace                | 0.1472 ns | 0.0096 ns | 0.0089 ns |
+    ///| Flow               | 0.1486 ns | 0.0049 ns | 0.0046 ns |
+    ///| Trace              | 0.2357 ns | 0.0066 ns | 0.0062 ns |
+    ///| Orbital            | 0.1433 ns | 0.0056 ns | 0.0053 ns |
+    ///| PcgRxsmxs          | 0.1441 ns | 0.0042 ns | 0.0037 ns |
     ///.NET 9.0:
     ///BenchmarkDotNet v0.14.0, Windows 11 (10.0.22631.3880/23H2/2023Update/SunValley3)
     ///12th Gen Intel Core i7-12800H, 1 CPU, 20 logical and 14 physical cores
