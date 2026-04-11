@@ -120,6 +120,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public uint Flow() => _rng.NextUInt();
 
+        [GlobalSetup(Target = nameof(Trace))]
+        public void TraceSetup() => _rng = new TraceRandom(1UL);
+        [Benchmark]
+        public uint Trace() => _rng.NextUInt();
+
         [GlobalSetup(Target = nameof(Orbital))]
         public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
         [Benchmark]
@@ -293,6 +298,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _rng = new FlowRandom(1UL);
         [Benchmark]
         public uint Flow() => _rng.NextUInt(999u);
+
+        [GlobalSetup(Target = nameof(Trace))]
+        public void TraceSetup() => _rng = new TraceRandom(1UL);
+        [Benchmark]
+        public uint Trace() => _rng.NextUInt(999u);
 
         [GlobalSetup(Target = nameof(Orbital))]
         public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
@@ -501,6 +511,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public ulong Flow() => _rng.NextULong();
 
+        [GlobalSetup(Target = nameof(Trace))]
+        public void TraceSetup() => _rng = new TraceRandom(1UL);
+        [Benchmark]
+        public ulong Trace() => _rng.NextULong();
+
         [GlobalSetup(Target = nameof(Orbital))]
         public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
         [Benchmark]
@@ -643,6 +658,7 @@ namespace ShaiRandom.PerformanceTests
         private readonly ScruffRandom _scruffRandom = new ScruffRandom(1UL);
         private readonly AceRandom _aceRandom = new AceRandom(1UL);
         private readonly FlowRandom _flowRandom = new FlowRandom(1UL);
+        private readonly TraceRandom _traceRandom = new TraceRandom(1UL);
         private readonly OrbitalRandom _orbitalRandom = new OrbitalRandom(1UL);
         private readonly PcgRxsmxsRandom _pcgRxsmxsRandom = new PcgRxsmxsRandom(1UL);
 
@@ -700,6 +716,9 @@ namespace ShaiRandom.PerformanceTests
         public ulong Flow() => _flowRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
+        public ulong Trace() => _traceRandom.NextULong(1UL, 1000UL);
+
+        [Benchmark]
         public ulong Orbital() => _orbitalRandom.NextULong(1UL, 1000UL);
 
         [Benchmark]
@@ -751,6 +770,7 @@ namespace ShaiRandom.PerformanceTests
         private readonly ScruffRandom _scruffRandom = new ScruffRandom(1UL);
         private readonly AceRandom _aceRandom = new AceRandom(1UL);
         private readonly FlowRandom _flowRandom = new FlowRandom(1UL);
+        private readonly TraceRandom _traceRandom = new TraceRandom(1UL);
         private readonly OrbitalRandom _orbitalRandom = new OrbitalRandom(1UL);
         private readonly PcgRxsmxsRandom _pcgRxsmxsRandom = new PcgRxsmxsRandom(1UL);
 
@@ -806,6 +826,9 @@ namespace ShaiRandom.PerformanceTests
 
         [Benchmark]
         public ulong Flow() => Math.BigMul(_flowRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
+
+        [Benchmark]
+        public ulong Trace() => Math.BigMul(_traceRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
 
         [Benchmark]
         public ulong Orbital() => Math.BigMul(_orbitalRandom.NextULong(), 1000UL - 1UL, out _) + 1UL;
@@ -960,6 +983,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double Flow() => _rng.NextDouble();
 
+        [GlobalSetup(Target = nameof(Trace))]
+        public void TraceSetup() => _rng = new TraceRandom(1UL);
+        [Benchmark]
+        public double Trace() => _rng.NextDouble();
+
         [GlobalSetup(Target = nameof(Orbital))]
         public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
         [Benchmark]
@@ -1088,6 +1116,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _rng = new FlowRandom(1UL);
         [Benchmark]
         public double Flow() => _rng.NextDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Trace))]
+        public void TraceSetup() => _rng = new TraceRandom(1UL);
+        [Benchmark]
+        public double Trace() => _rng.NextDouble(1.1, -0.1);
 
         [GlobalSetup(Target = nameof(Orbital))]
         public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
@@ -1226,6 +1259,11 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double Flow() => _rng.NextExclusiveDouble();
 
+        [GlobalSetup(Target = nameof(Trace))]
+        public void TraceSetup() => _rng = new TraceRandom(1UL);
+        [Benchmark]
+        public double Trace() => _rng.NextExclusiveDouble();
+
         [GlobalSetup(Target = nameof(Orbital))]
         public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
         [Benchmark]
@@ -1333,6 +1371,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _rng = new FlowRandom(1UL);
         [Benchmark]
         public double Flow() => _rng.NextExclusiveDouble(1.1, -0.1);
+
+        [GlobalSetup(Target = nameof(Trace))]
+        public void TraceSetup() => _rng = new TraceRandom(1UL);
+        [Benchmark]
+        public double Trace() => _rng.NextExclusiveDouble(1.1, -0.1);
 
         [GlobalSetup(Target = nameof(Orbital))]
         public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
@@ -1755,6 +1798,16 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public double FlowS() => _rng.NextSparseDouble();
 
+        [GlobalSetup(Target = nameof(Trace))]
+        public void TraceSetup() => _rng = new TraceRandom(1UL);
+        [Benchmark]
+        public double Trace() => _rng.NextDouble();
+
+        [GlobalSetup(Target = nameof(TraceS))]
+        public void TraceSSetup() => _rng = new TraceRandom(1UL);
+        [Benchmark]
+        public double TraceS() => _rng.NextSparseDouble();
+
         [GlobalSetup(Target = nameof(Orbital))]
         public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
         [Benchmark]
@@ -2125,6 +2178,16 @@ namespace ShaiRandom.PerformanceTests
         [Benchmark]
         public float FlowS() => _rng.NextSparseFloat();
 
+        [GlobalSetup(Target = nameof(Trace))]
+        public void TraceSetup() => _rng = new TraceRandom(1UL);
+        [Benchmark]
+        public float Trace() => _rng.NextFloat();
+
+        [GlobalSetup(Target = nameof(TraceS))]
+        public void TraceSSetup() => _rng = new TraceRandom(1UL);
+        [Benchmark]
+        public float TraceS() => _rng.NextSparseFloat();
+
         [GlobalSetup(Target = nameof(Orbital))]
         public void OrbitalSetup() => _rng = new OrbitalRandom(1UL);
         [Benchmark]
@@ -2281,6 +2344,7 @@ namespace ShaiRandom.PerformanceTests
         private ScruffRandom _ScruffRandom = null!;
         private AceRandom _AceRandom = null!;
         private FlowRandom _FlowRandom = null!;
+        private TraceRandom _TraceRandom = null!;
         private OrbitalRandom _OrbitalRandom = null!;
         private PcgRxsmxsRandom _PcgRxsmxsRandom = null!;
 
@@ -2353,6 +2417,11 @@ namespace ShaiRandom.PerformanceTests
         public void FlowSetup() => _FlowRandom = new FlowRandom(1UL);
         [Benchmark]
         public ulong Flow() => _FlowRandom.NextULong();
+
+        [GlobalSetup(Target = nameof(Trace))]
+        public void TraceSetup() => _TraceRandom = new TraceRandom(1UL);
+        [Benchmark]
+        public ulong Trace() => _TraceRandom.NextULong();
 
         [GlobalSetup(Target = nameof(Orbital))]
         public void OrbitalSetup() => _OrbitalRandom = new OrbitalRandom(1UL);
